@@ -38,9 +38,9 @@ export default function URL(request: any, attachment?: any) {
         }
         CreateCokies('LicGUID', LicGUID) 
     }
-    return `${json.server}/mobile~project/${request}?LicGUID=${LicGUID}&${attachment}`;
+    return `${json.serverLocal}/mobile~project/${request}?LicGUID=${LicGUID}&${attachment}`;
 }
 
 export function ImgURL(attachment?: any) {
-    return <img src={`${json.server}/server~${attachment}`} />;
+    return <img src={`${json.serverLocal}/server~${attachment}`} />;
 }

@@ -30,9 +30,9 @@ const SignIn = (props: componentProps) => {
   let history = useHistory();
   const [error, setError] = useState<string | null>("");
   const [loginAnswer, setLoginAnswer] = useState("");
-  const [drx, setDrx] = useState();
-  const [user, setUser] = useState('');
-  const [workplace, setWorkPlace] = useState();
+  const [drx, setDrx] = useState("");
+  const [user, setUser] = useState("");
+  const [workplace, setWorkPlace] = useState("");
   const [password, setPassword] = useState();
   const [open, setOpen] = React.useState(true);
   //console.log(drx, user, workplace, password);
@@ -47,23 +47,21 @@ const SignIn = (props: componentProps) => {
 
   function CheckAnswerFromServer(answer?: Object) {
     let test: string;
-    
-    
+
     switch (answer) {
       case "ConfigName":
-        setError(`Файл подключения ${drx} не найден.`)
+        setError(`Файл подключения ${drx} не найден.`);
         break;
       case "UserName":
-        setError(`Пользователь ${user} в системе не зарегистрирован.`)
+        setError(`Пользователь ${user} в системе не зарегистрирован.`);
         break;
       case "Password":
-        setError(`Пароль неверный.`)
+        setError(`Пароль неверный.`);
         break;
     }
   }
 
   const handleSingIn = (event: any) => {
-   
     let LoginData = {
       ConfigName: drx,
       UserName: user,
@@ -75,10 +73,12 @@ const SignIn = (props: componentProps) => {
 
     axios.post(URL("enter"), JSON.stringify(LoginData)).then((response) => {
       setLoginAnswer(response.data);
-      response.data["error"] !== undefined? ( CheckAnswerFromServer(response.data["error"]["Item"])): (history.push("/main"))
+      response.data["error"] !== undefined
+        ? CheckAnswerFromServer(response.data["error"]["Item"])
+        : history.push("/main");
     });
   };
-  
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -102,7 +102,6 @@ const SignIn = (props: componentProps) => {
           >
             Вход по ЭП
           </Button>
-          
         </Grid>
 
         <SelectDrx drxInfo={drx} setBackInfo={setDrx} />
@@ -133,7 +132,7 @@ const SignIn = (props: componentProps) => {
             Войти
           </Button>
         </Grid>
-        <div>{error !== null ? `${error}` : ''}</div>
+        <div>{error !== null ? `${error}` : ""}</div>
       </Grid>
     </Container>
   );
