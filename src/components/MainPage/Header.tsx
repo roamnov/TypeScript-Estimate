@@ -15,6 +15,7 @@ import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import URL from "../Url";
 import axios from 'axios';
+import imageHeader from '../../static/images/header.jpg';
 
 const DashboardNavbar = ({  ...rest }) => {
   const [notifications] = useState([]);
@@ -26,14 +27,9 @@ const DashboardNavbar = ({  ...rest }) => {
     });
   };
   return (
-    <AppBar
-      elevation={0}
-      {...rest}
-    >
-      <Toolbar>
-        <RouterLink to="/">
-          ОБРАТНО      
-        </RouterLink>
+    
+      <Toolbar style={{marginLeft: -30, }}>
+        <img src={imageHeader}/>
         <Box sx={{ flexGrow: 1 }} />
         
           <IconButton color="inherit" size="large">
@@ -53,7 +49,7 @@ const DashboardNavbar = ({  ...rest }) => {
        </Link>
         
       </Toolbar>
-    </AppBar>
+    
   );
 };
 
