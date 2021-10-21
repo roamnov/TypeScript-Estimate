@@ -76,8 +76,7 @@ export default function SideBar() {
   function Menu(SectionList: any) {
     // фцнкция отрисовки меню
    
-   
-      
+         
       let Name, ID, currentDeep,  openSet, openSetDeep,  mainCollapse, deepCollapse, Img, keyS = 0, howDeep = 4, higherLvL= true;
       let assemblyLists = []; //сюда записываем все списки а потом отправляем на отрисовку
       
