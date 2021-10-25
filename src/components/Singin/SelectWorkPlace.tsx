@@ -60,7 +60,7 @@ const SelectWorkPlace = (props: menuSelect) => {
         }}
         id="workplaces"
         options={MenuItems(workplaces)}
-        renderInput={(params) => <TextField {...params} label="Конфигурация" />}
+        renderInput={(params) => <TextField {...params} label="Рабочее место" />}
       />
     </Grid>
   );

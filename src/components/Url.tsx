@@ -24,7 +24,8 @@ function getRandomArbitrary(min: number, max: number ) {
     var res = Math.floor(Math.random() * (max - min) + min);
     return res;
 }
-export default function URL(request: any, attachment?: any) {
+export default function URL(request: any ,attachment?: any, prefix?: any) {
+    
     var LicGUID: string;
     LicGUID = get_cookie('LicGUID');
     if (LicGUID == '') {
@@ -38,7 +39,7 @@ export default function URL(request: any, attachment?: any) {
         }
         CreateCokies('LicGUID', LicGUID) 
     }
-    return `${json.serverLocal}/mobile~project/${request}?LicGUID=${LicGUID}&${attachment}`;
+    return `${json.serverLocal}/mobile~${prefix == undefined? 'project' : prefix}/${request}?LicGUID=${LicGUID}&${attachment}`;
 }
 
 export function ImgURL(attachment?: any) {

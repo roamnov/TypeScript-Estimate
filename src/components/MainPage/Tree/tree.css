@@ -1,0 +1,36 @@
+ul>li {
+    list-style-type: none
+}
+
+.tree-leaf-1, .tree-leaf-0 {
+    letter-spacing: 0;
+    cursor: pointer;
+}
+
+.ul-item-list {
+    transition: height 1s;
+}
+
+.tree-leaf-1:hover {
+    cursor: pointer;
+    font-weight: 600
+}
+
+.tree-leaf-0 span:hover {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.tree-leaf-1 span.active, .tree-leaf-0 span.active {
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+li>button>svg:first-child:hover {
+    transform: scale(1.2);
+}
+
+li>button>svg+svg>path {
+    color: goldenrod;
+}

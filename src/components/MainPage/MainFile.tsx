@@ -4,6 +4,7 @@ import ResponsiveDrawer from "./Drawer";
 
 import DashboardNavbar from "./Header";
 import SideBar from "./SideBar";
+import Tree from "./Tree/tree";
 
 
 
@@ -12,8 +13,7 @@ const mainPage = () => {
         <Container>
             
             <ResponsiveDrawer  /> 
-           
-            
+                      
         </Container>
     )
 } 
