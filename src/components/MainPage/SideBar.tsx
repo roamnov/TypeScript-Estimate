@@ -12,13 +12,13 @@ import StarBorder from "@mui/icons-material/StarBorder";
 import axios from "axios";
 import URL from "../Url";
 import { ImgURL } from "../Url";
-import { Box, Button, Drawer, Grid,  MenuItem, Toolbar } from "@material-ui/core";
+import { Box, Button, Container, Drawer, Grid,  MenuItem, Toolbar } from "@material-ui/core";
 import { useStyles } from "../Styles";
 import { makeStyles } from "@material-ui/styles";
 
 export const defaultDrawerWidth = 360;
 const minDrawerWidth = 50;
-const maxDrawerWidth = 500;
+const maxDrawerWidth = 400;
 
 
 const useStyless = makeStyles((theme: { mixins: { toolbar: any; }; }) => ({
@@ -188,10 +188,12 @@ export default function SideBar() {
   }
 
   return (
+  
     <Drawer
       className={classes.drawer}
       variant="permanent"
-      PaperProps={{ style: { width: drawerWidth } }}
+      PaperProps={{ style: { width: drawerWidth,  } }}
+      sx={{ml: drawerWidth/100*11.9444444444444444}}
       >
        
       <div onMouseDown={e => handleMouseDown()} className={classes.dragger} />
@@ -200,7 +202,7 @@ export default function SideBar() {
       <List
         sx={{
           width: "100%",
-          maxWidth: 360,
+          
           bgcolor: "background.paper",
           marginTop: 1,
         }}
@@ -211,5 +213,6 @@ export default function SideBar() {
       </List>
     </Box>
     </Drawer>
+    
   );
 }

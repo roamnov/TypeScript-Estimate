@@ -46,6 +46,10 @@ export interface containerProps{
     children?: React.ReactNode[] | React.ReactNode;
 }
 
+export interface MainBoxWidth extends componentProps{
+    setBackWidth: (value:any) => void | any | undefined ;
+}
+
 export interface characterProfile extends Object{
     id?: number,
     name?: string,
