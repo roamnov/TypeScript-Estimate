@@ -16,9 +16,12 @@ import { Box, Button, Container, Drawer, Grid,  MenuItem, Toolbar } from "@mater
 import { useStyles } from "../Styles";
 import { makeStyles } from "@material-ui/styles";
 import { MainBoxBackId } from "../ComponentInterface";
+import useScrollbarSize from 'react-scrollbar-size';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 
 export const defaultDrawerWidth = 360;
-const minDrawerWidth = 50;
+const minDrawerWidth = 1;
 const maxDrawerWidth = 400;
 
 
@@ -30,6 +33,7 @@ const useStyless = makeStyles((theme: { mixins: { toolbar: any; }; }) => ({
 export default function SideBar(props: MainBoxBackId) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [drawerOpen, setdrawerOpen] = useState(true)
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState(null);
   const [data2, setData2] = useState(new Map());
@@ -53,10 +57,15 @@ export default function SideBar(props: MainBoxBackId) {
     }
   }, []);
 
+  const drawerClick =() => {
+    setdrawerOpen(!drawerOpen)
+    drawerOpen ? setDrawerWidth(8) : setDrawerWidth( defaultDrawerWidth)
+  }
   const handleClick = (event: any) => {
     setOpen(!open);
+  
     let ID = event.currentTarget.getAttribute("id");
-    setData2(data2.set(ID, !data2.get(event.currentTarget.getAttribute("id"))));
+    setData2(data2.set(ID, !data2.get(event.currentTarget.getAttribute("id"))));    
   };
 
   const updateSelected = (event: any) => {
@@ -121,12 +130,10 @@ export default function SideBar(props: MainBoxBackId) {
           mainCollapse = data2.get(ID);
           openSet = data2.get(ID);
           assemblyLists.push(
-            <ListItemButton component="li" id={ID} onClick={updateSelected}>
-              
-             
+            <ListItemButton component="li" id={ID} >
               <ListItemIcon>{Img}</ListItemIcon>
               <ListItemText primary={Name} />
-              { openSet ? (  <ExpandLess id={ID} onClick={handleClick} />  ) : (  <ExpandMore id={ID} onClick={handleClick} />  ) }
+              {SectionList[keyS] !== undefined  && SectionList[keyS]["Deep"] >= 1? (openSet ? (<ExpandLess id={ID} onClick={handleClick} />) : ( <ExpandMore id={ID} onClick={handleClick} /> )): (<></>)}
             </ListItemButton>
           );
         } else if (currentDeep !== null) {
@@ -157,7 +164,7 @@ export default function SideBar(props: MainBoxBackId) {
             assemblyLists.push(
               <Collapse    in={openSet && mainCollapse}    timeout="auto" unmountOnExit >
                 {(openSet = data2.get(ID))}
-                <ListItemButton sx={{ pl: howDeep }} id={ID} onClick={updateSelected}>
+                <ListItemButton sx={{ pl: howDeep }} id={ID} >
                   <ListItemIcon>{Img}</ListItemIcon>
                   <ListItemText primary={Name} />
                   {openSet ? ( <ExpandLess id={ID} onClick={handleClick} /> ) : (<ExpandMore id={ID} onClick={handleClick} />)}
@@ -171,7 +178,7 @@ export default function SideBar(props: MainBoxBackId) {
                 timeout="auto"
                 unmountOnExit
               >
-                <List component="div" disablePadding>
+                <List component="div" disablePadding style={{scrollbarWidth: "thin", scrollbarColor: "white"}}>
                   <ListItemButton sx={{ pl: howDeep }} id={ID} onClick={updateSelected}>
                     <ListItemIcon>{Img}</ListItemIcon>
                     <ListItemText primary={Name} />
@@ -198,11 +205,14 @@ export default function SideBar(props: MainBoxBackId) {
       variant="permanent"
       PaperProps={{ style: { width: drawerWidth,  } }}
       sx={{ml: drawerWidth/100*11.9444444444444444}}
+      style={{}}
       >
        
       <div onMouseDown={e => handleMouseDown()} className={classes.dragger} />
+      <div  className={classes.buttonDragger} >{drawerOpen ? ( <ArrowLeftIcon fontSize="small" id={"01001"} onClick={drawerClick} /> ) : (<ArrowRightIcon fontSize="small" id={"01001"} onClick={drawerClick} />)} </div> 
       <Toolbar />
         <Box sx={{ overflow: "auto" }}>
+        
       <List
         sx={{
           width: "100%",

@@ -22,6 +22,16 @@ export const useStyles = makeStyles((theme: { mixins: { toolbar: any; }; })=>({
     zIndex: 100,
     backgroundColor: "#f4f7f9"
   },
+  buttonDragger: {
+    width: "10px",
+    height: "20px",
+    padding: "0 14px 0 0",
+    position: "absolute",
+    top: "50%",
+    right: 0,
+    bottom: 0,
+    zIndex: 101,
+  },
 
     ButtonMargin:{
       

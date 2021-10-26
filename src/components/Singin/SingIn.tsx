@@ -24,9 +24,14 @@ import AlertPassword from "./AlertPassword";
 import { red } from "@material-ui/core/colors";
 import { Link, Redirect, useHistory } from "react-router-dom";
 
+export const LoginIn = React.createContext(false);
+ LoginIn.displayName = "false";
+ export const stas = false;
+
 const SignIn = (props: componentProps) => {
   const styles = useStyles();
 
+  
   let history = useHistory();
   const [error, setError] = useState<string | null>("");
   const [loginAnswer, setLoginAnswer] = useState("");
@@ -39,11 +44,12 @@ const SignIn = (props: componentProps) => {
 
   //<Result ConfigName="шурышкульт.drx" UserName="Администратор" Obfuscate="1" Password="B" WorkPlace="Администратор" Comp="NPO5898"/>
 
-  const handleSingOut = (event: any) => {
-    axios.get(URL("leave", "smart=1")).then((response) => {
-      console.log(response.data);
-    });
-  };
+  const ThemeContext = React.createContext('light');
+
+  const GoToMain =()=>{
+    LoginIn.displayName = "true";
+    history.push("/main");
+  }
 
   function CheckAnswerFromServer(answer?: Object) {
     let test: string;
@@ -75,7 +81,7 @@ const SignIn = (props: componentProps) => {
       setLoginAnswer(response.data);
       response.data["error"] !== undefined
         ? CheckAnswerFromServer(response.data["error"]["Item"])
-        : history.push("/main");
+        : GoToMain()
     });
   };
 
