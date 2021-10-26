@@ -1,22 +1,31 @@
 import { Grid } from "@material-ui/core";
+import CodeEditor from '@uiw/react-textarea-code-editor';
+
 import React, { createElement, useCallback, useEffect, useState } from "react";
 
+
+  
+
 const SqlWindow =() =>{
+    const [code, setCode] = React.useState(    ``  );
     return (
-        <Grid>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-          enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
-          imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus.
-          Convallis convallis tellus id interdum velit laoreet id donec ultrices.
-          Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-          adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra
-          nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum
-          leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis
-          feugiat vivamus at augue. At augue eget arcu dictum varius duis at
-          consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-          sapien faucibus et molestie ac.   
-        </Grid>
+            
+            <CodeEditor
+                
+                value={code}
+                language="sql"
+                placeholder="Please enter JS code."
+                onChange={(evn) => setCode(evn.target.value)}
+                padding={10}
+                style={{
+                fontSize: 12,
+                backgroundColor: "#f5f5f5",
+                fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+                height: "100vh"
+                
+                }}
+            />
+    
     )
 }
 

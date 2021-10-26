@@ -17,10 +17,14 @@ import SideBar from './SideBar';
 import { Button, ButtonGroup, Grid } from '@material-ui/core';
 import infoPanel from './Windows/InfoPanel';
 import InfoPanel from './Windows/InfoPanel';
+import SqlWindow from './Windows/SqlWindow';
+import Tree from './Tree/tree';
 
 const drawerWidth = 330;
 
 export default function ClippedDrawer() {
+  const [id, setID] = React.useState();
+  console.log(id)
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -28,7 +32,7 @@ export default function ClippedDrawer() {
         <DashboardNavbar/>
       </AppBar>
       
-          <SideBar/>
+          <SideBar setBackID={setID}/>
           
     
           
@@ -50,15 +54,15 @@ export default function ClippedDrawer() {
         </Grid>
           <Grid container item
           direction="row"
-          justifyContent="center"
+          justifyContent="flex-start"
           alignItems="stretch"
-          
+          xs
           >
-            <Grid style={{backgroundColor:"orange"}} >
-                a
+            <Grid xs={2} style={{}} >
+                <Tree/>
             </Grid>
-            <Grid style={{backgroundColor:"red"}}>
-                a
+            <Grid  xs={10} style={{backgroundColor:"red"}}>
+                <SqlWindow/>
             </Grid>
           </Grid>
       </Grid>

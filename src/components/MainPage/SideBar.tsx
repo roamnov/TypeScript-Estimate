@@ -15,6 +15,7 @@ import { ImgURL } from "../Url";
 import { Box, Button, Container, Drawer, Grid,  MenuItem, Toolbar } from "@material-ui/core";
 import { useStyles } from "../Styles";
 import { makeStyles } from "@material-ui/styles";
+import { MainBoxBackId } from "../ComponentInterface";
 
 export const defaultDrawerWidth = 360;
 const minDrawerWidth = 50;
@@ -26,7 +27,7 @@ const useStyless = makeStyles((theme: { mixins: { toolbar: any; }; }) => ({
 }));
 
 
-export default function SideBar() {
+export default function SideBar(props: MainBoxBackId) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
@@ -59,7 +60,7 @@ export default function SideBar() {
   };
 
   const updateSelected = (event: any) => {
-    console.log(event.currentTarget.getAttribute("id"));
+    props.setBackID(event.currentTarget.getAttribute("id"))
   };
 
   useEffect(() => {
@@ -90,7 +91,9 @@ export default function SideBar() {
 
   function Menu(SectionList: any) {
     // фцнкция отрисовки меню
+    if(data!== undefined){
 
+    
     let Name,
       ID,
       currentDeep,
@@ -118,7 +121,7 @@ export default function SideBar() {
           mainCollapse = data2.get(ID);
           openSet = data2.get(ID);
           assemblyLists.push(
-            <ListItemButton component="li" id={ID}>
+            <ListItemButton component="li" id={ID} onClick={updateSelected}>
               
              
               <ListItemIcon>{Img}</ListItemIcon>
@@ -154,7 +157,7 @@ export default function SideBar() {
             assemblyLists.push(
               <Collapse    in={openSet && mainCollapse}    timeout="auto" unmountOnExit >
                 {(openSet = data2.get(ID))}
-                <ListItemButton sx={{ pl: howDeep }} id={ID}>
+                <ListItemButton sx={{ pl: howDeep }} id={ID} onClick={updateSelected}>
                   <ListItemIcon>{Img}</ListItemIcon>
                   <ListItemText primary={Name} />
                   {openSet ? ( <ExpandLess id={ID} onClick={handleClick} /> ) : (<ExpandMore id={ID} onClick={handleClick} />)}
@@ -169,7 +172,7 @@ export default function SideBar() {
                 unmountOnExit
               >
                 <List component="div" disablePadding>
-                  <ListItemButton sx={{ pl: howDeep }} id={ID}>
+                  <ListItemButton sx={{ pl: howDeep }} id={ID} onClick={updateSelected}>
                     <ListItemIcon>{Img}</ListItemIcon>
                     <ListItemText primary={Name} />
                   </ListItemButton>
@@ -186,6 +189,7 @@ export default function SideBar() {
     //console.log(data2);
     return assemblyLists;
   }
+}
 
   return (
   
