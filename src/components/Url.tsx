@@ -6,7 +6,7 @@ import json from "./host.json";
 const { v4: uuidv4 } = require('uuid');
 
 const GUID = uuidv4()
-
+console.log(GUID)
 //let update:boolean = 
 
 function CreateCokies(name: string, value: string) {
@@ -24,7 +24,7 @@ function getRandomArbitrary(min: number, max: number ) {
     var res = Math.floor(Math.random() * (max - min) + min);
     return res;
 }
-export default function URL(request: any ,attachment?: any, prefix?: any) {
+export default function URL(request: any ,attachment?: any, prefix?: any, ) {
     
     var LicGUID: string;
     LicGUID = get_cookie('LicGUID');

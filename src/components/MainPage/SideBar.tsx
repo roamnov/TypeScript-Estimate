@@ -12,7 +12,7 @@ import StarBorder from "@mui/icons-material/StarBorder";
 import axios from "axios";
 import URL from "../Url";
 import { ImgURL } from "../Url";
-import { Box, Button, Container, Drawer, Grid,  MenuItem, Toolbar } from "@material-ui/core";
+import { Box, Button, Container, Drawer, Grid,  MenuItem, Slide, Toolbar } from "@material-ui/core";
 import { useStyles } from "../Styles";
 import { makeStyles } from "@material-ui/styles";
 import { MainBoxBackId } from "../ComponentInterface";
@@ -82,6 +82,7 @@ export default function SideBar(props: MainBoxBackId) {
 
 
   function ListItems(List: any) {
+    if(data!== undefined){
     let ID,
       keyS = 0;
     let assemblyListsTest = [];
@@ -96,6 +97,7 @@ export default function SideBar(props: MainBoxBackId) {
         setData2(data2.set(ID, false));
       }
     }
+  }
   }
 
   function Menu(SectionList: any) {
@@ -199,7 +201,7 @@ export default function SideBar(props: MainBoxBackId) {
 }
 
   return (
-  
+ 
     <Drawer
       className={classes.drawer}
       variant="permanent"
@@ -209,10 +211,11 @@ export default function SideBar(props: MainBoxBackId) {
       >
        
       <div onMouseDown={e => handleMouseDown()} className={classes.dragger} />
-      <div  className={classes.buttonDragger} >{drawerOpen ? ( <ArrowLeftIcon fontSize="small" id={"01001"} onClick={drawerClick} /> ) : (<ArrowRightIcon fontSize="small" id={"01001"} onClick={drawerClick} />)} </div> 
+      <div  className={classes.buttonDragger} >{drawerOpen ? ( <ArrowLeftIcon fontSize="small" id={"01001"} onClick={drawerClick} /> ) : (<ArrowRightIcon fontSize="small" id={"01001"} onClick={drawerClick} />)} </div>
+   
       <Toolbar />
         <Box sx={{ overflow: "auto" }}>
-        
+      <Slide direction="right" in={drawerOpen}> 
       <List
         sx={{
           width: "100%",
@@ -225,7 +228,9 @@ export default function SideBar(props: MainBoxBackId) {
       >
         {Menu(data)}
       </List>
+      </Slide>
     </Box>
+    
     </Drawer>
     
   );

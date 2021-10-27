@@ -23,10 +23,12 @@ import URL from "../Url";
 import AlertPassword from "./AlertPassword";
 import { red } from "@material-ui/core/colors";
 import { Link, Redirect, useHistory } from "react-router-dom";
+import { LoginIn } from "../Wrapper";
 
-export const LoginIn = React.createContext(false);
- LoginIn.displayName = "false";
- export const stas = false;
+
+
+
+
 
 const SignIn = (props: componentProps) => {
   const styles = useStyles();
@@ -40,14 +42,13 @@ const SignIn = (props: componentProps) => {
   const [workplace, setWorkPlace] = useState("");
   const [password, setPassword] = useState();
   const [open, setOpen] = React.useState(true);
-  //console.log(drx, user, workplace, password);
-
-  //<Result ConfigName="шурышкульт.drx" UserName="Администратор" Obfuscate="1" Password="B" WorkPlace="Администратор" Comp="NPO5898"/>
+ 
+  
 
   const ThemeContext = React.createContext('light');
 
   const GoToMain =()=>{
-    LoginIn.displayName = "true";
+    
     history.push("/main");
   }
 
@@ -71,7 +72,6 @@ const SignIn = (props: componentProps) => {
     let LoginData = {
       ConfigName: drx,
       UserName: user,
-
       Password: password,
       WorkPlace: workplace,
       //Comp: "NPO5898",
@@ -88,7 +88,7 @@ const SignIn = (props: componentProps) => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      {}
+    
       <Grid
         container
         direction="column"

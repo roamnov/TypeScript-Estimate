@@ -1,27 +1,26 @@
 import { Container } from "@material-ui/core";
 import React from "react";
+import { LoginIn } from "../Wrapper";
 import ClippedDrawer from "./Drawer";
-import { LoginIn } from "../Singin/SingIn";
+
 
 import DashboardNavbar from "./Header";
 import SideBar from "./SideBar";
 
 
 
-const mainPage = () => {
-    console.log(LoginIn.displayName)
+const MainPage = () => {
+    const Value = React.useContext(LoginIn); 
+    console.log(Value)
    
     return(
-        
-            
-           <ClippedDrawer/>
+    
+        <ClippedDrawer/>
            
-            
-       
     )
 } 
 
-export default mainPage;
+export default MainPage;
 /*
  
 */

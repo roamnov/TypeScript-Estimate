@@ -15,17 +15,14 @@ import MailIcon from '@mui/icons-material/Mail';
 import DashboardNavbar from './Header';
 import SideBar from './SideBar';
 import { Button, ButtonGroup, Grid } from '@material-ui/core';
-import infoPanel from './Windows/InfoPanel';
-import InfoPanel from './Windows/InfoPanel';
 import SqlWindow from './Windows/SqlWindow';
-import Tree from './Tree/tree';
 import FullRightSide from './Windows/FullRightSide';
 
 const drawerWidth = 330;
 
 export default function ClippedDrawer() {
   const [id, setID] = React.useState();
-  console.log(id)
+  
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
