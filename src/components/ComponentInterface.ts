@@ -51,9 +51,10 @@ export interface MainBoxBackId extends componentProps{
     setBackID: (value:any) => void | any | undefined ;
 }
 
-export interface characterProfile extends Object{
-    id?: number,
-    name?: string,
-    sex?: string,
-    avatar?: string,
-}
+
+
+export interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+  }

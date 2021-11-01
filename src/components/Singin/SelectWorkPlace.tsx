@@ -22,11 +22,14 @@ const SelectWorkPlace = (props: menuSelect) => {
   const [inputValue, setInputValue] = React.useState("");
 
   const getWorkPlaces = () => {
+    let params = new Map();
+    params.set('comand','getworkplacelist');
+    params.set('ConfigName',props.drxInfo);
+    params.set('UserName',props.userInfo);
     axios
       .get(
         URL(
-          "getworkplacelist",
-          `ConfigName=${props.drxInfo}&UserName=${props.userInfo}`
+          params
         )
       )
       .then((response) => {
@@ -46,10 +49,11 @@ const SelectWorkPlace = (props: menuSelect) => {
   return (
     <Grid item xs>
       <Autocomplete
+        id="workplaces"
         freeSolo
         fullWidth
         onSelect={getWorkPlaces}
-        value={props.drxInfo}
+        value={value}
         onChange={(event: any, newValue: string | null) => {
           setValue(newValue);
         }}
@@ -58,10 +62,11 @@ const SelectWorkPlace = (props: menuSelect) => {
           props.setBackInfo(newInputValue);
           setInputValue(newInputValue);
         }}
-        id="workplaces"
+        
         options={MenuItems(workplaces)}
         renderInput={(params) => <TextField {...params} label="Рабочее место" />}
       />
+      
     </Grid>
   );
 };

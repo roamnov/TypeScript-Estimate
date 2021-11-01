@@ -68,16 +68,19 @@ const SignIn = (props: componentProps) => {
     }
   }
 
+
   const handleSingIn = (event: any) => {
     let LoginData = {
       ConfigName: drx,
       UserName: user,
+
       Password: password,
       WorkPlace: workplace,
       //Comp: "NPO5898",
     };
-
-    axios.post(URL("enter"), JSON.stringify(LoginData)).then((response) => {
+    let params = new Map();
+    params.set('comand','enter');
+    axios.post(URL(params), JSON.stringify(LoginData)).then((response) => {
       setLoginAnswer(response.data);
       response.data["error"] !== undefined
         ? CheckAnswerFromServer(response.data["error"]["Item"])

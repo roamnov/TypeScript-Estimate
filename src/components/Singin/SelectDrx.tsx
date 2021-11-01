@@ -24,7 +24,9 @@ const SelectDrx = (props: menuSelect) => {
   const [inputValue, setInputValue] = React.useState("");
 
   const getDrx = () => {
-    axios.get(URL("getconfiglist", "")).then((response) => {
+    let params = new Map();
+    params.set('comand','getconfiglist');
+    axios.get(URL(params)).then((response) => {
       setDrxServer(response.data);
     });
   };

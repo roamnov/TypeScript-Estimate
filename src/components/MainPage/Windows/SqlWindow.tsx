@@ -1,16 +1,64 @@
-import { Grid } from "@material-ui/core";
+import { Box, Grid, Tab, Tabs, Typography } from "@material-ui/core";
 import { padding } from "@material-ui/system";
 import CodeEditor from '@uiw/react-textarea-code-editor';
-
+import { TabPanelProps } from "../../ComponentInterface";
 import React, { createElement, useCallback, useEffect, useState } from "react";
 
 
+function TabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{  }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+  
+  function a11yProps(index: number) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
   
 
 const SqlWindow =() =>{
     const [code, setCode] = React.useState(    ``  );
+    const [value, setValue] = React.useState(0);
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+      };
     return (
             
+
+        <Grid container item
+      direction="row"
+      justifyContent="flex-start"
+      alignItems="stretch"
+      xs
+      >
+        <Grid xs={2} style={{backgroundColor:"red"}} >
+            a
+        </Grid>
+        <Grid  xs={10} >
+          <Grid direction={'column'} style={{}}>
+          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+            <Tab label="Данные" {...a11yProps(0)} />
+            <Tab label="SQL-скрипты" {...a11yProps(1)} />
+          </Tabs>
+          </Grid>
+            <TabPanel value={value} index={1}>
             <CodeEditor
                 
                 value={code}
@@ -26,6 +74,10 @@ const SqlWindow =() =>{
                 height: "100vh",
                 }}
             />
+            </TabPanel>
+        </Grid>
+      </Grid>
+            
     
     )
 }

@@ -73,13 +73,16 @@ export default function SideBar(props: MainBoxBackId) {
   };
 
   useEffect(() => {
-    axios.get(URL("GetSectionList", "Simple=1&full=1")).then((response) => {
+    let params = new Map();
+    params.set('comand','GetSectionList');
+    params.set('Simple','1');
+    params.set('full','1');
+    axios.get(URL(params)).then((response) => {
       //console.log(response.data["Sections"]);
       setData(response.data["Sections"]);
       ListItems(response.data["Sections"]);
     });
   }, []);
-
 
   function ListItems(List: any) {
     if(data!== undefined){
@@ -199,7 +202,7 @@ export default function SideBar(props: MainBoxBackId) {
     return assemblyLists;
   }
 }
-
+  let buttonDragger = (<div  className={classes.buttonDragger} >{drawerOpen ? ( <ArrowLeftIcon style={{fontSize: "1rem"}} id={"01001"} onClick={drawerClick} /> ) : (<ArrowRightIcon style={{fontSize: "1rem"}}  id={"01001"} onClick={drawerClick} />)} </div>)
   return (
  
     <Drawer
@@ -207,11 +210,13 @@ export default function SideBar(props: MainBoxBackId) {
       variant="permanent"
       PaperProps={{ style: { width: drawerWidth,  } }}
       sx={{ml: drawerWidth/100*11.9444444444444444}}
-      style={{}}
+      style={{ overflowX: "hidden"}}
       >
        
-      <div onMouseDown={e => handleMouseDown()} className={classes.dragger} />
-      <div  className={classes.buttonDragger} >{drawerOpen ? ( <ArrowLeftIcon fontSize="small" id={"01001"} onClick={drawerClick} /> ) : (<ArrowRightIcon fontSize="small" id={"01001"} onClick={drawerClick} />)} </div>
+      <div onMouseDown={e => handleMouseDown()} className={classes.dragger} >
+            {buttonDragger}
+          </div>
+     
    
       <Toolbar />
         <Box sx={{ overflow: "auto" }}>

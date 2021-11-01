@@ -7,12 +7,13 @@ export const useStyles = makeStyles((theme: { mixins: { toolbar: any; }; })=>({
 
 
   drawer: {
-    flexShrink: 0
+    flexShrink: 0,
+    overflowX: "hidden"
   },
   //toolbar: theme.mixins.toolbar,
   dragger: {
     width: "5px",
-    cursor: "ew-resize",
+    cursor: "col-resize",
     padding: "4px 0 0",
     borderTop: "1px solid #ddd",
     position: "absolute",
@@ -23,14 +24,17 @@ export const useStyles = makeStyles((theme: { mixins: { toolbar: any; }; })=>({
     backgroundColor: "#f4f7f9"
   },
   buttonDragger: {
-    width: "10px",
-    height: "20px",
-    padding: "0 14px 0 0",
+    //width: "1px",
+    cursor:"pointer",
+    height: "2.5%",
+    padding: "0 0 0 0",
     position: "absolute",
+    left: -5,
     top: "50%",
     right: 0,
     bottom: 0,
     zIndex: 101,
+    overflowX: "hidden",
   },
 
     ButtonMargin:{

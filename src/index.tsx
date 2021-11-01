@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import Wrapper from "./components/Wrapper";
-import { ThemeContext } from '@emotion/react';
 
 //let pref = require('./components/stimweb/tools/trsview.html')
 

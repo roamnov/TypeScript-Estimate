@@ -22,8 +22,10 @@ const SelectUser = (props: menuSelect) => {
 
 
   const getUser = () => {
-    axios
-      .get(URL("getuserlist", `ConfigName=${props.drxInfo}`))
+    let params = new Map();
+    params.set('comand','getuserlist');
+    params.set('ConfigName',props.drxInfo);
+    axios.get(URL(params))
       .then((response) => {
         setUserList(response.data);
       });

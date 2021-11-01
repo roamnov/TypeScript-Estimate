@@ -22,7 +22,9 @@ const DashboardNavbar = ({  ...rest }) => {
   let history = useHistory();
   
   const handleSingOut = (event: any) => {
-    axios.get(URL("leave", "smart=1")).then((response) => {
+    let params = new Map();
+    params.set('comand','leave');
+    axios.get(URL(params)).then((response) => {
       console.log(response.data);
     });
   };

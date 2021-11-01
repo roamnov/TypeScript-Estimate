@@ -3,14 +3,12 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Grid, Toolbar } from '@material-ui/core';
+import { Button, Grid, Toolbar } from '@material-ui/core';
 import SqlWindow from './SqlWindow';
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
+import { TabPanelProps } from "../../ComponentInterface";
+//import init from "../stimweb/tools"
+import Init from '../test';
+import Sas from "../sas"
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -32,6 +30,8 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
+
+
 function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
@@ -40,11 +40,22 @@ function a11yProps(index: number) {
 }
 
 export default function FullRightSide() {
-  const [value, setValue] = React.useState(0);
 
+  const [value, setValue] = React.useState(0);
+  const [howManyTabs, setHowManyTabs] = React.useState(['Личный кабинет', "sas"])
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  const TabsReturn =(tab?: any) =>{
+    return tab.map((name: number,key: number)=>{
+      name = name + key
+      return(
+        
+        <Tab label={name} {...a11yProps(key)} />
+      )
+    })
+  }
 
   return (
     <Grid container 
@@ -55,35 +66,23 @@ export default function FullRightSide() {
     alignItems="stretch"
     
     >
- 
+    
     <Grid item direction="column" style={{backgroundColor:"blueviolet"}}>
     <Toolbar />
       Верхушка(меню)
     </Grid>
-    <Grid item direction="column" style={{backgroundColor:"blue"}} >
-      Хлебные крошки
+    <Grid item direction="column" style={{}} >
+      <Button onClick={()=> setHowManyTabs( ["sas"] ) }> Добавить вкладку</Button>
+      <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+              {TabsReturn(howManyTabs)}
+      </Tabs>
     </Grid>
-      <Grid container item
-      direction="row"
-      justifyContent="flex-start"
-      alignItems="stretch"
-      xs
-      >
-        <Grid xs={2} style={{backgroundColor:"red"}} >
-            a
-        </Grid>
-        <Grid  xs={10} >
-          <Grid direction={'column'} style={{}}>
-          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="Данные" {...a11yProps(0)} />
-            <Tab label="SQL-скрипты" {...a11yProps(1)} />
-            </Tabs>
-          </Grid>
-            <TabPanel value={value} index={1}>
-            <SqlWindow/>
-            </TabPanel>
-        </Grid>
-      </Grid>
+    <TabPanel value={value} index={0}>
+      {/* <Sas/> */}
+    </TabPanel>  
+    <TabPanel value={value} index={1}>
+      <SqlWindow/>
+    </TabPanel>  
   </Grid>
   );
 }
