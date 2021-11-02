@@ -20,10 +20,10 @@ import useScrollbarSize from 'react-scrollbar-size';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 
-export const defaultDrawerWidth = 360;
+const defaultDrawerWidth = window.innerWidth/100 * 16.791045;
 const minDrawerWidth = 1;
 const maxDrawerWidth = 400;
-
+//alert( window.innerWidth ); 
 
 const useStyless = makeStyles((theme: { mixins: { toolbar: any; }; }) => ({
  

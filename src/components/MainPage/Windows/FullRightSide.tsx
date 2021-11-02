@@ -4,8 +4,8 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Button, Grid, Toolbar } from '@material-ui/core';
-import SqlWindow from './SqlWindow';
-import { TabPanelProps } from "../../ComponentInterface";
+import SqlWindow from './ViewData/SqlWindow';
+import { IdToTree, TabPanelProps } from "../../ComponentInterface";
 //import init from "../stimweb/tools"
 import Init from '../test';
 import Sas from "../sas"
@@ -39,7 +39,7 @@ function a11yProps(index: number) {
   };
 }
 
-export default function FullRightSide() {
+export default function FullRightSide(props: IdToTree) {
 
   const [value, setValue] = React.useState(0);
   const [howManyTabs, setHowManyTabs] = React.useState(['Личный кабинет', "sas"])
@@ -58,6 +58,7 @@ export default function FullRightSide() {
   }
 
   return (
+    
     <Grid container 
     direction="column" 
     justifyContent="center" 
@@ -76,12 +77,12 @@ export default function FullRightSide() {
       <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
               {TabsReturn(howManyTabs)}
       </Tabs>
-    </Grid>
+    </Grid>  
     <TabPanel value={value} index={0}>
-      {/* <Sas/> */}
-    </TabPanel>  
+      <SqlWindow ID={props.ID}/>
+    </TabPanel>
     <TabPanel value={value} index={1}>
-      <SqlWindow/>
+    <SqlWindow ID={props.ID}/>
     </TabPanel>  
   </Grid>
   );

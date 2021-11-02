@@ -15,10 +15,10 @@ import MailIcon from '@mui/icons-material/Mail';
 import DashboardNavbar from './Header';
 import SideBar from './SideBar';
 import { Button, ButtonGroup, Grid } from '@material-ui/core';
-import SqlWindow from './Windows/SqlWindow';
+import SqlWindow from './Windows/ViewData/SqlWindow';
 import FullRightSide from './Windows/FullRightSide';
 
-const drawerWidth = 330;
+
 
 export default function ClippedDrawer() {
   const [id, setID] = React.useState();
@@ -31,7 +31,8 @@ export default function ClippedDrawer() {
       </AppBar>
 
       <SideBar setBackID={setID}/>
-      <FullRightSide/>
+      {id !== undefined? <FullRightSide ID={id} /> : <div></div>}
+     
     </Box>
   );
 }

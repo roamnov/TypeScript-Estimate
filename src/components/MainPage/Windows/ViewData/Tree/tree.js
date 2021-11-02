@@ -8,7 +8,8 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import axios from "axios";
 import IconButton from '@mui/material/IconButton';
 import './tree.css';
-import URL from '../../Url';
+import URL from '../../../../Url';
+import { useState, useEffect } from 'react';
 
 function clickitems(el) {
   var b = el.target;
@@ -21,7 +22,13 @@ function clickitems(el) {
   parent.querySelectorAll('.active').forEach(n => n.classList.remove('active'))
   b.classList.add("active");
   if (id) {//http://localhost:1316/mobile~dbview/HandleSQLScript?LicGUID=9E69A024498237DD3D5485809E3167AD&ID=${id}
-    axios.get(URL('HandleSQLScript','143','dbview')).then((response) => {
+    let params = new Map();
+    params.set('prefix','dbview'); 
+    params.set('comand','HandleSQLScript');
+    params.set('SectionID','143');
+    params.set('GroupID',b.id);
+    params.set('Current',b.id);
+    axios.get(URL('HandleSQLScript', '143', 'dbview')).then((response) => {
       otv = response.data.content;
     })
   }
@@ -46,8 +53,15 @@ function ShowChild(el) {
     ul.classList.add("ul-item-list")
     var otv;
     var leaf = b.getAttribute("leaf");
-    if (leaf == 0)
-      axios.get(`http://localhost:1317/mobile~dbview/GetGroupTree?LicGUID=9E69A024498237DD3D5485809E3167AD&ObjType=0&SectionID=143&Info=0&UsedDate=0&GroupID=${b.id}&Current=${b.id}`).then((response) => {
+
+    if (leaf == 0){
+      let params = new Map();
+    params.set('prefix','dbview'); 
+    params.set('comand','GetGroupTree');
+    params.set('SectionID','143');
+    params.set('GroupID',b.id);
+    params.set('Current',b.id);
+      axios.get(URL(params)).then((response) => {
         otv = response.data["Tree"]["items"]
         ReactDOM.render(otv.map((item) => {
           var li = <li className={item.leaf ? "tree-leaf-1" : "tree-leaf-0"} style={!item.leaf ? { position: "relative", left: "-22px" } : { position: "relative", display: "flex" }}
@@ -61,29 +75,47 @@ function ShowChild(el) {
           </li>
           return (li)
         }), ul)
-      })
+      })}
     b.appendChild(ul)
   }
 }
 
 
-export default function Tree() {
 
-  var data = data[0]["Tree"]["items"];
+
+
+export default function Tree() {
+let [data, setdata] = useState([]) 
+useEffect(() => {
+  fetchData();
+}, [])
+async function fetchData() {
+  let params = new Map();
+    params.set('prefix','dbview'); 
+    params.set('comand','GetGroupTree');
+    await axios.get(URL(params)).then( (response) => {
+      data =  response.data["Tree"]["items"]
+     console.log(data)
+    })
+    setdata(data);}
+    
+    
   return (
-    <ul className='tree'>
+    <div style={{ height: "100%"}}>
+    <ul className='tree' >
       {data.map((item) => {
         return <li
           id={item["id"]}
           className={item.leaf ? "tree-leaf-1" : "tree-leaf-0"}
           leaf={item["leaf"] ? "1" : "0"}>
           {!item.leaf ?
-            <IconButton disableRipple={true} edge='start' onClick={(event) => ShowChild(event)} style={{ position: "relative", top: "-2px", background: "transparent" }}>
+            <IconButton disableRipple={true} edge='start' onClick={(event) => ShowChild(event)} style={{position: "relative", top: "-2px", background: "transparent" }}>
               <ArrowRightIcon /><FolderOpenIcon />
             </IconButton> : <DescriptionIcon />}
           <span onClick={(event) => clickitems(event)}> {item["text"]}</span>
         </li>
       })}
     </ul>
+    </div>
   );
 }

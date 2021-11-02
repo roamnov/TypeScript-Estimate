@@ -51,6 +51,9 @@ export interface MainBoxBackId extends componentProps{
     setBackID: (value:any) => void | any | undefined ;
 }
 
+export interface IdToTree extends componentProps{
+    ID:  any |string;
+}
 
 
 export interface TabPanelProps {
