@@ -73,6 +73,11 @@ export default function FullRightSide(props: IdToTree) {
       Верхушка(меню)
     </Grid>
     <Grid item direction="column" style={{}} >
+
+      
+      
+      
+       
       <Button onClick={()=> setHowManyTabs( ["sas"] ) }> Добавить вкладку</Button>
       <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
               {TabsReturn(howManyTabs)}

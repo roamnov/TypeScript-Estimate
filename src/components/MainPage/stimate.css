@@ -23,7 +23,7 @@
 	height: 15px;
 	display: inline-block;
 	background-position: center;
-	background: url(images/loading.gif)
+	
 }
 
 .login-form-mask {
@@ -121,10 +121,10 @@
 }
 
 .col-move-top {
-	background-image: url('images/col-move-top.png');
+	background-image: url('./images/col-move-top.png');
 }
 .col-move-bottom {
-	background-image: url('images/col-move-bottom.png');
+	background-image: url('./images/col-move-bottom.png');
 }
 
 .grid-with-row-lines .grid-item {

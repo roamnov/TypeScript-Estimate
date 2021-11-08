@@ -17,6 +17,8 @@ import SideBar from './SideBar';
 import { Button, ButtonGroup, Grid } from '@material-ui/core';
 import SqlWindow from './Windows/ViewData/SqlWindow';
 import FullRightSide from './Windows/FullRightSide';
+import Init from './test';
+import ReactDOM from 'react-dom';
 
 
 
@@ -32,7 +34,9 @@ export default function ClippedDrawer() {
 
       <SideBar setBackID={setID}/>
       {id !== undefined? <FullRightSide ID={id} /> : <div></div>}
-     
+      {}
+      
+      
     </Box>
   );
 }
