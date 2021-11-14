@@ -25,9 +25,7 @@ const minDrawerWidth = 1;
 const maxDrawerWidth = 400;
 //alert( window.innerWidth ); 
 
-const useStyless = makeStyles((theme: { mixins: { toolbar: any; }; }) => ({
- 
-}));
+
 
 
 export default function SideBar(props: MainBoxBackId) {
@@ -61,6 +59,7 @@ export default function SideBar(props: MainBoxBackId) {
     setdrawerOpen(!drawerOpen)
     drawerOpen ? setDrawerWidth(8) : setDrawerWidth( defaultDrawerWidth)
   }
+
   const handleClick = (event: any) => {
     setOpen(!open);
   
@@ -69,7 +68,12 @@ export default function SideBar(props: MainBoxBackId) {
   };
 
   const updateSelected = (event: any) => {
-    props.setBackID(event.currentTarget.getAttribute("id"))
+    let ID = event.currentTarget.getAttribute("id");
+    
+    let Name = GetElementNameByID(ID, data)
+    console.log(Name)
+    props.setBackName(Name);
+    props.setBackID(ID);
   };
 
   useEffect(() => {
@@ -78,7 +82,6 @@ export default function SideBar(props: MainBoxBackId) {
     params.set('Simple','1');
     params.set('full','1');
     axios.get(URL(params)).then((response) => {
-      //console.log(response.data["Sections"]);
       setData(response.data["Sections"]);
       ListItems(response.data["Sections"]);
     });
@@ -103,6 +106,16 @@ export default function SideBar(props: MainBoxBackId) {
   }
   }
 
+  function GetElementNameByID(CurrnetID: string, List: any) {
+    let backvalue;
+    List.filter((Elements: any) => {
+      if (Elements["ID"] == CurrnetID) return (backvalue = Elements["Name"]);
+    });
+    return backvalue;
+  }
+
+
+
   function Menu(SectionList: any) {
     // фцнкция отрисовки меню
     if(data!== undefined){
@@ -118,7 +131,7 @@ export default function SideBar(props: MainBoxBackId) {
       Img,
       keyS = 0,
       howDeep = 4
-    let assemblyLists = []; //сюда записываем все списки а потом отправляем на отрисовку
+    let assemblyLists = []; //сюда записываем все секции а потом отправляем на отрисовку
 
     try {
       for (const [key, value] of Object.entries(SectionList)) {

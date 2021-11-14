@@ -2005,67 +2005,14 @@ var dataId = 0, source = null, grid = null;
 
 export default function Init() {
     //initGrid(document.getElementById("gridPanel"));
-    function addBtnEvents(btn) {
-        btn.addEventListener("mouseover", function(e) {btn.style.background = "#5795cb"});
-        btn.addEventListener("mouseout", function(e) {btn.style.background = "#5fa2dd"});
-        btn.addEventListener("mousedown", function(e) {btn.style.background = "#477aa6"});
-        btn.addEventListener("mouseup", function(e) {btn.style.background = "#5795cb"});
-        btn.addEventListener("click", function(e) {
-            var input = document.createElement('input');
-            input.type = 'file';
-            input.accept = ".trs";
-            input.onchange = function(e) {
-                var f, r;
-                f = e.target.files[0];
-                r = new FileReader();
-                r.onload = function(e) {
-                    showApplicationMask(document.body, 'загрузка файла: ' + f.name);
-                    try {
-                        var request = {}, json;
-                        request.fileName = f.name;
-                        request.RCDATA = e.target.result.substr(37);
-                        json = Stimate.synchRequest('dbview/uploadFile', request);
-                        if (json) {
-                            grid.setSource(null);
-                            source.close();
-                            dataId = json.ID;
-                            source.open();
-                            json = Stimate.synchRequest('dbview/getTableLayout', null, 'id=' + dataId);
-                            if (json && json.Columns) {
-                                let columns = {title: []};
-                                for (let i = 0, sour, dest; i < json.Columns.length; i++) {
-                                    sour = json.Columns[i];
-                                    if (sour.FieldName) {
-                                        dest = {};
-                                        dest.fieldName = sour.FieldName;
-                                        if (sour.Width) dest.width = parseInt(sour.Width)
-                                        else dest.width = 100;
-                                        if (sour.Level) dest.level = parseInt(sour.Level)
-                                        else dest.level = 0;
-                                        columns.title.push(dest);
-                                    }
-                                };
-                                grid.setColumns(columns);
-                            } else grid.defaultColumns = true;
-                            grid.setSource(source);
-                            grid.refreshSource();
-                        };
-                    } finally {
-                        hideApplicationMask(document.body);
-                    }
-                };
-                r.readAsDataURL(f);
-            };
-            input.click();
-        });
-    };
-
+    
     function initGrid(gridPanel) {
+        /*
         source = new createRecordSource();
         source.onHandleRequest = function(request) {
             let json = Stimate.synchRequest('dbview/handleTable', request, 'id=' + dataId);
             return json;
-        };
+        };*/
 
         gridPanel.grid = new createGrid(gridPanel);
         gridPanel.grid.defaultColumns = true;
@@ -2076,6 +2023,6 @@ export default function Init() {
     //json = Stimate.synchRequest('dbview/uploadfile', {fileName: 'D:\\Temp\\table.trs'});
     //if (json) dataId = json.ID;
     initGrid(document.getElementById("gridPanel"));
-    addBtnEvents(document.getElementById("btnOpen"));
+   
     
 }

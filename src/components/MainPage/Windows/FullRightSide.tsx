@@ -8,7 +8,7 @@ import SqlWindow from './ViewData/SqlWindow';
 import { IdToTree, TabPanelProps } from "../../ComponentInterface";
 //import init from "../stimweb/tools"
 import Init from '../test';
-import Sas from "../sas"
+import { isTemplateSpan } from 'typescript';
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -41,11 +41,22 @@ function a11yProps(index: number) {
 
 export default function FullRightSide(props: IdToTree) {
 
+
+  const [id, setID] = React.useState();
+  const [name, setName] = React.useState();
+  const [currentTab, setcurrentTab] = React.useState(0);
   const [value, setValue] = React.useState(0);
-  const [howManyTabs, setHowManyTabs] = React.useState(['Личный кабинет', "sas"])
+  const [howManyTabs, setHowManyTabs] = React.useState(['Личный кабинет'])
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+  const addTabs= () =>{
+    
+    
+    setHowManyTabs([...howManyTabs, "test"])
+    /*
+    */
+  }
 
   const TabsReturn =(tab?: any) =>{
     return tab.map((name: number,key: number)=>{
@@ -53,6 +64,18 @@ export default function FullRightSide(props: IdToTree) {
       return(
         
         <Tab label={name} {...a11yProps(key)} />
+      )
+    })
+  }
+
+  const TabPanelReturn = (tab?: any) =>{
+    return tab.map((name: number,key: number)=>{
+      name = name + key
+      return(
+        
+        <TabPanel value={value} index={key}>
+          {key}
+      </TabPanel> 
       )
     })
   }
@@ -73,17 +96,15 @@ export default function FullRightSide(props: IdToTree) {
       Верхушка(меню)
     </Grid>
     <Grid item direction="column" style={{}} >
-      <Button onClick={()=> setHowManyTabs( ["sas"] ) }> Добавить вкладку</Button>
+      <Button onClick={addTabs}> Добавить вкладку</Button>
       <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
               {TabsReturn(howManyTabs)}
       </Tabs>
     </Grid>  
     <TabPanel value={value} index={0}>
-      <SqlWindow ID={props.ID}/>
+       {props.ID !== undefined && props.Name == "Просмотр данных"? <SqlWindow Name={name} ID={id} /> : <div></div>}
     </TabPanel>
-    <TabPanel value={value} index={1}>
-    <SqlWindow ID={props.ID}/>
-    </TabPanel>  
+      {TabPanelReturn(howManyTabs)}
   </Grid>
   );
 }

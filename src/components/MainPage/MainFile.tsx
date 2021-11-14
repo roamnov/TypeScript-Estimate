@@ -1,7 +1,7 @@
 import { Container } from "@material-ui/core";
 import React from "react";
 import { LoginIn } from "../Wrapper";
-import ClippedDrawer from "./Drawer";
+import ClippedDrawer from "./WrapperRightSide";
 
 
 import DashboardNavbar from "./Header";

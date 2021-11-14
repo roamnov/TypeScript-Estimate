@@ -49,10 +49,12 @@ export interface containerProps{
 export interface MainBoxBackId extends componentProps{
     backId?: any | string;
     setBackID: (value:any) => void | any | undefined ;
+    setBackName: (value:any) => void | any | undefined ;
 }
 
 export interface IdToTree extends componentProps{
     ID:  any |string;
+    Name:  any |string;
 }
 
 
