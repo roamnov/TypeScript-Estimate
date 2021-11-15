@@ -4,9 +4,9 @@ import CodeEditor from '@uiw/react-textarea-code-editor';
 import { IdToTree, TabPanelProps } from "../../../ComponentInterface";
 import React, { createElement, useCallback, useEffect, useState } from "react";
 import Tree from "./Tree/tree.js";
-import ResizableComponent from "./ResizebleComponent";
+import ResizableComponent from "./ResizebleComponent/ResizebleComponent";
 import { useStyles } from "../../../Styles";
-import ResizePanel from "./ResizebleComponent";
+import ResizePanel from "./ResizebleComponent/ResizebleComponent";
 
 
 function TabPanel(props: TabPanelProps) {

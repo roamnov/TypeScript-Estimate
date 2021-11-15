@@ -3,20 +3,20 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
 import CssBaseline from '@mui/material/CssBaseline';
-import DashboardNavbar from './Header';
-import SideBar from './SideBar';
+import DashboardNavbar from './NotWorkArea(Side&Head)/Header';
+import SideBar from './NotWorkArea(Side&Head)/SideBar';
 import { Button, ButtonGroup, Grid, Toolbar } from '@material-ui/core';
 import SqlWindow from './Windows/ViewData/SqlWindow';
 import FullRightSide from './Windows/FullRightSide';
-import Init from './test';
-
+import Init from './stimategrid/test';
+import { InfoAboutClick } from '../ComponentInterface';
 
 
 export default function WrapperRightSide() {
   const [id, setID] = React.useState();
-  const [name, setName] = React.useState();
-  const [grid, setGrid] = React.useState(false);
-  console.log(name)
+  const [clsid, setCLSID] = React.useState();
+  const [selected, setSelected] = React.useState<InfoAboutClick | undefined>();
+  
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -24,14 +24,17 @@ export default function WrapperRightSide() {
         <DashboardNavbar/>
       </AppBar>
 
-      <SideBar setBackName={setName} setBackID={setID}/>
-      <FullRightSide Name={name} ID={id} />
+      <SideBar setBackCLSID={setCLSID} setBackID={setID} setSelected={setSelected}/>
+      <FullRightSide CLSID={clsid} ID={id} />
       <Toolbar/>
           
       
     </Box>
   );
 }
+
+
+
 /*
 
 <Button style={{marginTop: 200}} onClick={() => setGrid(true)}> Нажми на меня</Button>

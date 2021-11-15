@@ -13,9 +13,9 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
-import URL from "../Url";
+import URL from "../../Url";
 import axios from 'axios';
-import imageHeader from '../../static/images/header.jpg';
+import imageHeader from '../../../static/images/header.jpg';
 
 const DashboardNavbar = ({  ...rest }) => {
   const [notifications] = useState([]);

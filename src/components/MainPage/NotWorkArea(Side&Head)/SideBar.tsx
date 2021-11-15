@@ -1,22 +1,17 @@
-import React, { createElement, useCallback, useEffect, useState } from "react";
-import ListSubheader from "@mui/material/ListSubheader";
+import React, {  useCallback, useEffect, useState } from "react";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import StarBorder from "@mui/icons-material/StarBorder";
 import axios from "axios";
-import URL from "../Url";
-import { ImgURL } from "../Url";
-import { Box, Button, Container, Drawer, Grid,  MenuItem, Slide, Toolbar } from "@material-ui/core";
-import { useStyles } from "../Styles";
-import { makeStyles } from "@material-ui/styles";
-import { MainBoxBackId } from "../ComponentInterface";
-import useScrollbarSize from 'react-scrollbar-size';
+import URL from "../../Url";
+import { ImgURL } from "../../Url";
+import { Box, Drawer, Slide, Toolbar } from "@material-ui/core";
+import { useStyles } from "../../Styles";
+import { MainBoxBackId,InfoAboutClick } from "../../ComponentInterface";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 
@@ -33,7 +28,7 @@ export default function SideBar(props: MainBoxBackId) {
   const [open, setOpen] = useState(false);
   const [drawerOpen, setdrawerOpen] = useState(true)
   const [data, setData] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState<InfoAboutClick | undefined> ();
   const [data2, setData2] = useState(new Map());
   const [drawerWidth, setDrawerWidth] = useState(defaultDrawerWidth);
   let e = 0;
@@ -68,12 +63,22 @@ export default function SideBar(props: MainBoxBackId) {
   };
 
   const updateSelected = (event: any) => {
-    let ID = event.currentTarget.getAttribute("id");
     
-    let Name = GetElementNameByID(ID, data)
-    console.log(Name)
-    props.setBackName(Name);
+
+    let ID = event.currentTarget.getAttribute("id");
+    let CLSID  = GetElementAttributeByID(ID, data, "CLSID")  
+
+
+
+    let Name = event.currentTarget["innerText"]
+
+
+    setSelected( {id: ID, clsic: CLSID, name: Name})
+    props.setSelected(selected)
+    props.setBackCLSID(CLSID);
     props.setBackID(ID);
+    console.log(Name)
+  
   };
 
   useEffect(() => {
@@ -84,6 +89,7 @@ export default function SideBar(props: MainBoxBackId) {
     axios.get(URL(params)).then((response) => {
       setData(response.data["Sections"]);
       ListItems(response.data["Sections"]);
+    
     });
   }, []);
 
@@ -91,7 +97,6 @@ export default function SideBar(props: MainBoxBackId) {
     if(data!== undefined){
     let ID,
       keyS = 0;
-    let assemblyListsTest = [];
     for (const [key, value] of Object.entries(List)) {
       keyS += 1;
       ID = List[key]["ID"];
@@ -106,10 +111,10 @@ export default function SideBar(props: MainBoxBackId) {
   }
   }
 
-  function GetElementNameByID(CurrnetID: string, List: any) {
+  function GetElementAttributeByID(CurrnetID: string, List: any,Attribute:string) {
     let backvalue;
     List.filter((Elements: any) => {
-      if (Elements["ID"] == CurrnetID) return (backvalue = Elements["Name"]);
+      if (Elements["ID"] == CurrnetID) return (backvalue = Elements[Attribute]);
     });
     return backvalue;
   }
@@ -120,20 +125,11 @@ export default function SideBar(props: MainBoxBackId) {
     // фцнкция отрисовки меню
     if(data!== undefined){
 
-    
-    let Name,
-      ID,
-      currentDeep,
-      openSet,
-      openSetDeep,
-      mainCollapse,
-      deepCollapse,
-      Img,
-      keyS = 0,
-      howDeep = 4
+      
+    let Name, ID, currentDeep, openSet, openSetDeep, mainCollapse, deepCollapse, Img, keyS = 0, howDeep = 4
     let assemblyLists = []; //сюда записываем все секции а потом отправляем на отрисовку
 
-    try {
+    
       for (const [key, value] of Object.entries(SectionList)) {
         //ходим по всему объекту
         Name = SectionList[key]["Name"];
@@ -197,7 +193,7 @@ export default function SideBar(props: MainBoxBackId) {
                 unmountOnExit
               >
                 <List component="div" disablePadding style={{scrollbarWidth: "thin", scrollbarColor: "white"}}>
-                  <ListItemButton sx={{ pl: howDeep }} id={ID} onClick={updateSelected}>
+                  <ListItemButton sx={{ pl: howDeep }}  id={ID} onClick={updateSelected}>
                     <ListItemIcon>{Img}</ListItemIcon>
                     <ListItemText primary={Name} />
                   </ListItemButton>
@@ -207,11 +203,9 @@ export default function SideBar(props: MainBoxBackId) {
           }
         }
       }
-    } catch (error) {
-      console.log(error);
-    }
+    
 
-    //console.log(data2);
+   
     return assemblyLists;
   }
 }
@@ -228,7 +222,7 @@ export default function SideBar(props: MainBoxBackId) {
        
       <div onMouseDown={e => handleMouseDown()} className={classes.dragger} >
             {buttonDragger}
-          </div>
+      </div>
      
    
       <Toolbar />

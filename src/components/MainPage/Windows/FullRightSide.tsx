@@ -7,8 +7,9 @@ import { Button, Grid, Toolbar } from '@material-ui/core';
 import SqlWindow from './ViewData/SqlWindow';
 import { IdToTree, TabPanelProps } from "../../ComponentInterface";
 //import init from "../stimweb/tools"
-import Init from '../test';
+import Init from '../stimategrid/test';
 import { isTemplateSpan } from 'typescript';
+import { TabsDemo } from './Tabs/ClosableTabs';
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -41,9 +42,9 @@ function a11yProps(index: number) {
 
 export default function FullRightSide(props: IdToTree) {
 
-
+  
   const [id, setID] = React.useState();
-  const [name, setName] = React.useState();
+  const [clsid, setCLSID] = React.useState();
   const [currentTab, setcurrentTab] = React.useState(0);
   const [value, setValue] = React.useState(0);
   const [howManyTabs, setHowManyTabs] = React.useState(['Личный кабинет'])
@@ -57,6 +58,27 @@ export default function FullRightSide(props: IdToTree) {
     /*
     */
   }
+
+  const tabs = [
+    {
+      id: 1,
+      label: "Tab 1",
+      component: <div/>,
+      closeable: false
+    },
+    {
+      id: 2,
+      label: "Tab 2",
+      component: <div/>,
+      closeable: true
+    },
+    {
+      id: 3,
+      label: "Tab 3",
+      component: props.ID !== undefined && props.CLSID == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"? <SqlWindow CLSID={clsid} ID={id} /> : <div></div>,
+      closeable: true
+    }
+  ];
 
   const TabsReturn =(tab?: any) =>{
     return tab.map((name: number,key: number)=>{
@@ -96,20 +118,28 @@ export default function FullRightSide(props: IdToTree) {
       Верхушка(меню)
     </Grid>
     <Grid item direction="column" style={{}} >
-      <Button onClick={addTabs}> Добавить вкладку</Button>
-      <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-              {TabsReturn(howManyTabs)}
-      </Tabs>
+      
+      
+      <TabsDemo tabs={tabs} onClose={undefined} />
     </Grid>  
-    <TabPanel value={value} index={0}>
-       {props.ID !== undefined && props.Name == "Просмотр данных"? <SqlWindow Name={name} ID={id} /> : <div></div>}
-    </TabPanel>
+   
       {TabPanelReturn(howManyTabs)}
   </Grid>
   );
 }
 
 /*
+<Button onClick={addTabs}> Добавить вкладку</Button>
+<Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+              {TabsReturn(howManyTabs)}
+      </Tabs>
+
+ <TabPanel value={value} index={0}>
+{Просмотр данных*} {props.ID !== undefined && props.CLSID == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"? <SqlWindow CLSID={clsid} ID={id} /> : <div></div>}
+</TabPanel>
+
+
+
 <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">

@@ -4,8 +4,8 @@ import { LoginIn } from "../Wrapper";
 import ClippedDrawer from "./WrapperRightSide";
 
 
-import DashboardNavbar from "./Header";
-import SideBar from "./SideBar";
+import DashboardNavbar from "./NotWorkArea(Side&Head)/Header";
+import SideBar from "./NotWorkArea(Side&Head)/SideBar";
 
 
 
