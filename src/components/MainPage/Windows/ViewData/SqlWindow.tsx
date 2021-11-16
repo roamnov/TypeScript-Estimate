@@ -1,10 +1,8 @@
 import { Box, Grid, Tab, Tabs, Typography } from "@material-ui/core";
-import { padding } from "@material-ui/system";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { IdToTree, TabPanelProps } from "../../../ComponentInterface";
 import React, { createElement, useCallback, useEffect, useState } from "react";
 import Tree from "./Tree/tree.js";
-import ResizableComponent from "./ResizebleComponent/ResizebleComponent";
 import { useStyles } from "../../../Styles";
 import ResizePanel from "./ResizebleComponent/ResizebleComponent";
 
@@ -60,7 +58,7 @@ const SqlWindow =(props: IdToTree) =>{
          
         <ResizePanel direction="e" style={{ width: '400px' }} >
           
-            <Tree/>
+            <Tree setCode={setCode} />
           
         </ResizePanel>
     
@@ -70,12 +68,13 @@ const SqlWindow =(props: IdToTree) =>{
         
         <Grid xs>
           <Grid direction={'column'} style={{}}>
-          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="Данные" {...a11yProps(0)} />
+          <Tabs value={value} onChange={handleChange} >
             <Tab label="SQL-скрипты" {...a11yProps(1)} />
+            <Tab label="Данные" {...a11yProps(0)} />
           </Tabs>
           </Grid>
-            <TabPanel value={value} index={1}>
+            <TabPanel value={value} index={0}>
+              {/* УВЕЛИЧИТЬ ПОЛЕ ВВОДА, НЕ ХВАТАЕТ*/}
             <CodeEditor
                 
                 value={code}

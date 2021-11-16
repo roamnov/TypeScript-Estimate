@@ -5,11 +5,14 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Button, Grid, Toolbar } from '@material-ui/core';
 import SqlWindow from './ViewData/SqlWindow';
-import { IdToTree, TabPanelProps } from "../../ComponentInterface";
+import { IdToTree, InfoAboutClick, TabPanelProps,InfoAboutClickDown } from "../../ComponentInterface";
 //import init from "../stimweb/tools"
 import Init from '../stimategrid/test';
 import { isTemplateSpan } from 'typescript';
 import { TabsDemo } from './Tabs/ClosableTabs';
+import { BrowserRouter } from 'react-router-dom';
+import BasicBreadcrumbs from './Breadcrumbs';
+import SectionTools from './SectionTools';
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -40,11 +43,9 @@ function a11yProps(index: number) {
   };
 }
 
-export default function FullRightSide(props: IdToTree) {
+export default function FullRightSide(props: InfoAboutClick) {
 
-  
-  const [id, setID] = React.useState();
-  const [clsid, setCLSID] = React.useState();
+  const [selected,setSelected] = React.useState<InfoAboutClick | undefined>()
   const [currentTab, setcurrentTab] = React.useState(0);
   const [value, setValue] = React.useState(0);
   const [howManyTabs, setHowManyTabs] = React.useState(['Личный кабинет'])
@@ -75,7 +76,7 @@ export default function FullRightSide(props: IdToTree) {
     {
       id: 3,
       label: "Tab 3",
-      component: props.ID !== undefined && props.CLSID == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"? <SqlWindow CLSID={clsid} ID={id} /> : <div></div>,
+      component: props.id !== undefined && props.clsic  == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"? <SqlWindow CLSID={props.clsic} ID={props.id} /> : <div></div>,
       closeable: true
     }
   ];
@@ -96,7 +97,7 @@ export default function FullRightSide(props: IdToTree) {
       return(
         
         <TabPanel value={value} index={key}>
-          {key}
+          
       </TabPanel> 
       )
     })
@@ -115,20 +116,23 @@ export default function FullRightSide(props: IdToTree) {
     
     <Grid item direction="column" style={{backgroundColor:"blueviolet"}}>
     <Toolbar />
-      Верхушка(меню)
+      <SectionTools/>
     </Grid>
+    <BasicBreadcrumbs/>
     <Grid item direction="column" style={{}} >
-      
-      
       <TabsDemo tabs={tabs} onClose={undefined} />
     </Grid>  
-   
+    
       {TabPanelReturn(howManyTabs)}
+    
   </Grid>
   );
 }
 
 /*
+
+props.ID !== undefined && props.CLSID == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"? <SqlWindow CLSID={clsid} ID={id} /> : 
+
 <Button onClick={addTabs}> Добавить вкладку</Button>
 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
               {TabsReturn(howManyTabs)}

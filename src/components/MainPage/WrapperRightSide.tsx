@@ -10,6 +10,7 @@ import SqlWindow from './Windows/ViewData/SqlWindow';
 import FullRightSide from './Windows/FullRightSide';
 import Init from './stimategrid/test';
 import { InfoAboutClick } from '../ComponentInterface';
+import { BrowserRouter } from 'react-router-dom';
 
 
 export default function WrapperRightSide() {
@@ -24,9 +25,10 @@ export default function WrapperRightSide() {
         <DashboardNavbar/>
       </AppBar>
 
-      <SideBar setBackCLSID={setCLSID} setBackID={setID} setSelected={setSelected}/>
-      <FullRightSide CLSID={clsid} ID={id} />
-      <Toolbar/>
+      <SideBar setSelected={setSelected}/>
+      <BrowserRouter>
+      <FullRightSide id= {selected?.id}  clsic= {selected?.clsic} name= {selected?.name}  />
+    </BrowserRouter>
           
       
     </Box>

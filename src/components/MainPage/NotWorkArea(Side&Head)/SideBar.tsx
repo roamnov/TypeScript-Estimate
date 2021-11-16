@@ -11,7 +11,7 @@ import URL from "../../Url";
 import { ImgURL } from "../../Url";
 import { Box, Drawer, Slide, Toolbar } from "@material-ui/core";
 import { useStyles } from "../../Styles";
-import { MainBoxBackId,InfoAboutClick } from "../../ComponentInterface";
+import { MainBoxBackClick,InfoAboutClick } from "../../ComponentInterface";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 
@@ -23,7 +23,7 @@ const maxDrawerWidth = 400;
 
 
 
-export default function SideBar(props: MainBoxBackId) {
+export default function SideBar(props: MainBoxBackClick) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [drawerOpen, setdrawerOpen] = useState(true)
@@ -63,24 +63,15 @@ export default function SideBar(props: MainBoxBackId) {
   };
 
   const updateSelected = (event: any) => {
-    
 
     let ID = event.currentTarget.getAttribute("id");
-    let CLSID  = GetElementAttributeByID(ID, data, "CLSID")  
-
-
-
+    let CLSID  = GetElementAttributeByID(ID, data, "CLSID")
     let Name = event.currentTarget["innerText"]
 
-
-    setSelected( {id: ID, clsic: CLSID, name: Name})
-    props.setSelected(selected)
-    props.setBackCLSID(CLSID);
-    props.setBackID(ID);
-    console.log(Name)
-  
+    props.setSelected( {id: ID, clsic: CLSID, name: Name})  
   };
 
+  //useEffect(()=>props.setSelected(selected),[selected] )
   useEffect(() => {
     let params = new Map();
     params.set('comand','GetSectionList');
@@ -193,7 +184,7 @@ export default function SideBar(props: MainBoxBackId) {
                 unmountOnExit
               >
                 <List component="div" disablePadding style={{scrollbarWidth: "thin", scrollbarColor: "white"}}>
-                  <ListItemButton sx={{ pl: howDeep }}  id={ID} onClick={updateSelected}>
+                  <ListItemButton sx={{ pl: howDeep }}   id={ID} onClick={updateSelected}>
                     <ListItemIcon>{Img}</ListItemIcon>
                     <ListItemText primary={Name} />
                   </ListItemButton>

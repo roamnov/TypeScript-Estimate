@@ -60,7 +60,7 @@ const Sql =(props: IdToTree) =>{
          
         <ResizePanel direction="e" style={{ width: '400px' }} >
           
-            <Tree/>
+            <Tree setCode={setCode}/>
           
         </ResizePanel>
     

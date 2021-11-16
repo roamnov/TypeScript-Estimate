@@ -46,10 +46,8 @@ export interface containerProps{
     children?: React.ReactNode[] | React.ReactNode;
 }
 
-export interface MainBoxBackId extends componentProps{
+export interface MainBoxBackClick extends componentProps{
     backId?: any | string;
-    setBackID: (value:any) => void | any | undefined ;
-    setBackCLSID: (value:any) => void | any | undefined ;
     setSelected: (value:any) => void | any | undefined;
 }
 
@@ -69,4 +67,12 @@ export interface TabPanelProps {
     id: string | undefined;
     clsic?: string | undefined;
     name: string | undefined;
+  }
+
+  export interface InfoAboutClickDown{
+    infoClick:{ 
+        id: string | undefined;
+        clsic?: string | undefined;
+        name: string | undefined;
+    }
   }
