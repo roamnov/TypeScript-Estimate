@@ -10,6 +10,10 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import URL from '../../Url';
 import axios from 'axios';
 
+
+
+
+
 const SectionTools = () =>{
     const [menuBar, setMenuBar] = React.useState([])
     const [buttons, setButtons] = React.useState([])
@@ -34,12 +38,16 @@ const SectionTools = () =>{
             console.log(ButtonsLocal)
             for (const [key, value] of Object.entries(ButtonsLocal)) {
              
-                console.log(`${key}`, value); 
+                console.log(`${key}`, backValue(value,"Image"));
+
                 
               }
         }
     }
 
+    const backValue = (value:any, param:string)=>{
+        return value[param]
+    }
     
 
     return(

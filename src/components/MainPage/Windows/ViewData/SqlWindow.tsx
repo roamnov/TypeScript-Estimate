@@ -5,11 +5,12 @@ import React, { createElement, useCallback, useEffect, useState } from "react";
 import Tree from "./Tree/tree.js";
 import { useStyles } from "../../../Styles";
 import ResizePanel from "./ResizebleComponent/ResizebleComponent";
+import Init from "../../stimategrid/test";
 
-
+//
 function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
-  
+    
     return (
       <div
         role="tabpanel"
@@ -26,21 +27,25 @@ function TabPanel(props: TabPanelProps) {
       </div>
     );
   }
-  
+  //
+
   function a11yProps(index: number) {
     return {
       id: `simple-tab-${index}`,
       'aria-controls': `simple-tabpanel-${index}`,
     };
   }
-  
+  //
 
 const SqlWindow =(props: IdToTree) =>{
     const classes = useStyles();
     const [code, setCode] = React.useState(    ``  );
     const [value, setValue] = React.useState(0);
-
-
+    const [open, setOpen] = useState(false)
+    
+    const openGrid= ()=>{
+      setOpen(!open)
+    }
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -69,11 +74,11 @@ const SqlWindow =(props: IdToTree) =>{
         <Grid xs>
           <Grid direction={'column'} style={{}}>
           <Tabs value={value} onChange={handleChange} >
-            <Tab label="SQL-скрипты" {...a11yProps(1)} />
+            <Tab onClick={openGrid} label="SQL-скрипты" {...a11yProps(1)} />
             <Tab label="Данные" {...a11yProps(0)} />
           </Tabs>
           </Grid>
-            <TabPanel value={value} index={0}>
+            <TabPanel  value={value} index={0}>
               {/* УВЕЛИЧИТЬ ПОЛЕ ВВОДА, НЕ ХВАТАЕТ*/}
             <CodeEditor
                 
@@ -90,6 +95,10 @@ const SqlWindow =(props: IdToTree) =>{
                 height: "100vh",
                 }}
             />
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+                {open?Init():<button onClick={openGrid}>Открыть</button>}
+                <div id="gridPanel" style={{position: 'relative', left: '0px', top: '0px', width: '100%', height: '100%'}} >  </div>
             </TabPanel>
         </Grid>
       </Grid>

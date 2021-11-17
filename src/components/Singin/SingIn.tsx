@@ -9,10 +9,14 @@ import {
   CssBaseline,
   Button,
   Typography,
+  Box,
+  styled,
+  ButtonProps,
 } from "@material-ui/core";
 //стили и интерфейсы пропсов
 import { useStyles } from "../Styles";
 import { componentProps } from "../ComponentInterface";
+import money from "../../static/images/money.png"
 //копмпоненты
 import SelectDrx from "./SelectDrx";
 import SelectUser from "./SelectUser";
@@ -21,10 +25,9 @@ import PasswordInput from "./PasswordInput";
 import axios from "axios";
 import URL from "../Url";
 import AlertPassword from "./AlertPassword";
-import { red } from "@material-ui/core/colors";
+import { purple, red } from "@material-ui/core/colors";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import { LoginIn } from "../Wrapper";
-
 
 
 
@@ -89,9 +92,25 @@ const SignIn = (props: componentProps) => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" >
+      
       <CssBaseline />
-    
+      <img src={money} style={{ marginLeft:"30%"}}/>
+      <Typography variant="h5" color={"#0098ad"} style={{ marginLeft:"30%"}}> WEB-СМЕТА</Typography>
+      <Paper variant='elevation' elevation={10}  >
+      
+      <Box
+          sx={{
+            px: 3,
+            pb: 3,
+            pt:1,
+            marginTop: 10,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          
       <Grid
         container
         direction="column"
@@ -102,12 +121,13 @@ const SignIn = (props: componentProps) => {
       >
         <Grid item xs>
           <Button
-            style={{ marginTop: 10 }}
+            style={{ marginTop: 10, backgroundColor: "#0098ad" }}
             type="submit"
             fullWidth
             variant="contained"
             className="ButtonMargin"
             onClick={handleSingIn}
+            
           >
             Вход по ЭП
           </Button>
@@ -131,7 +151,9 @@ const SignIn = (props: componentProps) => {
         </Grid>
         {}
         <Grid item>
+          
           <Button
+          style={{backgroundColor: "#0098ad"}}
             type="submit"
             fullWidth
             variant="contained"
@@ -143,6 +165,8 @@ const SignIn = (props: componentProps) => {
         </Grid>
         <div>{error !== null ? `${error}` : ""}</div>
       </Grid>
+      </Box>
+      </Paper>
     </Container>
   );
 };

@@ -64,7 +64,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     {
       id: 1,
       label: "Tab 1",
-      component: <div/>,
+      component: props.id !== undefined && props.clsic  == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"? <SqlWindow CLSID={props.clsic} ID={props.id} /> : <div></div>,
       closeable: false
     },
     {
@@ -76,7 +76,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     {
       id: 3,
       label: "Tab 3",
-      component: props.id !== undefined && props.clsic  == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"? <SqlWindow CLSID={props.clsic} ID={props.id} /> : <div></div>,
+      component: <div/>,
       closeable: true
     }
   ];
@@ -114,7 +114,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     
     >
     
-    <Grid item direction="column" style={{backgroundColor:"blueviolet"}}>
+    <Grid item direction="column" >
     <Toolbar />
       <SectionTools/>
     </Grid>

@@ -1,10 +1,4 @@
-@font-face {
-    font-family: 'FontAwesome';
-    src: url('font-awesome/fonts/fontawesome-webfont.eot?v=4.4.0');
-    src: url('font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.4.0') format('embedded-opentype'), url('font-awesome/fonts/fontawesome-webfont.woff2?v=4.4.0') format('woff2'), url('font-awesome/fonts/fontawesome-webfont.woff?v=4.4.0') format('woff'), url('font-awesome/fonts/fontawesome-webfont.ttf?v=4.4.0') format('truetype'), url('font-awesome/fonts/fontawesome-webfont.svg?v=4.4.0#fontawesomeregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
+
 
 .login-form-mask-box {
 	top: 50%;
@@ -121,10 +115,10 @@
 }
 
 .col-move-top {
-	background-image: url('./images/col-move-top.png');
+	background-image: url('../images/col-move-top.png');
 }
 .col-move-bottom {
-	background-image: url('./images/col-move-bottom.png');
+	background-image: url('../images/col-move-bottom.png');
 }
 
 .grid-with-row-lines .grid-item {
@@ -226,7 +220,7 @@
 .collapse-img {
     width: 15px;
     height: 15px;
-    background-image: url(images/arrows.gif);
+    background-image: url(../images/arrows.gif);
 	vertical-align: top;
     border: 0;
     cursor: pointer;
