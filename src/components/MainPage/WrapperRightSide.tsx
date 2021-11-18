@@ -16,8 +16,9 @@ import { BrowserRouter } from 'react-router-dom';
 export default function WrapperRightSide() {
   const [id, setID] = React.useState();
   const [clsid, setCLSID] = React.useState();
+  const [isLoading, setIsLoading] = React.useState(true);
   const [selected, setSelected] = React.useState<InfoAboutClick | undefined>();
-  
+  console.log(isLoading)
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -25,12 +26,10 @@ export default function WrapperRightSide() {
         <DashboardNavbar/>
       </AppBar>
 
-      <SideBar setSelected={setSelected}/>
-      <BrowserRouter>
-      <FullRightSide id= {selected?.id}  clsic= {selected?.clsic} name= {selected?.name}  />
-    </BrowserRouter>
-          
-      
+      <SideBar isLoading={setIsLoading} setSelected={setSelected}/>
+    
+      <FullRightSide isLoading={isLoading} id= {selected?.id}  clsic= {selected?.clsic} name= {selected?.name}  />
+   
     </Box>
   );
 }

@@ -22,13 +22,13 @@ const SelectUser = (props: menuSelect) => {
 
 
   const getUser = () => {
-    let params = new Map();
-    params.set('comand','getuserlist');
-    params.set('ConfigName',props.drxInfo);
-    axios.get(URL(params))
-      .then((response) => {
-        setUserList(response.data);
-      });
+      let params = new Map();
+      params.set('comand','getuserlist');
+      params.set('ConfigName',props.drxInfo);
+      axios.get(URL(params))
+        .then((response) => {
+          setUserList(response.data);
+        });
   };
 
   function MenuItems(userList: any) {
@@ -45,7 +45,6 @@ const SelectUser = (props: menuSelect) => {
       <Autocomplete
         freeSolo
         fullWidth
-        onSelect={getUser}
         value={value}
         onChange={(event: any, newValue: string | null) => {
           setValue(newValue);
@@ -58,7 +57,7 @@ const SelectUser = (props: menuSelect) => {
         id="user"
         options={MenuItems(users)}
         renderInput={(params) => (
-          <TextField {...params} label="Имя пользователя" />
+          <TextField {...params} onClick={getUser} label="Имя пользователя" />
         )}
       />
     </Grid>

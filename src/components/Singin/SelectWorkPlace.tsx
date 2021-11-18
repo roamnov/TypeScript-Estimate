@@ -21,20 +21,14 @@ const SelectWorkPlace = (props: menuSelect) => {
   const [value, setValue] = React.useState<string | null>();
   const [inputValue, setInputValue] = React.useState("");
 
-  const getWorkPlaces = () => {
-    let params = new Map();
-    params.set('comand','getworkplacelist');
-    params.set('ConfigName',props.drxInfo);
-    params.set('UserName',props.userInfo);
-    axios
-      .get(
-        URL(
-          params
-        )
-      )
-      .then((response) => {
-        setWorkPlaces(response.data);
-      });
+  const getWorkPlaces = (event:any) => {
+      let params = new Map();
+      params.set('comand','getworkplacelist');
+      params.set('ConfigName',props.drxInfo);
+      params.set('UserName',props.userInfo);
+      axios.get(URL(params)).then((response) => {
+          setWorkPlaces(response.data);
+        });
   };
 
   function MenuItems(userList: any) {
@@ -52,7 +46,6 @@ const SelectWorkPlace = (props: menuSelect) => {
         id="workplaces"
         freeSolo
         fullWidth
-        onSelect={getWorkPlaces}
         value={value}
         onChange={(event: any, newValue: string | null) => {
           setValue(newValue);
@@ -64,7 +57,7 @@ const SelectWorkPlace = (props: menuSelect) => {
         }}
         
         options={MenuItems(workplaces)}
-        renderInput={(params) => <TextField {...params} label="Рабочее место" />}
+        renderInput={(params) => <TextField onClick={getWorkPlaces} {...params} label="Рабочее место" />}
       />
       
     </Grid>

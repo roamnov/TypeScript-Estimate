@@ -18,14 +18,16 @@ const SectionTools = () =>{
     const [menuBar, setMenuBar] = React.useState([])
     const [buttons, setButtons] = React.useState([])
 
+    React.useEffect(() => {
+       GetSectionTools();
+    }, [])
 
-
-    const GetSectionTools = () =>{
+    const GetSectionTools = async () =>{
         let params = new Map();
         params.set('prefix','tools');
         params.set('comand','GetSectionTools');
         params.set('SectionID', '143');
-        axios.get(URL(params)).then((response) =>{
+        await axios.get(URL(params)).then((response) =>{
             setButtons(response.data["Buttons"]);
             setMenuBar(response.data["MenuBar"])
         })
@@ -33,9 +35,9 @@ const SectionTools = () =>{
     }
     
     const RenderButtons=(ButtonsLocal: any)=>{
-        if(ButtonsLocal !== undefined){
+        if(ButtonsLocal.lenght !== undefined){
             let items = []
-            console.log(ButtonsLocal)
+            console.log(ButtonsLocal.lenght)
             for (const [key, value] of Object.entries(ButtonsLocal)) {
              
                 console.log(`${key}`, backValue(value,"Image"));

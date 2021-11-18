@@ -31,7 +31,8 @@ export default function SideBar(props: MainBoxBackClick) {
   const [selected, setSelected] = useState<InfoAboutClick | undefined> ();
   const [data2, setData2] = useState(new Map());
   const [drawerWidth, setDrawerWidth] = useState(defaultDrawerWidth);
-  let e = 0;
+  let e = 0;//event 
+  
 
   const handleMouseDown = () => {
     document.addEventListener("mouseup", handleMouseUp, true);
@@ -71,21 +72,28 @@ export default function SideBar(props: MainBoxBackClick) {
     props.setSelected( {id: ID, clsic: CLSID, name: Name})  
   };
 
+
+
   //useEffect(()=>props.setSelected(selected),[selected] )
   useEffect(() => {
+    getSectionList();
+  }, []);
+
+  const getSectionList= async ()=> {
     let params = new Map();
     params.set('comand','GetSectionList');
     params.set('Simple','1');
     params.set('full','1');
-    axios.get(URL(params)).then((response) => {
+    await axios.get(URL(params)).then((response) => {
+      props.isLoading(false);
       setData(response.data["Sections"]);
       ListItems(response.data["Sections"]);
-    
+      
     });
-  }, []);
+  }
 
   function ListItems(List: any) {
-    if(data!== undefined){
+    if(data.length!== undefined){
     let ID,
       keyS = 0;
     for (const [key, value] of Object.entries(List)) {
@@ -112,91 +120,88 @@ export default function SideBar(props: MainBoxBackClick) {
 
 
 
-  function Menu(SectionList: any) {
+  function  Menu(SectionList: any) {
     // фцнкция отрисовки меню
-    if(data!== undefined){
+    if(data.length!== undefined){
+        
+        
+      let Name, ID, currentDeep, openSet, openSetDeep, mainCollapse, deepCollapse, Img, keyS = 0, howDeep = 4
+      let assemblyLists = []; //сюда записываем все секции а потом отправляем на отрисовку
 
       
-    let Name, ID, currentDeep, openSet, openSetDeep, mainCollapse, deepCollapse, Img, keyS = 0, howDeep = 4
-    let assemblyLists = []; //сюда записываем все секции а потом отправляем на отрисовку
+        for (const [key, value] of Object.entries(SectionList)) {
+          //ходим по всему объекту
+          Name = SectionList[key]["Name"];
+          ID = SectionList[key]["ID"];
+          currentDeep = SectionList[key]["Deep"];
+          //Img = ImgURL(SectionList[key]["Image"]);
 
-    
-      for (const [key, value] of Object.entries(SectionList)) {
-        //ходим по всему объекту
-        Name = SectionList[key]["Name"];
-        ID = SectionList[key]["ID"];
-        currentDeep = SectionList[key]["Deep"];
-        Img = ImgURL(SectionList[key]["Image"]);
+          keyS += 1;
 
-        keyS += 1;
-
-        if (currentDeep == null) {
-          //если нет DEEP то отрисовываем родителя
-          mainCollapse = data2.get(ID);
-          openSet = data2.get(ID);
-          assemblyLists.push(
-            <ListItemButton component="li" id={ID} >
-              <ListItemIcon>{Img}</ListItemIcon>
-              <ListItemText primary={Name} />
-              {SectionList[keyS] !== undefined  && SectionList[keyS]["Deep"] >= 1? (openSet ? (<ExpandLess id={ID} onClick={handleClick} />) : ( <ExpandMore id={ID} onClick={handleClick} /> )): (<></>)}
-            </ListItemButton>
-          );
-        } else if (currentDeep !== null) {
-          //если есть DEEP
-          howDeep = 4;
-
-          switch (
-            currentDeep //Определяем сколько сдвинуть направо отностиельно родителя
-          ) {
-            case "1":
-              openSet = mainCollapse;
-              break;
-            case "2":
-              howDeep += 4;
-              break;
-            case "3":
-              howDeep += 8;
-              break;
-          }
-          if (
-            SectionList[keyS] !== undefined &&
-            SectionList[keyS]["Deep"] > currentDeep
-          ) {
-            //если ключ НЕ необъявен и след deep больше текущего, то рисуем родителя
-
-            currentDeep == "2"  ? (deepCollapse = openSet): (deepCollapse = undefined);
-            openSetDeep = openSet;
+          if (currentDeep == null) {
+            //если нет DEEP то отрисовываем родителя
+            mainCollapse = data2.get(ID);
+            openSet = data2.get(ID);
             assemblyLists.push(
-              <Collapse    in={openSet && mainCollapse}    timeout="auto" unmountOnExit >
-                {(openSet = data2.get(ID))}
-                <ListItemButton sx={{ pl: howDeep }} id={ID} >
-                  <ListItemIcon>{Img}</ListItemIcon>
-                  <ListItemText primary={Name} />
-                  {openSet ? ( <ExpandLess id={ID} onClick={handleClick} /> ) : (<ExpandMore id={ID} onClick={handleClick} />)}
-                </ListItemButton>
-              </Collapse>
+              <ListItemButton component="li" id={ID} >
+                <ListItemIcon>{Img}</ListItemIcon>
+                <ListItemText primary={Name} />
+                {SectionList[keyS] !== undefined  && SectionList[keyS]["Deep"] >= 1? (openSet ? (<ExpandLess id={ID} onClick={handleClick} />) : ( <ExpandMore id={ID} onClick={handleClick} /> )): (<></>)}
+              </ListItemButton>
             );
-          } else {
-            assemblyLists.push(
-              <Collapse
-                in={ openSet && mainCollapse && currentDeep == "3" ? deepCollapse: openSet && mainCollapse    }
-                timeout="auto"
-                unmountOnExit
-              >
-                <List component="div" disablePadding style={{scrollbarWidth: "thin", scrollbarColor: "white"}}>
-                  <ListItemButton sx={{ pl: howDeep }}   id={ID} onClick={updateSelected}>
+          } else if (currentDeep !== null) {
+            //если есть DEEP
+            howDeep = 4;
+
+            switch (
+              currentDeep //Определяем сколько сдвинуть направо отностиельно родителя
+            ) {
+              case "1":
+                openSet = mainCollapse;
+                break;
+              case "2":
+                howDeep += 4;
+                break;
+              case "3":
+                howDeep += 8;
+                break;
+            }
+            if (
+              SectionList[keyS] !== undefined &&
+              SectionList[keyS]["Deep"] > currentDeep
+            ) {
+              //если ключ НЕ необъявен и след deep больше текущего, то рисуем родителя
+
+              currentDeep == "2"  ? (deepCollapse = openSet): (deepCollapse = undefined);
+              openSetDeep = openSet;
+              assemblyLists.push(
+                <Collapse    in={openSet && mainCollapse}    timeout="auto" unmountOnExit >
+                  {(openSet = data2.get(ID))}
+                  <ListItemButton sx={{ pl: howDeep }} id={ID} >
                     <ListItemIcon>{Img}</ListItemIcon>
                     <ListItemText primary={Name} />
+                    {openSet ? ( <ExpandLess id={ID} onClick={handleClick} /> ) : (<ExpandMore id={ID} onClick={handleClick} />)}
                   </ListItemButton>
-                </List>
-              </Collapse>
-            );
+                </Collapse>
+              );
+            } else {
+              assemblyLists.push(
+                <Collapse
+                  in={ openSet && mainCollapse && currentDeep == "3" ? deepCollapse: openSet && mainCollapse    }
+                  timeout="auto"
+                  unmountOnExit
+                >
+                  <List component="div" disablePadding style={{scrollbarWidth: "thin", scrollbarColor: "white"}}>
+                    <ListItemButton sx={{ pl: howDeep }}   id={ID} onClick={updateSelected}>
+                      <ListItemIcon>{Img}</ListItemIcon>
+                      <ListItemText primary={Name} />
+                    </ListItemButton>
+                  </List>
+                </Collapse>
+              );
+            }
           }
         }
-      }
-    
-
-   
     return assemblyLists;
   }
 }

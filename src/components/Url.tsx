@@ -54,6 +54,6 @@ export default function URL(params: any) {
     return `${json.serverLocal}/mobile~${params.get("prefix") == undefined ? 'project' : params.get("prefix")}/${comand}?LicGUID=${LicGUID}${attachment ? attachment: ""}`;
 }
 
-export function ImgURL(attachment?: any) {
+export  function  ImgURL(attachment?: any) {
     return <img src={`${json.serverLocal}/server~${attachment}`} />;
 }

@@ -7,6 +7,7 @@ export interface componentProps{
     container?: true | false;
     dataSelectMenu?: string;
     posts?: any;
+    isLoading?: any;
 
     //--ГРИДЫ
     justify?: "space-around" | "space-between" | "space-evenly" | "center" | "flex-end" | "flex-start" | undefined;
@@ -48,6 +49,7 @@ export interface containerProps{
 
 export interface MainBoxBackClick extends componentProps{
     backId?: any | string;
+   
     setSelected: (value:any) => void | any | undefined;
 }
 
@@ -63,13 +65,13 @@ export interface TabPanelProps {
     value: number;
   }
 
-  export interface InfoAboutClick{
+  export interface InfoAboutClick extends componentProps{
     id: string | undefined;
     clsic?: string | undefined;
     name: string | undefined;
   }
 
-  export interface InfoAboutClickDown{
+  export interface InfoAboutClickDown extends componentProps{
     infoClick:{ 
         id: string | undefined;
         clsic?: string | undefined;

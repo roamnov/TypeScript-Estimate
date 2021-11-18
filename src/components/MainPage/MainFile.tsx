@@ -11,7 +11,7 @@ import SideBar from "./NotWorkArea(Side&Head)/SideBar";
 
 const MainPage = () => {
     const Value = React.useContext(LoginIn); 
-    console.log(Value)
+    console.log("ЗАЙДИ И ПОСМОТРИ")
    
     return(
     

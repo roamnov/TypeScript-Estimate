@@ -116,7 +116,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     
     <Grid item direction="column" >
     <Toolbar />
-      <SectionTools/>
+      {props.isLoading?<div></div>:<SectionTools/>}
     </Grid>
     <BasicBreadcrumbs/>
     <Grid item direction="column" style={{}} >
