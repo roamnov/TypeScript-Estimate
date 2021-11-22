@@ -8,7 +8,7 @@ import MainPage from "./MainPage/MainFile";
 import {useStyles} from "./Styles";
 import {componentProps} from "./ComponentInterface";
 
-import { BrowserRouter, HashRouter, Route, Router, Switch } from "react-router-dom"
+import { BrowserRouter, HashRouter, Route, Router, Routes } from "react-router-dom"
 
 //<SignIn  dataSelectMenu={'test'} />
 /* 
@@ -24,13 +24,13 @@ const Wrapper = () =>
     //const value = useMemo(() => ({ auth, setAuth }), [auth]);
     const styles = useStyles();
     return(
-        <main>
+        <main >
             <LoginIn.Provider value={false}>
             <HashRouter>
-                <Switch>
-                    <Route exact path='/' component={SignIn }/>
-                    <Route exact path='/main' component={MainPage}/>
-                </Switch>
+                <Routes>
+                    <Route  path='/LogIn' element={<SignIn/>}/>
+                    <Route  path='/main' element={<MainPage/>}/>
+                </Routes>
             </HashRouter>
             </LoginIn.Provider>
         </main>

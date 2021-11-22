@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, Link as RouterLink, useHistory } from 'react-router-dom';
+import { Link, Link as RouterLink, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   AppBar,
@@ -19,7 +19,7 @@ import imageHeader from '../../../static/images/header.jpg';
 
 const DashboardNavbar = ({  ...rest }) => {
   const [notifications] = useState([]);
-  let history = useHistory();
+  let navigate = useNavigate();
   
   const handleSingOut = (event: any) => {
     let params = new Map();

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useLocalStorage from "../Hooks/useLocalStorage";
 import {
   Paper,
   Grid,
@@ -26,7 +27,7 @@ import axios from "axios";
 import URL from "../Url";
 import AlertPassword from "./AlertPassword";
 import { purple, red } from "@material-ui/core/colors";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { Link,  useNavigate } from "react-router-dom";
 import { LoginIn } from "../Wrapper";
 
 
@@ -37,7 +38,8 @@ const SignIn = (props: componentProps) => {
   const styles = useStyles();
 
   
-  let history = useHistory();
+  let navigate = useNavigate();
+  const [authtoken, setAutnToken] = useLocalStorage(false, "auth")
   const [error, setError] = useState<string | null>("");
   const [loginAnswer, setLoginAnswer] = useState("");
   const [drx, setDrx] = useState("");
@@ -51,8 +53,8 @@ const SignIn = (props: componentProps) => {
   const ThemeContext = React.createContext('light');
 
   const GoToMain =()=>{
-    
-    history.push("/main");
+    setAutnToken(true, "auth")
+    navigate("main");
   }
 
   function CheckAnswerFromServer(answer?: Object) {
@@ -76,7 +78,6 @@ const SignIn = (props: componentProps) => {
     let LoginData = {
       ConfigName: drx,
       UserName: user,
-
       Password: password,
       WorkPlace: workplace,
       //Comp: "NPO5898",
@@ -85,14 +86,12 @@ const SignIn = (props: componentProps) => {
     params.set('comand','enter');
     axios.post(URL(params), JSON.stringify(LoginData)).then((response) => {
       setLoginAnswer(response.data);
-      response.data["error"] !== undefined
-        ? CheckAnswerFromServer(response.data["error"]["Item"])
-        : GoToMain()
+      response.data["error"] !== undefined? CheckAnswerFromServer(response.data["error"]["Item"]): GoToMain()
     });
   };
 
   return (
-    <Container component="main" maxWidth="xs" >
+    <Container  maxWidth="xs"  >
       
       <CssBaseline />
       <img src={money} style={{ marginLeft:"30%"}}/>
