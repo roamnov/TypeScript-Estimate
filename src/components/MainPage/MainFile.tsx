@@ -6,7 +6,7 @@ import WrapperRightSide from "./WrapperRightSide";
 
 import DashboardNavbar from "./NotWorkArea(Side&Head)/Header";
 import SideBar from "./NotWorkArea(Side&Head)/SideBar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 
 
 
@@ -18,7 +18,7 @@ const MainPage = () => {
     console.log(auth)
     return(
         <>
-        {auth === "true"? <WrapperRightSide/>: navigate('main')}
+        {auth === "true"? <WrapperRightSide/>:<Navigate to="/"/> }
         
         </> 
     )

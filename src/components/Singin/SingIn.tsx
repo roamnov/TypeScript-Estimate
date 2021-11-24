@@ -115,7 +115,6 @@ const SignIn = (props: componentProps) => {
         direction="column"
         justifyContent="space-around"
         alignItems="stretch"
-        xs
         spacing={2}
       >
         <Grid item xs>

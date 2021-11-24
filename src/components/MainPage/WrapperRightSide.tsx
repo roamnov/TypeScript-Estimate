@@ -15,7 +15,7 @@ import useLocalStorage from '../Hooks/useLocalStorage';
 
 
 export default function WrapperRightSide() {
-  const [authtoken, setAutnToken] = useLocalStorage(true, "auth")
+  
   const [id, setID] = React.useState();
   const [clsid, setCLSID] = React.useState();
   const [isLoading, setIsLoading] = React.useState(true);

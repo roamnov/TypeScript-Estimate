@@ -9,6 +9,7 @@ import RequestPageIcon from '@mui/icons-material/RequestPage';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import URL from '../../Url';
 import axios from 'axios';
+import { ImgURL } from "../../Url";
 
 
 
@@ -35,15 +36,15 @@ const SectionTools = () =>{
     }
     
     const RenderButtons=(ButtonsLocal: any)=>{
-        if(ButtonsLocal.lenght !== undefined){
+        if(typeof ButtonsLocal !== undefined){
             let items = []
+            
             console.log(ButtonsLocal.lenght)
             for (const [key, value] of Object.entries(ButtonsLocal)) {
-             
-                console.log(`${key}`, backValue(value,"Image"));
-
-                
+                console.log(backValue(value, 'Image'));
+                items.push(ImgURL(backValue(value, 'Image')))                
               }
+              return items
         }
     }
 
@@ -62,6 +63,10 @@ const SectionTools = () =>{
 
 export default SectionTools;
 
+
+function imgUrl(): any {
+    throw new Error('Function not implemented.');
+}
 /*
 React.useEffect(() => {
         console.log(buttons)

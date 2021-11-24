@@ -16,9 +16,11 @@ import InputIcon from '@material-ui/icons/Input';
 import URL from "../../Url";
 import axios from 'axios';
 import imageHeader from '../../../static/images/header.jpg';
+import useLocalStorage from '../../Hooks/useLocalStorage';
 
 const DashboardNavbar = ({  ...rest }) => {
   const [notifications] = useState([]);
+  const [authtoken, setAutnToken] = useLocalStorage(true, "auth")
   let navigate = useNavigate();
   
   const handleSingOut = (event: any) => {
@@ -26,6 +28,7 @@ const DashboardNavbar = ({  ...rest }) => {
     params.set('comand','leave');
     axios.get(URL(params)).then((response) => {
       console.log(response.data);
+      setAutnToken(false, "auth")
     });
   };
   return (

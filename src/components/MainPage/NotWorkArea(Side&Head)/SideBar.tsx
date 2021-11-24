@@ -85,10 +85,9 @@ export default function SideBar(props: MainBoxBackClick) {
     params.set('Simple','1');
     params.set('full','1');
     await axios.get(URL(params)).then((response) => {
-      props.isLoading(false);
       setData(response.data["Sections"]);
       ListItems(response.data["Sections"]);
-      
+      props.isLoading(false);
     });
   }
 

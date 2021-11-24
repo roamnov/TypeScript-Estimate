@@ -9,6 +9,7 @@ import {useStyles} from "./Styles";
 import {componentProps} from "./ComponentInterface";
 
 import { BrowserRouter, HashRouter, Route, Router, Routes } from "react-router-dom"
+import { Container } from "@material-ui/core";
 
 //<SignIn  dataSelectMenu={'test'} />
 /* 
@@ -25,14 +26,16 @@ const Wrapper = () =>
     const styles = useStyles();
     return(
         <main >
+            
             <LoginIn.Provider value={false}>
             <HashRouter>
                 <Routes>
-                    <Route  path='/LogIn' element={<SignIn/>}/>
+                    <Route  path='/' element={<SignIn/>}/>
                     <Route  path='/main' element={<MainPage/>}/>
                 </Routes>
             </HashRouter>
             </LoginIn.Provider>
+           
         </main>
     )
 }
