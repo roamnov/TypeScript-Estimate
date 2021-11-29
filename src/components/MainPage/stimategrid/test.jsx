@@ -1668,9 +1668,11 @@ function createGrid(panel) {
             return res + max;
         };
 
-        for (let i = 0; i < levels.length; i++) {
+        if (levels !== undefined){
+            for (let i = 0; i < levels.length; i++) {
             maxlev = maxint(maxlev, getMaxLevel(levels[i]));
-        };
+        };};
+        
 
         childColumnSize = rowHeight;
         titleSize = maxlev * childColumnSize;

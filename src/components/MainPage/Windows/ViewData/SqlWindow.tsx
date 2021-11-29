@@ -61,7 +61,7 @@ const SqlWindow =(props: IdToTree) =>{
               >
         
          
-        <ResizePanel direction="e" style={{ width: '400px' }} >
+        <ResizePanel   direction="e" style={{ width: '400px',  maxWidth: "80%" }} >
           
             <Tree setCode={setCode} />
           

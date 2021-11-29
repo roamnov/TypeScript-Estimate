@@ -18,10 +18,21 @@ import { ImgURL } from "../../Url";
 const SectionTools = () =>{
     const [menuBar, setMenuBar] = React.useState([])
     const [buttons, setButtons] = React.useState([])
+    const [imgf, setImgf] = React.useState();
 
     React.useEffect(() => {
        GetSectionTools();
+      
     }, [])
+    
+    const getImages = async (whereIsImg: string) =>{
+        await axios.get(`http://localhost:1317/server~${whereIsImg}`).then((response)=>{
+            setImgf(response.data)
+            return response.data
+        })
+        
+    }
+
 
     const GetSectionTools = async () =>{
         let params = new Map();
@@ -38,11 +49,13 @@ const SectionTools = () =>{
     const RenderButtons=(ButtonsLocal: any)=>{
         if(typeof ButtonsLocal !== undefined){
             let items = []
-            
-            console.log(ButtonsLocal.lenght)
+            setTimeout(()=> {console.log("2")}, 2000);
+            console.log(ButtonsLocal)
             for (const [key, value] of Object.entries(ButtonsLocal)) {
-                console.log(backValue(value, 'Image'));
-                items.push(ImgURL(backValue(value, 'Image')))                
+                //console.log(backValue(value, 'Image'));
+                
+                items.push(ImgURL(backValue(value, 'Image')))//items.push(<img src={getImages(backValue(value, 'Image'))}/>)
+                
               }
               return items
         }
@@ -57,6 +70,7 @@ const SectionTools = () =>{
         <Grid style={{}} justifyContent="center">
             <button onClick={GetSectionTools}> НАЖМИ ДЛЯ ЗАПРОСА</button>
             {RenderButtons(buttons)}
+           
         </Grid>
     )
 }

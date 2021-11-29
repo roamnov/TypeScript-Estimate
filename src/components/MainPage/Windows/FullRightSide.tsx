@@ -81,15 +81,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     }
   ];
 
-  const TabsReturn =(tab?: any) =>{
-    return tab.map((name: number,key: number)=>{
-      name = name + key
-      return(
-        
-        <Tab label={name} {...a11yProps(key)} />
-      )
-    })
-  }
+ 
 
   const TabPanelReturn = (tab?: any) =>{
     return tab.map((name: number,key: number)=>{
@@ -114,13 +106,13 @@ export default function FullRightSide(props: InfoAboutClick) {
     
     >
     
-    <Grid item direction="column" >
+    <Grid item  >
     <Toolbar />
       {props.isLoading?<div></div>:<><SectionTools/></>}
       
     </Grid>
     <BasicBreadcrumbs/>
-    <Grid item direction="column" style={{}} >
+    <Grid item  style={{}} >
       <TabsDemo tabs={tabs} onClose={undefined} />
     </Grid>  
     
