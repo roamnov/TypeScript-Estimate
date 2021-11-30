@@ -166,6 +166,7 @@ class ResizePanel extends React.Component {
         ref={this.wrapperRef}
         className={containerClass}
         style={containerStyle}
+        
       >
         {content}
       </div>

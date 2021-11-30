@@ -58,10 +58,11 @@ const SqlWindow =(props: IdToTree) =>{
               justifyContent="flex-start"
               alignItems="stretch"
               xs
+              
               >
         
          
-        <ResizePanel   direction="e" style={{ width: '400px',  maxWidth: "80%" }} >
+        <ResizePanel   direction="e" style={{ width: '400px',  maxWidth: "80%" , paddingTop:"2%"}} >
           
             <Tree setCode={setCode} />
           

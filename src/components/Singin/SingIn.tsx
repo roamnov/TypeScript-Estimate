@@ -53,6 +53,7 @@ const SignIn = (props: componentProps) => {
   const ThemeContext = React.createContext('light');
 
   const GoToMain =()=>{
+    //useLocalStorage(drx, "drx")
     setAutnToken(true, "auth")
     navigate("main");
   }

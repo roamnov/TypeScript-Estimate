@@ -23,14 +23,17 @@ const DashboardNavbar = ({  ...rest }) => {
   const [authtoken, setAutnToken] = useLocalStorage(true, "auth")
   let navigate = useNavigate();
   
-  const handleSingOut = (event: any) => {
+  const HandleSingOut = (event: any) => {
     let params = new Map();
     params.set('comand','leave');
+    useLocalStorage("","drx")
     axios.get(URL(params)).then((response) => {
       console.log(response.data);
       setAutnToken(false, "auth")
+      
     });
   };
+
   return (
     
       <Toolbar style={{marginLeft: -30, }}>
@@ -47,7 +50,7 @@ const DashboardNavbar = ({  ...rest }) => {
             </Badge>
           </IconButton>
           <Link to={'/'} >
-          <IconButton color="inherit" size="large" onClick={handleSingOut}>
+          <IconButton color="inherit" size="large" onClick={HandleSingOut}>
             <InputIcon />
            
           </IconButton>

@@ -13,35 +13,8 @@ import { TabsDemo } from './Tabs/ClosableTabs';
 import { BrowserRouter } from 'react-router-dom';
 import BasicBreadcrumbs from './Breadcrumbs';
 import SectionTools from './SectionTools';
+import DocTabs from './Tabs/CustomTabs';
 
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{  }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
 
 export default function FullRightSide(props: InfoAboutClick) {
 
@@ -52,13 +25,7 @@ export default function FullRightSide(props: InfoAboutClick) {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  const addTabs= () =>{
-    
-    
-    setHowManyTabs([...howManyTabs, "test"])
-    /*
-    */
-  }
+  
 
   const tabs = [
     {
@@ -81,19 +48,16 @@ export default function FullRightSide(props: InfoAboutClick) {
     }
   ];
 
- 
-
-  const TabPanelReturn = (tab?: any) =>{
-    return tab.map((name: number,key: number)=>{
-      name = name + key
-      return(
-        
-        <TabPanel value={value} index={key}>
-          
-      </TabPanel> 
-      )
-    })
+  const getTabs = ()=>{
+    if(props.id !== undefined && props.clsic  == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"){
+      
+      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <SqlWindow CLSID={props.clsic} ID={props.id} />) 
+    }
+    if(props.id !== undefined){
+      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <> {props.name}</>) 
+    }
   }
+
 
   return (
     
@@ -111,12 +75,14 @@ export default function FullRightSide(props: InfoAboutClick) {
       {props.isLoading?<div></div>:<><SectionTools/></>}
       
     </Grid>
-    <BasicBreadcrumbs/>
+    
     <Grid item  style={{}} >
-      <TabsDemo tabs={tabs} onClose={undefined} />
+      <div id ="WorkPlace"></div>
+      {getTabs()}
+      {}
     </Grid>  
     
-      {TabPanelReturn(howManyTabs)}
+     
     
   </Grid>
   );

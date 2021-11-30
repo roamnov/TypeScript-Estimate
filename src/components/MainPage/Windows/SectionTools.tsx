@@ -49,8 +49,7 @@ const SectionTools = () =>{
     const RenderButtons=(ButtonsLocal: any)=>{
         if(typeof ButtonsLocal !== undefined){
             let items = []
-            setTimeout(()=> {console.log("2")}, 2000);
-            console.log(ButtonsLocal)
+            
             for (const [key, value] of Object.entries(ButtonsLocal)) {
                 //console.log(backValue(value, 'Image'));
                 

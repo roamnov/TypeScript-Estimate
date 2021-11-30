@@ -2009,12 +2009,12 @@ export default function Init() {
     //initGrid(document.getElementById("gridPanel"));
     
     function initGrid(gridPanel) {
-        /*
+        
         source = new createRecordSource();
         source.onHandleRequest = function(request) {
-            let json = Stimate.synchRequest('dbview/handleTable', request, 'id=' + dataId);
+            let json = Stimate.synchRequest('dbview/handleTable', request, 'id=' + "1014");
             return json;
-        };*/
+        };/**/
 
         gridPanel.grid = new createGrid(gridPanel);
         gridPanel.grid.defaultColumns = true;
