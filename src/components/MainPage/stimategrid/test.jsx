@@ -1,6 +1,11 @@
-
+import URL from "../../Url"
+import axios from "axios";
 import "./stimate.css"
 
+const axiosPostRequest =()=>{
+    
+    axios.post(`http://localhost:1317/dbview~HandleTable?LicGuid=`)
+}
 
 function getCookie(name, json=false) {
     if (!name) {
@@ -96,7 +101,7 @@ var Stimate = {
     licGUID: '',
     address: 'http://localhost:1317/mobile~',
     synchRequest: function(command, content, params) {
-        var request = new XMLHttpRequest(), res, url = Stimate.address + command + '?licGUID=' + Stimate.licGUID;
+        var request = new XMLHttpRequest(), res, url = 'http://localhost:1317/mobile~'+ command + '?licGUID=' + "GV1SS627OBN9GXE8892IEIDIQESNAAHI";
         if (params) {
             url = url + '&' + params;
         }
@@ -2010,7 +2015,9 @@ export default function Init() {
     
     function initGrid(gridPanel) {
         
+
         source = new createRecordSource();
+       
         source.onHandleRequest = function(request) {
             let json = Stimate.synchRequest('dbview/handleTable', request, 'id=' + "1014");
             return json;
@@ -2019,6 +2026,16 @@ export default function Init() {
         gridPanel.grid = new createGrid(gridPanel);
         gridPanel.grid.defaultColumns = true;
         grid = gridPanel.grid;
+
+        grid.setSource(null);
+        source.close();
+        try{
+            source.open();
+        }catch(error){
+            console.log(error)
+        }
+        ////////
+        grid.setSource(source);
     }
 
     //let json = Stimate.synchRequest('project/enter', {configName: 'webtools_hidden.drx', userName: 'webadmin'}); 
