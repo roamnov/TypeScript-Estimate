@@ -6,6 +6,7 @@ import Tree from "./Tree/tree.js";
 import { useStyles } from "../../../Styles";
 import ResizePanel from "./ResizebleComponent/ResizebleComponent";
 import Init from "../../stimategrid/test";
+import ManWhoSoldTheWorld from "../../stimategrid/test";
 
 //
 function TabPanel(props: TabPanelProps) {
@@ -98,7 +99,7 @@ const SqlWindow =(props: IdToTree) =>{
             />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                {open?Init():<button onClick={openGrid}>Открыть</button>}
+                {open?ManWhoSoldTheWorld():<button onClick={openGrid}>Открыть</button>}
                 <div id="gridPanel" style={{position: 'relative', left: '0px', top: '0px', width: '100%', height: '100%'}} >  </div>
             </TabPanel>
         </Grid>

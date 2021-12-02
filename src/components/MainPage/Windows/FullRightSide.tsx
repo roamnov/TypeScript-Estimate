@@ -7,7 +7,7 @@ import { Button, Grid, Toolbar } from '@material-ui/core';
 import SqlWindow from './ViewData/SqlWindow';
 import { IdToTree, InfoAboutClick, TabPanelProps,InfoAboutClickDown } from "../../ComponentInterface";
 //import init from "../stimweb/tools"
-import Init from '../stimategrid/test';
+//import Init from '../stimategrid/test';
 import { isTemplateSpan } from 'typescript';
 import { TabsDemo } from './Tabs/ClosableTabs';
 import { BrowserRouter } from 'react-router-dom';

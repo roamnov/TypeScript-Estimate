@@ -1,12 +1,25 @@
 import URL from "../../Url"
 import axios from "axios";
 import "./stimate.css"
+import  { useState } from "react";
 
-const axiosPostRequest =()=>{
-    
-    axios.post(`http://localhost:1317/dbview~HandleTable?LicGuid=`)
-}
 
+
+
+const ManWhoSoldTheWorld = ()=>{
+
+
+
+    const AxiosPostRequest =(url,content)=>{
+        
+        const res = axios.post(url, JSON.stringify(content))
+        const resData = res.then((response) => 
+      
+            response
+         )
+        console.log(resData)
+        
+    }
 function getCookie(name, json=false) {
     if (!name) {
       return undefined;
@@ -84,6 +97,7 @@ function deleteCookie(name) {
 };
   
 var Stimate = {
+    
     appendEvent: function(e, f, el) {
         if (el) {
             el.addEventListener(e, f)
@@ -100,20 +114,34 @@ var Stimate = {
     },
     licGUID: '',
     address: 'http://localhost:1317/mobile~',
-    synchRequest: function(command, content, params) {
-        var request = new XMLHttpRequest(), res, url = 'http://localhost:1317/mobile~'+ command + '?licGUID=' + "GV1SS627OBN9GXE8892IEIDIQESNAAHI";
+    SynchRequest: function(command, content, params) {
+        //const [responseText, setresponseText] = useState([])
+        var request = new XMLHttpRequest(), res, url = 'http://localhost:1317/mobile~'+ command + '?licGUID=' + "RK88EEBMNI9IG35NMGQTQAFLG3S1MV37";
         if (params) {
             url = url + '&' + params;
-        }
+        }/*
+        AxiosPostRequest(url,content)
+         
+        axios.post(url, JSON.stringify(content)).then((response)=>{
+            
+            return response
+            
+        }).catch((error)=>{
+            console.log(error)
+        }) */
+        
+        
         request.open('POST', url, false);
         request.onload = function() {
             res = request.responseText;
+            console.log(res)
         };
         if (content) {
             let json = JSON.stringify(content);
             request.send(json);
         } else request.send();
-        test = JSON.parse(res);
+        //test = JSON.parse(res);
+        console.log(res);
         return JSON.parse(res);
     },
     binaryRequest: function(command, content, params) {
@@ -2010,7 +2038,7 @@ function createGrid(panel) {
 
 var dataId = 0, source = null, grid = null;
 
-export default function Init() {
+function Init() {
     //initGrid(document.getElementById("gridPanel"));
     
     function initGrid(gridPanel) {
@@ -2019,7 +2047,7 @@ export default function Init() {
         source = new createRecordSource();
        
         source.onHandleRequest = function(request) {
-            let json = Stimate.synchRequest('dbview/handleTable', request, 'id=' + "1014");
+            let json = Stimate.SynchRequest('dbview/handleTable', request, 'id=' + "1014");
             return json;
         };/**/
 
@@ -2029,13 +2057,15 @@ export default function Init() {
 
         grid.setSource(null);
         source.close();
-        try{
-            source.open();
-        }catch(error){
-            console.log(error)
-        }
+        
+        source.open();
+        
+            
+       
         ////////
         grid.setSource(source);
+        
+
     }
 
     //let json = Stimate.synchRequest('project/enter', {configName: 'webtools_hidden.drx', userName: 'webadmin'}); 
@@ -2045,3 +2075,10 @@ export default function Init() {
    
     
 }
+return(
+    <>
+    {Init()}
+    </>
+)
+}
+export default ManWhoSoldTheWorld;
