@@ -1,7 +1,10 @@
-import URL from "../../Url"
+
+'use strict';
+import URL, {get_cookie} from "../../Url"
 import axios from "axios";
 import "./stimate.css"
 import  { useState } from "react";
+
 
 
 
@@ -20,103 +23,103 @@ const ManWhoSoldTheWorld = ()=>{
         console.log(resData)
         
     }
-function getCookie(name, json=false) {
-    if (!name) {
-      return undefined;
-    }
-    /*
-    Returns cookie with specified name (str) if exists, else - undefined
-    if returning value is JSON and json parameter is true, returns json, otherwise str
-    */
-    let matches = document.cookie.match(new RegExp(
-      "(?:^|; )" + name.replace(/([.$?*|{}()\[\]\\\/+^])/g, '\\$1') + "=([^;]*)"
-    ));
-    if (matches) {
-      let res = decodeURIComponent(matches[1]);
-      if (json) {
-        try {
-          return JSON.parse(res);
-        }
-        catch(e) {}
-      }
-      return res;
-    }
-  
-    return undefined;
-};
-
-function setCookie(name, value, options = {path: '/'}) {
-    /*
-    Sets a cookie with specified name (str), value (str) & options (dict)
-    options keys:
-      - path (str) - URL, for which this cookie is available (must be absolute!)
-      - domain (str) - domain, for which this cookie is available
-      - expires (Date object) - expiration date&time of cookie
-      - max-age (int) - cookie lifetime in seconds (alternative for expires option)
-      - secure (bool) - if true, cookie will be available only for HTTPS.
-                        IT CAN'T BE FALSE
-      - samesite (str) - XSRF protection setting.
-                         Can be strict or lax
-                         Read https://web.dev/samesite-cookies-explained/ for details
-      - httpOnly (bool) - if true, cookie won't be available for using in JavaScript
-                          IT CAN'T BE FALSE
-    */
-    if (!name) {
-      return;
-    }
-  
-    options = options || {};
-  
-    if (options.expires instanceof Date) {
-      options.expires = options.expires.toUTCString();
-    }
-  
-    if (value instanceof Object) {
-      value = JSON.stringify(value);
-    }
-    let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
-    for (let optionKey in options) {
-      updatedCookie += "; " + optionKey;
-      let optionValue = options[optionKey];
-      if (optionValue !== true) {
-        updatedCookie += "=" + optionValue;
-      }
-    }
-    document.cookie = updatedCookie;
-};
-  
-function deleteCookie(name) {
-    /*
-    Deletes a cookie with specified name.
-    Returns true when cookie was successfully deleted, otherwise false
-    */
-    setCookie(name, null, {
-        expires: new Date(),
-        path: '/'
-    })
-};
-  
-var Stimate = {
     
-    appendEvent: function(e, f, el) {
-        if (el) {
-            el.addEventListener(e, f)
-        } else {
-          document.addEventListener(e, f);
+    function getCookie(name, json=false) {
+        if (!name) {
+          return undefined;
         }
-    },
-    deleteEvent: function(e, f, el) {
-        if (el) {
-            el.removeEventListener(e, f)
-        } else {
-            document.removeEventListener(e, f);
+        /*
+        Returns cookie with specified name (str) if exists, else - undefined
+        if returning value is JSON and json parameter is true, returns json, otherwise str
+        */
+        let matches = document.cookie.match(new RegExp(
+          "(?:^|; )" + name.replace(/([.$?*|{}()\[\]\\\/+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        if (matches) {
+          let res = decodeURIComponent(matches[1]);
+          if (json) {
+            try {
+              return JSON.parse(res);
+            }
+            catch(e) {}
+          }
+          return res;
         }
-    },
+      
+        return undefined;
+    };
+    
+    function setCookie(name, value, options = {path: '/'}) {
+        /*
+        Sets a cookie with specified name (str), value (str) & options (dict)
+        options keys:
+          - path (str) - URL, for which this cookie is available (must be absolute!)
+          - domain (str) - domain, for which this cookie is available
+          - expires (Date object) - expiration date&time of cookie
+          - max-age (int) - cookie lifetime in seconds (alternative for expires option)
+          - secure (bool) - if true, cookie will be available only for HTTPS.
+                            IT CAN'T BE FALSE
+          - samesite (str) - XSRF protection setting.
+                             Can be strict or lax
+                             Read https://web.dev/samesite-cookies-explained/ for details
+          - httpOnly (bool) - if true, cookie won't be available for using in JavaScript
+                              IT CAN'T BE FALSE
+        */
+        if (!name) {
+          return;
+        }
+      
+        options = options || {};
+      
+        if (options.expires instanceof Date) {
+          options.expires = options.expires.toUTCString();
+        }
+      
+        if (value instanceof Object) {
+          value = JSON.stringify(value);
+        }
+        let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+        for (let optionKey in options) {
+          updatedCookie += "; " + optionKey;
+          let optionValue = options[optionKey];
+          if (optionValue !== true) {
+            updatedCookie += "=" + optionValue;
+          }
+        }
+        document.cookie = updatedCookie;
+    };
+      
+    function deleteCookie(name) {
+        /*
+        Deletes a cookie with specified name.
+        Returns true when cookie was successfully deleted, otherwise false
+        */
+        setCookie(name, null, {
+            expires: new Date(),
+            path: '/'
+        })
+    };
+      
+    var Stimate = {
+        appendEvent: function(e, f, el) {
+            if (el) {
+                el.addEventListener(e, f)
+            } else {
+              document.addEventListener(e, f);
+            }
+        },
+        deleteEvent: function(e, f, el) {
+            if (el) {
+                el.removeEventListener(e, f)
+            } else {
+                document.removeEventListener(e, f);
+            }
+        },
     licGUID: '',
     address: 'http://localhost:1317/mobile~',
     SynchRequest: function(command, content, params) {
         //const [responseText, setresponseText] = useState([])
-        var request = new XMLHttpRequest(), res, url = 'http://localhost:1317/mobile~'+ command + '?licGUID=' + "RK88EEBMNI9IG35NMGQTQAFLG3S1MV37";
+        var request = new XMLHttpRequest(), res, url = 'http://localhost:1317/mobile~'+ command + '?licGUID=' + get_cookie('LicGUID');
         if (params) {
             url = url + '&' + params;
         }/*
@@ -1294,13 +1297,13 @@ function createGrid(panel) {
     }
 
     function scrollToRecord(record, moveCurrent) {
-        if (sourceActive()) {
+        if (sourceActive) {
             if (moveCurrent) {
                 if (me.source.activeRecord != record) {
                     hideEditor();
                     if (me.source.isEditMode()) {
-                        if (me.source.modified) me.source.postRecord()
-                        else me.source.cancelRecord();
+                        if (me.source.modified){ source.postRecord()}
+                        else {me.source.cancelRecord();}
                     }
                     me.source.setRecordIndex(record);
                 }
@@ -1701,11 +1704,9 @@ function createGrid(panel) {
             return res + max;
         };
 
-        if (levels !== undefined){
-            for (let i = 0; i < levels.length; i++) {
+        for (let i = 0; i < levels.length; i++) {
             maxlev = maxint(maxlev, getMaxLevel(levels[i]));
-        };};
-        
+        };
 
         childColumnSize = rowHeight;
         titleSize = maxlev * childColumnSize;
@@ -2036,6 +2037,7 @@ function createGrid(panel) {
 
 
 
+
 var dataId = 0, source = null, grid = null;
 
 function Init() {
@@ -2047,7 +2049,7 @@ function Init() {
         source = new createRecordSource();
        
         source.onHandleRequest = function(request) {
-            let json = Stimate.SynchRequest('dbview/handleTable', request, 'id=' + "1014");
+            let json = Stimate.SynchRequest('dbview/handleTable', request, 'id=' + "327");
             return json;
         };/**/
 
@@ -2057,14 +2059,10 @@ function Init() {
 
         grid.setSource(null);
         source.close();
-        
         source.open();
-        
-            
-       
-        ////////
         grid.setSource(source);
-        
+        grid.refreshSource();
+    
 
     }
 

@@ -14,10 +14,12 @@ import { BrowserRouter } from 'react-router-dom';
 import BasicBreadcrumbs from './Breadcrumbs';
 import SectionTools from './SectionTools';
 import DocTabs from './Tabs/CustomTabs';
+import ManWhoSoldTheWorld from '../stimategrid/test';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
 
+  const [open, setOpen] = React.useState(false);
   const [selected,setSelected] = React.useState<InfoAboutClick | undefined>()
   const [currentTab, setcurrentTab] = React.useState(0);
   const [value, setValue] = React.useState(0);
@@ -25,7 +27,9 @@ export default function FullRightSide(props: InfoAboutClick) {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  
+  const openGrid= ()=>{
+    setOpen(!open)
+  }
 
   const tabs = [
     {
@@ -76,10 +80,10 @@ export default function FullRightSide(props: InfoAboutClick) {
       
     </Grid>
     
-    <Grid item  style={{}} >
+    <Grid item xs  style={{height:""}} >
       <div id ="WorkPlace"></div>
-      {getTabs()}
-      {}
+      <SqlWindow CLSID={props.clsic} ID={props.id} />
+
     </Grid>  
     
      
@@ -89,6 +93,11 @@ export default function FullRightSide(props: InfoAboutClick) {
 }
 
 /*
+{getTabs()}
+
+ {open?ManWhoSoldTheWorld():<button onClick={openGrid}>Открыть</button>}
+       <div id="gridPanel" style={{position: 'relative', left: '0px', top: '0px', width: '100%', height: '100%'}} >  </div>
+
 
 props.ID !== undefined && props.CLSID == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"? <SqlWindow CLSID={clsid} ID={id} /> : 
 

@@ -12,7 +12,7 @@ const GUID = uuidv4()
 function CreateCokies(name: string, value: string) {
     document.cookie = name + "=" + value;
 };
-function get_cookie(cookie_name: string): string {
+export function get_cookie(cookie_name: string): string {
     var results = document.cookie.match(
         "(^|;) ?" + cookie_name + "=([^;]*)(;|$)"
     );
