@@ -39,6 +39,7 @@ async function fetchData() {
       while (!parent.classList.contains("tree")) {
         parent = parent.parentNode;
       }
+      
       parent.querySelectorAll('.active').forEach(n => n.classList.remove('active'))
       b.classList.add("active");
       if (id) {//http://localhost:1316/mobile~dbview/HandleSQLScript?LicGUID=9E69A024498237DD3D5485809E3167AD&ID=${id}
@@ -50,6 +51,7 @@ async function fetchData() {
         axios.get(URL(params)).then((response) => {
           otv = response.data.content;
          props.setCode(otv)
+         props.setIDbd(b.id)
         })
       }
     }

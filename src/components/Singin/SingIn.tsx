@@ -116,7 +116,7 @@ const SignIn = (props: componentProps) => {
         direction="column"
         justifyContent="space-around"
         alignItems="stretch"
-        spacing={2}
+        spacing={3}
       >
         <Grid item xs>
           <Button
@@ -136,19 +136,14 @@ const SignIn = (props: componentProps) => {
 
         <SelectUser userInfo={user} drxInfo={drx} setBackInfo={setUser} />
 
-        <SelectWorkPlace
-          drxInfo={drx}
-          userInfo={user}
-          workPlaceInfo={workplace}
-          setBackInfo={setWorkPlace}
-        />
+        <SelectWorkPlace  drxInfo={drx}  userInfo={user}  workPlaceInfo={workplace}  setBackInfo={setWorkPlace}   />
 
         {/* ПОТОМ СДЕЛАТЬ GETUSERINFO */}
 
         <Grid item xs>
           <PasswordInput password={password} setBackInfo={setPassword} />
         </Grid>
-        {}
+      
         <Grid item>
           
           <Button
@@ -162,7 +157,7 @@ const SignIn = (props: componentProps) => {
             Войти
           </Button>
         </Grid>
-        <div>{error !== null ? `${error}` : ""}</div>
+        <div style={{justifyContent:"center", alignItems:"center", display:"flex", color:"red"}}>{error !== null ? `${error}` : ""}</div>
       </Grid>
       </Box>
       </Paper>

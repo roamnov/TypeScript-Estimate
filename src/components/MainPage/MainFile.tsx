@@ -1,7 +1,7 @@
 import { Container } from "@material-ui/core";
 import React from "react";
 import { LoginIn } from "../Wrapper";
-import WrapperRightSide from "./WrapperRightSide";
+import WrapperRightSide from "./WrapperMainFile";
 
 
 import DashboardNavbar from "./NotWorkArea(Side&Head)/Header";

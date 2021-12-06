@@ -15,6 +15,7 @@ import BasicBreadcrumbs from './Breadcrumbs';
 import SectionTools from './SectionTools';
 import DocTabs from './Tabs/CustomTabs';
 import ManWhoSoldTheWorld from '../stimategrid/test';
+import DocsReportsMainWindow from './Docs&Reports/Docs&ReportsWindow';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
@@ -58,7 +59,7 @@ export default function FullRightSide(props: InfoAboutClick) {
       return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <SqlWindow CLSID={props.clsic} ID={props.id} />) 
     }
     if(props.id !== undefined){
-      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <> {props.name}</>) 
+      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <DocsReportsMainWindow id={props.id}/>) 
     }
   }
 
@@ -82,8 +83,8 @@ export default function FullRightSide(props: InfoAboutClick) {
     
     <Grid item xs  style={{height:""}} >
       <div id ="WorkPlace"></div>
-      <SqlWindow CLSID={props.clsic} ID={props.id} />
-
+     
+      {getTabs()}
     </Grid>  
     
      

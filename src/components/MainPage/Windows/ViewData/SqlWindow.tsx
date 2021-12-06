@@ -1,11 +1,10 @@
-import { Box, Grid, Tab, Tabs, Typography } from "@material-ui/core";
+import { Grid, Tab, Tabs } from "@material-ui/core";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { IdToTree, TabPanelProps } from "../../../ComponentInterface";
-import React, { createElement, useCallback, useEffect, useState } from "react";
+import React, {useState } from "react";
 import Tree from "./Tree/tree.js";
 import { useStyles } from "../../../Styles";
 import ResizePanel from "./ResizebleComponent/ResizebleComponent";
-import Init from "../../stimategrid/test";
 import ManWhoSoldTheWorld from "../../stimategrid/test";
 
 //
@@ -21,7 +20,7 @@ function TabPanel(props: TabPanelProps) {
         {...other}
       >
         {value === index && (
-          <Grid xs={12} style={{ height: "100vh"  }}>
+          <Grid style={{ height: "100vh"  }}>
             {children}
           </Grid>
         )}
@@ -43,7 +42,8 @@ const SqlWindow =(props: IdToTree) =>{
     const [code, setCode] = React.useState(    ``  );
     const [value, setValue] = React.useState(0);
     const [open, setOpen] = useState(false)
-    
+    const [IDbd, setIDbd] = useState();
+   
     const openGrid= ()=>{
       setOpen(!open)
     }
@@ -62,13 +62,13 @@ const SqlWindow =(props: IdToTree) =>{
               
               >
         
-         
+        
         <ResizePanel   direction="e" style={{ width: '400px',  maxWidth: "80%" , paddingTop:"2%"}} >
-          
-            <Tree setCode={setCode} />
+         
+          <Tree setCode={setCode} setIDbd={setIDbd} />           
           
         </ResizePanel>
-    
+    {/*  */}
            
          
         
@@ -99,7 +99,7 @@ const SqlWindow =(props: IdToTree) =>{
             />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                {open?ManWhoSoldTheWorld():<button onClick={openGrid}>Открыть</button>}
+                {open?ManWhoSoldTheWorld(IDbd):<button onClick={openGrid}>Открыть</button>}
                 <div id="gridPanel" style={{position: 'relative', left: '0px', top: '0px', width: '100%', height: '100%'}} >  </div>
             </TabPanel>
         </Grid>

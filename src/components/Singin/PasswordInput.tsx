@@ -18,7 +18,7 @@ const PasswordInput = (props: menuSelect) => {
       onChange={clientEmailHandler}
       defaultValue={""}
       value={props.password}
-      style={{ marginTop: "12px" }}
+      
     />
   );
 };

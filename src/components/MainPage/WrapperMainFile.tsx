@@ -1,18 +1,11 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
 import CssBaseline from '@mui/material/CssBaseline';
 import DashboardNavbar from './NotWorkArea(Side&Head)/Header';
 import SideBar from './NotWorkArea(Side&Head)/SideBar';
-import { Button, ButtonGroup, Grid, Toolbar } from '@material-ui/core';
-import SqlWindow from './Windows/ViewData/SqlWindow';
 import FullRightSide from './Windows/FullRightSide';
-import Init from './stimategrid/test';
 import { InfoAboutClick } from '../ComponentInterface';
-import { BrowserRouter } from 'react-router-dom';
-import useLocalStorage from '../Hooks/useLocalStorage';
-
 
 export default function WrapperRightSide() {
   
@@ -28,7 +21,7 @@ export default function WrapperRightSide() {
         <DashboardNavbar/>
       </AppBar>
 
-      <SideBar isLoading={setIsLoading} setSelected={setSelected}/>
+      <SideBar  isLoading={setIsLoading} setSelected={setSelected}/>
     
       <FullRightSide isLoading={isLoading} id= {selected?.id}  clsic= {selected?.clsic} name= {selected?.name}  />
    

@@ -9,20 +9,10 @@ import  { useState } from "react";
 
 
 
-const ManWhoSoldTheWorld = ()=>{
+const ManWhoSoldTheWorld = (IDbd)=>{
 
 
 
-    const AxiosPostRequest =(url,content)=>{
-        
-        const res = axios.post(url, JSON.stringify(content))
-        const resData = res.then((response) => 
-      
-            response
-         )
-        console.log(resData)
-        
-    }
     
     function getCookie(name, json=false) {
         if (!name) {
@@ -137,14 +127,12 @@ const ManWhoSoldTheWorld = ()=>{
         request.open('POST', url, false);
         request.onload = function() {
             res = request.responseText;
-            console.log(res)
         };
         if (content) {
             let json = JSON.stringify(content);
             request.send(json);
-        } else request.send();
-        //test = JSON.parse(res);
-        console.log(res);
+        } else request.send(); 
+        
         return JSON.parse(res);
     },
     binaryRequest: function(command, content, params) {
@@ -2040,19 +2028,19 @@ function createGrid(panel) {
 
 var dataId = 0, source = null, grid = null;
 
-function Init() {
+function Init(testID) {
     //initGrid(document.getElementById("gridPanel"));
     
-    function initGrid(gridPanel) {
+    function initGrid(gridPanel, testBD) {
         
 
         source = new createRecordSource();
        
         source.onHandleRequest = function(request) {
-            let json = Stimate.SynchRequest('dbview/handleTable', request, 'id=' + "327");
+            let json = Stimate.SynchRequest('dbview/handleTable', request, 'id=' + testBD);
             return json;
         };/**/
-
+        
         gridPanel.grid = new createGrid(gridPanel);
         gridPanel.grid.defaultColumns = true;
         grid = gridPanel.grid;
@@ -2069,13 +2057,13 @@ function Init() {
     //let json = Stimate.synchRequest('project/enter', {configName: 'webtools_hidden.drx', userName: 'webadmin'}); 
     //json = Stimate.synchRequest('dbview/uploadfile', {fileName: 'D:\\Temp\\table.trs'});
     //if (json) dataId = json.ID;
-    initGrid(document.getElementById("gridPanel"));
+    initGrid(document.getElementById("gridPanel"), testID);
    
     
 }
 return(
     <>
-    {Init()}
+    {Init(IDbd)}
     </>
 )
 }

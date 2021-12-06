@@ -78,4 +78,12 @@ export interface TabPanelProps {
         name: string | undefined;
     }
     
+   
   }
+
+  export interface DocsAndReports extends componentProps{
+    id: string | undefined;
+    clsic?: string | undefined;
+    name?: string | undefined;
+  }
+

@@ -85,6 +85,7 @@ export default function SideBar(props: MainBoxBackClick) {
     params.set('Simple','1');
     params.set('full','1');
     await axios.get(URL(params)).then((response) => {
+      console.log(response.data)
       setData(response.data["Sections"]);
       ListItems(response.data["Sections"]);
       props.isLoading(false);
@@ -134,7 +135,7 @@ export default function SideBar(props: MainBoxBackClick) {
           ID = SectionList[key]["ID"];
           currentDeep = SectionList[key]["Deep"];
           //Img = ImgURL(SectionList[key]["Image"]);
-
+          if(SectionList[key]["Documents"] !== undefined || SectionList[key]["Reports"] !== undefined)
           keyS += 1;
 
           if (currentDeep == null) {
@@ -190,7 +191,7 @@ export default function SideBar(props: MainBoxBackClick) {
                   timeout="auto"
                   unmountOnExit
                 >
-                  <List component="div" disablePadding style={{scrollbarWidth: "thin", scrollbarColor: "white"}}>
+                  <List component="div" disablePadding >
                     <ListItemButton sx={{ pl: howDeep }}   id={ID} onClick={updateSelected}>
                       <ListItemIcon>{Img}</ListItemIcon>
                       <ListItemText primary={Name} />
@@ -208,6 +209,7 @@ export default function SideBar(props: MainBoxBackClick) {
   return (
  
     <Drawer
+    
       className={classes.drawer}
       variant="permanent"
       PaperProps={{ style: { width: drawerWidth,  } }}
