@@ -135,7 +135,7 @@ export default function SideBar(props: MainBoxBackClick) {
           ID = SectionList[key]["ID"];
           currentDeep = SectionList[key]["Deep"];
           //Img = ImgURL(SectionList[key]["Image"]);
-          if(SectionList[key]["Documents"] !== undefined || SectionList[key]["Reports"] !== undefined)
+
           keyS += 1;
 
           if (currentDeep == null) {
