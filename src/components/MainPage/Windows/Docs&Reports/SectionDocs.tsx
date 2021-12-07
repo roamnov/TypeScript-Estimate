@@ -1,13 +1,16 @@
-import { Grid } from "@material-ui/core";
+import { Grid, ListItemButton, ListItemText } from "@material-ui/core";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { DocsAndReports } from "../../../ComponentInterface";
 import URL from "../../../Url";
+import ResizePanel from "../ViewData/ResizebleComponent/ResizebleComponent";
 
 
 const SectionDocs= (props:DocsAndReports) =>{
 
     const [sectionDocs, setSetionDocs] = useState([]);
+
+
     useEffect(() => {
         setActiveSession();
         initContext();
@@ -57,12 +60,39 @@ const SectionDocs= (props:DocsAndReports) =>{
         })
     }
 
+
+    const ListSecond=(sectionDoc: any)=>{
+        let items= [], Name, DocCfgID
+        for (const [key, value] of Object.entries(sectionDoc)) {
+            Name = sectionDoc[key]["Name"]
+            DocCfgID = sectionDoc[key]["DocCfgID"]
+            items.push(
+                
+                <ListItemButton component="li" id={DocCfgID} >
+                <ListItemText primary={Name} />
+              </ListItemButton>
+            )
+        }
+
+        return items
+    }
+
     return(
-        <Grid item>
-            {JSON.stringify(sectionDocs)}
-        </Grid>
+        <ResizePanel  direction="e">
+            <>
+            
+            {ListSecond(sectionDocs)}
+            </>
+        </ResizePanel>
     )
 }
 
 
 export default SectionDocs;
+
+/*
+<Grid xs={2} item style={{backgroundColor:"red"}}>
+            
+        </Grid>
+
+*/

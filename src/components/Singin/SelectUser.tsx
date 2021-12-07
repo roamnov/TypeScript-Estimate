@@ -54,7 +54,7 @@ const SelectUser = (props: menuSelect) => {
           props.setBackInfo(newInputValue);
           setInputValue(newInputValue);
         }}
-        id="user"
+        
         options={MenuItems(users)}
         renderInput={(params) => (
           <TextField {...params} onClick={getUser} label="Имя пользователя" />

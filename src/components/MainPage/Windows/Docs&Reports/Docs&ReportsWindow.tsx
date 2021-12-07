@@ -13,6 +13,7 @@ const DocsReportsMainWindow= (props:DocsAndReports) =>{
     return(
         <Grid container direction="row" justifyContent="flex-start" alignItems="center"> 
             <SectionDocs id={props.id}/>
+            sdddssd
         </Grid>
     )
 }
