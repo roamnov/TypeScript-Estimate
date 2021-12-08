@@ -49,7 +49,7 @@ const SelectDrx = (props: menuSelect) => {
           setValue(newValue);
         }}
         inputValue={inputValue}
-        onInputChange={(event, newInputValue) => {
+        onInputChange={(event: any, newInputValue: React.SetStateAction<string>) => {
           props.setBackInfo(newInputValue);
           setInputValue(newInputValue);
         }}

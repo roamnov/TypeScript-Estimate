@@ -25,7 +25,6 @@ import SelectWorkPlace from "./SelectWorkPlace";
 import PasswordInput from "./PasswordInput";
 import axios from "axios";
 import URL from "../Url";
-import AlertPassword from "./AlertPassword";
 import { purple, red } from "@material-ui/core/colors";
 import { Link,  useNavigate } from "react-router-dom";
 import { LoginIn } from "../Wrapper";
@@ -138,7 +137,7 @@ const SignIn = (props: componentProps) => {
 
         <SelectWorkPlace  drxInfo={drx}  userInfo={user}  workPlaceInfo={workplace}  setBackInfo={setWorkPlace}   />
 
-        {/* ПОТОМ СДЕЛАТЬ GETUSERINFO */}
+       {/*  ПОТОМ СДЕЛАТЬ GETUSERINFO */}
 
         <Grid item xs>
           <PasswordInput password={password} setBackInfo={setPassword} />

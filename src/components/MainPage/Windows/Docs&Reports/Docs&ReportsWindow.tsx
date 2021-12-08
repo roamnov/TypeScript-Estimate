@@ -13,10 +13,20 @@ const DocsReportsMainWindow= (props:DocsAndReports) =>{
     return(
         <Grid container direction="row" justifyContent="flex-start" alignItems="center"> 
             <SectionDocs id={props.id}/>
-            sdddssd
+            <div style={{}}>
+
+            </div>
         </Grid>
     )
 }
 
 
 export default DocsReportsMainWindow;
+
+/*
+
+<Grid xs item style={{zIndex:"4", backgroundColor:"blue", height: "100%"}} >
+                dsd
+            </Grid>
+
+*/
