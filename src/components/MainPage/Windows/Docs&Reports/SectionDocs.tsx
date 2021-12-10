@@ -78,7 +78,7 @@ const SectionDocs= (props:DocsAndReports) =>{
     }
 
     return(
-        <ResizePanel  direction="e">
+        <ResizePanel  direction="e" style={{ width: '400px',  maxWidth: "80%" , paddingTop:"2%"}}>
             <>
             
             {ListSecond(sectionDocs)}
