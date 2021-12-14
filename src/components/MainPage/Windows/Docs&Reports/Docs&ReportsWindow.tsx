@@ -1,6 +1,7 @@
 import { Grid } from "@material-ui/core";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Alert from "../../../Alert";
 import { DocsAndReports } from "../../../ComponentInterface";
 import TableParams from "../ParamsList/TableParams/TableParams";
 import SectionDocs from "./SectionDocs";
@@ -18,6 +19,7 @@ const DocsReportsMainWindow= (props:DocsAndReports) =>{
             <div style={{}}>
               
             </div>
+            <Alert/>
         </Grid>
     )
 }

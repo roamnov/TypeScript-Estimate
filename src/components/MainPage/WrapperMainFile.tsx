@@ -6,6 +6,7 @@ import DashboardNavbar from './NotWorkArea(Side&Head)/Header';
 import SideBar from './NotWorkArea(Side&Head)/SideBar';
 import FullRightSide from './Windows/FullRightSide';
 import { InfoAboutClick } from '../ComponentInterface';
+import ModalContainer from '../Containers/ModalContainer';
 
 export default function WrapperRightSide() {
   
@@ -21,6 +22,7 @@ export default function WrapperRightSide() {
         <DashboardNavbar/>
       </AppBar>
 
+
       <SideBar  isLoading={setIsLoading} setSelected={setSelected}/>
     
       <FullRightSide isLoading={isLoading} id= {selected?.id}  clsic= {selected?.clsic} name= {selected?.name}  />
@@ -33,6 +35,11 @@ export default function WrapperRightSide() {
 
 /*
 
+        <ModalContainer>
+          <>
+          SAS
+          </>
+        </ModalContainer>
 <Button style={{marginTop: 200}} onClick={() => setGrid(true)}> Нажми на меня</Button>
         <div style={{marginTop: 200, width:"50%", height:"100%"}} id="gridPanel">  </div> 
         {grid? Init(): <> пока пусто</> }

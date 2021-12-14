@@ -9,8 +9,8 @@ import ResizePanel from "../ViewData/ResizebleComponent/ResizebleComponent";
 const SectionDocs= (props:DocsAndReports) =>{
 
     const [sectionDocs, setSetionDocs] = useState([]);
-
-
+    const windowInnerHeight = window.innerHeight - 80 
+    console.log(windowInnerHeight)
     useEffect(() => {
         setActiveSession();
         initContext();
@@ -78,11 +78,11 @@ const SectionDocs= (props:DocsAndReports) =>{
     }
 
     return(
-        <ResizePanel  direction="e" style={{ width: '400px',  maxWidth: "80%" , paddingTop:"2%"}}>
-            <>
+        <ResizePanel  direction="e" style={{ width: '400px',  maxWidth: "80%" , paddingTop:"2%",}}>
+            <div style={{maxHeight:windowInnerHeight}}>
             
             {ListSecond(sectionDocs)}
-            </>
+            </div>
         </ResizePanel>
     )
 }

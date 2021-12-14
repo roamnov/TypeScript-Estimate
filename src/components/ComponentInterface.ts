@@ -87,3 +87,6 @@ export interface TabPanelProps {
     name?: string | undefined;
   }
 
+  export interface containerProps{
+    children?: React.ReactNode[] | React.ReactNode;
+}

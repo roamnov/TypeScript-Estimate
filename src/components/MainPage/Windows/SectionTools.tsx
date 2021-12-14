@@ -1,12 +1,5 @@
 import  React from 'react';
-import { Button, ButtonGroup, Grid, Toolbar } from "@material-ui/core"
-import palochka from '../../../static/images/palochka.png';
-import HomeIcon from '@mui/icons-material/Home';
-import FolderIcon from '@mui/icons-material/Folder';
-import TouchAppIcon from '@mui/icons-material/TouchApp';
-import DescriptionIcon from '@mui/icons-material/Description';
-import RequestPageIcon from '@mui/icons-material/RequestPage';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import { Avatar, Button, ButtonGroup, Grid, IconButton, } from "@material-ui/core"
 import URL from '../../Url';
 import axios from 'axios';
 import { ImgURL } from "../../Url";
@@ -25,13 +18,7 @@ const SectionTools = () =>{
       
     }, [])
     
-    const getImages = async (whereIsImg: string) =>{
-        await axios.get(`http://localhost:1317/server~${whereIsImg}`).then((response)=>{
-            setImgf(response.data)
-            return response.data
-        })
-        
-    }
+  
 
 
     const GetSectionTools = async () =>{
@@ -53,7 +40,17 @@ const SectionTools = () =>{
             for (const [key, value] of Object.entries(ButtonsLocal)) {
                 //console.log(backValue(value, 'Image'));
                 
-                items.push(ImgURL(backValue(value, 'Image')))//items.push(<img src={getImages(backValue(value, 'Image'))}/>)
+                items.push(
+                    <label>
+                   
+                        
+                        
+                        <IconButton color='primary'  component="span">
+                            {ImgURL(backValue(value, 'Image'))}
+                        </IconButton>
+                  
+                    </label>
+                    )//items.push(<img src={getImages(backValue(value, 'Image'))}/>)
                 
               }
               return items
@@ -67,7 +64,7 @@ const SectionTools = () =>{
 
     return(
         <Grid style={{}} justifyContent="center">
-            <button onClick={GetSectionTools}> НАЖМИ ДЛЯ ЗАПРОСА</button>
+           
             {RenderButtons(buttons)}
            
         </Grid>
@@ -77,10 +74,7 @@ const SectionTools = () =>{
 export default SectionTools;
 
 
-function imgUrl(): any {
-    throw new Error('Function not implemented.');
-}
-/*
+/* <button onClick={GetSectionTools}> НАЖМИ ДЛЯ ЗАПРОСА</button>
 React.useEffect(() => {
         console.log(buttons)
         console.log(menuBar)

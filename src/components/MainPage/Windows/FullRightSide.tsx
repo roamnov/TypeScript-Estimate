@@ -32,26 +32,6 @@ export default function FullRightSide(props: InfoAboutClick) {
     setOpen(!open)
   }
 
-  const tabs = [
-    {
-      id: 1,
-      label: "Tab 1",
-      component: props.id !== undefined && props.clsic  == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"? <SqlWindow CLSID={props.clsic} ID={props.id} /> : <div></div>,
-      closeable: false
-    },
-    {
-      id: 2,
-      label: "Tab 2",
-      component: <div/>,
-      closeable: true
-    },
-    {
-      id: 3,
-      label: "Tab 3",
-      component: <div/>,
-      closeable: true
-    }
-  ];
 
   const getTabs = ()=>{
     if(props.id !== undefined && props.clsic  == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"){
@@ -71,7 +51,8 @@ export default function FullRightSide(props: InfoAboutClick) {
     justifyContent="center" 
     component="main" 
     sx={{ flexGrow: 1, pt: 2, pl:2 }}  
-    alignItems="stretch"
+    alignItems="stretch" 
+    
     
     >
     
