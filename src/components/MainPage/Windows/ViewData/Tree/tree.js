@@ -46,7 +46,7 @@ async function fetchData() {
         let params = new Map();
         params.set('prefix','dbview'); 
         params.set('comand','HandleSQLScript');
-        params.set('SectionID','143');
+        params.set('SectionID',b.id);
         params.set('ID',b.id);
         axios.get(URL(params)).then((response) => {
           otv = response.data.content;

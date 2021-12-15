@@ -1,4 +1,4 @@
-import { Grid, Tab, Tabs } from "@material-ui/core";
+import { Button, Grid, Tab, Tabs } from "@material-ui/core";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { IdToTree, TabPanelProps } from "../../../ComponentInterface";
 import React, {useState } from "react";
@@ -43,7 +43,7 @@ const SqlWindow =(props: IdToTree) =>{
     const [value, setValue] = React.useState(0);
     const [open, setOpen] = useState(false)
     const [IDbd, setIDbd] = useState();
-   
+    const windowInnerHeight = window.innerHeight - 80
     const openGrid= ()=>{
       setOpen(!open)
     }
@@ -89,17 +89,17 @@ const SqlWindow =(props: IdToTree) =>{
                 placeholder="Please enter SQL code."
                 onChange={(evn) => setCode(evn.target.value)}
                 padding={5}
-                
+                //minHeight={windowInnerHeight}
                 style={{
                 fontSize: 12,
                 backgroundColor: "#f5f5f5",
                 fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                height: "100vh",
+                  height:"200px"
                 }}
             />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                {open?ManWhoSoldTheWorld(IDbd):<button onClick={openGrid}>Открыть</button>}
+                {open?ManWhoSoldTheWorld(IDbd):<Button disabled={IDbd === undefined} variant="outlined" onClick={openGrid}>Открыть</Button>}
                 <div id="gridPanel" style={{position: 'relative', left: '0px', top: '0px', width: '100%', height: '100%'}} >  </div>
             </TabPanel>
         </Grid>

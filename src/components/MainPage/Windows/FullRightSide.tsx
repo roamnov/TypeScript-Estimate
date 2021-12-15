@@ -11,11 +11,12 @@ import { IdToTree, InfoAboutClick, TabPanelProps,InfoAboutClickDown } from "../.
 import { isTemplateSpan } from 'typescript';
 import { TabsDemo } from './Tabs/ClosableTabs';
 import { BrowserRouter } from 'react-router-dom';
-import BasicBreadcrumbs from './Breadcrumbs';
-import SectionTools from './SectionTools';
+import BasicBreadcrumbs from '../Tools/Breadcrumbs';
+import SectionTools from '../Tools/SectionTools';
 import DocTabs from './Tabs/CustomTabs';
 import ManWhoSoldTheWorld from '../stimategrid/test';
 import DocsReportsMainWindow from './Docs&Reports/Docs&ReportsWindow';
+import NestedMenu from '../Tools/NestedMenu';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
@@ -52,24 +53,21 @@ export default function FullRightSide(props: InfoAboutClick) {
     component="main" 
     sx={{ flexGrow: 1, pt: 2, pl:2 }}  
     alignItems="stretch" 
-    
-    
     >
     
     <Grid item  >
-    <Toolbar />
+      <Toolbar />
       {props.isLoading?<div></div>:<><SectionTools/></>}
-      
+        
     </Grid>
     
     <Grid item xs  style={{height:""}} >
-      <div id ="WorkPlace"></div>
+      <div id ="WorkPlace">
+
+      </div>
      
       {getTabs()}
     </Grid>  
-    
-     
-    
   </Grid>
   );
 }

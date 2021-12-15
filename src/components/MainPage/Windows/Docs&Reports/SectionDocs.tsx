@@ -1,4 +1,4 @@
-import { Grid, ListItemButton, ListItemText } from "@material-ui/core";
+import { Grid, ListItemButton, ListItemText, Typography, Card, CardContent,CardActionArea, Button, Box } from "@material-ui/core";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { DocsAndReports } from "../../../ComponentInterface";
@@ -67,10 +67,9 @@ const SectionDocs= (props:DocsAndReports) =>{
             Name = sectionDoc[key]["Name"]
             DocCfgID = sectionDoc[key]["DocCfgID"]
             items.push(
+          
+                <Button style={{wordWrap:"normal",}} sx={{p:'0px',margin: "0.3%", width:"200px", height:"70px"}} variant="outlined"> {Name}</Button>
                 
-                <ListItemButton component="li" id={DocCfgID} >
-                <ListItemText primary={Name} />
-              </ListItemButton>
             )
         }
 
@@ -78,12 +77,18 @@ const SectionDocs= (props:DocsAndReports) =>{
     }
 
     return(
-        <ResizePanel  direction="e" style={{ width: '400px',  maxWidth: "80%" , paddingTop:"2%",}}>
-            <div style={{maxHeight:windowInnerHeight}}>
+        
+            <div >
+            <Typography variant="h5" sx={{margin: "0.3%"}}>
+                Документы:
+                <Grid container direction="row"  justifyContent="flex-start"alignItems="flex-start" sx={{paddingLeft:"10%"}}>
+                    {ListSecond(sectionDocs)}  
+                </Grid>
+            </Typography>
             
-            {ListSecond(sectionDocs)}
+            
             </div>
-        </ResizePanel>
+     
     )
 }
 
@@ -91,6 +96,36 @@ const SectionDocs= (props:DocsAndReports) =>{
 export default SectionDocs;
 
 /*
+
+<Card sx={{}}>
+                    <CardActionArea>
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="div">
+                                {Name}
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+
+
+    const ListSecond=(sectionDoc: any)=>{
+        let items= [], Name, DocCfgID
+        for (const [key, value] of Object.entries(sectionDoc)) {
+            Name = sectionDoc[key]["Name"]
+            DocCfgID = sectionDoc[key]["DocCfgID"]
+            items.push(
+                
+                <ListItemButton component="li" id={DocCfgID} >
+                <ListItemText primary={Name} />
+              </ListItemButton>
+            )
+        }
+
+
+
+<ResizePanel  direction="e" style={{ width: '400px',  maxWidth: "80%" , paddingTop:"2%",}}>
+   </ResizePanel>
+
 <Grid xs={2} item style={{backgroundColor:"red"}}>
             
         </Grid>

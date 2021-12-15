@@ -16,7 +16,7 @@ export default function WrapperRightSide() {
   const [selected, setSelected] = React.useState<InfoAboutClick | undefined>();
   console.log(isLoading)
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex' , height:"600px"}}>
       <CssBaseline />
       <AppBar  position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} style={{backgroundColor:"#628eb8"}}>
         <DashboardNavbar/>
