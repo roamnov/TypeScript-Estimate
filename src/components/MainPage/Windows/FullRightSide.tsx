@@ -48,12 +48,11 @@ export default function FullRightSide(props: InfoAboutClick) {
   return (
     
     <Grid container 
-    direction="column" 
-    justifyContent="center" 
-    component="main" 
-    sx={{ flexGrow: 1, pt: 2, pl:2 }}  
-    alignItems="stretch" 
-    >
+          direction="column" 
+          justifyContent="center" 
+          sx={{ flexGrow: 1, pt: 2, pl:2 }}  
+          alignItems="stretch" 
+          >
     
     <Grid item  >
       <Toolbar />
@@ -61,7 +60,7 @@ export default function FullRightSide(props: InfoAboutClick) {
         
     </Grid>
     
-    <Grid item xs  style={{height:""}} >
+    <Grid item xs   >
       <div id ="WorkPlace">
 
       </div>

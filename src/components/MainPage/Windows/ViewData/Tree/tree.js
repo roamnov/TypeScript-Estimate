@@ -22,6 +22,17 @@ let [data, setdata] = useState([])
 useEffect(() => {
   fetchData();
 }, [])
+
+
+const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight-218);
+
+const handleResize = () => {
+  setCurrentHeight(window.innerHeight-218);
+}
+useEffect(() => {
+  window.addEventListener("resize", handleResize, false);
+}, []);
+
 async function fetchData() {
   let params = new Map();
     params.set('prefix','dbview'); 
@@ -104,12 +115,11 @@ async function fetchData() {
 
 
 
-
-
+   
 
   return (
-    <div style={{ height: "100%"}}>
-    <ul className='tree' >
+    <div style={{}}>
+    <ul class='tree' style={{ height:`${currentHeight}px`, overflow:"scroll", overflowX:"hidden",scrollbarWidth:"none"}} >
       {data.map((item) => {
         return <li
           id={item["id"]}

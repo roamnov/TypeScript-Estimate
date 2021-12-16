@@ -1,7 +1,7 @@
 import { Button, Grid, Tab, Tabs } from "@material-ui/core";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { IdToTree, TabPanelProps } from "../../../ComponentInterface";
-import React, {useState } from "react";
+import  {useState,useEffect } from "react";
 import Tree from "./Tree/tree.js";
 import { useStyles } from "../../../Styles";
 import ResizePanel from "./ResizebleComponent/ResizebleComponent";
@@ -20,7 +20,7 @@ function TabPanel(props: TabPanelProps) {
         {...other}
       >
         {value === index && (
-          <Grid style={{ height: "100vh"  }}>
+          <Grid style={{  }}>
             {children}
           </Grid>
         )}
@@ -39,11 +39,19 @@ function TabPanel(props: TabPanelProps) {
 
 const SqlWindow =(props: IdToTree) =>{
     const classes = useStyles();
-    const [code, setCode] = React.useState(    ``  );
-    const [value, setValue] = React.useState(0);
+    const [code, setCode] = useState(    ``  );
+    const [value, setValue] = useState(0);
     const [open, setOpen] = useState(false)
     const [IDbd, setIDbd] = useState();
-    const windowInnerHeight = window.innerHeight - 80
+    const [currentHeight, setCurrentHeight] = useState(window.innerHeight-218);
+
+    const handleResize = () => {
+      setCurrentHeight(window.innerHeight-218);
+    }
+    useEffect(() => {
+      window.addEventListener("resize", handleResize, false);
+    }, []);
+
     const openGrid= ()=>{
       setOpen(!open)
     }
@@ -54,7 +62,7 @@ const SqlWindow =(props: IdToTree) =>{
     return (
             
 
-        <Grid container item
+        <Grid container
               direction="row"
               justifyContent="flex-start"
               alignItems="stretch"
@@ -62,26 +70,29 @@ const SqlWindow =(props: IdToTree) =>{
               
               >
         
-    {/*      
+          
         <ResizePanel   direction="e" style={{ width: '400px',  maxWidth: "80%" , paddingTop:"2%"}} >
          
           <Tree setCode={setCode} setIDbd={setIDbd} />           
           
         </ResizePanel>
-    */}
-           
-         
-        
-        
+   {/* */}
+
+        {/*   */}    
+       
+          
         <Grid xs>
-          <Grid direction={'column'} style={{}}>
+          <Grid  style={{}}>
           <Tabs value={value} onChange={handleChange} >
             <Tab onClick={openGrid} label="SQL-скрипты" {...a11yProps(1)} />
             <Tab label="Данные" {...a11yProps(0)} />
           </Tabs>
           </Grid>
             <TabPanel  value={value} index={0}>
-              {/* УВЕЛИЧИТЬ ПОЛЕ ВВОДА, НЕ ХВАТАЕТ*/}
+              {/* УВЕЛИЧИТЬ ПОЛЕ ВВОДА, НЕ ХВАТАЕТ*/} 
+              
+            <div style={{overflow:"scroll",  height:`${currentHeight}px`    ,overflowX:"hidden",scrollbarWidth:"none" }}>
+   
             <CodeEditor
                 
                 value={code}
@@ -91,16 +102,18 @@ const SqlWindow =(props: IdToTree) =>{
                 padding={5}
                 //minHeight={windowInnerHeight}
                 style={{
+                
                 fontSize: 12,
                 backgroundColor: "#f5f5f5",
                 fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                  height:"200px"
+                
                 }}
             />
+            </div>
             </TabPanel>
             <TabPanel value={value} index={1}>
                 {open?ManWhoSoldTheWorld(IDbd):<Button disabled={IDbd === undefined} variant="outlined" onClick={openGrid}>Открыть</Button>}
-                <div id="gridPanel" style={{position: 'relative', left: '0px', top: '0px', width: '100%', height: '100%'}} >  </div>
+                <div id="gridPanel" style={{position: 'relative', left: '0px', top: '0px', width: '100%', height:`${currentHeight}px`}} >  </div>
             </TabPanel>
         </Grid>
       </Grid>
@@ -110,3 +123,7 @@ const SqlWindow =(props: IdToTree) =>{
 }
 
 export default SqlWindow;
+
+/*
+
+*/

@@ -222,7 +222,7 @@ export default function SideBar(props: MainBoxBackClick) {
      
    
       <Toolbar />
-        <Box sx={{ overflow: "auto" }}>
+        <Box style={{ scrollbarWidth:"none"}} sx={{ overflow: "auto" }}>
       <Slide direction="right" in={drawerOpen}> 
       <List
         sx={{
