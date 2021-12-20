@@ -80,6 +80,7 @@ export default function SideBar(props: MainBoxBackClick) {
   }, []);
 
   const getSectionList= async ()=> {
+    let stas
     let params = new Map();
     params.set('comand','GetSectionList');
     params.set('Simple','1');

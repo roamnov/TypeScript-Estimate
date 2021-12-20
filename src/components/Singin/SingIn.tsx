@@ -74,7 +74,7 @@ const SignIn = (props: componentProps) => {
   }
 
 
-  const handleSingIn = (event: any) => {
+  const handleSingIn = () => {
     let LoginData = {
       ConfigName: drx,
       UserName: user,

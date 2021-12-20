@@ -14,9 +14,6 @@ import { useState, useEffect } from 'react';
 
 
 
-
-
-
 export default function Tree(props) {
 let [data, setdata] = useState([]) 
 useEffect(() => {

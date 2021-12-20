@@ -24,7 +24,7 @@ function getRandomArbitrary(min: number, max: number) {
     var res = Math.floor(Math.random() * (max - min) + min);
     return res;
 }
-export default function URL(params: any) {
+export default function URL(params: any, postData?: any) {
 
     var LicGUID: string;
     LicGUID = get_cookie('LicGUID');
@@ -41,7 +41,7 @@ export default function URL(params: any) {
     }
     var attachment = "";
     for (let pair of params) {
-        if ((pair[0] !== "prefix") && (pair[0] !== "comand"))
+        if ((pair[0] !== "prefix") && (pair[0] !== "comand") && (pair[0] !== "requestCommand"))
             if (!attachment)
                 attachment = pair[0] + '=' + pair[1]
             else
@@ -50,7 +50,8 @@ export default function URL(params: any) {
     }
     if (attachment) 
     attachment = "&" + attachment;
-    let comand = params.get("comand");    
+    let comand = params.get("comand");
+    let requestCommand = params.get("requestCommand")    
     return `${json.serverLocal}/mobile~${params.get("prefix") == undefined ? 'project' : params.get("prefix")}/${comand}?LicGUID=${LicGUID}${attachment ? attachment: ""}`;
 }
 
