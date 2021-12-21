@@ -2038,6 +2038,7 @@ function Init(testID) {
        
         source.onHandleRequest = function(request) {
             let json = Stimate.SynchRequest('dbview/handleTable', request, 'id=' + testBD);
+            console.log(json)
             return json;
         };/**/
         

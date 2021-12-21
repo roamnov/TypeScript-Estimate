@@ -10,7 +10,7 @@ import {
 import Autocomplete from "@mui/material/Autocomplete";
 import { componentProps, menuSelect } from "../ComponentInterface";
 import axios from "axios";
-import URL from "../Url";
+import URL, { AxiosRequest,XMLrequest } from "../Url";
 
 const baseURL =
   "http://localhost:1317/mobile~project/getconfiglist?LicGUID=ED16868F4BEF468AC4DF0F8CB0E75D4A&All=0&All=0 HTTP/1.1";
@@ -24,9 +24,13 @@ const SelectDrx = (props: menuSelect) => {
   const getDrx = () => {
       let params = new Map();
       params.set('comand','getconfiglist');
+      //let test = AxiosRequest(params, "get")
+     
+      //setDrxServer(XMLrequest(params, "GET"));
+      /*
       axios.get(URL(params)).then((response) => {
         setDrxServer(response.data);
-      });
+      });*/
         
   };
 

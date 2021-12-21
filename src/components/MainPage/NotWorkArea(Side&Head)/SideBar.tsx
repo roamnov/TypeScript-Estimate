@@ -80,7 +80,6 @@ export default function SideBar(props: MainBoxBackClick) {
   }, []);
 
   const getSectionList= async ()=> {
-    let stas
     let params = new Map();
     params.set('comand','GetSectionList');
     params.set('Simple','1');
@@ -90,6 +89,7 @@ export default function SideBar(props: MainBoxBackClick) {
       ListItems(response.data["Sections"]);
       props.isLoading(false);
     });
+
   }
 
   function ListItems(List: any) {
@@ -143,7 +143,7 @@ export default function SideBar(props: MainBoxBackClick) {
             mainCollapse = data2.get(ID);
             openSet = data2.get(ID);
             assemblyLists.push(
-              <ListItemButton component="li" id={ID} >
+              <ListItemButton key={ID} component="li" id={ID} >
                 <ListItemIcon>{Img}</ListItemIcon>
                 <ListItemText primary={Name} />
                 {SectionList[keyS] !== undefined  && SectionList[keyS]["Deep"] >= 1? (openSet ? (<ExpandLess id={ID} onClick={handleClick} />) : ( <ExpandMore id={ID} onClick={handleClick} /> )): (<></>)}
@@ -175,9 +175,9 @@ export default function SideBar(props: MainBoxBackClick) {
               currentDeep == "2"  ? (deepCollapse = openSet): (deepCollapse = undefined);
               openSetDeep = openSet;
               assemblyLists.push(
-                <Collapse    in={openSet && mainCollapse}    timeout="auto" unmountOnExit >
+                <Collapse  key={ID}  in={openSet && mainCollapse}    timeout="auto" unmountOnExit >
                   {(openSet = data2.get(ID))}
-                  <ListItemButton sx={{ pl: howDeep }} id={ID} >
+                  <ListItemButton key={ID} sx={{ pl: howDeep }} id={ID} >
                     <ListItemIcon>{Img}</ListItemIcon>
                     <ListItemText primary={Name} />
                     {openSet ? ( <ExpandLess id={ID} onClick={handleClick} /> ) : (<ExpandMore id={ID} onClick={handleClick} />)}
@@ -187,12 +187,13 @@ export default function SideBar(props: MainBoxBackClick) {
             } else {
               assemblyLists.push(
                 <Collapse
+                key={ID}
                   in={ openSet && mainCollapse && currentDeep == "3" ? deepCollapse: openSet && mainCollapse    }
                   timeout="auto"
                   unmountOnExit
                 >
                   <List component="div" disablePadding >
-                    <ListItemButton sx={{ pl: howDeep }}   id={ID} onClick={updateSelected}>
+                    <ListItemButton key={ID} sx={{ pl: howDeep }}   id={ID} onClick={updateSelected}>
                       <ListItemIcon>{Img}</ListItemIcon>
                       <ListItemText primary={Name} />
                     </ListItemButton>

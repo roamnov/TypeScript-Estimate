@@ -1,5 +1,5 @@
 import  React from 'react';
-import { Avatar, Button, ButtonGroup, Grid, IconButton, } from "@material-ui/core"
+import {  Grid, IconButton, Tooltip, } from "@material-ui/core"
 import URL from '../../Url';
 import axios from 'axios';
 import { ImgURL } from "../../Url";
@@ -35,27 +35,21 @@ const SectionTools = () =>{
     
     const RenderButtons=(ButtonsLocal: any)=>{
         if(typeof ButtonsLocal !== undefined){
-            let items = []
-            
+            let items = [];
             for (const [key, value] of Object.entries(ButtonsLocal)) {
-                //console.log(backValue(value, 'Image'));
-                
                 items.push(
-                    <label>
-                   
-                        
-                        
-                        <IconButton color='primary'  component="span">
-                            {ImgURL(backValue(value, 'Image'))}
-                        </IconButton>
-                  
+                    <label key={key}>
+                        <Tooltip title={key}> 
+                            <IconButton color='primary'  component="span">
+                                {ImgURL(backValue(value, 'Image'))}
+                            </IconButton>
+                        </Tooltip>
                     </label>
-                    )//items.push(<img src={getImages(backValue(value, 'Image'))}/>)
-                
-              }
+                    )
+                }
               return items
+            }
         }
-    }
 
     const backValue = (value:any, param:string)=>{
         return value[param]

@@ -14,23 +14,25 @@ const GridStimate =()=>{
 
     let source ;
     source = new createRecordSource();
-
-    source.onHandleRequest = function(request){
+/*
+    source.onHandleRequest = async function(request){
         let params = new Map();
         let res;
         params.set('prefix','dbview'); 
         params.set('comand','handleTable');
         params.set('id',"134");
         console.log(request["command"])
-        return axios.post(URL(params),JSON.stringify(request)).then(response => response.data
+        await axios.post(URL(params),JSON.stringify(request))
+        .then((response) => {
+            res = response.data
+        }
         ).catch((error)=>{
             
             return error
         })
         console.log(res)
-        //console.log(stas)
-        //return res
-    }/**/
+        return res
+    }*/
     
     source.close();
     source.open();

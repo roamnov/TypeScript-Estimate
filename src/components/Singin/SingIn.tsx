@@ -24,7 +24,7 @@ import SelectUser from "./SelectUser";
 import SelectWorkPlace from "./SelectWorkPlace";
 import PasswordInput from "./PasswordInput";
 import axios from "axios";
-import URL from "../Url";
+import URL, { AxiosRequest } from "../Url";
 import { purple, red } from "@material-ui/core/colors";
 import { Link,  useNavigate } from "react-router-dom";
 import { LoginIn } from "../Wrapper";
@@ -82,17 +82,20 @@ const SignIn = (props: componentProps) => {
       WorkPlace: workplace,
       //Comp: "NPO5898",
     };
+    //console.log(typeof(LoginData))
     let params = new Map();
     params.set('comand','enter');
+    let res = AxiosRequest(params, "post",LoginData)
+    //res.then((responce)=>{console.log(responce)})
+    /*
     axios.post(URL(params), JSON.stringify(LoginData)).then((response) => {
       setLoginAnswer(response.data);
       response.data["error"] !== undefined? CheckAnswerFromServer(response.data["error"]["Item"]): GoToMain()
-    });
+    });*/
   };
 
   return (
     <Container  maxWidth="xs"  >
-      
       <CssBaseline />
       <img src={money} style={{ marginLeft:"30%"}}/>
       <Typography variant="h5" color={"#0098ad"} style={{ marginLeft:"30%"}}> WEB-СМЕТА</Typography>
@@ -124,10 +127,10 @@ const SignIn = (props: componentProps) => {
             fullWidth
             variant="contained"
             className="ButtonMargin"
-            onClick={handleSingIn}
-            
-          >
+            onClick={handleSingIn} >
+
             Вход по ЭП
+
           </Button>
         </Grid>
 
