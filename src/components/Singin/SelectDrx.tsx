@@ -26,7 +26,7 @@ const SelectDrx = (props: menuSelect) => {
       params.set('comand','getconfiglist');
       //let test = AxiosRequest(params, "get")
      
-      //setDrxServer(XMLrequest(params, "GET"));
+      setDrxServer(XMLrequest(params));
       /*
       axios.get(URL(params)).then((response) => {
         setDrxServer(response.data);

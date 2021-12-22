@@ -24,7 +24,7 @@ import SelectUser from "./SelectUser";
 import SelectWorkPlace from "./SelectWorkPlace";
 import PasswordInput from "./PasswordInput";
 import axios from "axios";
-import URL, { AxiosRequest } from "../Url";
+import URL, { AxiosRequest, XMLrequest } from "../Url";
 import { purple, red } from "@material-ui/core/colors";
 import { Link,  useNavigate } from "react-router-dom";
 import { LoginIn } from "../Wrapper";
@@ -75,6 +75,7 @@ const SignIn = (props: componentProps) => {
 
 
   const handleSingIn = () => {
+    let res:object 
     let LoginData = {
       ConfigName: drx,
       UserName: user,
@@ -85,7 +86,10 @@ const SignIn = (props: componentProps) => {
     //console.log(typeof(LoginData))
     let params = new Map();
     params.set('comand','enter');
-    let res = AxiosRequest(params, "post",LoginData)
+    let rest = XMLrequest(params,  LoginData);
+    
+    rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain()
+    //let res = AxiosRequest(params, "post",LoginData)
     //res.then((responce)=>{console.log(responce)})
     /*
     axios.post(URL(params), JSON.stringify(LoginData)).then((response) => {

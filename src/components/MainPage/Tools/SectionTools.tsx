@@ -1,6 +1,6 @@
 import  React from 'react';
 import {  Grid, IconButton, Tooltip, } from "@material-ui/core"
-import URL from '../../Url';
+import URL, { XMLrequest } from '../../Url';
 import axios from 'axios';
 import { ImgURL } from "../../Url";
 
@@ -22,14 +22,14 @@ const SectionTools = () =>{
 
 
     const GetSectionTools = async () =>{
-        let params = new Map();
+        let params = new Map(), json;
         params.set('prefix','tools');
         params.set('comand','GetSectionTools');
         params.set('SectionID', '143');
-        await axios.get(URL(params)).then((response) =>{
-            setButtons(response.data["Buttons"]);
-            setMenuBar(response.data["MenuBar"])
-        })
+        json = XMLrequest(params)
+        setButtons(json["Buttons"]);
+        setMenuBar(json["MenuBar"])
+        
 
     }
     

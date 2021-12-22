@@ -1,6 +1,6 @@
 
 'use strict';
-import URL, {get_cookie} from "../../Url"
+import URL, {get_cookie, XMLrequest} from "../../Url"
 import axios from "axios";
 import "./stimate.css"
 import  { useState } from "react";
@@ -2040,8 +2040,22 @@ function Init(testID) {
             let json = Stimate.SynchRequest('dbview/handleTable', request, 'id=' + testBD);
             console.log(json)
             return json;
-        };/**/
+        };/*
+
+
+let json = Stimate.SynchRequest('dbview/handleTable', request, 'id=' + testBD);
+            console.log(json)
+            return json;
+
+
+            let params = new Map();
+            params.set('prefix','dbview'); 
+            params.set('comand','handleTable');
+            params.set('id',testBD);
+            
+            return XMLrequest(params, request.command);
         
+        */
         gridPanel.grid = new createGrid(gridPanel);
         gridPanel.grid.defaultColumns = true;
         grid = gridPanel.grid;

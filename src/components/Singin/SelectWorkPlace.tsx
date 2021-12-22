@@ -12,7 +12,7 @@ import { useStyles } from "../Styles";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { menuSelect } from "../ComponentInterface";
 import axios from "axios";
-import URL from "../Url";
+import URL, { XMLrequest } from "../Url";
 
 const SelectWorkPlace = (props: menuSelect) => {
   const styles = useStyles();
@@ -26,9 +26,8 @@ const SelectWorkPlace = (props: menuSelect) => {
       params.set('comand','getworkplacelist');
       params.set('ConfigName',props.drxInfo);
       params.set('UserName',props.userInfo);
-      axios.get(URL(params)).then((response) => {
-          setWorkPlaces(response.data);
-        });
+      setWorkPlaces(XMLrequest(params));
+        
   };
 
   function MenuItems(userList: any) {

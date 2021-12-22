@@ -12,7 +12,7 @@ import { useStyles } from "../Styles";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { componentProps, menuSelect } from "../ComponentInterface";
 import axios from "axios";
-import URL from "../Url";
+import URL, { XMLrequest } from "../Url";
 
 const SelectUser = (props: menuSelect) => {
   const styles = useStyles();
@@ -25,10 +25,8 @@ const SelectUser = (props: menuSelect) => {
       let params = new Map();
       params.set('comand','getuserlist');
       params.set('ConfigName',props.drxInfo);
-      axios.get(URL(params))
-        .then((response) => {
-          setUserList(response.data);
-        });
+      setUserList(XMLrequest(params));
+      
   };
 
   function MenuItems(userList: any) {

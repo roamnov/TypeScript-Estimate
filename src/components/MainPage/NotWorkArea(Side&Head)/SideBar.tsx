@@ -7,7 +7,7 @@ import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import axios from "axios";
-import URL from "../../Url";
+import URL, { XMLrequest } from "../../Url";
 import { ImgURL } from "../../Url";
 import { Box, Drawer, Slide, Toolbar } from "@material-ui/core";
 import { useStyles } from "../../Styles";
@@ -80,15 +80,15 @@ export default function SideBar(props: MainBoxBackClick) {
   }, []);
 
   const getSectionList= async ()=> {
-    let params = new Map();
+    let params = new Map(), json;
     params.set('comand','GetSectionList');
     params.set('Simple','1');
     params.set('full','1');
-    await axios.get(URL(params)).then((response) => {
-      setData(response.data["Sections"]);
-      ListItems(response.data["Sections"]);
-      props.isLoading(false);
-    });
+    json = XMLrequest(params)
+    setData(json["Sections"]);
+    ListItems(json["Sections"]);
+    props.isLoading(false);
+    
 
   }
 

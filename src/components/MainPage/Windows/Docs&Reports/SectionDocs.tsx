@@ -2,7 +2,7 @@ import { Grid, ListItemButton, ListItemText, Typography, Card, CardContent,CardA
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { DocsAndReports } from "../../../ComponentInterface";
-import URL from "../../../Url";
+import URL, { XMLrequest } from "../../../Url";
 import ResizePanel from "../ViewData/ResizebleComponent/ResizebleComponent";
 
 
@@ -20,44 +20,37 @@ const SectionDocs= (props:DocsAndReports) =>{
 
     }, [])
 
-    const setActiveSession= async ()=>{
+    const setActiveSession= ()=>{
         let params = new Map();
         params.set('prefix','project'); 
         params.set('comand','SetActiveSection');
         params.set('SectionID',props.id);
-        await axios.get(URL(params)).then((response)=>{
-            console.log(response.data)
-        })
+        XMLrequest(params)
     }
-    const initContext = async ()=>{ //GET /documents~InitContext?LicGUID=E2365CAC4CE2CFD8F60C3C857AD2E1F7&LazyMemos=1 HTTP/1.1
+    const initContext = ()=>{ //GET /documents~InitContext?LicGUID=E2365CAC4CE2CFD8F60C3C857AD2E1F7&LazyMemos=1 HTTP/1.1
         let params = new Map();
         params.set('prefix','documents'); 
         params.set('comand','InitContext');
-        await axios.get(URL(params)).then((response)=>{
-            console.log(response.data)
-        })
+        XMLrequest(params)
         
     }
     
-    const setActiveSite= async ()=>{//GET /documents~SetActiveSite?LicGUID=E2365CAC4CE2CFD8F60C3C857AD2E1F7 HTTP/1.1
+    const setActiveSite= ()=>{//GET /documents~SetActiveSite?LicGUID=E2365CAC4CE2CFD8F60C3C857AD2E1F7 HTTP/1.1
         let params = new Map();
         params.set('prefix','documents'); 
         params.set('comand','SetActiveSite');
-        await axios.get(URL(params)).then((response)=>{
-            console.log(response.data)
-        })
+        XMLrequest(params)
     }
     
     //GET /tools~GetSectionTools?LicGUID=E2365CAC4CE2CFD8F60C3C857AD2E1F7&SectionID=136 HTTP/1.1 потом
-    const getSectionDocs = async ()=>{
+    const getSectionDocs = ()=>{
         let params = new Map();
         params.set('prefix','documents'); 
         params.set('comand','GetSectionDocs');
         params.set('SectionID',props.id);
-        await axios.get(URL(params)).then((response)=>{
-            console.log(response.data)
-            setSetionDocs(response.data)
-        })
+        
+            setSetionDocs(XMLrequest(params))
+    
     }
 
 

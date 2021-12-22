@@ -28,9 +28,9 @@ function getRandomArbitrary(min: number, max: number) {
 }
 
 
-export function XMLrequest(params: any, requestMethod: "GET" | "POST" | "DELETE" ,postData?:any) {
+export function XMLrequest(params: any,postData?:any) {
 
-    var LicGUID: string, request = new XMLHttpRequest(), res ="";
+    var LicGUID: string, request = new XMLHttpRequest(), res ="", method;
     LicGUID = get_cookie('LicGUID');
     if (LicGUID == '') {
         var s = "0123456789ABCDEFGHIKLMNOPQRSTVXYZ";
@@ -58,7 +58,8 @@ export function XMLrequest(params: any, requestMethod: "GET" | "POST" | "DELETE"
       
     let url = `${json.serverLocal}/mobile~${params.get("prefix") == undefined ? 'project' : params.get("prefix")}/${comand}?LicGUID=${LicGUID}${attachment ? attachment: ""}`;
 
-    request.open(requestMethod, url, false);
+    postData === undefined? method = "GET": method = "POST"
+    request.open(method, url, false);
         request.onload = function() {
             res = request.responseText;
         };
