@@ -3,13 +3,9 @@ import { useEffect, useState } from "react";
 import {createRecordSource} from "./CreateRecordSource"
 import URL, { XMLrequest } from "../../Url";
 
-const GridStimate =()=>{
+const GridStimate =(gridPanel)=>{
     //console.log("GridStimate")
     const [data, setData] = useState();
-    let params = new Map();
-    params.set('prefix','dbview'); 
-    params.set('comand','handleTable');
-    params.set('id',"163");
     
 
     let source ;

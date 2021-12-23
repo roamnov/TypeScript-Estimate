@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { maxint, midint, showElement,hideElement } from "./Helpful";
+import { maxint, } from "./Helpful";
 import {createGrid} from "./CreateGrid"
 
 

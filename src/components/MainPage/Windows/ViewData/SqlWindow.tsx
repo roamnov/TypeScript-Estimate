@@ -115,7 +115,7 @@ const SqlWindow =(props: IdToTree) =>{
             <TabPanel value={value} index={1}>
                 {open?ManWhoSoldTheWorld(IDbd):<Button  variant="outlined" onClick={openGrid}>Открыть</Button>}
                 <div id="gridPanel" style={{position: 'relative', left: '0px', top: '0px', width: '100%', height:`${currentHeight}px`}} >  </div>
-                {GridStimate()}
+          
             </TabPanel>
         </Grid>
       </Grid>

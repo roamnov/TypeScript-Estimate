@@ -5,6 +5,10 @@ import { intintrange, log, showElement, hideElement,delayCall, moddiv, maxint,  
 
 export function createGrid(panel) {
 
+    var
+    STATUS_GROUPED = 32,
+    STATUS_COLLAPSED = 128;
+
     var Stimate = {
         appendEvent: function(e, f, el) {
             if (el) {
