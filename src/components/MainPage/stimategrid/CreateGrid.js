@@ -1,5 +1,5 @@
 import {createScrollbar} from "./CreateScrollBar"
-import { intintrange, log, showElement, hideElement,delayCall, moddiv, maxint,  showApplicationMask, hideApplicationMask } from "./Helpful";
+import { intintrange, log, showElement, hideElement,delayCall, moddiv, maxint,  showApplicationMask, hideApplicationMask, midint } from "./Helpful";
 
 
 
@@ -7,7 +7,8 @@ export function createGrid(panel) {
 
     var
     STATUS_GROUPED = 32,
-    STATUS_COLLAPSED = 128;
+    STATUS_COLLAPSED = 128,
+    nfStateChanged = 'StateChanged';
 
     var Stimate = {
         appendEvent: function(e, f, el) {
@@ -706,7 +707,8 @@ export function createGrid(panel) {
                 if (me.source.activeRecord != record) {
                     hideEditor();
                     if (me.source.isEditMode()) {
-                        if (me.source.modified){ source.postRecord()}
+                        if (me.source.modified)
+                        { me.source.postRecord()}
                         else {me.source.cancelRecord();}
                     }
                     me.source.setRecordIndex(record);

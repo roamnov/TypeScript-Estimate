@@ -2071,9 +2071,6 @@ let json = Stimate.SynchRequest('dbview/handleTable', request, 'id=' + testBD);
 
     }
 
-    //let json = Stimate.synchRequest('project/enter', {configName: 'webtools_hidden.drx', userName: 'webadmin'}); 
-    //json = Stimate.synchRequest('dbview/uploadfile', {fileName: 'D:\\Temp\\table.trs'});
-    //if (json) dataId = json.ID;
     initGrid(document.getElementById("gridPanel"), testID);
    
     

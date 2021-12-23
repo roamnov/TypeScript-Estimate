@@ -7,6 +7,7 @@ import { useStyles } from "../../../Styles";
 import ResizePanel from "./ResizebleComponent/ResizebleComponent";
 import ManWhoSoldTheWorld from "../../stimategrid/test";
 import GridStimate from "../../stimategrid/GridTest";
+import { SGrid } from "../../stasgrid/StasGrid";
 
 //
 function TabPanel(props: TabPanelProps) {
@@ -45,6 +46,7 @@ const SqlWindow =(props: IdToTree) =>{
     const [open, setOpen] = useState(false)
     const [IDbd, setIDbd] = useState();
     const [currentHeight, setCurrentHeight] = useState(window.innerHeight-205);
+    const [gridPanel, setGridPanel] = useState([]);
 
     const handleResize = () => {
       setCurrentHeight(window.innerHeight-205);
@@ -54,7 +56,9 @@ const SqlWindow =(props: IdToTree) =>{
     }, []);
 
     const openGrid= ()=>{
+      //setGridPanel(document.getElementById("gridPanel"))
       setOpen(!open)
+      
     }
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -87,6 +91,7 @@ const SqlWindow =(props: IdToTree) =>{
           <Tabs value={value} onChange={handleChange} >
             <Tab onClick={openGrid} label="SQL-скрипты" {...a11yProps(1)} />
             <Tab label="Данные" {...a11yProps(0)} />
+ 
           </Tabs>
           </Grid>
             <TabPanel  value={value} index={0}>
@@ -113,10 +118,11 @@ const SqlWindow =(props: IdToTree) =>{
             </div>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                {open?ManWhoSoldTheWorld(IDbd):<Button  variant="outlined" onClick={openGrid}>Открыть</Button>}
+                {open?ManWhoSoldTheWorld(IDbd):<Button disabled={IDbd === undefined}  variant="outlined" onClick={openGrid}>Открыть</Button>}
                 <div id="gridPanel" style={{position: 'relative', left: '0px', top: '0px', width: '100%', height:`${currentHeight}px`}} >  </div>
           
             </TabPanel>
+           
         </Grid>
       </Grid>
             
@@ -128,4 +134,5 @@ export default SqlWindow;
 
 /*
 disabled={IDbd === undefined}
+ {open?ManWhoSoldTheWorld(IDbd):<Button  variant="outlined" onClick={openGrid}>Открыть</Button>}
 */

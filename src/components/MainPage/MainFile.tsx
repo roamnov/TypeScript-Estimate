@@ -18,7 +18,7 @@ const MainPage = () => {
     console.log(auth)
     return(
         <>
-        {auth === "true"? <WrapperRightSide/>:<Navigate to="/"/> }
+        <WrapperRightSide/>
         
         </> 
     )
