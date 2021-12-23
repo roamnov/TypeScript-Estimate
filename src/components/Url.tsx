@@ -68,7 +68,7 @@ export function XMLrequest(params: any,postData?:any) {
             request.send(json);
         } else request.send(); 
         
-        console.log(res)
+        //console.log(res)
         return JSON.parse(res)
 }
 
@@ -104,9 +104,9 @@ export default function URL(params: any, postData?: any) {
     return `${json.serverLocal}/mobile~${params.get("prefix") == undefined ? 'project' : params.get("prefix")}/${comand}?LicGUID=${LicGUID}${attachment ? attachment: ""}`;
 }
 
-export function  AxiosRequest(params: any, requestMethod: "get" | "post" | "delete" ,postData?: object| AxiosRequestConfig){
+export async  function  AxiosRequest(params: any,postData?: object| AxiosRequestConfig){
     
-    var LicGUID: string,res;
+    var LicGUID: string,res,method;
    // let res = Object;
     LicGUID = get_cookie('LicGUID');
     if (LicGUID == '') {
@@ -133,10 +133,11 @@ export function  AxiosRequest(params: any, requestMethod: "get" | "post" | "dele
     attachment = "&" + attachment;
     let comand = params.get("comand");
     let url = `${json.serverLocal}/mobile~${params.get("prefix") == undefined ? 'project' : params.get("prefix")}/${comand}?LicGUID=${LicGUID}${attachment ? attachment: ""}`;
-    if (requestMethod==="get" ){
-        axios.get(url).then((response)=>{res = response.data})
-    }else if (requestMethod==="post" ){
-        axios.post(url, JSON.stringify(postData)).then((response)=>{res = response.data})
+    postData === undefined? method = "get": method = "post"
+    if (method==="get" ){
+        await axios.get(url).then((response)=>{res = response.data})
+    }else if (method==="post" ){
+        await axios.post(url, JSON.stringify(postData)).then((response)=>{res = response.data})
     }
     //console.log(res)
     return res

@@ -44,10 +44,10 @@ const SqlWindow =(props: IdToTree) =>{
     const [value, setValue] = useState(0);
     const [open, setOpen] = useState(false)
     const [IDbd, setIDbd] = useState();
-    const [currentHeight, setCurrentHeight] = useState(window.innerHeight-218);
+    const [currentHeight, setCurrentHeight] = useState(window.innerHeight-205);
 
     const handleResize = () => {
-      setCurrentHeight(window.innerHeight-218);
+      setCurrentHeight(window.innerHeight-205);
     }
     useEffect(() => {
       window.addEventListener("resize", handleResize, false);
@@ -113,7 +113,7 @@ const SqlWindow =(props: IdToTree) =>{
             </div>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                {open?ManWhoSoldTheWorld(IDbd):<Button disabled={IDbd === undefined} variant="outlined" onClick={openGrid}>Открыть</Button>}
+                {open?ManWhoSoldTheWorld(IDbd):<Button  variant="outlined" onClick={openGrid}>Открыть</Button>}
                 <div id="gridPanel" style={{position: 'relative', left: '0px', top: '0px', width: '100%', height:`${currentHeight}px`}} >  </div>
                 {GridStimate()}
             </TabPanel>
@@ -127,5 +127,5 @@ const SqlWindow =(props: IdToTree) =>{
 export default SqlWindow;
 
 /*
-
+disabled={IDbd === undefined}
 */

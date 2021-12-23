@@ -1,14 +1,11 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import DescriptionIcon from '@mui/icons-material/Description';
-import axios from "axios";
 import IconButton from '@mui/material/IconButton';
 import './tree.css';
-import URL from '../../../../Url';
+import  {XMLrequest} from '../../../../Url';
 import { useState, useEffect } from 'react';
 
 
@@ -21,23 +18,22 @@ useEffect(() => {
 }, [])
 
 
-const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight-218);
+const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight-205);
 
 const handleResize = () => {
-  setCurrentHeight(window.innerHeight-218);
+  setCurrentHeight(window.innerHeight-205);
 }
 useEffect(() => {
   window.addEventListener("resize", handleResize, false);
 }, []);
 
-async function fetchData() {
+function fetchData() {
   let params = new Map();
     params.set('prefix','dbview'); 
     params.set('comand','GetGroupTree');
-    await axios.get(URL(params)).then( (response) => {
-      data =  response.data["Tree"]["items"]
-    })
-    setdata(data);}
+    data =  XMLrequest(params)["Tree"]["items"]
+    setdata(data);
+  }
     
     function clickitems(el, par) {
       var b = el.target;
@@ -56,11 +52,9 @@ async function fetchData() {
         params.set('comand','HandleSQLScript');
         params.set('SectionID',b.id);
         params.set('ID',b.id);
-        axios.get(URL(params)).then((response) => {
-          otv = response.data.content;
-         props.setCode(otv)
-         props.setIDbd(b.id)
-        })
+        otv = XMLrequest(params);       
+        props.setCode(otv.content);
+        props.setIDbd(b.id);
       }
     }
     
@@ -91,8 +85,7 @@ async function fetchData() {
         params.set('SectionID','143');
         params.set('GroupID',b.id);
         params.set('Current',b.id);
-          axios.get(URL(params)).then((response) => {
-            otv = response.data["Tree"]["items"]
+         otv = XMLrequest(params)["Tree"]["items"]
             ReactDOM.render(otv.map((item) => {
               var li = <li className={item.leaf ? "tree-leaf-1" : "tree-leaf-0"} style={!item.leaf ? { position: "relative", left: "-22px" } : { position: "relative", display: "flex" }}
                 id={item.id} leaf={item.leaf ? "1" : "0"}>
@@ -105,7 +98,7 @@ async function fetchData() {
               </li>
               return (li)
             }), ul)
-          })}
+         }
         b.appendChild(ul)
       }
     }

@@ -1,3 +1,6 @@
+import { midint, showElement,hideElement} from "./Helpful"
+
+
 export function createScrollbar(view, event) {
     this.view = view;
     view.insertAdjacentHTML('beforeend', '<div class="lazy-scroll">');

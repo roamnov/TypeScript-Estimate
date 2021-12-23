@@ -39,7 +39,7 @@ const SectionTools = () =>{
             for (const [key, value] of Object.entries(ButtonsLocal)) {
                 items.push(
                     <label key={key}>
-                        <Tooltip title={key}> 
+                        <Tooltip title={key} arrow> 
                             <IconButton color='primary'  component="span">
                                 {ImgURL(backValue(value, 'Image'))}
                             </IconButton>
