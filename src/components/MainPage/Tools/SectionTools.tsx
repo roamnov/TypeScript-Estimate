@@ -1,5 +1,5 @@
 import  React from 'react';
-import {  Grid, IconButton, Tooltip, } from "@material-ui/core"
+import {  Grid, IconButton, Tooltip, } from "@mui/material"
 import URL, { XMLrequest } from '../../Url';
 import axios from 'axios';
 import { ImgURL } from "../../Url";
@@ -9,8 +9,9 @@ import { ImgURL } from "../../Url";
 //https://mui.com/components/toggle-button/
 //
 const SectionTools = () =>{
-    const [menuBar, setMenuBar] = React.useState([])
-    const [buttons, setButtons] = React.useState([])
+    const [testProgramButton, setestProgramButton] = React.useState();
+    const [menuBar, setMenuBar] = React.useState([]);
+    const [buttons, setButtons] = React.useState([]);
     const [imgf, setImgf] = React.useState();
 
     React.useEffect(() => {
@@ -29,18 +30,37 @@ const SectionTools = () =>{
         json = XMLrequest(params)
         setButtons(json["Buttons"]);
         setMenuBar(json["MenuBar"])
-        
+    }
 
+    const handeleExecToolprogram =(event:any , type?:string)=>{///tools~ExecToolProgram
+        let Path = event.currentTarget.getAttribute("id"),  params = new Map(), json, Type, Module, Token, Break;
+        Path = event.currentTarget.getAttribute("id");
+        Type = event.currentTarget.parentElement.id;
+        params.set('prefix', 'tools');
+        params.set("comand", "ExecToolProgram")
+        params.set("Path", Path)
+        params.set("Type", type)
+        //params.set("Checked", "0")
+        params.set("WSM", "1")
+        json = XMLrequest(params);
+        Module = json.Module;
+        Token = json.Token;
+        Break = json.Break
+        console.log(json);
+        
     }
     
     const RenderButtons=(ButtonsLocal: any)=>{
         if(typeof ButtonsLocal !== undefined){
-            let items = [];
+            let items = [], Path, Type:string;
             for (const [key, value] of Object.entries(ButtonsLocal)) {
+                //console.log(value)
+                Path = backValue(value, 'Path');
+                Type = backValue(value, 'Type');
                 items.push(
-                    <label key={key}>
-                        <Tooltip title={key} arrow> 
-                            <IconButton color='primary'  component="span">
+                    <label id={Type} key={key} >
+                        <Tooltip title={key} id={Type} arrow > 
+                            <IconButton id={Path}  color='primary'  component="span" onClick={(e: any) => handeleExecToolprogram(e,Type)} >
                                 {ImgURL(backValue(value, 'Image'))}
                             </IconButton>
                         </Tooltip>

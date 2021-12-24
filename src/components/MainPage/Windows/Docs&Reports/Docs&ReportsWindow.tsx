@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import Alert from "../../../Alert";
 import { DocsAndReports, TabPanelProps } from "../../../ComponentInterface";
+import ModalContainer from "../../../Containers/ModalContainer";
 import TableParams from "../ParamsList/TableParams/TableParams";
 import SectionDocs from "./SectionDocs";
 //import data from '../ParamsList/data.js'
@@ -39,18 +40,33 @@ function TabPanel(props: TabPanelProps) {
 
 const DocsReportsMainWindow= (props:DocsAndReports) =>{
     const [value, setValue] = useState(0);
+    const test = document.createElement("div")
+    test.innerText = "test"
+    const [ div, setDiv] = useState([<div> 1 </div>, <> 2 </>])
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
       };
+
+    
     return(
         <Grid container direction="row" justifyContent="flex-start" alignItems="center" xs> 
         <Grid xs>
         
                 
                 <SectionDocs id={props.id} />
-                
+               
             
             </Grid>
+            <Grid xs>
+
+         
+            <ModalContainer> 
+
+            <SectionDocs id={props.id} />
+              </ModalContainer>
+
+            </Grid>
+            
         </Grid>
     )
 }

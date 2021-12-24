@@ -8,6 +8,7 @@ import ResizePanel from "./ResizebleComponent/ResizebleComponent";
 import ManWhoSoldTheWorld from "../../stimategrid/test";
 import GridStimate from "../../stimategrid/GridTest";
 import { SGrid } from "../../stasgrid/StasGrid";
+import ModalContainer from "../../../Containers/ModalContainer";
 
 //
 function TabPanel(props: TabPanelProps) {
@@ -84,8 +85,7 @@ const SqlWindow =(props: IdToTree) =>{
    {/* */}
 
         {/*   */}    
-       
-          
+    
         <Grid xs>
           <Grid  style={{}}>
           <Tabs value={value} onChange={handleChange} >

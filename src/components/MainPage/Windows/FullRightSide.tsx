@@ -16,7 +16,8 @@ import SectionTools from '../Tools/SectionTools';
 import DocTabs from './Tabs/CustomTabs';
 import ManWhoSoldTheWorld from '../stimategrid/test';
 import DocsReportsMainWindow from './Docs&Reports/Docs&ReportsWindow';
-import NestedMenu from '../Tools/NestedMenu';
+//import NestedMenu from '../Tools/NestedMenu';
+import { WorkPlaceTools } from '../Tools/WorkPlaceTools';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
@@ -56,7 +57,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     
     <Grid item  >
       <Toolbar />
-      {props.isLoading?<div></div>:<><SectionTools/></>}
+      {props.isLoading?<div></div>:<><WorkPlaceTools/> <SectionTools/> </>}
         
     </Grid>
     

@@ -1,7 +1,7 @@
 {
-  "name": "react-typescript",
+  "name": "typeScript-Estimate",
   "homepage": ".",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "dependencies": {
     "@emotion/react": "^11.6.0",
@@ -23,9 +23,11 @@
     "@uiw/react-textarea-code-editor": "^1.4.14",
     "axios": "^0.21.4",
     "cash-dom": "^8.1.0",
+    "i": "^0.3.7",
     "immer": "^9.0.6",
-    "material-ui-nested-menu-item": "^1.0.2",
+    "mui-nested-menu": "^1.0.9",
     "notistack": "^2.0.3",
+    "npm": "^8.3.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-draggable": "^4.4.4",

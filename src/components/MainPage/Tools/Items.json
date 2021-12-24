@@ -1,0 +1,18 @@
+{"Buttons":{
+    "Button_Ok" : 1,
+    "Button_Cancel" : 2,
+    "Button_Yes" : 4,
+    "Button_No" : 8,
+    "Button_Abort" : 16,
+    "Button_Retry" : 32,
+    "Button_Ignore" : 64,
+    "Button_All" : 128,
+    "Button_NoToAll" : 256,
+    "Button_YesToAll" : 512,
+    "Button_Execute" : 1024
+},
+"DlgType":{
+    "0" :"mtWarning", "mtError":0, "mtInformation":0, "mtConfirmation": 0
+}
+
+}
