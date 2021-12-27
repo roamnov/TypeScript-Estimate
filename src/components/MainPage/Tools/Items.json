@@ -1,18 +1,36 @@
-{"Buttons":{
-    "Button_Ok" : 1,
-    "Button_Cancel" : 2,
-    "Button_Yes" : 4,
-    "Button_No" : 8,
-    "Button_Abort" : 16,
-    "Button_Retry" : 32,
-    "Button_Ignore" : 64,
-    "Button_All" : 128,
-    "Button_NoToAll" : 256,
-    "Button_YesToAll" : 512,
-    "Button_Execute" : 1024
+{
+    "Buttons":{
+    "Ok" : 1,
+    "Отмена" : 2,
+    "Да" : 4,
+    "Нет" : 8,
+    "Прервать" : 16,
+    "Повторить" : 32,
+    "Пропустить" : 64,
+    "Для всех" : 128,
+    "Нет для всех" : 256,
+    "Да для всех" : 512,
+    "Execute" : 1024
 },
-"DlgType":{
-    "0" :"mtWarning", "mtError":0, "mtInformation":0, "mtConfirmation": 0
-}
+    "DlgType":{
+        "Предупреждение" :"0", "Ошибка":"1", "Информация":"2", "Вопрос": "3"
+},
+    "DlgRes":{
+        "DlgRes_None" : 0,
+        "Ok" : 1,
+        "Отмена" : 2,
+        "Прервать" : 3,
+        "Повторить" : 4,
+        "Пропустить" : 5,
+        "Да" : 6,
+        "Нет" : 7,
+        "DlgRes_Close" : 8,
+        "DlgRes_Help" : 9,
+        "DlgRes_TryAgain" : 10,
+        "DlgRes_Continue" : 11,
+        "Для всех" : 12,
+        "Нет для всех"  :13,
+        "Да для всех" : 14
+    }
 
 }

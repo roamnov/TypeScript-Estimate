@@ -1,7 +1,7 @@
 import { Grid, Tab, Tabs } from "@material-ui/core";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import Alert from "../../../Alert";
+
 import { DocsAndReports, TabPanelProps } from "../../../ComponentInterface";
 import ModalContainer from "../../../Containers/ModalContainer";
 import TableParams from "../ParamsList/TableParams/TableParams";

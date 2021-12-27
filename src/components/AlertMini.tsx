@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '@mui/material/Button';
 import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
+import { containerProps } from './ComponentInterface';
 
 function MyApp() {
   const { enqueueSnackbar } = useSnackbar();
@@ -29,7 +30,7 @@ function MyApp() {
   );
 }
 
-export default function Alert() {
+export default function AlertMini(props: containerProps) {
   return (
     <SnackbarProvider maxSnack={5}
         anchorOrigin={{
