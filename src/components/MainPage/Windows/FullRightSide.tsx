@@ -18,6 +18,7 @@ import ManWhoSoldTheWorld from '../stimategrid/test';
 import DocsReportsMainWindow from './Docs&Reports/Docs&ReportsWindow';
 //import NestedMenu from '../Tools/NestedMenu';
 import { WorkPlaceTools } from '../Tools/WorkPlaceTools';
+import StickyFooter from '../NotWorkArea(Side&Head)/Footer';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
@@ -67,7 +68,9 @@ export default function FullRightSide(props: InfoAboutClick) {
       </div>
      
       {getTabs()}
-    </Grid>  
+      <StickyFooter/>
+    </Grid> 
+   
   </Grid>
   );
 }

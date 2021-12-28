@@ -7,6 +7,7 @@ import SideBar from './NotWorkArea(Side&Head)/SideBar';
 import FullRightSide from './Windows/FullRightSide';
 import { InfoAboutClick } from '../ComponentInterface';
 import ModalContainer from '../Containers/ModalContainer';
+import StickyFooter from './NotWorkArea(Side&Head)/Footer';
 
 export default function WrapperRightSide() {
   
@@ -26,8 +27,9 @@ export default function WrapperRightSide() {
       <SideBar  isLoading={setIsLoading} setSelected={setSelected}/>
     
       <FullRightSide isLoading={isLoading} id= {selected?.id}  clsic= {selected?.clsic} name= {selected?.name}  />
-   
+       
     </Box>
+    
   );
 }
 

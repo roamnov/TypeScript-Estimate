@@ -15,6 +15,7 @@ import AlertMini from '../../AlertMini';
 //
 const SectionTools = () =>{
     const [testProgramButton, setTestProgramButton] = React.useState([<></>]);
+    const [requestId,setRequestId] = React.useState();
     const [menuBar, setMenuBar] = React.useState([]);
     const [buttons, setButtons] = React.useState([]);
     const [value, setValue] = React.useState();
@@ -24,7 +25,7 @@ const SectionTools = () =>{
     }, [])
     
     React.useEffect(() => {
-        console.log("USEEFFECTG")
+        console.log(value);
     }, [value])
   
 
@@ -39,22 +40,41 @@ const SectionTools = () =>{
         setMenuBar(json["MenuBar"])
     }
 
-
+    const handleClick = async (event: any, RequestID:any, emptyReq?: boolean, requestData?:any)=>{
+        let params = new Map, data, json, DlgResValue,  clickValue = event.target.value;
+        setValue(clickValue);
+        
+        if(emptyReq){
+            data = { "Result":"" }
+        }else{
+            for (const [key, value] of Object.entries(items.DlgRes)) {
+                if (key === clickValue) DlgResValue = value;
+           }
+        }
+        
+        console.log(DlgResValue)
+        data = { "Result": DlgResValue }
+        params.set('prefix', 'project');
+        params.set("comand", "ResumeRequest");
+        params.set("RequestID",RequestID );
+        params.set("WSM", "1");
+        json = XMLrequest(params,  data);
+        tokenProcessing(json)
+    }
     
 
-    const  tokenProcessing= async (json: any )=>{
-        let returnJSX= [], returnButton = [], Token,Module, Break , Message, DlgType, Buttons,
-        RequestID,andResult,  pressedButton, params = new Map, data, jsonResponse, a = 0;
-    
-                
+    const  tokenProcessing =  (json: any )=>{///project~ResumeRequest?LicGUID=D100CAB54337ED32E087B59F6CE41511&RequestID=18892&WSM=1 HTTP/1.1
+        if(json.Break !== undefined){
+            
+            let returnJSX= [], returnButton = [], Token,Module, RequestID:any,andResult, params = new Map, data, jsonResponse;
         
             Module = json.Module;
             Token = json.Token;
-            Break = json.Break;
-            RequestID= json.RequestID;
+            RequestID= json.Params.RequestID;
+            setRequestId(RequestID);
+            //console.log(RequestID)
             if ( Token === "MessageBox"){
-                console.log(json);
-                console.log(items);
+                let Message, Buttons, DlgType;
                 Message = json.Params.Message;
                 Buttons = json.Params.Buttons;
                 DlgType = json.Params.DlgType;
@@ -63,29 +83,25 @@ const SectionTools = () =>{
                     andResult = value & Buttons;
                     
                     if (andResult!==0){
-                        returnButton.push(<Button value={key} onClick={(e)=>{pressedButton = e.currentTarget.textContent}}>{key}</Button>)
+                        returnButton.push(<Button value={key} onClick={(e)=>handleClick(e,RequestID, false)}>{key}</Button>)
                     }
                 }
-                    for (const [key, value] of Object.entries(items.DlgType)) {
-                        if (value === DlgType){
-                            DlgType = key;
-                        }
+
+                for (const [key, value] of Object.entries(items.DlgType)) {
+                    if (value === DlgType){
+                        DlgType = key;
+                    }
                 }
 
-            returnJSX.push(  <ModalContainer dlgType={DlgType} text={Message} buttons={returnButton} /> )
-            setTestProgramButton(returnJSX);
-            data = {
-                "Result":{
-                    "Result": "6" 
-                }
+                returnJSX.push(  <ModalContainer dlgType={DlgType} text={Message} buttons={returnButton} /> )
+                setTestProgramButton(returnJSX);
+            }else if(Token === "ChangeStatusProgress"){
+                console.log(json)
             }
-            params.set('prefix', 'project');
-            params.set("comand", "ResumeRequest");
-            params.set("RequestID",RequestID );
-            params.set("WSM", "1");
-            json = XMLrequest(params, pressedButton);
-            a += 1
-            }
+        }else{
+            setTestProgramButton([<></>]);
+        }
+        
         
     }
 

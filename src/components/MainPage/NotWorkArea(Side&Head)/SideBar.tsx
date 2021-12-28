@@ -6,8 +6,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import axios from "axios";
-import URL, { XMLrequest } from "../../Url";
+import  { XMLrequest } from "../../Url";
 import { ImgURL } from "../../Url";
 import { Box, Drawer, Slide, Toolbar } from "@material-ui/core";
 import { useStyles } from "../../Styles";
@@ -79,7 +78,7 @@ export default function SideBar(props: MainBoxBackClick) {
     getSectionList();
   }, []);
 
-  const getSectionList= async ()=> {
+  const getSectionList= ()=> {
     let params = new Map(), json;
     params.set('comand','GetSectionList');
     params.set('Simple','1');
@@ -210,36 +209,33 @@ export default function SideBar(props: MainBoxBackClick) {
   return (
  
     <Drawer
-    
       className={classes.drawer}
       variant="permanent"
       PaperProps={{ style: { width: drawerWidth,  } }}
       sx={{ml: drawerWidth/100*11.9444444444444444}}
-      style={{ overflowX: "hidden"}}
-      >
-       
+      style={{ overflowX: "hidden"}}  >
+
       <div onMouseDown={e => handleMouseDown()} className={classes.dragger} >
             {buttonDragger}
       </div>
-     
-   
+    
       <Toolbar />
-        <Box style={{ scrollbarWidth:"none"}} sx={{ overflow: "auto" }}>
-      <Slide direction="right" in={drawerOpen}> 
-      <List
-        sx={{
-          width: "100%",
-          
-          bgcolor: "background.paper",
-          marginTop: 1,
-        }}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-      >
-        {Menu(data)}
-      </List>
-      </Slide>
-    </Box>
+
+      <Box style={{ scrollbarWidth:"none"}} sx={{ overflow: "auto" }} >
+        <Slide direction="right" in={drawerOpen}> 
+          <List
+            sx={{
+              width: "100%",
+              bgcolor: "background.paper",
+              marginTop: 1,
+            }}
+            component="nav"
+            aria-labelledby="nested-list-subheader"
+          >
+            {Menu(data)}
+          </List>
+        </Slide>
+      </Box>
     
     </Drawer>
     
