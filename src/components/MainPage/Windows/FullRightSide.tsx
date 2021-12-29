@@ -52,7 +52,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     <Grid container 
           direction="column" 
           justifyContent="center" 
-          sx={{ flexGrow: 1, pt: 2, pl:2 }}  
+          sx={{ flexGrow: 1, pt: 2 }}  
           alignItems="stretch" 
           >
     
@@ -62,15 +62,20 @@ export default function FullRightSide(props: InfoAboutClick) {
         
     </Grid>
     
-    <Grid item xs   >
-      <div id ="WorkPlace">
+    <Grid item xs    >
+      <div  style={{ paddingLeft: "0.85%"}}>
+        <div id ="WorkPlace">
 
+        </div>
+        <div>
+        <StickyFooter/>
+        </div>
       </div>
      
       {getTabs()}
-      <StickyFooter/>
+      
     </Grid> 
-   
+
   </Grid>
   );
 }

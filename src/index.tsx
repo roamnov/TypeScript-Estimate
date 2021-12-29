@@ -2,19 +2,24 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import Wrapper from "./components/Wrapper";
+import { BrowserRouter, HashRouter, Route, Routes } from 'react-router-dom';
+import MainPage from './components/MainPage/MainFile';
+import SignIn from './components/Singin/SingIn';
 
 //let pref = require('./components/stimweb/tools/trsview.html')
 
 ReactDOM.render(
-  <React.StrictMode>
+  <HashRouter>
+    <React.StrictMode>
 
-    <Wrapper />
-   
-  </React.StrictMode>,
+        
+                  <Routes>
+                      <Route  path='/' element={<SignIn/>}/>
+                      <Route  path='/main' element={<MainPage/>}/>
+                  </Routes>
+    </React.StrictMode>
+  </HashRouter>,
   document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

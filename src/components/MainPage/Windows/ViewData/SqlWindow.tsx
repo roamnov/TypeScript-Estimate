@@ -46,8 +46,9 @@ const SqlWindow =(props: IdToTree) =>{
     const [value, setValue] = useState(0);
     const [open, setOpen] = useState(false)
     const [IDbd, setIDbd] = useState();
-    const [currentHeight, setCurrentHeight] = useState(window.innerHeight-205);
     const [gridPanel, setGridPanel] = useState([]);
+    const [currentHeight, setCurrentHeight] = useState(window.innerHeight-205);
+
 
     const handleResize = () => {
       setCurrentHeight(window.innerHeight-205);

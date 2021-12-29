@@ -55,8 +55,7 @@ export default function DocTabs(name, doccfgid, parent, cont) {
             sumC = sumC + el.children[i].clientWidth;
             sumO = sumO + el.children[i].offsetWidth;
         }
-        console.log("sum offsetWidth = " + sumO)
-            console.log("sum clientWidth = " + sumC)
+      
         return Sum
     }
     function ResizeBtnTab(event) {

@@ -7,6 +7,7 @@ import { ButtonForST } from './ComponentsForSectionToolsButtons';
 import ModalContainer from '../../Containers/ModalContainer';
 import items from "./Items.json"
 import AlertMini from '../../AlertMini';
+import { RenderFooter } from '../NotWorkArea(Side&Head)/Footer';
 
 
 
@@ -40,7 +41,7 @@ const SectionTools = () =>{
         setMenuBar(json["MenuBar"])
     }
 
-    const handleClick = async (event: any, RequestID:any, emptyReq?: boolean, requestData?:any)=>{
+    const handleClick = (event: any, RequestID:any, emptyReq?: boolean, requestData?:any)=>{
         let params = new Map, data, json, DlgResValue,  clickValue = event.target.value;
         setValue(clickValue);
         
@@ -96,6 +97,10 @@ const SectionTools = () =>{
                 returnJSX.push(  <ModalContainer dlgType={DlgType} text={Message} buttons={returnButton} /> )
                 setTestProgramButton(returnJSX);
             }else if(Token === "ChangeStatusProgress"){
+                let Count,Stop,Title;
+                Count = json.Params.Count;
+                Stop = json.Params.Stop;
+                Title = json.Params.Title;
                 console.log(json)
             }
         }else{
@@ -118,6 +123,7 @@ const SectionTools = () =>{
         params.set("WSM", "1")
         json = XMLrequest(params);
         tokenProcessing(json)
+        
     }
     
     const RenderButtons=(ButtonsLocal: any)=>{
@@ -129,7 +135,7 @@ const SectionTools = () =>{
                 Type = backValue(value, 'Type');
                 items.push(
                     <label id={Type} key={key} >
-                        <Tooltip title={key} id={Type} arrow > 
+                        <Tooltip title={key} id={Type} arrow  placement="left"> 
                             <IconButton id={Path}  color='primary'  component="span" onClick={(e: any) => handeleExecToolprogram(e,Type)} >
                                 {ImgURL(backValue(value, 'Image'))}
                             </IconButton>
@@ -147,7 +153,7 @@ const SectionTools = () =>{
     
 
     return(
-        <Grid style={{}} justifyContent="center">
+        <Grid sx={{pl:2}} justifyContent="center">
            
             {RenderButtons(buttons)}
             {testProgramButton}

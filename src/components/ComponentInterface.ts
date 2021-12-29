@@ -95,3 +95,15 @@ export interface TabPanelProps {
     needToClose?:boolean;
     dlgType?: string;
 }
+
+export interface FooterProps{
+    children?: React.ReactNode[] | React.ReactNode;
+    text?: string;
+    open?:boolean;
+    ID?:string;
+    dlgType?: string;
+}
+
+export interface SectionToolsToFooter{
+    setChildren?: (value:any) => void | any;
+}
