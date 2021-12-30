@@ -1,17 +1,9 @@
 import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import { Button, Grid, Toolbar } from '@material-ui/core';
 import SqlWindow from './ViewData/SqlWindow';
 import { IdToTree, InfoAboutClick, TabPanelProps,InfoAboutClickDown } from "../../ComponentInterface";
 //import init from "../stimweb/tools"
 //import Init from '../stimategrid/test';
-import { isTemplateSpan } from 'typescript';
-import { TabsDemo } from './Tabs/ClosableTabs';
-import { BrowserRouter } from 'react-router-dom';
-import BasicBreadcrumbs from '../Tools/Breadcrumbs';
 import SectionTools from '../Tools/SectionTools';
 import DocTabs from './Tabs/CustomTabs';
 import ManWhoSoldTheWorld from '../stimategrid/test';
@@ -27,7 +19,8 @@ export default function FullRightSide(props: InfoAboutClick) {
   const [selected,setSelected] = React.useState<InfoAboutClick | undefined>()
   const [currentTab, setcurrentTab] = React.useState(0);
   const [value, setValue] = React.useState(0);
-  const [howManyTabs, setHowManyTabs] = React.useState(['Личный кабинет'])
+  const [sectionToolsData, setSectionToolsData] = React.useState();
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -58,7 +51,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     
     <Grid item  >
       <Toolbar />
-      {props.isLoading?<div></div>:<><WorkPlaceTools/> <SectionTools/> </>}
+      {props.isLoading?<div></div>:<><WorkPlaceTools/> <SectionTools setChildren={setSectionToolsData}/> </>}
         
     </Grid>
     
@@ -68,7 +61,7 @@ export default function FullRightSide(props: InfoAboutClick) {
 
         </div>
         <div>
-        <StickyFooter/>
+        <StickyFooter value={sectionToolsData}/>
         </div>
       </div>
      

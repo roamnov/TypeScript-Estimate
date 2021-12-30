@@ -98,12 +98,11 @@ export interface TabPanelProps {
 
 export interface FooterProps{
     children?: React.ReactNode[] | React.ReactNode;
-    text?: string;
+    value?: number;
     open?:boolean;
     ID?:string;
-    dlgType?: string;
 }
 
 export interface SectionToolsToFooter{
-    setChildren?: (value:any) => void | any;
+    setChildren: (value:any) => void | any;
 }

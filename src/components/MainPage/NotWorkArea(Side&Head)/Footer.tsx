@@ -6,6 +6,7 @@ import Container from '@mui/material/Container';
 import { useEffect,useState } from 'react';
 import ReactDOM from 'react-dom';
 import { FooterProps } from '../../ComponentInterface';
+import { LinearProgress } from '@material-ui/core';
 
 
 
@@ -47,19 +48,10 @@ export default function StickyFooter( props: FooterProps) {
         }}
       >
         <Container id="footer" maxWidth="xl">
-          {props.children}
+          {props.value === undefined? <></>:<LinearProgress variant="determinate" value={props.value} />}
         </Container>
       </Box>
     </Box>
   );
 }
 
-
-export function RenderFooter( children?: React.ReactNode[] | React.ReactNode){
-  ReactDOM.render(
-    <>
-    SAS
-    </>,
-    document.getElementById('footer')
-  );
-}

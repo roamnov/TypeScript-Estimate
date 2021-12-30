@@ -1,5 +1,5 @@
-import  React from 'react';
-import {  Button, Grid, IconButton, Tooltip, } from "@mui/material"
+import  React, { useEffect } from 'react';
+import {  Backdrop, Button, Grid, IconButton, LinearProgress, Tooltip, } from "@mui/material"
 import URL, { XMLrequest } from '../../Url';
 import axios from 'axios';
 import { ImgURL } from "../../Url";
@@ -7,19 +7,21 @@ import { ButtonForST } from './ComponentsForSectionToolsButtons';
 import ModalContainer from '../../Containers/ModalContainer';
 import items from "./Items.json"
 import AlertMini from '../../AlertMini';
-import { RenderFooter } from '../NotWorkArea(Side&Head)/Footer';
+import { SectionToolsToFooter } from '../../ComponentInterface';
 
 
 
 //
 //https://mui.com/components/toggle-button/
 //
-const SectionTools = () =>{
+const SectionTools = (props:SectionToolsToFooter) =>{
     const [testProgramButton, setTestProgramButton] = React.useState([<></>]);
     const [requestId,setRequestId] = React.useState();
     const [menuBar, setMenuBar] = React.useState([]);
     const [buttons, setButtons] = React.useState([]);
     const [value, setValue] = React.useState();
+    const [progress, setProgress] = React.useState<number>(0);
+    let IndexS = 0;
 
     React.useEffect(() => {
        GetSectionTools();
@@ -27,7 +29,7 @@ const SectionTools = () =>{
     
     React.useEffect(() => {
         console.log(value);
-    }, [value])
+    }, [])
   
 
 
@@ -41,17 +43,40 @@ const SectionTools = () =>{
         setMenuBar(json["MenuBar"])
     }
 
-    const handleClick = (event: any, RequestID:any, emptyReq?: boolean, requestData?:any)=>{
+    function ChangeStatusProgress( RequestID:any){
+        let params = new Map, data, json, progr:number;
+        data = { "Result":"" }
+        params.set('prefix', 'project');
+        params.set("comand", "ResumeRequest");
+        params.set("RequestID",RequestID );
+        params.set("WSM", "1");
+        json = XMLrequest(params,  data);
+     /**/
+        while(json.Break !== undefined){
+
+            
+            progr = Number(json.Params.Index);
+            console.log(json);
+            setProgress(progr);
+            IndexS = progr;
+            props.setChildren(progr);
+          
+            json = XMLrequest(params,  data);
+        }
+        
+        
+        //tokenProcessing(json)
+    }
+
+    function handleClick (event: any, RequestID:any, emptyReq?: boolean, requestData?:any){//MessageBox
         let params = new Map, data, json, DlgResValue,  clickValue = event.target.value;
         setValue(clickValue);
         
-        if(emptyReq){
-            data = { "Result":"" }
-        }else{
+     
             for (const [key, value] of Object.entries(items.DlgRes)) {
                 if (key === clickValue) DlgResValue = value;
            }
-        }
+        
         
         console.log(DlgResValue)
         data = { "Result": DlgResValue }
@@ -64,10 +89,10 @@ const SectionTools = () =>{
     }
     
 
-    const  tokenProcessing =  (json: any )=>{///project~ResumeRequest?LicGUID=D100CAB54337ED32E087B59F6CE41511&RequestID=18892&WSM=1 HTTP/1.1
+    function  tokenProcessing (json: any ){///project~ResumeRequest?LicGUID=D100CAB54337ED32E087B59F6CE41511&RequestID=18892&WSM=1 HTTP/1.1
         if(json.Break !== undefined){
             
-            let returnJSX= [], returnButton = [], Token,Module, RequestID:any,andResult, params = new Map, data, jsonResponse;
+            let returnJSX= [], returnSmth = [], Token,Module, RequestID:any,andResult, params = new Map, data, jsonResponse;
         
             Module = json.Module;
             Token = json.Token;
@@ -84,7 +109,7 @@ const SectionTools = () =>{
                     andResult = value & Buttons;
                     
                     if (andResult!==0){
-                        returnButton.push(<Button value={key} onClick={(e)=>handleClick(e,RequestID, false)}>{key}</Button>)
+                        returnSmth.push(<Button value={key} onClick={(e)=>handleClick(e,RequestID, false)}>{key}</Button>)
                     }
                 }
 
@@ -94,14 +119,31 @@ const SectionTools = () =>{
                     }
                 }
 
-                returnJSX.push(  <ModalContainer dlgType={DlgType} text={Message} buttons={returnButton} /> )
+                returnJSX.push(  <ModalContainer dlgType={DlgType} text={Message} buttons={returnSmth} /> )
                 setTestProgramButton(returnJSX);
             }else if(Token === "ChangeStatusProgress"){
-                let Count,Stop,Title;
+                let Count,Stop,Title, Index;
                 Count = json.Params.Count;
                 Stop = json.Params.Stop;
                 Title = json.Params.Title;
-                console.log(json)
+                Index = json.Params.Index;
+                //props.setChildren(json);
+                returnJSX.push(
+                    <div style={{width:"13%"}}>
+                        
+                        <Backdrop
+                            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                            open={true}
+                            
+                            >
+                                <LinearProgress variant="determinate" value={IndexS} />
+                        </Backdrop>
+                    </div>
+
+                )
+                //setTestProgramButton(returnJSX);
+                ChangeStatusProgress(RequestID);
+                
             }
         }else{
             setTestProgramButton([<></>]);
@@ -134,13 +176,15 @@ const SectionTools = () =>{
                 Path = backValue(value, 'Path');
                 Type = backValue(value, 'Type');
                 items.push(
-                    <label id={Type} key={key} >
-                        <Tooltip title={key} id={Type} arrow  placement="left"> 
+                 
+                      
                             <IconButton id={Path}  color='primary'  component="span" onClick={(e: any) => handeleExecToolprogram(e,Type)} >
+                     
                                 {ImgURL(backValue(value, 'Image'))}
+                             
                             </IconButton>
-                        </Tooltip>
-                    </label>
+                       
+ 
                     )
                 }
               return items
