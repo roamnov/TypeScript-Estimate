@@ -18,15 +18,14 @@ import ManWhoSoldTheWorld from '../stimategrid/test';
 import DocsReportsMainWindow from './Docs&Reports/Docs&ReportsWindow';
 import NestedMenu from '../Tools/NestedMenu';
 import SectionsDBview from '../Sections/dbview';
+import { WorkPlaceTools } from '../Tools/WorkPlaceTools';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
 
   const [open, setOpen] = React.useState(false);
-  const [selected,setSelected] = React.useState<InfoAboutClick | undefined>()
-  const [currentTab, setcurrentTab] = React.useState(0);
   const [value, setValue] = React.useState(0);
-  const [howManyTabs, setHowManyTabs] = React.useState(['Личный кабинет'])
+  const [sectionToolsData, setSectionToolsData] = React.useState();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -57,7 +56,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     
     <Grid item  >
       <Toolbar />
-      {props.isLoading?<div></div>:<><SectionTools/></>}
+      {props.isLoading?<div></div>:<><WorkPlaceTools/> <SectionTools setChildren={setSectionToolsData}/> </>}
         
     </Grid>
     
