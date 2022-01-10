@@ -4,11 +4,10 @@ import { IdToTree, TabPanelProps } from "../../../ComponentInterface";
 import  {useState,useEffect } from "react";
 import Tree from "./Tree/tree.js";
 import { useStyles } from "../../../Styles";
-import ResizePanel from "./ResizebleComponent/ResizebleComponent";
+
 import ManWhoSoldTheWorld from "../../stimategrid/test";
+import { ReactDOM } from "react";
 import GridStimate from "../../stimategrid/GridTest";
-import { SGrid } from "../../stasgrid/StasGrid";
-import ModalContainer from "../../../Containers/ModalContainer";
 
 //
 function TabPanel(props: TabPanelProps) {
@@ -46,9 +45,8 @@ const SqlWindow =(props: IdToTree) =>{
     const [value, setValue] = useState(0);
     const [open, setOpen] = useState(false)
     const [IDbd, setIDbd] = useState();
-    const [gridPanel, setGridPanel] = useState([]);
+    const [elGrid, setGrid] = useState();
     const [currentHeight, setCurrentHeight] = useState(window.innerHeight-205);
-
 
     const handleResize = () => {
       setCurrentHeight(window.innerHeight-205);
@@ -58,14 +56,14 @@ const SqlWindow =(props: IdToTree) =>{
     }, []);
 
     const openGrid= ()=>{
-      //setGridPanel(document.getElementById("gridPanel"))
       setOpen(!open)
-      
     }
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
       };
+      
+
     return (
             
 
@@ -78,21 +76,17 @@ const SqlWindow =(props: IdToTree) =>{
               >
         
           
-        <ResizePanel   direction="e" style={{ width: '400px',  maxWidth: "80%" , paddingTop:"2%"}} >
-         
-          <Tree setCode={setCode} setIDbd={setIDbd} />           
-          
-        </ResizePanel>
+        
    {/* */}
 
         {/*   */}    
-    
+       
+          
         <Grid xs>
           <Grid  style={{}}>
           <Tabs value={value} onChange={handleChange} >
             <Tab onClick={openGrid} label="SQL-скрипты" {...a11yProps(1)} />
             <Tab label="Данные" {...a11yProps(0)} />
- 
           </Tabs>
           </Grid>
             <TabPanel  value={value} index={0}>
@@ -119,11 +113,10 @@ const SqlWindow =(props: IdToTree) =>{
             </div>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                {open?ManWhoSoldTheWorld(IDbd):<Button disabled={IDbd === undefined}  variant="outlined" onClick={openGrid}>Открыть</Button>}
+                 {elGrid? elGrid:open?ManWhoSoldTheWorld(IDbd):<Button  variant="outlined" onClick={openGrid}>Открыть</Button>}
                 <div id="gridPanel" style={{position: 'relative', left: '0px', top: '0px', width: '100%', height:`${currentHeight}px`}} >  </div>
           
             </TabPanel>
-           
         </Grid>
       </Grid>
             
@@ -135,5 +128,4 @@ export default SqlWindow;
 
 /*
 disabled={IDbd === undefined}
- {open?ManWhoSoldTheWorld(IDbd):<Button  variant="outlined" onClick={openGrid}>Открыть</Button>}
 */

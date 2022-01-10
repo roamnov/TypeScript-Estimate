@@ -7,7 +7,6 @@ import SideBar from './NotWorkArea(Side&Head)/SideBar';
 import FullRightSide from './Windows/FullRightSide';
 import { InfoAboutClick } from '../ComponentInterface';
 import ModalContainer from '../Containers/ModalContainer';
-import StickyFooter from './NotWorkArea(Side&Head)/Footer';
 
 export default function WrapperRightSide() {
   
@@ -15,8 +14,7 @@ export default function WrapperRightSide() {
   const [clsid, setCLSID] = React.useState();
   const [isLoading, setIsLoading] = React.useState(true);
   const [selected, setSelected] = React.useState<InfoAboutClick | undefined>();
-  
-
+  console.log(isLoading)
   return (
     <Box sx={{ display: 'flex' , height:"100%", overflow:"hidden"}}>
       <CssBaseline />
@@ -28,9 +26,8 @@ export default function WrapperRightSide() {
       <SideBar  isLoading={setIsLoading} setSelected={setSelected}/>
     
       <FullRightSide isLoading={isLoading} id= {selected?.id}  clsic= {selected?.clsic} name= {selected?.name}  />
-       
+   
     </Box>
-    
   );
 }
 

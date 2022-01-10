@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { DocsAndReports } from "../../../ComponentInterface";
 import URL, { XMLrequest } from "../../../Url";
-import ResizePanel from "../ViewData/ResizebleComponent/ResizebleComponent";
+
 
 
 const SectionDocs= (props:DocsAndReports) =>{

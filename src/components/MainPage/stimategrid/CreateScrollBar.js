@@ -2,21 +2,6 @@ import { midint, showElement,hideElement} from "./Helpful"
 
 
 export function createScrollbar(view, event) {
-    var Stimate = {
-        appendEvent: function(e, f, el) {
-            if (el) {
-                el.addEventListener(e, f)
-            } else {
-              document.addEventListener(e, f);
-            }
-        },
-        deleteEvent: function(e, f, el) {
-            if (el) {
-                el.removeEventListener(e, f)
-            } else {
-                document.removeEventListener(e, f);
-            }
-        }}
     this.view = view;
     view.insertAdjacentHTML('beforeend', '<div class="lazy-scroll">');
     var bar = view.lastChild;

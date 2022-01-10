@@ -1,0 +1,60 @@
+#DBviewTree {
+    width: 30%;
+}
+
+#DBviewTabsButtons {
+    display: flex;
+    cursor: pointer;
+}
+
+#SectionsDBview {
+    display: flex;
+}
+
+.DBviewTabs {
+    width: 100%;
+    overflow-x: scroll;
+    font-family: sans-serif;
+}
+#DBviewData .ActivTabs
+{
+    display: block;
+}
+#DBviewData .noActivTabs
+{
+    display: none;
+}
+.DBviewTabs .ContentTab, .DBviewTabs input[type='radio'] {
+    display: none;
+}
+
+.DBviewTabs .ContentTab {
+    background-color: #fff;
+    width: calc(100% - 40px);
+    max-width: 100%;
+    padding: 20px;
+    float: left;
+    position: absolute;
+}
+
+.DBviewTabs >input + label {
+    display: inline-block;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    padding: 0.25rem 0.75rem;
+    color: #B3B3B3;
+    background: #E7E7E7;
+    margin-left: 0.25rem;
+    
+}
+
+.DBviewTabs input:checked+label {
+    font-weight: bold;
+    border-bottom-color: #fff;
+    background: #fff;
+    color: #186baa;
+}
+
+.DBviewTabs input:checked+label+.ContentTab {
+    display: block;
+}
