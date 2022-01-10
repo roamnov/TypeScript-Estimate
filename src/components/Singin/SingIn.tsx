@@ -53,7 +53,7 @@ const SignIn = (props: componentProps) => {
 
   const GoToMain =()=>{
     //useLocalStorage(drx, "drx")
-    //setAutnToken(true, "auth")
+    setAutnToken(true, "auth")
     navigate("main");
   }
 

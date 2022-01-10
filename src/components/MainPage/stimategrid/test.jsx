@@ -1406,7 +1406,6 @@ function createGrid(panel) {
     function handleMouseUp(e) {
 
         if (e.button != 0) return;
-
         isJustMouseDown = false;
 
         if (sizeMarker.style.opacity == 1) {
@@ -2071,7 +2070,12 @@ let json = Stimate.SynchRequest('dbview/handleTable', request, 'id=' + testBD);
 
     }
 
-    initGrid(document.getElementById("gridPanel"), testID);
+    //let json = Stimate.synchRequest('project/enter', {configName: 'webtools_hidden.drx', userName: 'webadmin'}); 
+    //json = Stimate.synchRequest('dbview/uploadfile', {fileName: 'D:\\Temp\\table.trs'});
+    //if (json) dataId = json.ID;
+    var grP = document.getElementById("gridpanel"+IDbd)
+    if(grP)
+      initGrid(grP, testID);
    
     
 }
