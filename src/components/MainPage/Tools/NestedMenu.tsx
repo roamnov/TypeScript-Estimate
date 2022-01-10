@@ -1,47 +1,62 @@
 import React, { useState } from "react";
-/*
-import { Button, Menu, MenuItem, Typography } from "@mui/material";
-import { NestedMenuItem } from "./NestedMenuOrigin/NestedMenuItem";
-import { IconMenuItem } from "./NestedMenuOrigin/NestedMenuIcon";
+import { Menu, MenuItem, Typography } from "@material-ui/core";
 
+import NestedMenuItem from "material-ui-nested-menu-item";
 
+export const NestedMenu = () => {
+  const [menuPosition, setMenuPosition] = useState<any>(null);
 
-export default function NestedMenu() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const handleRightClick = (event: React.MouseEvent) => {
+    if (menuPosition) {
+      return;
+    }
+    event.preventDefault();
+    setMenuPosition({
+      top: event.pageY,
+      left: event.pageX
+    });
+  };
 
-  const handleClick = (event: { currentTarget: React.SetStateAction<null>; }) => setAnchorEl(event.currentTarget);
-  const handleClose = () => setAnchorEl(null);
+  const handleItemClick = (event: React.MouseEvent) => {
+    setMenuPosition(null);
+  };
 
   return (
-    <div>
-      <Button variant='contained' onClick={handleClick} >
-        Click Me!
-      </Button>
-      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+    <div onContextMenu={handleRightClick}>
+      <Typography>Right click to open menu</Typography>
+      <Menu
+        open={!!menuPosition}
+        onClose={() => setMenuPosition(null)}
+        anchorReference="anchorPosition"
+        anchorPosition={menuPosition}
+      >
+        <MenuItem onClick={handleItemClick}>Button 1</MenuItem>
+        <MenuItem onClick={handleItemClick}>Button 2</MenuItem>
         <NestedMenuItem
-         
-          label={'Top Level'}
-          parentMenuOpen={open}
-        >
-          <MenuItem onClick={handleClose}>Standard Menu Item!</MenuItem>
-          <IconMenuItem
-            onClick={handleClose}
-         
-            label={'Icon Menu Item'}
-          />
+                  label="Button 3"
+                  parentMenuOpen={!!menuPosition}
+                  onClick={handleItemClick} innerRef={undefined} alignItems={undefined} ContainerComponent={undefined}        >
+          <MenuItem onClick={handleItemClick}>Sub-Button 1</MenuItem>
+          <MenuItem onClick={handleItemClick}>Sub-Button 2</MenuItem>
           <NestedMenuItem
-          
-            label={'Go deeper!'}
-            parentMenuOpen={open}
-          >
-            <MenuItem onClick={handleClose}>Standard Menu Item!</MenuItem>
-            <IconMenuItem
-              onClick={handleClose}
-              label={'Icon Menu Item'} leftIcon={undefined} rightIcon={undefined} MenuItemProps={undefined} className={undefined} ref={undefined}            />
+                      label="Sub-Button 3"
+                      parentMenuOpen={!!menuPosition}
+                      onClick={handleItemClick} innerRef={undefined} alignItems={undefined} ContainerComponent={undefined}          >
+            <MenuItem onClick={handleItemClick}>Sub-Sub-Button 1</MenuItem>
+            <MenuItem onClick={handleItemClick}>Sub-Sub-Button 2</MenuItem>
           </NestedMenuItem>
+        </NestedMenuItem>
+        <MenuItem onClick={handleItemClick}>Button 4</MenuItem>
+        <NestedMenuItem
+                  label="Button 5"
+                  parentMenuOpen={!!menuPosition}
+                  onClick={handleItemClick} innerRef={undefined} alignItems={undefined} ContainerComponent={undefined}        >
+          <MenuItem onClick={handleItemClick}>Sub-Button 1</MenuItem>
+          <MenuItem onClick={handleItemClick}>Sub-Button 2</MenuItem>
         </NestedMenuItem>
       </Menu>
     </div>
   );
-}*/
+};
+
+export default NestedMenu;
