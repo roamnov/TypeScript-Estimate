@@ -65,7 +65,7 @@ export default function ModalContainer(props: containerProps) {
           </Grid>
           <Grid item>
             <DialogContentText id="alert-dialog-slide-description">
-            {props.text}
+            {props.content}
             </DialogContentText>
           </Grid>
         </Grid>

@@ -15,7 +15,7 @@ import { SectionToolsToFooter } from '../../ComponentInterface';
 //https://mui.com/components/toggle-button/
 //
 const SectionTools = (props:SectionToolsToFooter) =>{
-    const [testProgramButton, setTestProgramButton] = React.useState([<></>]);
+    const [Program, setProgram] = React.useState([<></>]);
     const [requestId,setRequestId] = React.useState();
     const [menuBar, setMenuBar] = React.useState([]);
     const [buttons, setButtons] = React.useState([]);
@@ -119,9 +119,10 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                     }
                 }
 
-                returnJSX.push(  <ModalContainer dlgType={DlgType} text={Message} buttons={returnSmth} /> )
-                setTestProgramButton(returnJSX);
-            }else if(Token === "ChangeStatusProgress"){
+                returnJSX.push(  <ModalContainer dlgType={DlgType} content={Message} buttons={returnSmth} /> )
+                setProgram(returnJSX);
+            }
+            else if(Token === "ChangeStatusProgress"){
                 let Count,Stop,Title, Index;
                 Count = json.Params.Count;
                 Stop = json.Params.Stop;
@@ -130,12 +131,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 //props.setChildren(json);
                 returnJSX.push(
                     <div style={{width:"13%"}}>
-                        
-                        <Backdrop
-                            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                            open={true}
-                            
-                            >
+                        <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}  >
                                 <LinearProgress variant="determinate" value={IndexS} />
                         </Backdrop>
                     </div>
@@ -144,9 +140,17 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 //setTestProgramButton(returnJSX);
                 ChangeStatusProgress(RequestID);
                 
+            }else if(Token === "InputText"){
+                console.log(json)
+                let Caption, Title;
+                returnJSX.push(
+                    <ModalContainer  content={Caption} /> 
+                )
             }
-        }else{
-            setTestProgramButton([<></>]);
+
+        }
+        else{
+            setProgram([<></>]);
         }
         
         
@@ -156,15 +160,15 @@ const SectionTools = (props:SectionToolsToFooter) =>{
     const handeleExecToolprogram =(event:any , type?:string)=>{///tools~ExecToolProgram
         let Path = event.currentTarget.getAttribute("id"),  params = new Map(), json, Type, Module, Token, Break;
         Path = event.currentTarget.getAttribute("id");
-        Type = event.currentTarget.parentElement.id;
         params.set('prefix', 'tools');
-        params.set("comand", "ExecToolProgram")
-        params.set("Path", Path)
-        params.set("Type", type)
-        //params.set("Checked", "0")
-        params.set("WSM", "1")
+        params.set("comand", "ExecToolProgram");
+        params.set("Path", Path);
+        params.set("Type", type);
+        //params.set("Checked", "0") УЗНАТЬ КАК WSM ПОЛУЧАТЬ ////////////////////////////////////////////////////////
+        params.set("WSM", "1");
         json = XMLrequest(params);
-        tokenProcessing(json)
+        //console.log(json)
+        tokenProcessing(json);
         
     }
     
@@ -176,15 +180,11 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 Path = backValue(value, 'Path');
                 Type = backValue(value, 'Type');
                 items.push(
-                 
-                      
                             <IconButton id={Path}  color='primary'  component="span" onClick={(e: any) => handeleExecToolprogram(e,Type)} >
                      
                                 {ImgURL(backValue(value, 'Image'))}
                              
                             </IconButton>
-                       
- 
                     )
                 }
               return items
@@ -200,7 +200,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         <Grid sx={{pl:2}} justifyContent="center">
            
             {RenderButtons(buttons)}
-            {testProgramButton}
+            {Program}
         </Grid>
     )
 }
