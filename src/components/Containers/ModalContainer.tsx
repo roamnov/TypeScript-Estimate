@@ -59,12 +59,12 @@ export default function ModalContainer(props: containerProps) {
       >
         <DialogTitle>{props.dlgType}</DialogTitle>
         <DialogContent>
-        <Grid container direction="row" justifyContent="space-evenly" alignItems="center">
+        <Grid container direction="row" justifyContent="space-evenly" alignItems="center" spacing={2} >
           <Grid item>
               {title()}
           </Grid>
           <Grid item>
-            <DialogContentText id="alert-dialog-slide-description">
+            <DialogContentText style={{marginTop:"2%"}}>
             {props.content}
             </DialogContentText>
           </Grid>

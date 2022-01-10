@@ -1,5 +1,5 @@
 import  React, { useEffect } from 'react';
-import {  Backdrop, Button, Grid, IconButton, LinearProgress, Tooltip, } from "@mui/material"
+import {  Backdrop, Button, Grid, IconButton, LinearProgress, TextField, Tooltip, } from "@mui/material"
 import URL, { XMLrequest } from '../../Url';
 import axios from 'axios';
 import { ImgURL } from "../../Url";
@@ -18,6 +18,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
     const [Program, setProgram] = React.useState([<></>]);
     const [requestId,setRequestId] = React.useState();
     const [menuBar, setMenuBar] = React.useState([]);
+    const [inputText, setInputText] = React.useState();
     const [buttons, setButtons] = React.useState([]);
     const [value, setValue] = React.useState();
     const [progress, setProgress] = React.useState<number>(0);
@@ -42,6 +43,31 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         setButtons(json["Buttons"]);
         setMenuBar(json["MenuBar"])
     }
+
+
+    const InputChange = (event:any)=>{
+        console.log(inputText)
+        setInputText(event.target.value)
+    }
+
+    function InputTextChange(event: any, RequestID:any){
+        let params = new Map, data, json, ClickedButton= event.target.value ,inputResult = event.target.form[0]["value"];
+        //const data1 = new FormData(event.currentTarget);
+
+        if (ClickedButton === 2){
+            data = { "Result": ""}
+        }else{
+            data = {  "Text":inputResult, "Result": 1 }
+        }
+            
+        params.set('prefix', 'project');
+        params.set("comand", "ResumeRequest");
+        params.set("RequestID",RequestID );
+        params.set("WSM", "1");
+        json = XMLrequest(params,  data);
+        tokenProcessing(json);
+    }
+
 
     function ChangeStatusProgress( RequestID:any){
         let params = new Map, data, json, progr:number;
@@ -68,7 +94,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         //tokenProcessing(json)
     }
 
-    function handleClick (event: any, RequestID:any, emptyReq?: boolean, requestData?:any){//MessageBox
+    function handleClickMessageBox (event: any, RequestID:any, emptyReq?: boolean, requestData?:any){//MessageBox
         let params = new Map, data, json, DlgResValue,  clickValue = event.target.value;
         setValue(clickValue);
         
@@ -85,7 +111,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         params.set("RequestID",RequestID );
         params.set("WSM", "1");
         json = XMLrequest(params,  data);
-        tokenProcessing(json)
+        tokenProcessing(json);
     }
     
 
@@ -109,7 +135,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                     andResult = value & Buttons;
                     
                     if (andResult!==0){
-                        returnSmth.push(<Button value={key} onClick={(e)=>handleClick(e,RequestID, false)}>{key}</Button>)
+                        returnSmth.push(<Button value={key} onClick={(e)=>handleClickMessageBox(e,RequestID)}>{key}</Button>)
                     }
                 }
 
@@ -140,12 +166,30 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 //setTestProgramButton(returnJSX);
                 ChangeStatusProgress(RequestID);
                 
+                
             }else if(Token === "InputText"){
                 console.log(json)
                 let Caption, Title;
-                returnJSX.push(
-                    <ModalContainer  content={Caption} /> 
+                Caption = json.Params.Caption;
+                Title = json.Params.Title;
+
+                returnSmth.push(
+                    <Grid component={"form"} container direction="column"  justifyContent="center"  alignItems="flex-end" spacing={2}>
+                        <Grid item>
+                            <TextField  id="input-text" name="input-text" label={Title} variant="outlined" fullWidth onChange={InputChange} />
+                            
+                        </Grid>
+                        <Grid item>
+                            <Button value={1} onClick={(e)=>InputTextChange(e,RequestID)} > Ок</Button>
+                            <Button value={2} onClick={(e)=>InputTextChange(e,RequestID)}> Отмена</Button>
+                        </Grid>
+                    </Grid>
                 )
+
+                returnJSX.push(
+                    <ModalContainer dlgType={Caption}  content={returnSmth} /> 
+                )
+                setProgram(returnJSX);
             }
 
         }
@@ -208,6 +252,10 @@ const SectionTools = (props:SectionToolsToFooter) =>{
 export default SectionTools;
 
 
+
+function getAttribute(arg0: string): any {
+    throw new Error('Function not implemented.');
+}
 /* <button onClick={GetSectionTools}> НАЖМИ ДЛЯ ЗАПРОСА</button>
 React.useEffect(() => {
         console.log(buttons)

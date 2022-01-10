@@ -1,17 +1,8 @@
 import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import { Button, Grid, Toolbar } from '@material-ui/core';
-import SqlWindow from './ViewData/SqlWindow';
 import { IdToTree, InfoAboutClick, TabPanelProps,InfoAboutClickDown } from "../../ComponentInterface";
 //import init from "../stimweb/tools"
 //import Init from '../stimategrid/test';
-import { isTemplateSpan } from 'typescript';
-import { TabsDemo } from './DocTabs/ClosableTabs';
-import { BrowserRouter } from 'react-router-dom';
-import BasicBreadcrumbs from '../Tools/Breadcrumbs';
 import SectionTools from '../Tools/SectionTools';
 import DocTabs from './DocTabs/DocTabs';
 import ManWhoSoldTheWorld from '../stimategrid/test';
@@ -19,6 +10,7 @@ import DocsReportsMainWindow from './Docs&Reports/Docs&ReportsWindow';
 import NestedMenu from '../Tools/NestedMenu';
 import SectionsDBview from '../Sections/dbview';
 import { WorkPlaceTools } from '../Tools/WorkPlaceTools';
+import StickyFooter from '../NotWorkArea(Side&Head)/Footer';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
@@ -57,7 +49,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     <Grid item  >
       <Toolbar />
       {props.isLoading?<div></div>:<><WorkPlaceTools/> <SectionTools setChildren={setSectionToolsData}/> </>}
-        
+      <StickyFooter value={sectionToolsData}/>
     </Grid>
     
     <Grid item xs   >
@@ -67,6 +59,7 @@ export default function FullRightSide(props: InfoAboutClick) {
      
       {getTabs()}
     </Grid>  
+   
   </Grid>
   );
 }
