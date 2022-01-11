@@ -89,7 +89,7 @@ export interface TabPanelProps {
 
   export interface containerProps extends componentProps{
     children?: React.ReactNode[] | React.ReactNode;
-    content?: string | JSX.Element[];
+    content?: string | JSX.Element[] | Element;
     buttons?: any;
     open?:boolean;
     needToClose?:boolean;

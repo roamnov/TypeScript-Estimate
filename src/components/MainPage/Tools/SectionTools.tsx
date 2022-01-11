@@ -1,15 +1,55 @@
-import  React, { useEffect } from 'react';
-import {  Backdrop, Button, Grid, IconButton, LinearProgress, TextField, Tooltip, } from "@mui/material"
-import URL, { XMLrequest } from '../../Url';
-import axios from 'axios';
+import  React from 'react';
+import {  Backdrop,  Button, Grid, IconButton, LinearProgress, Step, StepLabel, Stepper, TextField } from "@mui/material"
+import { XMLrequest } from '../../Url';
+
 import { ImgURL } from "../../Url";
-import { ButtonForST } from './ComponentsForSectionToolsButtons';
 import ModalContainer from '../../Containers/ModalContainer';
 import items from "./Items.json"
 import AlertMini from '../../AlertMini';
 import { SectionToolsToFooter } from '../../ComponentInterface';
 
+const steps = [
+    {
+      label: 'Select campaign settings',
+      description: `For each ad campaign that you create, you can control how much
+                you're willing to spend on clicks and conversions, which networks
+                and geographical locations you want your ads to show on, and more.`,
+    },
+    {
+      label: 'Create an ad group',
+      description:
+        'An ad group contains one or more ads which target a shared set of keywords.',
+    },
+    {
+      label: 'Create an ad',
+      description: `Try out different ad text to see what brings in the most customers,
+                and learn how to enhance your ads using features like ad extensions.
+                If you run into any problems with your ads, find out how to tell if
+                they're running and how to resolve approval issues.`,
+    },
+  ];
 
+  
+export function VerticalLinearStepper() {
+    const [activeStep, setActiveStep] = React.useState(1);
+  
+    return (
+    
+        <Stepper activeStep={activeStep} orientation="vertical">
+          {steps.map((step, index) => (
+            <Step key={step.label}>
+              <StepLabel
+                
+              >
+                {step.label}
+              </StepLabel>
+             
+            </Step>
+          ))}
+        </Stepper>
+      
+    );
+  }
 
 //
 //https://mui.com/components/toggle-button/
@@ -22,19 +62,15 @@ const SectionTools = (props:SectionToolsToFooter) =>{
     const [buttons, setButtons] = React.useState([]);
     const [value, setValue] = React.useState();
     const [progress, setProgress] = React.useState<number>(0);
+    const [activeStep, setActiveStep] = React.useState(0);
     let IndexS = 0;
 
     React.useEffect(() => {
        GetSectionTools();
     }, [])
-    
-    React.useEffect(() => {
-        console.log(value);
-    }, [])
-  
 
 
-    const GetSectionTools = async () =>{
+    const GetSectionTools =  () =>{
         let params = new Map(), json;
         params.set('prefix','tools');
         params.set('comand','GetSectionTools');
@@ -79,8 +115,6 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         json = XMLrequest(params,  data);
      /**/
         while(json.Break !== undefined){
-
-            
             progr = Number(json.Params.Index);
             console.log(json);
             setProgress(progr);
@@ -91,7 +125,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         }
         
         
-        //tokenProcessing(json)
+        tokenProcessing(json)
     }
 
     function handleClickMessageBox (event: any, RequestID:any, emptyReq?: boolean, requestData?:any){//MessageBox
@@ -103,8 +137,6 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 if (key === clickValue) DlgResValue = value;
            }
         
-        
-        console.log(DlgResValue)
         data = { "Result": DlgResValue }
         params.set('prefix', 'project');
         params.set("comand", "ResumeRequest");
@@ -114,11 +146,33 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         tokenProcessing(json);
     }
     
+    function ShowProgressDialog(RequestID:string){
+        let params = new Map, data, json:object;
+        params.set('prefix', 'project');
+        params.set("comand", "ResumeRequest");
+        params.set("RequestID",RequestID );
+        params.set("WSM", "1");
+    }
 
-    function  tokenProcessing (json: any ){///project~ResumeRequest?LicGUID=D100CAB54337ED32E087B59F6CE41511&RequestID=18892&WSM=1 HTTP/1.1
+    function EmptyRequest(RequestID:string){
+        let params = new Map, data, json:object;
+        params.set('prefix', 'project');
+        params.set("comand", "ResumeRequest");
+        params.set("RequestID",RequestID );
+        params.set("WSM", "1");
+        json = XMLrequest(params,  data);
+        tokenProcessing(json);
+    }
+
+    function setCharAt(str: string,index: number,chr: any) {
+        if(index > str.length-1) return str;
+        return str.substring(0,index) + chr + str.substring(index+1);
+    }
+
+    function  tokenProcessing (json: any, DataJSX?:any ){///project~ResumeRequest?LicGUID=D100CAB54337ED32E087B59F6CE41511&RequestID=18892&WSM=1 HTTP/1.1
         if(json.Break !== undefined){
             
-            let returnJSX= [], returnSmth = [], Token,Module, RequestID:any,andResult, params = new Map, data, jsonResponse;
+            let returnJSX= [], returnSmth = [], Token,Module, RequestID:any,andResult,jsonResponse;
         
             Module = json.Module;
             Token = json.Token;
@@ -147,8 +201,8 @@ const SectionTools = (props:SectionToolsToFooter) =>{
 
                 returnJSX.push(  <ModalContainer dlgType={DlgType} content={Message} buttons={returnSmth} /> )
                 setProgram(returnJSX);
-            }
-            else if(Token === "ChangeStatusProgress"){
+
+            }else if(Token === "ChangeStatusProgress"){
                 let Count,Stop,Title, Index;
                 Count = json.Params.Count;
                 Stop = json.Params.Stop;
@@ -165,7 +219,6 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 )
                 //setTestProgramButton(returnJSX);
                 ChangeStatusProgress(RequestID);
-                
                 
             }else if(Token === "InputText"){
                 console.log(json)
@@ -190,6 +243,52 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                     <ModalContainer dlgType={Caption}  content={returnSmth} /> 
                 )
                 setProgram(returnJSX);
+
+            }else if(Token === "ShowProgressDialog"){
+                let Path, ProgID, Sections, Title, SectionsArray, Section:any, Steps = [];
+                Path = json.Params.Path;
+                ProgID = json.Params.ProgID;
+                Sections = json.Params.Sections;
+                Title = json.Params.Title;
+                SectionsArray = Sections.split(",");
+                //console.log(json)
+                
+                for (const [key, value] of Object.entries(SectionsArray)) {
+                    let FixedSection:any;
+                    FixedSection = value;
+                    Section = value;
+
+                    for (const [key, value] of Object.entries(Section)){
+                        if(value ===  Section[Number(key)+1] && value === '"'){
+                           FixedSection = setCharAt(FixedSection, Number(key), "");
+                        }
+                    }
+                    if(FixedSection[0] === '"' && FixedSection[FixedSection.length -1]=== '"'){
+                        FixedSection = setCharAt(FixedSection, 0, "");
+                        FixedSection = setCharAt(FixedSection, FixedSection.length - 1, "");
+                    }
+                    returnSmth.push(FixedSection)
+                }
+                console.log(returnSmth)
+                Steps.push(
+                    <Stepper activeStep={activeStep} orientation="vertical">
+                        {returnSmth.map((step, index) => (
+                            <Step key={step}>
+                                <StepLabel>
+                                    {step}
+                                </StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                )
+
+                returnJSX.push(<ModalContainer content={Steps} />)
+                setProgram(returnJSX);
+                //EmptyRequest(RequestID);
+            }else if(Token === "SetProgressLabel"){
+                EmptyRequest(RequestID);
+            }else if(Token === "SetProgressSection"){
+                console.log(json)
             }
 
         }
@@ -211,7 +310,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         //params.set("Checked", "0") УЗНАТЬ КАК WSM ПОЛУЧАТЬ ////////////////////////////////////////////////////////
         params.set("WSM", "1");
         json = XMLrequest(params);
-        //console.log(json)
+       // console.log(json)
         tokenProcessing(json);
         
     }
