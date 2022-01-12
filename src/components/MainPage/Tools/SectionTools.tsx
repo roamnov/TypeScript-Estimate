@@ -289,6 +289,8 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 EmptyRequest(RequestID);
             }else if(Token === "SetProgressSection"){
                 console.log(json)
+            }else if (Token === "StepProgress"){
+                
             }
 
         }

@@ -7,7 +7,7 @@ import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import axios from "axios";
-import URL, { XMLrequest } from "../../Url";
+import URL, { ImgBASE64, XMLrequest } from "../../Url";
 import { ImgURL } from "../../Url";
 import { Box, Drawer, Slide, Toolbar } from "@material-ui/core";
 import { useStyles } from "../../Styles";
@@ -32,6 +32,7 @@ export default function SideBar(props: MainBoxBackClick) {
   const [data2, setData2] = useState(new Map());
   const [drawerWidth, setDrawerWidth] = useState(defaultDrawerWidth);
   let e = 0;//event 
+  
   
 
   const handleMouseDown = () => {
@@ -134,8 +135,9 @@ export default function SideBar(props: MainBoxBackClick) {
           Name = SectionList[key]["Name"];
           ID = SectionList[key]["ID"];
           currentDeep = SectionList[key]["Deep"];
+          //console.log(SectionList[key])
           //Img = ImgURL(SectionList[key]["Image"]);
-
+          Img = ImgBASE64(SectionList[key]["RCDATA"]);
           keyS += 1;
 
           if (currentDeep == null) {

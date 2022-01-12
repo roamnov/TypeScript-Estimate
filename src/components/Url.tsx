@@ -147,3 +147,8 @@ export  function  ImgURL(attachment?: any, path?: string) {
 
     return  <img key={path} src={`${json.serverLocal}/server~${attachment}`} />;
 }
+
+export  function  ImgBASE64(attachment?: any, path?: string) {
+
+    return  <img key={path} src={`data:image/png;base64,${attachment}`} />;
+}

@@ -8,7 +8,7 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import { containerProps } from '../ComponentInterface';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
+//import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
 import ReportRoundedIcon from '@mui/icons-material/ReportRounded';
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import { Grid } from '@material-ui/core';
@@ -34,7 +34,7 @@ export default function ModalContainer(props: containerProps) {
         case "Информация":
           return <InfoRoundedIcon  fontSize='large'/>
         case "Вопрос":
-          return <QuestionMarkRoundedIcon  fontSize='large'/>
+          return //<QuestionMarkRoundedIcon  fontSize='large'/>
       }
   }
 
