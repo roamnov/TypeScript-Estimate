@@ -113,8 +113,12 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         params.set("RequestID",RequestID );
         params.set("WSM", "1");
         json = XMLrequest(params,  data);
-     /**/
-        while(json.Break !== undefined){
+     /*
+     while(json.Break !== undefined){
+           
+        }
+     */
+        
             progr = Number(json.Params.Index);
             console.log(json);
             setProgress(progr);
@@ -122,8 +126,6 @@ const SectionTools = (props:SectionToolsToFooter) =>{
             props.setChildren(progr);
           
             json = XMLrequest(params,  data);
-        }
-        
         
         tokenProcessing(json)
     }
@@ -162,6 +164,16 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         params.set("WSM", "1");
         json = XMLrequest(params,  data);
         tokenProcessing(json);
+    }
+
+    function EmptyRequestWithDataJsx(RequestID:string, DataJSX?: any){
+        let params = new Map, data, json:object;
+        params.set('prefix', 'project');
+        params.set("comand", "ResumeRequest");
+        params.set("RequestID",RequestID );
+        params.set("WSM", "1");
+        json = XMLrequest(params,  data);
+        tokenProcessing(json, DataJSX);
     }
 
     function setCharAt(str: string,index: number,chr: any) {
@@ -211,9 +223,9 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 //props.setChildren(json);
                 returnJSX.push(
                     <div style={{width:"13%"}}>
-                        <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}  >
+                   
                                 <LinearProgress variant="determinate" value={IndexS} />
-                        </Backdrop>
+                        
                     </div>
 
                 )
@@ -281,16 +293,18 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                         ))}
                     </Stepper>
                 )
+                EmptyRequestWithDataJsx(RequestID,Steps);
 
-                returnJSX.push(<ModalContainer content={Steps} />)
-                setProgram(returnJSX);
-                //EmptyRequest(RequestID);
             }else if(Token === "SetProgressLabel"){
                 EmptyRequest(RequestID);
+
             }else if(Token === "SetProgressSection"){
                 console.log(json)
+                returnJSX.push(<ModalContainer content={DataJSX} />)
+                setProgram(returnJSX);
+
             }else if (Token === "StepProgress"){
-                
+
             }
 
         }
