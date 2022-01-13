@@ -7,6 +7,7 @@ import ModalContainer from '../../Containers/ModalContainer';
 import items from "./Items.json"
 import AlertMini from '../../AlertMini';
 import { SectionToolsToFooter } from '../../ComponentInterface';
+import ReactDOM from 'react-dom';
 
 const steps = [
     {
@@ -56,12 +57,14 @@ export function VerticalLinearStepper() {
 //
 const SectionTools = (props:SectionToolsToFooter) =>{
     const [Program, setProgram] = React.useState([<></>]);
+    const [data, setData] = React.useState({});
     const [requestId,setRequestId] = React.useState();
     const [menuBar, setMenuBar] = React.useState([]);
     const [inputText, setInputText] = React.useState();
     const [buttons, setButtons] = React.useState([]);
     const [value, setValue] = React.useState();
     const [progress, setProgress] = React.useState<number>(0);
+    const [count, setCount] = React.useState<number>(0);
     const [activeStep, setActiveStep] = React.useState(0);
     let IndexS = 0;
 
@@ -69,6 +72,9 @@ const SectionTools = (props:SectionToolsToFooter) =>{
        GetSectionTools();
     }, [])
 
+    React.useEffect(()=>{
+        tokenProcessing(data)
+    }, [data])
 
     const GetSectionTools =  () =>{
         let params = new Map(), json;
@@ -158,16 +164,19 @@ const SectionTools = (props:SectionToolsToFooter) =>{
 
     function EmptyRequest(RequestID:string){
         let params = new Map, data, json:object;
+        data = { "Result":"" }
         params.set('prefix', 'project');
         params.set("comand", "ResumeRequest");
         params.set("RequestID",RequestID );
         params.set("WSM", "1");
         json = XMLrequest(params,  data);
-        tokenProcessing(json);
+        setData(json);
+        //tokenProcessing(json);
     }
 
     function EmptyRequestWithDataJsx(RequestID:string, DataJSX?: any){
         let params = new Map, data, json:object;
+        data = { "Result":"" }
         params.set('prefix', 'project');
         params.set("comand", "ResumeRequest");
         params.set("RequestID",RequestID );
@@ -180,6 +189,8 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         if(index > str.length-1) return str;
         return str.substring(0,index) + chr + str.substring(index+1);
     }
+
+    const normalise = (value:any, MAX:any) => ((Number(value) - 0) * 100) / (Number(MAX) - 0);
 
     function  tokenProcessing (json: any, DataJSX?:any ){///project~ResumeRequest?LicGUID=D100CAB54337ED32E087B59F6CE41511&RequestID=18892&WSM=1 HTTP/1.1
         if(json.Break !== undefined){
@@ -299,12 +310,28 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 EmptyRequest(RequestID);
 
             }else if(Token === "SetProgressSection"){
-                console.log(json)
-                returnJSX.push(<ModalContainer content={DataJSX} />)
-                setProgram(returnJSX);
+                //console.log(json)
+                //returnJSX.push(<ModalContainer content={DataJSX} />)
+                //setProgram(returnJSX);
+                
+                //setProgram(returnJSX);
+                EmptyRequestWithDataJsx(RequestID,DataJSX);
 
             }else if (Token === "StepProgress"){
-
+                let Index,MAX;
+                Index = json.Params.Index;
+                Index === undefined? Index= 0:  
+                MAX = json.Params.Count;
+                setCount(normalise(Index,MAX));
+                console.log(count);
+                returnSmth.push(
+                    <div style={{width:"100%"}}>
+                         <LinearProgress variant="determinate" value={normalise(Index,MAX)} />
+                    </div>
+                )
+                returnJSX.push();
+                ReactDOM.render(<ModalContainer content={DataJSX} buttons={returnSmth} />, document.getElementById('testR'));
+                //EmptyRequestWithDataJsx(RequestID,DataJSX);
             }
 
         }
@@ -327,8 +354,9 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         params.set("WSM", "1");
         json = XMLrequest(params);
        // console.log(json)
-        tokenProcessing(json);
-        
+        //tokenProcessing(json);
+        setData(json);
+        console.log(data)
     }
     
     const RenderButtons=(ButtonsLocal: any)=>{
@@ -357,7 +385,9 @@ const SectionTools = (props:SectionToolsToFooter) =>{
 
     return(
         <Grid sx={{pl:2}} justifyContent="center">
-           
+           <div id="testR">
+
+           </div>
             {RenderButtons(buttons)}
             {Program}
         </Grid>
