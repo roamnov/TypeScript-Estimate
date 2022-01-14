@@ -9,48 +9,6 @@ import AlertMini from '../../AlertMini';
 import { SectionToolsToFooter } from '../../ComponentInterface';
 import ReactDOM from 'react-dom';
 
-const steps = [
-    {
-      label: 'Select campaign settings',
-      description: `For each ad campaign that you create, you can control how much
-                you're willing to spend on clicks and conversions, which networks
-                and geographical locations you want your ads to show on, and more.`,
-    },
-    {
-      label: 'Create an ad group',
-      description:
-        'An ad group contains one or more ads which target a shared set of keywords.',
-    },
-    {
-      label: 'Create an ad',
-      description: `Try out different ad text to see what brings in the most customers,
-                and learn how to enhance your ads using features like ad extensions.
-                If you run into any problems with your ads, find out how to tell if
-                they're running and how to resolve approval issues.`,
-    },
-  ];
-
-  
-export function VerticalLinearStepper() {
-    const [activeStep, setActiveStep] = React.useState(1);
-  
-    return (
-    
-        <Stepper activeStep={activeStep} orientation="vertical">
-          {steps.map((step, index) => (
-            <Step key={step.label}>
-              <StepLabel
-                
-              >
-                {step.label}
-              </StepLabel>
-             
-            </Step>
-          ))}
-        </Stepper>
-      
-    );
-  }
 
 //
 //https://mui.com/components/toggle-button/
@@ -58,6 +16,9 @@ export function VerticalLinearStepper() {
 const SectionTools = (props:SectionToolsToFooter) =>{
     const [Program, setProgram] = React.useState([<></>]);
     const [data, setData] = React.useState({});
+    const [ProgressJSX, setProgressJSX] = React.useState([<></>]);
+    const [contentJSX, setContentJSX] = React.useState([<></>]);
+
     const [requestId,setRequestId] = React.useState();
     const [menuBar, setMenuBar] = React.useState([]);
     const [inputText, setInputText] = React.useState();
@@ -182,7 +143,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         params.set("RequestID",RequestID );
         params.set("WSM", "1");
         json = XMLrequest(params,  data);
-        tokenProcessing(json, DataJSX);
+        setData(json);
     }
 
     function setCharAt(str: string,index: number,chr: any) {
@@ -244,7 +205,6 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 ChangeStatusProgress(RequestID);
                 
             }else if(Token === "InputText"){
-                console.log(json)
                 let Caption, Title;
                 Caption = json.Params.Caption;
                 Title = json.Params.Title;
@@ -304,13 +264,31 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                         ))}
                     </Stepper>
                 )
+                
+                returnSmth.push(
+                    <div style={{width:"100%", height:"40px"}}>
+                         <LinearProgress variant="determinate" value={count} />
+                    </div>
+                )
+                setProgressJSX(returnSmth);
+                setContentJSX(Steps);
+                ReactDOM.render(<ModalContainer content={Steps} buttons={returnSmth} />, document.getElementById('testR'));
                 EmptyRequestWithDataJsx(RequestID,Steps);
 
             }else if(Token === "SetProgressLabel"){
                 EmptyRequest(RequestID);
 
             }else if(Token === "SetProgressSection"){
-                //console.log(json)
+                let Index;
+                Index = Number(json.Params.Index);
+                if(isNaN(Index)) Index = 0;
+                setActiveStep(Index);
+                returnSmth.push(
+                    <div style={{width:"100%", height:"40px"}}>
+                         <LinearProgress variant="determinate" value={100} />
+                    </div>
+                )
+                setProgressJSX(returnSmth);
                 //returnJSX.push(<ModalContainer content={DataJSX} />)
                 //setProgram(returnJSX);
                 
@@ -318,20 +296,17 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 EmptyRequestWithDataJsx(RequestID,DataJSX);
 
             }else if (Token === "StepProgress"){
+                //console.log(activeStep)
                 let Index,MAX;
                 Index = json.Params.Index;
-                Index === undefined? Index= 0:  
+                if(isNaN(Index)) Index = 0;  
                 MAX = json.Params.Count;
                 setCount(normalise(Index,MAX));
-                console.log(count);
-                returnSmth.push(
-                    <div style={{width:"100%"}}>
-                         <LinearProgress variant="determinate" value={normalise(Index,MAX)} />
-                    </div>
-                )
-                returnJSX.push();
-                ReactDOM.render(<ModalContainer content={DataJSX} buttons={returnSmth} />, document.getElementById('testR'));
-                //EmptyRequestWithDataJsx(RequestID,DataJSX);
+                //ReactDOM.render(<>SAS{Index}</>,document.getElementById('DialogActionTest') )
+                console.log(count)
+                //returnJSX.push();
+               
+                EmptyRequestWithDataJsx(RequestID,DataJSX);
             }
 
         }

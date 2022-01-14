@@ -70,7 +70,7 @@ export default function ModalContainer(props: containerProps) {
         
         </DialogContent>
         <DialogActions >
-          <div id="DialogAction">
+          <div id="DialogActionTest">
             {props.buttons}
           </div>
         </DialogActions>
