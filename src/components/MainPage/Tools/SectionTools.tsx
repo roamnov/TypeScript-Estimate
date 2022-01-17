@@ -8,6 +8,7 @@ import items from "./Items.json"
 import AlertMini from '../../AlertMini';
 import { SectionToolsToFooter } from '../../ComponentInterface';
 import ReactDOM from 'react-dom';
+import ModalProgress from '../../Containers/ModalProgress';
 
 
 //
@@ -272,11 +273,13 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 )
                 setProgressJSX(returnSmth);
                 setContentJSX(Steps);
+                //ReactDOM.render(<ModalContainer content={Steps} buttons={returnSmth} />, document.getElementById('testR'));
                 ReactDOM.render(<ModalContainer content={Steps} buttons={returnSmth} />, document.getElementById('testR'));
-                EmptyRequestWithDataJsx(RequestID,Steps);
+                //EmptyRequestWithDataJsx(RequestID,Steps);
 
             }else if(Token === "SetProgressLabel"){
-                EmptyRequest(RequestID);
+                ReactDOM.render(<ModalProgress  Json={json}/>, document.getElementById('testR'));
+                //EmptyRequest(RequestID);
 
             }else if(Token === "SetProgressSection"){
                 let Index;
@@ -306,7 +309,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 console.log(count)
                 //returnJSX.push();
                
-                EmptyRequestWithDataJsx(RequestID,DataJSX);
+                //EmptyRequestWithDataJsx(RequestID,DataJSX);
             }
 
         }
@@ -361,7 +364,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
     return(
         <Grid sx={{pl:2}} justifyContent="center">
            <div id="testR">
-
+         
            </div>
             {RenderButtons(buttons)}
             {Program}
