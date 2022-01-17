@@ -235,6 +235,8 @@ function log(info) {
 }
 
 function moddiv(baseval, divider) {
+    if (!baseval)
+    baseval = 300; 
     if (divider > 0) {
       return (baseval - baseval % divider) / divider;
     } else return 0;
@@ -728,7 +730,8 @@ function createGrid(panel) {
         if (info) info.region = r;
         switch (r) {
             case REGION_TITLE: {
-                for (let levels = me.columns.levels, i = 0, left = 0, top = me.header.getBoundingClientRect().top, width, level, field; i < levels.length; i++) {
+                let r = me.header.getBoundingClientRect();
+                for (let levels = me.columns.levels, i = 0, left = r.left, top = r.top, width, level, field; i < levels.length; i++) {
                     level = levels[i];
                     width = {value: level.field.width};
                     field = checkColumn(levels[i], left, top, width, titleSize);
@@ -1732,7 +1735,8 @@ function createGrid(panel) {
                     l += w;
                 };
                 height = childColumnSize;
-            } else me.columns.fields.push(field);
+            } else 
+             me.columns.fields.push(field);
 
             el = document.createElement('div');
             el.className = 'grid-column';
@@ -1789,7 +1793,8 @@ function createGrid(panel) {
             if ((left + width) > totalWidth) {
                 overflowColumns = true;
                 width -= (left + width) - totalWidth;
-                if (width < rowHeight) break;
+                if (width < rowHeight) 
+                 break;
                 i = levels.length;
             };
             left += createFieldElement(level, left, 0, width, titleSize);
@@ -2065,10 +2070,7 @@ let json = Stimate.SynchRequest('dbview/handleTable', request, 'id=' + testBD);
         source.close();
         source.open();
         grid.setSource(source);
-        grid.refreshSource();
-    
-
-    }
+        grid.refreshSource();    }
 
     //let json = Stimate.synchRequest('project/enter', {configName: 'webtools_hidden.drx', userName: 'webadmin'}); 
     //json = Stimate.synchRequest('dbview/uploadfile', {fileName: 'D:\\Temp\\table.trs'});

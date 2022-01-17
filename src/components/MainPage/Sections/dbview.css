@@ -1,7 +1,11 @@
 #DBviewTree {
     width: 30%;
 }
-
+#DBviewData{
+width: 67%;
+/*height: inherit;*/
+position: relative;
+}
 #DBviewTabsButtons {
     display: flex;
     cursor: pointer;
@@ -9,6 +13,10 @@
 
 #SectionsDBview {
     display: flex;
+    height: 100%;
+    position: relative;
+   /* position: absolute;
+    width: 100%;*/
 }
 
 .DBviewTabs {
@@ -19,6 +27,7 @@
 #DBviewData .ActivTabs
 {
     display: block;
+    height: inherit;
 }
 #DBviewData .noActivTabs
 {
@@ -30,11 +39,12 @@
 
 .DBviewTabs .ContentTab {
     background-color: #fff;
-    width: calc(100% - 40px);
+    width: inherit;
+    height: inherit;
     max-width: 100%;
     padding: 20px;
     float: left;
-    position: absolute;
+    /*position: absolute;*/
 }
 
 .DBviewTabs >input + label {

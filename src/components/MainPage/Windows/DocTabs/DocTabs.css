@@ -2,7 +2,12 @@
     display: flex;
     overflow: hidden;
 }
-
+#DocTabsContent
+{
+    /*position: absolute;*/
+    width: 100%;
+    /*height: 100%;*/
+}
 .TabDoc {
     display: flex;
     justify-content: center;
@@ -27,10 +32,14 @@
 .TabDocContent
 {
     display: none;
+    position: relative;
+    height: inherit;
 }
 .TabDocContent.TabDocContentActiv
 {
     display: block;
+   /* position: absolute;
+    width: 100%;*/
 }
 .TabDoc span {
     width: calc(100% - 25px);
