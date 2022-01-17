@@ -42,7 +42,7 @@ export default function Tree(props) {
     let templatetabs = <> <input type="radio" name={"DBviewTabButton" + id} id={"DBviewTabButtonGrid" + id} checked />
       <label for={"DBviewTabButtonGrid" + id}>Данные</label>
       <div id="DBviewTabGrid" class="ContentTab">
-        <div id={"gridpanel" + id} style = {{position: "absolute"}} >
+        <div id={"gridpanel" + id} style = {{position: "absolute", height: "89%", width: "100%"}} >
           
         </div>
       </div>
@@ -53,7 +53,11 @@ export default function Tree(props) {
           <div id="ConnectionId">
             <DropList text="Подключение" width="200px" />
           </div>
-          <Button variant="contained" endIcon={<SendIcon />} onClick={() => {ManWhoSoldTheWorld(id);}}>
+          <Button variant="contained" endIcon={<SendIcon />} onClick={() => {
+            let i = document.getElementById("DBviewTabButtonGrid"+id); 
+            i.checked = true;
+            ManWhoSoldTheWorld(id);
+            }}>
             Открыть
           </Button>
           <div>
@@ -147,7 +151,7 @@ export default function Tree(props) {
         params.set('Current', b.id);
         otv = XMLrequest(params)["Tree"]["items"]
         ReactDOM.render(otv.map((item) => {
-          var li = <li className={item.leaf ? "tree-leaf-1" : "tree-leaf-0"} style={!item.leaf ? { position: "relative", left: "-22px" } : { position: "relative", display: "flex" }}
+          var li = <li className={item.leaf ? "tree-leaf-1" : "tree-leaf-0"} style={!item.leaf ? { position: "relative", left: "-22px", "white-space": "nowrap" } : { position: "relative", display: "flex" }}
             id={item.id} leaf={item.leaf ? "1" : "0"}>
             {!item.leaf ?
               <IconButton disableRipple={true} disableFocusRipple={true} edge='start' onClick={(event) => ShowChild(event)} style={{
