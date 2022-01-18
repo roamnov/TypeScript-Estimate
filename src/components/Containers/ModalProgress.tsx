@@ -12,7 +12,7 @@ import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import ReportRoundedIcon from '@mui/icons-material/ReportRounded';
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import { Grid } from '@material-ui/core';
-import { LinearProgress, Step, StepLabel, Stepper } from '@mui/material';
+import { Button, LinearProgress, Step, StepLabel, Stepper } from '@mui/material';
 import { XMLrequest } from '../Url';
 import ReactDOM from 'react-dom';
 
@@ -98,6 +98,7 @@ export default function ModalProgress(Json:any) {
         }
         setAllSteps(returnSmth);
         setTitle(Title);
+        setPath(Path);
         EmptyRequest(RequestID);
 
       }else if (Token === "SetProgressSection"){
@@ -122,16 +123,21 @@ export default function ModalProgress(Json:any) {
         Text = json.Params.Text;
         console.log(Text)
         EmptyRequest(RequestID);
+      }else if(Token === "HideProgressDialog"){
+        setOpen(false);
       }
     }
   }
 
-  function handleCloseButton(){
+  async function handleCloseButton (){
     let params = new Map;
+    console.log("Отмена")
     params.set('prefix', 'programs');
     params.set("comand", "StopProcess");
-    params.set("WSM", "1");
-    //json = XMLrequest(params);
+    params.set("smart", "1");
+    params.set("Path", path);
+    XMLrequest(params);
+    setOpen(false);
   }
 
   const handleClose = () => {
@@ -139,10 +145,11 @@ export default function ModalProgress(Json:any) {
   };
 
   return (
-    <div style={{width:"700px"}}>
+    <div >
       
       <Dialog
-        
+        maxWidth={'sm'}
+        fullWidth
         open={open}
         TransitionComponent={Transition}
         keepMounted
@@ -174,9 +181,16 @@ export default function ModalProgress(Json:any) {
         
         </DialogContent>
         <DialogActions >
-            <div style={{width:"100%", height:"40px"}}>
-               <LinearProgress variant="determinate" value={count} />
-            </div>
+          <Grid container direction="row" justifyContent="center" alignItems="center">
+              <Grid item style={{width:"70%"}}>
+                <LinearProgress variant="determinate" value={count} />
+              </Grid>
+            <Grid item>
+              <Button onClick={handleCloseButton}>
+                Отмена
+              </Button>
+            </Grid>
+          </Grid>
         </DialogActions>
       </Dialog>
     </div>
