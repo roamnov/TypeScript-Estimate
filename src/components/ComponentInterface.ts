@@ -106,3 +106,8 @@ export interface FooterProps{
 export interface SectionToolsToFooter{
     setChildren: (value:any) => void | any;
 }
+
+export interface ModalProgressProps{
+    Json: object;
+    children?: React.ReactNode[] | React.ReactNode;
+}

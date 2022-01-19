@@ -1,5 +1,5 @@
 import  React from 'react';
-import {  Backdrop,  Button, Grid, IconButton, LinearProgress, Step, StepLabel, Stepper, TextField } from "@mui/material"
+import {  Backdrop,  Box,  Button, Grid, IconButton, LinearProgress, Modal, Step, StepLabel, Stepper, TextField } from "@mui/material"
 import { XMLrequest } from '../../Url';
 
 import { ImgURL } from "../../Url";
@@ -28,6 +28,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
     const [progress, setProgress] = React.useState<number>(0);
     const [count, setCount] = React.useState<number>(0);
     const [activeStep, setActiveStep] = React.useState(0);
+    const [path,setPath]= React.useState("");
     let IndexS = 0;
 
     React.useEffect(() => {
@@ -235,8 +236,10 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 Sections = json.Params.Sections;
                 Title = json.Params.Title;
                 SectionsArray = Sections.split(",");
-                //console.log(json)
                 
+                ReactDOM.render(<ModalProgress  Json={json} > <ButtonsCancel/> </ModalProgress>, document.getElementById('testR'));
+                //console.log(json)
+                /*
                 for (const [key, value] of Object.entries(SectionsArray)) {
                     let FixedSection:any;
                     FixedSection = value;
@@ -273,13 +276,12 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 )
                 setProgressJSX(returnSmth);
                 setContentJSX(Steps);
-                //ReactDOM.render(<ModalContainer content={Steps} buttons={returnSmth} />, document.getElementById('testR'));
-                ReactDOM.render(<ModalContainer content={Steps} buttons={returnSmth} />, document.getElementById('testR'));
-                //EmptyRequestWithDataJsx(RequestID,Steps);
+                ReactDOM.render(<ModalContainer content={Steps} buttons={returnSmth} />, document.getElementById('testR')); 
+                */
 
             }else if(Token === "SetProgressLabel"){
-                ReactDOM.render(<ModalProgress  Json={json}/>, document.getElementById('testR'));
-                //EmptyRequest(RequestID);
+                EmptyRequest(RequestID);
+               
 
             }else if(Token === "SetProgressSection"){
                 let Index;
@@ -292,10 +294,6 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                     </div>
                 )
                 setProgressJSX(returnSmth);
-                //returnJSX.push(<ModalContainer content={DataJSX} />)
-                //setProgram(returnJSX);
-                
-                //setProgram(returnJSX);
                 EmptyRequestWithDataJsx(RequestID,DataJSX);
 
             }else if (Token === "StepProgress"){
@@ -305,11 +303,6 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 if(isNaN(Index)) Index = 0;  
                 MAX = json.Params.Count;
                 setCount(normalise(Index,MAX));
-                //ReactDOM.render(<>SAS{Index}</>,document.getElementById('DialogActionTest') )
-                console.log(count)
-                //returnJSX.push();
-               
-                //EmptyRequestWithDataJsx(RequestID,DataJSX);
             }
 
         }
@@ -320,6 +313,85 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         
     }
 
+
+    const ChildModal =(Path:any)=> {
+        const [open, setOpen] = React.useState(false);
+        const handleOpen = () => {
+          setOpen(true);
+        };
+        const handleClose = () => {
+          setOpen(false);
+        };
+      
+        async function handleCloseButton (){
+          let params = new Map;
+          console.log("Отмена")
+          params.set('prefix', 'programs');
+          params.set("comand", "StopProcess");
+          params.set("smart", "1");
+          //params.set("Path", Path);
+         // XMLrequest(params);
+          setOpen(false);
+        }
+      
+        const style = {
+          position: 'absolute' as 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          border: '2px solid #000',
+          boxShadow: 24,
+          pt: 2,
+          px: 4,
+          pb: 3,
+        };
+      
+        return (
+          <React.Fragment>
+            <Button onClick={()=>handleOpen}>Отмена c модальным окном</Button>
+            <Modal
+              hideBackdrop
+              open={open}
+              //onClose={handleClose}
+              aria-labelledby="child-modal-title"
+              aria-describedby="child-modal-description"
+            >
+              <Box sx={{ ...style, width: "40%" }}>
+                <h2 id="child-modal-title">Подтверждение</h2>
+                <p id="child-modal-description">
+                  Остановить процесс?
+                </p>
+                <Button onClick={handleCloseButton}>Да</Button>
+                <Button onClick={handleClose}>Нет</Button>
+              </Box>
+            </Modal>
+          </React.Fragment>
+        );
+      }
+
+    const ButtonsCancel =()=>{
+        const handleCloseButton =()=>{
+            let params = new Map;
+            console.log("Отмена")
+            params.set('prefix', 'programs');
+            params.set("comand", "StopProcess");
+            params.set("smart", "1");
+            params.set("Path", path);
+            XMLrequest(params);
+            //await axios.get(URL(params)).then((res)=> setData(res));
+            //setOpen(false);
+          }
+        return(
+            <Grid item >
+              <Button onClick={handleCloseButton}>
+                Отмена
+              </Button>
+            <ChildModal Path={path}/>
+            </Grid>
+        )
+    }
 
     const handeleExecToolprogram =(event:any , type?:string)=>{///tools~ExecToolProgram
         let Path = event.currentTarget.getAttribute("id"),  params = new Map(), json, Type, Module, Token, Break;
