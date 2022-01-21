@@ -1,6 +1,6 @@
 import  React from 'react';
-import {  Backdrop,  Box,  Button, Grid, IconButton, LinearProgress, Modal, Step, StepLabel, Stepper, TextField } from "@mui/material"
-import { XMLrequest } from '../../Url';
+import {  Backdrop,  Box,  Button, Grid, IconButton, LinearProgress, Modal, Step, StepLabel, Stepper, TextField, Tooltip } from "@mui/material"
+import URL, { XMLrequest } from '../../Url';
 
 import { ImgURL } from "../../Url";
 import ModalContainer from '../../Containers/ModalContainer';
@@ -9,6 +9,7 @@ import AlertMini from '../../AlertMini';
 import { SectionToolsToFooter } from '../../ComponentInterface';
 import ReactDOM from 'react-dom';
 import ModalProgress from '../../Containers/ModalProgress';
+import axios from 'axios';
 
 
 //
@@ -17,18 +18,14 @@ import ModalProgress from '../../Containers/ModalProgress';
 const SectionTools = (props:SectionToolsToFooter) =>{
     const [Program, setProgram] = React.useState([<></>]);
     const [data, setData] = React.useState({});
-    const [ProgressJSX, setProgressJSX] = React.useState([<></>]);
-    const [contentJSX, setContentJSX] = React.useState([<></>]);
 
-    const [requestId,setRequestId] = React.useState();
+    //const [requestId,setRequestId] = React.useState();
     const [menuBar, setMenuBar] = React.useState([]);
     const [inputText, setInputText] = React.useState();
     const [buttons, setButtons] = React.useState([]);
     const [value, setValue] = React.useState();
     const [progress, setProgress] = React.useState<number>(0);
-    const [count, setCount] = React.useState<number>(0);
-    const [activeStep, setActiveStep] = React.useState(0);
-    const [path,setPath]= React.useState("");
+    
     let IndexS = 0;
 
     React.useEffect(() => {
@@ -117,13 +114,6 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         tokenProcessing(json);
     }
     
-    function ShowProgressDialog(RequestID:string){
-        let params = new Map, data, json:object;
-        params.set('prefix', 'project');
-        params.set("comand", "ResumeRequest");
-        params.set("RequestID",RequestID );
-        params.set("WSM", "1");
-    }
 
     function EmptyRequest(RequestID:string){
         let params = new Map, data, json:object;
@@ -163,7 +153,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
             Module = json.Module;
             Token = json.Token;
             RequestID= json.Params.RequestID;
-            setRequestId(RequestID);
+            
             //console.log(RequestID)
             if ( Token === "MessageBox"){
                 let Message, Buttons, DlgType;
@@ -230,79 +220,10 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 setProgram(returnJSX);
 
             }else if(Token === "ShowProgressDialog"){
-                let Path, ProgID, Sections, Title, SectionsArray, Section:any, Steps = [];
-                Path = json.Params.Path;
-                ProgID = json.Params.ProgID;
-                Sections = json.Params.Sections;
-                Title = json.Params.Title;
-                SectionsArray = Sections.split(",");
+                ReactDOM.render(<ModalProgress open={true}  ReqId={ RequestID}  Json={json} /> , document.getElementById('testR'));
                 
-                ReactDOM.render(<ModalProgress  Json={json} > <ButtonsCancel/> </ModalProgress>, document.getElementById('testR'));
-                //console.log(json)
-                /*
-                for (const [key, value] of Object.entries(SectionsArray)) {
-                    let FixedSection:any;
-                    FixedSection = value;
-                    Section = value;
-
-                    for (const [key, value] of Object.entries(Section)){
-                        if(value ===  Section[Number(key)+1] && value === '"'){
-                           FixedSection = setCharAt(FixedSection, Number(key), "");
-                        }
-                    }
-                    if(FixedSection[0] === '"' && FixedSection[FixedSection.length -1]=== '"'){
-                        FixedSection = setCharAt(FixedSection, 0, "");
-                        FixedSection = setCharAt(FixedSection, FixedSection.length - 1, "");
-                    }
-                    returnSmth.push(FixedSection)
-                }
-                console.log(returnSmth)
-                Steps.push(
-                    <Stepper activeStep={activeStep} orientation="vertical">
-                        {returnSmth.map((step, index) => (
-                            <Step key={step}>
-                                <StepLabel>
-                                    {step}
-                                </StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                )
-                
-                returnSmth.push(
-                    <div style={{width:"100%", height:"40px"}}>
-                         <LinearProgress variant="determinate" value={count} />
-                    </div>
-                )
-                setProgressJSX(returnSmth);
-                setContentJSX(Steps);
-                ReactDOM.render(<ModalContainer content={Steps} buttons={returnSmth} />, document.getElementById('testR')); 
-                */
-
             }else if(Token === "SetProgressLabel"){
                 EmptyRequest(RequestID);
-               
-
-            }else if(Token === "SetProgressSection"){
-                let Index;
-                Index = Number(json.Params.Index);
-                if(isNaN(Index)) Index = 0;
-                setActiveStep(Index);
-                returnSmth.push(
-                    <div style={{width:"100%", height:"40px"}}>
-                         <LinearProgress variant="determinate" value={100} />
-                    </div>
-                )
-                setProgressJSX(returnSmth);
-                EmptyRequestWithDataJsx(RequestID,DataJSX);
-
-            }else if (Token === "StepProgress"){
-                //console.log(activeStep)
-                let Index,MAX;
-                Index = json.Params.Index;
-                if(isNaN(Index)) Index = 0;  
-                MAX = json.Params.Count;
-                setCount(normalise(Index,MAX));
             }
 
         }
@@ -314,86 +235,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
     }
 
 
-    const ChildModal =(Path:any)=> {
-        const [open, setOpen] = React.useState(false);
-        const handleOpen = () => {
-          setOpen(true);
-        };
-        const handleClose = () => {
-          setOpen(false);
-        };
-      
-        async function handleCloseButton (){
-          let params = new Map;
-          console.log("Отмена")
-          params.set('prefix', 'programs');
-          params.set("comand", "StopProcess");
-          params.set("smart", "1");
-          //params.set("Path", Path);
-         // XMLrequest(params);
-          setOpen(false);
-        }
-      
-        const style = {
-          position: 'absolute' as 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          border: '2px solid #000',
-          boxShadow: 24,
-          pt: 2,
-          px: 4,
-          pb: 3,
-        };
-      
-        return (
-          <React.Fragment>
-            <Button onClick={()=>handleOpen}>Отмена c модальным окном</Button>
-            <Modal
-              hideBackdrop
-              open={open}
-              //onClose={handleClose}
-              aria-labelledby="child-modal-title"
-              aria-describedby="child-modal-description"
-            >
-              <Box sx={{ ...style, width: "40%" }}>
-                <h2 id="child-modal-title">Подтверждение</h2>
-                <p id="child-modal-description">
-                  Остановить процесс?
-                </p>
-                <Button onClick={handleCloseButton}>Да</Button>
-                <Button onClick={handleClose}>Нет</Button>
-              </Box>
-            </Modal>
-          </React.Fragment>
-        );
-      }
-
-    const ButtonsCancel =()=>{
-        const handleCloseButton =()=>{
-            let params = new Map;
-            console.log("Отмена")
-            params.set('prefix', 'programs');
-            params.set("comand", "StopProcess");
-            params.set("smart", "1");
-            params.set("Path", path);
-            XMLrequest(params);
-            //await axios.get(URL(params)).then((res)=> setData(res));
-            //setOpen(false);
-          }
-        return(
-            <Grid item >
-              <Button onClick={handleCloseButton}>
-                Отмена
-              </Button>
-            <ChildModal Path={path}/>
-            </Grid>
-        )
-    }
-
-    const handeleExecToolprogram =(event:any , type?:string)=>{///tools~ExecToolProgram
+    async function handeleExecToolprogram (event:any , type?:string){///tools~ExecToolProgram
         let Path = event.currentTarget.getAttribute("id"),  params = new Map(), json, Type, Module, Token, Break;
         Path = event.currentTarget.getAttribute("id");
         params.set('prefix', 'tools');
@@ -402,11 +244,9 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         params.set("Type", type);
         //params.set("Checked", "0") УЗНАТЬ КАК WSM ПОЛУЧАТЬ ////////////////////////////////////////////////////////
         params.set("WSM", "1");
-        json = XMLrequest(params);
-       // console.log(json)
-        //tokenProcessing(json);
-        setData(json);
-        console.log(data)
+        await axios.get(URL(params)).then((res)=> setData(res.data))
+        //json = XMLrequest(params);
+        //setData(json);
     }
     
     const RenderButtons=(ButtonsLocal: any)=>{
@@ -417,11 +257,13 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 Path = backValue(value, 'Path');
                 Type = backValue(value, 'Type');
                 items.push(
+                    <Tooltip  title={key}>
                             <IconButton id={Path}  color='primary'  component="span" onClick={(e: any) => handeleExecToolprogram(e,Type)} >
                      
                                 {ImgURL(backValue(value, 'Image'))}
                              
                             </IconButton>
+                    </Tooltip>
                     )
                 }
               return items
