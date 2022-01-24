@@ -50,7 +50,6 @@ export default function ModalContainer(props: containerProps) {
         open={props.open === undefined? open:props.open }
         TransitionComponent={Transition}
         keepMounted
-        onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>{props.dlgType}</DialogTitle>

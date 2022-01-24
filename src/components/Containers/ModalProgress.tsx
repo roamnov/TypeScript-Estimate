@@ -11,6 +11,7 @@ import { Box, Button, LinearProgress, Modal, Paper, PaperProps, Step, StepLabel,
 import URL, {  XMLrequest } from '../Url';
 import axios from 'axios';
 import Draggable from 'react-draggable';
+import ReactDOM from 'react-dom';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -23,10 +24,7 @@ const Transition = React.forwardRef(function Transition(
 
 function PaperComponent(props: PaperProps) {
   return (
-    <Draggable
-      handle="#draggable-dialog-title"
-      cancel={'[class*="MuiDialogContent-root"]'}
-    >
+    <Draggable cancel={'[class*="MuiDialogContent-root"]'}>
       <Paper {...props} />
     </Draggable>
   );
@@ -45,11 +43,14 @@ const style = {
   pb: 3,
 };
 
-function ChildModal(Path:any) {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
+function ChildModal(Path:any, bool:boolean) {
+  const [open, setOpen] = React.useState(true);
+
+  
+  React.useEffect(()=>{
     setOpen(true);
-  };
+  }, [Path])
+ 
   const handleClose = () => {
     setOpen(false);
   };
@@ -66,23 +67,19 @@ function ChildModal(Path:any) {
 
   return (
     <React.Fragment>
-      <Button onClick={handleOpen}>Отмена</Button>
-      <Modal
-        hideBackdrop
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="child-modal-title"
-        aria-describedby="child-modal-description"
-      >
-        <Box sx={{ ...style, width: "20%" }}>
-          <h2 id="child-modal-title">Подтверждение</h2>
-          <p id="child-modal-description">
-            Остановить процесс?
-          </p>
-          <Button onClick={handleCloseButton}>Да</Button>
-          <Button onClick={handleClose}>Нет</Button>
-        </Box>
-      </Modal>
+    
+      <Draggable>
+        <Modal hideBackdrop open={open} >
+          <Box sx={{ ...style, width: "20%" }}>
+            <h2 id="child-modal-title">Подтверждение</h2>
+            <p id="child-modal-description">
+              Остановить процесс?
+            </p>
+            <Button onClick={handleCloseButton}>Да</Button>
+            <Button onClick={handleClose}>Нет</Button>
+          </Box>
+        </Modal>
+      </Draggable>
     </React.Fragment>
   );
 }
@@ -98,14 +95,15 @@ export default function ModalProgress(props:ModalProgressProps) {
   const [path,setPath] = React.useState("");
   const [PrevToken,setPrevToken] = React.useState("");
   const [TextLoad,setTextLoad] = React.useState("");
+  const [currentLoad, setCurrentLoad] = React.useState("Load");
 
   React.useEffect(()=>{
-    tokenProcessing(data)
+    tokenProcessing(data);
   }, [data])
 
   React.useEffect(()=>{
-
-    tokenProcessing(props.Json)
+    tokenProcessing(props.Json);
+    OpenDialog();
   }, [props.Json])
 
   function setCharAt(str: string,index: number,chr: any) {
@@ -134,9 +132,8 @@ export default function ModalProgress(props:ModalProgressProps) {
       RequestID= json.Params.RequestID;
       
       if(Token === "ShowProgressDialog"){
-        let Path, ProgID, Sections, Title, SectionsArray, Section:any;
+        let Path, Sections, Title, SectionsArray, Section:any;
         Path = json.Params.Path;
-        ProgID = json.Params.ProgID;
         Sections = json.Params.Sections;
         Title = json.Params.Title;
         SectionsArray = Sections.split(",");
@@ -183,13 +180,13 @@ export default function ModalProgress(props:ModalProgressProps) {
       }else if(Token === "SetProgressLabel"){
         let Text;
         Text = json.Params.Text;
-        console.log(Text)
         if (PrevToken === "StepProgress"){
+          setCurrentLoad("Mix");
           setTextLoad(Text);
           
-        }else if (PrevToken === "SetProgressSection" || PrevToken ==="SetProgressLabel" ){
+        }else if (PrevToken === "SetProgressSection" || PrevToken ==="SetProgressLabel"|| PrevToken === "ShowProgressDialog" ){
           setTextLoad(Text);
-
+          setCurrentLoad("Text");
         }
         setPrevToken(Token);
         EmptyRequest(RequestID);
@@ -201,10 +198,20 @@ export default function ModalProgress(props:ModalProgressProps) {
     }
   }
 
+  function RenderCancelModal(){
+    ReactDOM.render(<ChildModal Path={path} openIt={open}/> , document.getElementById('testG'));
+  }
+
+  function OpenDialog(){
+    if (props.open){
+      setOpen(true)
+    }
+  }
 
   return (
-    <div >
-      <Dialog  maxWidth={'sm'} fullWidth style={{overflow:"hidden"}}  open={open}  TransitionComponent={Transition}  keepMounted PaperComponent={PaperComponent}  >
+    <div>
+    
+      <Dialog  maxWidth={'sm'} fullWidth style={{overflow:"hidden", height:"100%"}}  open={open}  TransitionComponent={Transition}  keepMounted PaperComponent={PaperComponent} >
         <DialogTitle>
            {Title} 
         </DialogTitle>
@@ -223,20 +230,20 @@ export default function ModalProgress(props:ModalProgressProps) {
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions >
+        <DialogActions style={{height:"60px"}}>
           <Grid container direction="row" justifyContent="center" alignItems="center" >
            
               <Grid item style={{width:"65%"}}>
                 <Grid style={{}}>
-                  {TextLoad}
+                  {currentLoad === "Text" || currentLoad ==="Mix"?TextLoad:<></>}
                 </Grid>
-                <Grid style={{marginBottom:"21px"}}>
-                  <LinearProgress variant="determinate" value={count} />
+                <Grid item style={{marginBottom: currentLoad ==="Mix"?"21px":"01px"}}>
+                 {currentLoad === "Load" || currentLoad ==="Mix"?<LinearProgress variant="determinate" value={count} sx={{".MuiLinearProgress-bar": {transition: "none" }}} />: <></>} 
                 </Grid>
                 
               </Grid>
               <Grid item >
-                <ChildModal Path={path}/>
+                <Button onClick={RenderCancelModal}>Отмена</Button>
             </Grid>
           </Grid>
         </DialogActions>

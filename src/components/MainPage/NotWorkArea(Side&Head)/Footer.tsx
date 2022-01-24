@@ -47,8 +47,8 @@ export default function StickyFooter( props: FooterProps) {
               : theme.palette.grey[800],
         }}
       >
-        <Container id="footer" maxWidth="xl">
-          {props.value === undefined? <></>:<LinearProgress variant="determinate" value={props.value} />}
+        <Container id="footerProgress" maxWidth="xl">
+
         </Container>
       </Box>
     </Box>

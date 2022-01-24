@@ -110,6 +110,5 @@ export interface SectionToolsToFooter{
 export interface ModalProgressProps{
     Json: object;
     children?: React.ReactNode[] | React.ReactNode;
-    ReqId: string;
     open:Boolean;
 }

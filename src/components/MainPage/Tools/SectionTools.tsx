@@ -10,6 +10,7 @@ import { SectionToolsToFooter } from '../../ComponentInterface';
 import ReactDOM from 'react-dom';
 import ModalProgress from '../../Containers/ModalProgress';
 import axios from 'axios';
+import ChangeStatusProgressFooter from '../NotWorkArea(Side&Head)/ChangeStatusProgress';
 
 
 //
@@ -24,9 +25,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
     const [inputText, setInputText] = React.useState();
     const [buttons, setButtons] = React.useState([]);
     const [value, setValue] = React.useState();
-    const [progress, setProgress] = React.useState<number>(0);
     
-    let IndexS = 0;
 
     React.useEffect(() => {
        GetSectionTools();
@@ -45,7 +44,6 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         setButtons(json["Buttons"]);
         setMenuBar(json["MenuBar"])
     }
-
 
     const InputChange = (event:any)=>{
         console.log(inputText)
@@ -68,32 +66,6 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         params.set("WSM", "1");
         json = XMLrequest(params,  data);
         tokenProcessing(json);
-    }
-
-
-    function ChangeStatusProgress( RequestID:any){
-        let params = new Map, data, json, progr:number;
-        data = { "Result":"" }
-        params.set('prefix', 'project');
-        params.set("comand", "ResumeRequest");
-        params.set("RequestID",RequestID );
-        params.set("WSM", "1");
-        json = XMLrequest(params,  data);
-     /*
-     while(json.Break !== undefined){
-           
-        }
-     */
-        
-            progr = Number(json.Params.Index);
-            console.log(json);
-            setProgress(progr);
-            IndexS = progr;
-            props.setChildren(progr);
-          
-            json = XMLrequest(params,  data);
-        
-        tokenProcessing(json)
     }
 
     function handleClickMessageBox (event: any, RequestID:any, emptyReq?: boolean, requestData?:any){//MessageBox
@@ -127,25 +99,8 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         //tokenProcessing(json);
     }
 
-    function EmptyRequestWithDataJsx(RequestID:string, DataJSX?: any){
-        let params = new Map, data, json:object;
-        data = { "Result":"" }
-        params.set('prefix', 'project');
-        params.set("comand", "ResumeRequest");
-        params.set("RequestID",RequestID );
-        params.set("WSM", "1");
-        json = XMLrequest(params,  data);
-        setData(json);
-    }
 
-    function setCharAt(str: string,index: number,chr: any) {
-        if(index > str.length-1) return str;
-        return str.substring(0,index) + chr + str.substring(index+1);
-    }
-
-    const normalise = (value:any, MAX:any) => ((Number(value) - 0) * 100) / (Number(MAX) - 0);
-
-    function  tokenProcessing (json: any, DataJSX?:any ){///project~ResumeRequest?LicGUID=D100CAB54337ED32E087B59F6CE41511&RequestID=18892&WSM=1 HTTP/1.1
+    function  tokenProcessing (json: any){///project~ResumeRequest?LicGUID=D100CAB54337ED32E087B59F6CE41511&RequestID=18892&WSM=1 HTTP/1.1
         if(json.Break !== undefined){
             
             let returnJSX= [], returnSmth = [], Token,Module, RequestID:any,andResult,jsonResponse;
@@ -154,7 +109,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
             Token = json.Token;
             RequestID= json.Params.RequestID;
             
-            //console.log(RequestID)
+            
             if ( Token === "MessageBox"){
                 let Message, Buttons, DlgType;
                 Message = json.Params.Message;
@@ -179,22 +134,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 setProgram(returnJSX);
 
             }else if(Token === "ChangeStatusProgress"){
-                let Count,Stop,Title, Index;
-                Count = json.Params.Count;
-                Stop = json.Params.Stop;
-                Title = json.Params.Title;
-                Index = json.Params.Index;
-                //props.setChildren(json);
-                returnJSX.push(
-                    <div style={{width:"13%"}}>
-                   
-                                <LinearProgress variant="determinate" value={IndexS} />
-                        
-                    </div>
-
-                )
-                //setTestProgramButton(returnJSX);
-                ChangeStatusProgress(RequestID);
+                ReactDOM.render(<ChangeStatusProgressFooter Json={json} /> , document.getElementById('footerProgress'));
                 
             }else if(Token === "InputText"){
                 let Caption, Title;
@@ -220,7 +160,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 setProgram(returnJSX);
 
             }else if(Token === "ShowProgressDialog"){
-                ReactDOM.render(<ModalProgress open={true}  ReqId={ RequestID}  Json={json} /> , document.getElementById('testR'));
+                ReactDOM.render(<ModalProgress open={true}  Json={json} /> , document.getElementById('testR'));
                 
             }else if(Token === "SetProgressLabel"){
                 EmptyRequest(RequestID);
@@ -257,7 +197,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                 Path = backValue(value, 'Path');
                 Type = backValue(value, 'Type');
                 items.push(
-                    <Tooltip  title={key}>
+                    <Tooltip  title={key} arrow>
                             <IconButton id={Path}  color='primary'  component="span" onClick={(e: any) => handeleExecToolprogram(e,Type)} >
                      
                                 {ImgURL(backValue(value, 'Image'))}
@@ -279,6 +219,9 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         <Grid sx={{pl:2}} justifyContent="center">
            <div id="testR">
          
+           </div>
+           <div id="testG">
+
            </div>
             {RenderButtons(buttons)}
             {Program}
