@@ -95,8 +95,7 @@ export default function SideBar(props: MainBoxBackClick) {
 
   function ListItems(List: any) {
     if(data.length!== undefined){
-    let ID,
-      keyS = 0;
+    let ID, keyS = 0;
     for (const [key, value] of Object.entries(List)) {
       keyS += 1;
       ID = List[key]["ID"];

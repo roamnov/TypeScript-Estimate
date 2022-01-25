@@ -108,62 +108,68 @@ const SectionTools = (props:SectionToolsToFooter) =>{
             Module = json.Module;
             Token = json.Token;
             RequestID= json.Params.RequestID;
-            
-            
-            if ( Token === "MessageBox"){
-                let Message, Buttons, DlgType;
-                Message = json.Params.Message;
-                Buttons = json.Params.Buttons;
-                DlgType = json.Params.DlgType;
-                for (const [key, value] of Object.entries(items.Buttons)) {
-                
-                    andResult = value & Buttons;
+
+            switch (Token){
+                case "MessageBox":
+                    let Message, Buttons, DlgType;
+                    Message = json.Params.Message;
+                    Buttons = json.Params.Buttons;
+                    DlgType = json.Params.DlgType;
+                    for (const [key, value] of Object.entries(items.Buttons)) {
                     
-                    if (andResult!==0){
-                        returnSmth.push(<Button value={key} onClick={(e)=>handleClickMessageBox(e,RequestID)}>{key}</Button>)
+                        andResult = value & Buttons;
+                        
+                        if (andResult!==0){
+                            returnSmth.push(<Button value={key} onClick={(e)=>handleClickMessageBox(e,RequestID)}>{key}</Button>)
+                        }
                     }
-                }
 
-                for (const [key, value] of Object.entries(items.DlgType)) {
-                    if (value === DlgType){
-                        DlgType = key;
+                    for (const [key, value] of Object.entries(items.DlgType)) {
+                        if (value === DlgType){
+                            DlgType = key;
+                        }
                     }
-                }
 
-                returnJSX.push(  <ModalContainer dlgType={DlgType} content={Message} buttons={returnSmth} /> )
-                setProgram(returnJSX);
+                    returnJSX.push(  <ModalContainer dlgType={DlgType} content={Message} buttons={returnSmth} /> )
+                    setProgram(returnJSX);
+                    break;
 
-            }else if(Token === "ChangeStatusProgress"){
-                ReactDOM.render(<ChangeStatusProgressFooter Json={json} /> , document.getElementById('footerProgress'));
-                
-            }else if(Token === "InputText"){
-                let Caption, Title;
-                Caption = json.Params.Caption;
-                Title = json.Params.Title;
+                case "ChangeStatusProgress":
+                    ReactDOM.render(<ChangeStatusProgressFooter Json={json} /> , document.getElementById('footerProgress'));
+                    break;
 
-                returnSmth.push(
-                    <Grid component={"form"} container direction="column"  justifyContent="center"  alignItems="flex-end" spacing={2}>
-                        <Grid item>
-                            <TextField  id="input-text" name="input-text" label={Title} variant="outlined" fullWidth onChange={InputChange} />
-                            
+                case "InputText":
+                    let Caption, Title;
+                    Caption = json.Params.Caption;
+                    Title = json.Params.Title;
+    
+                    returnSmth.push(
+                        <Grid component={"form"} container direction="column"  justifyContent="center"  alignItems="flex-end" spacing={2}>
+                            <Grid item>
+                                <TextField  id="input-text" name="input-text" label={Title} variant="outlined" fullWidth onChange={InputChange} />
+                                
+                            </Grid>
+                            <Grid item>
+                                <Button value={1} onClick={(e)=>InputTextChange(e,RequestID)} > Ок</Button>
+                                <Button value={2} onClick={(e)=>InputTextChange(e,RequestID)}> Отмена</Button>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Button value={1} onClick={(e)=>InputTextChange(e,RequestID)} > Ок</Button>
-                            <Button value={2} onClick={(e)=>InputTextChange(e,RequestID)}> Отмена</Button>
-                        </Grid>
-                    </Grid>
-                )
+                    )
+    
+                    returnJSX.push(
+                        <ModalContainer dlgType={Caption}  content={returnSmth} /> 
+                    )
+                    setProgram(returnJSX);
+                    break;
 
-                returnJSX.push(
-                    <ModalContainer dlgType={Caption}  content={returnSmth} /> 
-                )
-                setProgram(returnJSX);
+                case "ShowProgressDialog":
+                    ReactDOM.render(<ModalProgress open={true}  Json={json} /> , document.getElementById('testR'));
+                    break;
 
-            }else if(Token === "ShowProgressDialog"){
-                ReactDOM.render(<ModalProgress open={true}  Json={json} /> , document.getElementById('testR'));
-                
-            }else if(Token === "SetProgressLabel"){
-                EmptyRequest(RequestID);
+                case "SetProgressLabel":
+                    EmptyRequest(RequestID);
+                    break;
+
             }
 
         }

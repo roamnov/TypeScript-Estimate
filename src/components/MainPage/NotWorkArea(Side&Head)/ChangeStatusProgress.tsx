@@ -1,5 +1,5 @@
 import  React from 'react';
-import {  Grid,  LinearProgress } from "@mui/material"
+import {  Backdrop, Grid,  LinearProgress } from "@mui/material"
 import URL, { XMLrequest } from '../../Url';
 import axios from 'axios';
 import ReactDOM from 'react-dom';
@@ -12,12 +12,14 @@ const ChangeStatusProgressFooter = (Json:any) =>{
     const [Progress, setProgress] = React.useState(0);
     const [data, setData] = React.useState({}); 
     const [Title, setTitle]= React.useState("");
+    const [open, setOpen] = React.useState(true);
 
     React.useEffect(()=>{
         tokenProcessing(data)
     }, [data])
 
     React.useEffect(()=>{
+        
         tokenProcessing(Json.Json)
     }, [Json])
 
@@ -60,14 +62,16 @@ const ChangeStatusProgressFooter = (Json:any) =>{
     }
 
     return(
-        <Grid container sx={{pl:2}} direction="row" justifyContent="flex-start" alignItems="center" style={{width:"400px", height:"20px"}} spacing={1}>
-            <Grid item>
-                <LinearProgress variant="determinate" value={Progress} style={{height:"10px", width:"100px"}}/>
+        <Backdrop  sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}    open={open}  >
+            <Grid container sx={{pl:2}} direction="row" justifyContent="flex-start" alignItems="center" style={{width:"400px", height:"20px"}} spacing={1}>
+                <Grid item>
+                    <LinearProgress variant="determinate" value={Progress} style={{height:"10px", width:"100px"}}/>
+                </Grid>
+                <Grid item>
+                    {Title}
+                </Grid>
             </Grid>
-            <Grid item>
-                {Title}
-            </Grid>
-        </Grid>
+        </Backdrop>
     )
 }
 

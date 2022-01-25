@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import { Menu, MenuItem, Typography } from "@material-ui/core";
+import { Button, Menu, MenuItem, Typography } from "@material-ui/core";
+import { NestedMenuItem } from "./NestedMenuOrigin/NestedMenuItem";
 
-import NestedMenuItem from "material-ui-nested-menu-item";
+//import NestedMenuItem from "material-ui-nested-menu-item";
 
 export const NestedMenu = () => {
-  const [menuPosition, setMenuPosition] = useState<any>(null);
+  const [menuPosition, setMenuPosition] = useState();
+  const open = Boolean(menuPosition);
 
-  const handleRightClick = (event: React.MouseEvent) => {
+  const handleClick = (event) => setMenuPosition(event.currentTarget);
+
+  const handleRightClick = (event) => {
     if (menuPosition) {
       return;
     }
@@ -17,15 +21,15 @@ export const NestedMenu = () => {
     });
   };
 
-  const handleItemClick = (event: React.MouseEvent) => {
+  const handleItemClick = (event) => {
     setMenuPosition(null);
   };
 
   return (
-    <div onContextMenu={handleRightClick}>
-      <Typography>Right click to open menu</Typography>
+    <div >
+      <Button onClick={handleRightClick}>Click</Button>
       <Menu
-        open={!!menuPosition}
+        open={open}
         onClose={() => setMenuPosition(null)}
         anchorReference="anchorPosition"
         anchorPosition={menuPosition}
@@ -35,13 +39,13 @@ export const NestedMenu = () => {
         <NestedMenuItem
                   label="Button 3"
                   parentMenuOpen={!!menuPosition}
-                  onClick={handleItemClick} innerRef={undefined} alignItems={undefined} ContainerComponent={undefined}        >
+                  onClick={handleItemClick}       >
           <MenuItem onClick={handleItemClick}>Sub-Button 1</MenuItem>
           <MenuItem onClick={handleItemClick}>Sub-Button 2</MenuItem>
           <NestedMenuItem
                       label="Sub-Button 3"
                       parentMenuOpen={!!menuPosition}
-                      onClick={handleItemClick} innerRef={undefined} alignItems={undefined} ContainerComponent={undefined}          >
+                      onClick={handleItemClick}      >
             <MenuItem onClick={handleItemClick}>Sub-Sub-Button 1</MenuItem>
             <MenuItem onClick={handleItemClick}>Sub-Sub-Button 2</MenuItem>
           </NestedMenuItem>
@@ -50,7 +54,7 @@ export const NestedMenu = () => {
         <NestedMenuItem
                   label="Button 5"
                   parentMenuOpen={!!menuPosition}
-                  onClick={handleItemClick} innerRef={undefined} alignItems={undefined} ContainerComponent={undefined}        >
+                  onClick={handleItemClick}     >
           <MenuItem onClick={handleItemClick}>Sub-Button 1</MenuItem>
           <MenuItem onClick={handleItemClick}>Sub-Button 2</MenuItem>
         </NestedMenuItem>
