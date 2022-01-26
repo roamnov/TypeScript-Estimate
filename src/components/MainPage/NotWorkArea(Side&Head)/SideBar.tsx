@@ -123,7 +123,7 @@ export default function SideBar(props: MainBoxBackClick) {
   function  Menu(SectionList: any) {
     // фцнкция отрисовки меню
     if(data.length!== undefined){
-        
+        console.log(SectionList)
         
       let Name, ID, currentDeep, openSet, openSetDeep, mainCollapse, deepCollapse, Img, keyS = 0, howDeep = 4
       let assemblyLists = []; //сюда записываем все секции а потом отправляем на отрисовку

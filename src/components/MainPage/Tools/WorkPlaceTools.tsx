@@ -24,20 +24,36 @@ export function WorkPlaceTools (){
         params.set('comand','GetWorkPlaceTools');
         json = XMLrequest(params)
         console.log(json);
-        setDataButtons(json);
+        setDataButtons(json["Buttons"]);
+        setMenuBar(json["MenuBar"]);
         CreateMap(json["MenuBar"]);
     } 
 
     function CreateMap(jsonItems:any){
-        let DeepFirst:any
+        let DeepFirst:any,DeepSecond:any, Token;
 
         for (const [key, value] of Object.entries(jsonItems)) {
             //console.log(value)
-            DeepFirst = value;
-            for (const [key, value] of Object.entries(DeepFirst)) {
-                console.log(value)
-            }   
+            
+            Token = jsonItems[key]["Token"];
+
+            if(Token === undefined){
+                DeepFirst = value;
+
+                for (const [key, value2] of Object.entries(DeepFirst)) {
+                Token = DeepFirst[key]["Token"];
+
+                if(Token === undefined){
+                    DeepSecond = value2 ;
+
+                    for (const [key, value3] of Object.entries(DeepSecond)) {
+                        Token = DeepSecond[key]["Token"];
+                    }
+                }
+                }   
+            }
         }
+           
         
         // Object.keys(jsonItems).map((key, index, stas)=>{
         //     console.log(stas)
