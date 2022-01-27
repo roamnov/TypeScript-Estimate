@@ -13,24 +13,64 @@ export function WorkPlaceTools (){
     const [menuBar, setMenuBar] = useState();
     const [MenuJSX,setMenuJSX] = useState([<></>]);
     const [AssMass, setAssMass] = useState(new Map());
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
     useEffect(() => {
-        GetWorkPlaceTools();
+       GetWorkPlaceTools();
     }, []);
 
     
+    const handleClick = (event:any) => setAnchorEl(event.currentTarget);
+    const handleClose = () => setAnchorEl(null);
+
+
     const GetWorkPlaceTools = ( ) =>{
         let params = new Map, json;
         params.set('prefix','config'); 
         params.set('comand','GetWorkPlaceTools');
         json = XMLrequest(params)
-        console.log(json);
+        console.log(json["MenuBar"]);
         setDataButtons(json["Buttons"]);
         setMenuBar(json["MenuBar"]);
-        CreateMap(json["MenuBar"]);
+        //CreateMap(json["MenuBar"]);
+        //Rec(json["MenuBar"]);
+        //console.log(["array", "arrrsas",["asd"]])
     } 
 
+
+
+    
+    function Rec(jsonItems:any){
+        
+        if ( jsonItems !== undefined){
+            let DeepFirst:any, Token, keyS= 0;
+            let assemblyLists = [];
+
+            for (const [key, value] of Object.entries(jsonItems)) {
+                //console.log(value)
+                keyS = Number(key)+ 1;
+                Token = jsonItems[key]["Token"];
+                DeepFirst = value;
+                console.log(key)
+                console.log(Object.keys(DeepFirst))
+                
+            if (Token === undefined){
+                Rec(DeepFirst);
+            }else{
+                //console.log(key)
+            }
+            }
+            return <>a</> 
+        }
+               
+        // Object.keys(jsonItems).map((key, index, stas)=>{
+        //     console.log(stas)
+        // })
+    }
+
     function CreateMap(jsonItems:any){
-        let DeepFirst:any,DeepSecond:any, Token;
+        let DeepFirst:any,DeepSecond:any, Token, DeepThird;
 
         for (const [key, value] of Object.entries(jsonItems)) {
             //console.log(value)
@@ -52,9 +92,7 @@ export function WorkPlaceTools (){
                 }
                 }   
             }
-        }
-           
-        
+        }        
         // Object.keys(jsonItems).map((key, index, stas)=>{
         //     console.log(stas)
         // })
@@ -68,7 +106,15 @@ export function WorkPlaceTools (){
     return(
         <Grid>
             <NestedMenu/>
+            {/*
+            
             <App/>
+            
+            
+            */}
+            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                {Rec(menuBar)}
+            </Menu>
         </Grid>
     )
 }

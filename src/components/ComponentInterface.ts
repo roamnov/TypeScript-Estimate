@@ -34,9 +34,9 @@ export interface inputProps{
 }
 export interface menuSelect extends componentProps{
     drxInfo?: any|string;
-    userInfo?: any | string;
+    userInfo: any | string;
     workPlaceInfo?: any | string;
-    password?: any | string;
+    password: any | string;
     setBackInfo: (value:any) => void | any | undefined ;
 
 }

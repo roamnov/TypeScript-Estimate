@@ -14,9 +14,8 @@ const PasswordInput = (props: menuSelect) => {
       label="Пароль"
       type="password"
       id="password"
-      autoComplete="current-password"
       onChange={clientEmailHandler}
-      defaultValue={""}
+      
       value={props.password}
       
     />

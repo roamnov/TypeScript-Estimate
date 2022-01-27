@@ -5,6 +5,9 @@ import {makeStyles, ThemeProvider} from "@material-ui/styles";
 export const useStyles = makeStyles((theme: { mixins: { toolbar: any; }; })=>({
   
 
+  colorList:{
+    color:"white"
+  },
 
   drawer: {
     flexShrink: 0,

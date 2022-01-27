@@ -6,7 +6,6 @@ import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import axios from "axios";
 import URL, { ImgBASE64, XMLrequest } from "../../Url";
 import { ImgURL } from "../../Url";
 import { Box, Drawer, Slide, Toolbar } from "@material-ui/core";
@@ -14,13 +13,29 @@ import { useStyles } from "../../Styles";
 import { MainBoxBackClick,InfoAboutClick } from "../../ComponentInterface";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import { styled } from '@mui/material/styles';
 
 const defaultDrawerWidth = window.innerWidth/100 * 16.791045;
 const minDrawerWidth = 1;
 const maxDrawerWidth = 400;
 //alert( window.innerWidth ); 
 
-
+const StyledList = styled(List)({
+  // selected and (selected + hover) states
+  '&& .Mui-selected, && .Mui-selected:hover': {
+    backgroundColor: 'red',
+    '&, & .MuiListItemIcon-root': {
+      color: 'pink',
+    },
+  },
+  // hover states
+  '& .MuiListItemButton-root:hover': {
+    backgroundColor: 'orange',
+    '&, & .MuiListItemIcon-root': {
+      color: 'yellow',
+    },
+  },
+});
 
 
 export default function SideBar(props: MainBoxBackClick) {
@@ -28,7 +43,7 @@ export default function SideBar(props: MainBoxBackClick) {
   const [open, setOpen] = useState(false);
   const [drawerOpen, setdrawerOpen] = useState(true)
   const [data, setData] = useState([]);
-  const [selected, setSelected] = useState<InfoAboutClick | undefined> ();
+  const [selected, setSelected] = useState("");
   const [data2, setData2] = useState(new Map());
   const [drawerWidth, setDrawerWidth] = useState(defaultDrawerWidth);
   let e = 0;//event 
@@ -69,6 +84,7 @@ export default function SideBar(props: MainBoxBackClick) {
     let ID = event.currentTarget.getAttribute("id");
     let CLSID  = GetElementAttributeByID(ID, data, "CLSID")
     let Name = event.currentTarget["innerText"]
+    setSelected(ID);
 
     props.setSelected( {id: ID, clsic: CLSID, name: Name})  
   };
@@ -85,6 +101,7 @@ export default function SideBar(props: MainBoxBackClick) {
     params.set('comand','GetSectionList');
     params.set('Simple','1');
     params.set('full','1');
+    params.set(`png`,`1`);
     json = XMLrequest(params)
     setData(json["Sections"]);
     ListItems(json["Sections"]);
@@ -134,9 +151,8 @@ export default function SideBar(props: MainBoxBackClick) {
           Name = SectionList[key]["Name"];
           ID = SectionList[key]["ID"];
           currentDeep = SectionList[key]["Deep"];
-          //console.log(SectionList[key])
-          //Img = ImgURL(SectionList[key]["Image"]);
-          Img = ImgBASE64(SectionList[key]["RCDATA"]);
+          Img = ImgURL(SectionList[key]["Image"], "32px", "32px");
+          //Img = ImgBASE64(SectionList[key]["RCDATA"]);
           keyS += 1;
 
           if (currentDeep == null) {
@@ -144,7 +160,7 @@ export default function SideBar(props: MainBoxBackClick) {
             mainCollapse = data2.get(ID);
             openSet = data2.get(ID);
             assemblyLists.push(
-              <ListItemButton key={ID} component="li" id={ID} >
+              <ListItemButton className={classes.colorList} key={ID} component="li" id={ID} >
                 <ListItemIcon>{Img}</ListItemIcon>
                 <ListItemText primary={Name} />
                 {SectionList[keyS] !== undefined  && SectionList[keyS]["Deep"] >= 1? (openSet ? (<ExpandLess id={ID} onClick={handleClick} />) : ( <ExpandMore id={ID} onClick={handleClick} /> )): (<></>)}
@@ -167,18 +183,15 @@ export default function SideBar(props: MainBoxBackClick) {
                 howDeep += 8;
                 break;
             }
-            if (
-              SectionList[keyS] !== undefined &&
-              SectionList[keyS]["Deep"] > currentDeep
-            ) {
+            if (SectionList[keyS] !== undefined && SectionList[keyS]["Deep"] > currentDeep ) {
               //если ключ НЕ необъявен и след deep больше текущего, то рисуем родителя
 
               currentDeep == "2"  ? (deepCollapse = openSet): (deepCollapse = undefined);
               openSetDeep = openSet;
               assemblyLists.push(
-                <Collapse  key={ID}  in={openSet && mainCollapse}    timeout="auto" unmountOnExit >
+                <Collapse  key={ID}  in={openSet && mainCollapse}    timeout="auto" unmountOnExit > 
                   {(openSet = data2.get(ID))}
-                  <ListItemButton key={ID} sx={{ pl: howDeep }} id={ID} >
+                  <ListItemButton className={classes.colorList} key={ID} sx={{ pl: howDeep , "& .Mui-selected":{backgroundColor:"rgb(35, 114, 191)"} }} id={ID} selected={selected === ID} >
                     <ListItemIcon>{Img}</ListItemIcon>
                     <ListItemText primary={Name} />
                     {openSet ? ( <ExpandLess id={ID} onClick={handleClick} /> ) : (<ExpandMore id={ID} onClick={handleClick} />)}
@@ -194,7 +207,7 @@ export default function SideBar(props: MainBoxBackClick) {
                   unmountOnExit
                 >
                   <List component="div" disablePadding >
-                    <ListItemButton key={ID} sx={{ pl: howDeep }}   id={ID} onClick={updateSelected}>
+                    <ListItemButton className={classes.colorList}  key={ID} sx={{ pl: howDeep, "& .Mui-selected":{backgroundColor:"rgb(35, 114, 191)"} }}  selected={selected === ID}  id={ID} onClick={updateSelected} >
                       <ListItemIcon>{Img}</ListItemIcon>
                       <ListItemText primary={Name} />
                     </ListItemButton>
@@ -214,9 +227,9 @@ export default function SideBar(props: MainBoxBackClick) {
     
       className={classes.drawer}
       variant="permanent"
-      PaperProps={{ style: { width: drawerWidth,  } }}
+      PaperProps={{ style: { width: drawerWidth,   backgroundColor: "rgb(98, 141, 183)" } }}
       sx={{ml: drawerWidth/100*11.9444444444444444}}
-      style={{ overflowX: "hidden"}}
+      style={{ overflowX: "hidden", }}
       >
        
       <div onMouseDown={e => handleMouseDown()} className={classes.dragger} >
@@ -227,18 +240,17 @@ export default function SideBar(props: MainBoxBackClick) {
       <Toolbar />
         <Box style={{ scrollbarWidth:"none"}} sx={{ overflow: "auto" }}>
       <Slide direction="right" in={drawerOpen}> 
-      <List
+      <StyledList
         sx={{
           width: "100%",
-          
-          bgcolor: "background.paper",
+         bgcolor: "rgb(98, 141, 183)",
           marginTop: 1,
         }}
-        component="nav"
+       
         aria-labelledby="nested-list-subheader"
       >
         {Menu(data)}
-      </List>
+      </StyledList>
       </Slide>
     </Box>
     

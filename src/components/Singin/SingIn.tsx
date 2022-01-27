@@ -138,16 +138,16 @@ const SignIn = (props: componentProps) => {
           </Button>
         </Grid>
 
-        <SelectDrx drxInfo={drx} setBackInfo={setDrx} />
+        <SelectDrx drxInfo={drx} setBackInfo={setDrx} password={undefined} userInfo={undefined} />
 
-        <SelectUser userInfo={user} drxInfo={drx} setBackInfo={setUser} />
+        <SelectUser userInfo={user} drxInfo={drx} setBackInfo={setUser} password={undefined} />
 
-        <SelectWorkPlace  drxInfo={drx}  userInfo={user}  workPlaceInfo={workplace}  setBackInfo={setWorkPlace}   />
+        <SelectWorkPlace  drxInfo={drx} userInfo={user} workPlaceInfo={workplace} setBackInfo={setWorkPlace} password={undefined}   />
 
        {/*  ПОТОМ СДЕЛАТЬ GETUSERINFO */}
 
         <Grid item xs>
-          <PasswordInput password={password} setBackInfo={setPassword} />
+          <PasswordInput password={password} setBackInfo={setPassword} userInfo={undefined} />
         </Grid>
       
         <Grid item>

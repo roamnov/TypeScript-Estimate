@@ -196,7 +196,8 @@ const SectionTools = (props:SectionToolsToFooter) =>{
     }
     
     const RenderButtons=(ButtonsLocal: any)=>{
-        if(typeof ButtonsLocal !== undefined){
+        //console.log(ButtonsLocal)
+        if(ButtonsLocal !== undefined){
             let items = [], Path, Type:string;
             for (const [key, value] of Object.entries(ButtonsLocal)) {
                 //console.log(value)
