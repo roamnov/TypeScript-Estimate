@@ -23,18 +23,15 @@ const maxDrawerWidth = 400;
 const StyledList = styled(List)({
   // selected and (selected + hover) states
   '&& .Mui-selected, && .Mui-selected:hover': {
-    backgroundColor: 'red',
-    '&, & .MuiListItemIcon-root': {
-      color: 'pink',
-    },
+    backgroundColor:  "#3d5b75"
   },
   // hover states
-  '& .MuiListItemButton-root:hover': {
-    backgroundColor: 'orange',
-    '&, & .MuiListItemIcon-root': {
-      color: 'yellow',
-    },
-  },
+  // '& .MuiListItemButton-root:hover': {
+  //   backgroundColor: 'orange',
+  //   '&, & .MuiListItemIcon-root': {
+  //     color: 'yellow',
+  //   },
+  // },
 });
 
 
@@ -227,7 +224,7 @@ export default function SideBar(props: MainBoxBackClick) {
     
       className={classes.drawer}
       variant="permanent"
-      PaperProps={{ style: { width: drawerWidth,   backgroundColor: "rgb(98, 141, 183)" } }}
+      PaperProps={{ style: { width: drawerWidth,   backgroundColor: '#628cb6' } }}
       sx={{ml: drawerWidth/100*11.9444444444444444}}
       style={{ overflowX: "hidden", }}
       >
@@ -243,7 +240,7 @@ export default function SideBar(props: MainBoxBackClick) {
       <StyledList
         sx={{
           width: "100%",
-         bgcolor: "rgb(98, 141, 183)",
+         bgcolor: '#628cb6',
           marginTop: 1,
         }}
        

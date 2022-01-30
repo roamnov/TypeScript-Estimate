@@ -44,7 +44,7 @@ export function WorkPlaceTools (){
     function Rec(jsonItems:any){
         
         if ( jsonItems !== undefined){
-            let DeepFirst:any, Token, keyS= 0;
+            let DeepFirst:any, Token, keyS= 0, ArrItems;
             let assemblyLists = [];
 
             for (const [key, value] of Object.entries(jsonItems)) {
@@ -53,7 +53,10 @@ export function WorkPlaceTools (){
                 Token = jsonItems[key]["Token"];
                 DeepFirst = value;
                 console.log(key)
-                console.log(Object.keys(DeepFirst))
+                ArrItems = Object.keys(DeepFirst);
+                if (ArrItems[1]=== "Token"){
+                    
+                }
                 
             if (Token === undefined){
                 Rec(DeepFirst);
@@ -69,34 +72,7 @@ export function WorkPlaceTools (){
         // })
     }
 
-    function CreateMap(jsonItems:any){
-        let DeepFirst:any,DeepSecond:any, Token, DeepThird;
-
-        for (const [key, value] of Object.entries(jsonItems)) {
-            //console.log(value)
-            
-            Token = jsonItems[key]["Token"];
-
-            if(Token === undefined){
-                DeepFirst = value;
-
-                for (const [key, value2] of Object.entries(DeepFirst)) {
-                Token = DeepFirst[key]["Token"];
-
-                if(Token === undefined){
-                    DeepSecond = value2 ;
-
-                    for (const [key, value3] of Object.entries(DeepSecond)) {
-                        Token = DeepSecond[key]["Token"];
-                    }
-                }
-                }   
-            }
-        }        
-        // Object.keys(jsonItems).map((key, index, stas)=>{
-        //     console.log(stas)
-        // })
-    }
+    
 
 
     const BuildNestedMenu = ()=>{
