@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import ResizePanel from '../ResizebleComponent/ResizebleComponent';
 import Tree from '../Windows/ViewData/Tree/tree';
 import CodeEditor from '@uiw/react-textarea-code-editor';
-import './dbview.css';
 import { useState, useEffect } from "react";
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';

@@ -2,7 +2,6 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import IconButton from '@mui/material/IconButton';
-import './tree.css';
 import { XMLrequest } from '../../../../Url';
 import { useState, useEffect } from 'react';
 import DropList from '../../../../DropList/DropList';

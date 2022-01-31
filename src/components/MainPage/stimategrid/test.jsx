@@ -2,7 +2,6 @@
 'use strict';
 import URL, {get_cookie, XMLrequest,AxiosRequest} from "../../Url"
 import axios from "axios";
-import "./stimate.css"
 import  { useState } from "react";
 
 

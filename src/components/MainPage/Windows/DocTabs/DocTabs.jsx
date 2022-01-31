@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import './DocTabs.css';
 
 export default function DocTabs(name, doccfgid, parent, cont) {
     function closeDocTab(even) {
