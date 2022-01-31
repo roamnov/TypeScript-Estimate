@@ -163,7 +163,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                     break;
 
                 case "ShowProgressDialog":
-                    ReactDOM.render(<ModalProgress open={true}  Json={json} /> , document.getElementById('testR'));
+                    ReactDOM.render(<ModalProgress open={true}  Json={json} /> , document.getElementById('RenderModal'));
                     break;
 
                 case "SetProgressLabel":
@@ -223,12 +223,9 @@ const SectionTools = (props:SectionToolsToFooter) =>{
     
 
     return(
-        <Grid sx={{pl:2}} justifyContent="center">
-           <div id="testR">
+        <Grid item sx={{pl:2}} justifyContent="center">
+           <div id="RenderModal">
          
-           </div>
-           <div id="testG">
-
            </div>
             {RenderButtons(buttons)}
             {Program}

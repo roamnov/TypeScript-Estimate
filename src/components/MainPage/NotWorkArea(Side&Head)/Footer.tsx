@@ -11,7 +11,7 @@ import { LinearProgress } from '@material-ui/core';
 
 
 
-export default function StickyFooter( props: FooterProps) {
+export default function StickyFooter() {
 
 
   const [currentHeight, setCurrentHeight] = useState(window.innerHeight-190);

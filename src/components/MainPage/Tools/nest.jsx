@@ -25,7 +25,7 @@ export default function App() {
             <MenuItem onClick={handleClose}>Standard Menu Item!</MenuItem>
             <IconMenuItem
               onClick={handleClose}
-              leftIcon={<AccountCircleIcon />}
+              
               rightIcon={<AccountCircleIcon />}
               label={'Icon Menu Item'}
             />

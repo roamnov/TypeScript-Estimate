@@ -48,8 +48,8 @@ export default function FullRightSide(props: InfoAboutClick) {
     
     <Grid item  >
       <Toolbar />
-      {props.isLoading?<div></div>:<><WorkPlaceTools/> <SectionTools setChildren={setSectionToolsData}/> </>}
-      <StickyFooter value={sectionToolsData}/>
+      {props.isLoading?<div></div>:<Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" > <SectionTools setChildren={setSectionToolsData}/> <WorkPlaceTools/> </Grid>}
+      <StickyFooter />
     </Grid>
     
     <Grid item xs   >
