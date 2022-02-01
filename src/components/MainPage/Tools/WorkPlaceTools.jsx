@@ -3,27 +3,37 @@ import { Grid } from "@mui/material"
 import {useEffect, useState} from "react"
 import { XMLrequest } from "../../Url";
 import { Button, Menu, MenuItem } from "@mui/material";
-import App from "./nest";
-import NestedMenu from "./NestedMenu.jsx";
 import { NestedMenuItem } from "./NestedMenuOrigin/NestedMenuItem";
 
 
 
 export function WorkPlaceTools (){
     const [dataButtons, setDataButtons] = useState();
+    const [open1, setOpen1] = useState(false);
     const [menuBar, setMenuBar] = useState();
-    const [MenuJSX,setMenuJSX] = useState([<></>]);
+    const [ID, setID] = useState();
     const [AssMass, setAssMass] = useState(new Map());
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
+    const [anchorElAss, setAnchorElAss] = useState(new Map());
 
     useEffect(() => {
        GetWorkPlaceTools();
     }, []);
 
     
-    const handleClick = (event) => setAnchorEl(event.currentTarget);
-    const handleClose = () => setAnchorEl(null);
+    const handleClick = (event) =>{
+        setOpen1(!open1)
+        const id =event.currentTarget.getAttribute("id");
+        setAssMass(AssMass.set(id,true));
+        setAnchorElAss(anchorElAss.set(id,event.currentTarget));
+        setID(id);        
+    }
+
+    const handleClose = (event) => {
+        setOpen1(!open1)
+        const id = event.currentTarget.getAttribute("id")
+        setAssMass(AssMass.set(ID,false))
+        setAnchorElAss(anchorElAss.set(ID,null));
+    };
 
 
     const GetWorkPlaceTools = ( ) =>{
@@ -31,20 +41,26 @@ export function WorkPlaceTools (){
         params.set('prefix','config'); 
         params.set('comand','GetWorkPlaceTools');
         json = XMLrequest(params)
-        console.log(json["MenuBar"]);
+        console.log(json["Buttons"]);
         setDataButtons(json["Buttons"]);
         setMenuBar(json["MenuBar"]);
-        //CreateMap(json["MenuBar"]);
+        CreateMap(json["MenuBar"]);
         //Rec(json["MenuBar"]);
-        //console.log(["array", "arrrsas",["asd"]])
     } 
+    
+    function CreateMap(List){
+        for (const [key, value] of Object.entries(List)) {
+            setAnchorElAss(anchorElAss.set(key,null));
+            setAssMass(AssMass.set(key,false));
+            
+        }
+    }
 
 
-
-    function RecItems(jsonItems){
+    function RecItems(jsonItems, CurrentID ){
         
         if ( jsonItems !== undefined){
-            let DeepFirst, Token, keyS= 0, ArrItems;
+            let DeepFirst, Token, keyS= 0, ArrItems, openSet;
             let assemblyLists = [];
 
             for (const [key, value] of Object.entries(jsonItems)) {
@@ -52,7 +68,7 @@ export function WorkPlaceTools (){
                 keyS = Number(key)+ 1;
                 Token = jsonItems[key]["Token"];
                 DeepFirst = value;
-               
+                
                 ArrItems = Object.keys(DeepFirst);
                 if (ArrItems[1]=== "Token"){//это то что будет внутри item
                     assemblyLists.push(
@@ -65,10 +81,11 @@ export function WorkPlaceTools (){
                     )
                     
                 }else{// это item который будет распахиваться
+                    openSet = AssMass.get(CurrentID);
                     assemblyLists.push(
                         <Grid key={key}>
-                            <NestedMenuItem   onClick={handleClose} label={key}  parentMenuOpen={open}  >
-                                {RecItems(DeepFirst)}  
+                            <NestedMenuItem   onClick={handleClose} label={key}  parentMenuOpen={openSet}  >
+                                {RecItems(DeepFirst, CurrentID)}  
                             </NestedMenuItem>
                         </Grid>
                         
@@ -83,9 +100,9 @@ export function WorkPlaceTools (){
 
     
     function Rec(jsonItems){
-        
+        //console.log(AssMass)
         if ( jsonItems !== undefined){
-            let DeepFirst, Token, keyS= 0, ArrItems;
+            let DeepFirst, Token, keyS= 0, ArrItems, openSet, anchorElset;
             let assemblyLists = [];
 
             for (const [key, value] of Object.entries(jsonItems)) {
@@ -96,18 +113,20 @@ export function WorkPlaceTools (){
                
                 ArrItems = Object.keys(DeepFirst);
                 //console.log(Object.keys(jsonItems))
-                console.log(value)
+                //console.log(value)
 
                 if (ArrItems[1]=== "Token"){//это то что будет внутри item
                     
                 }else{// это item который будет распахиваться
+                    openSet = AssMass.get(key);
+                    anchorElset = anchorElAss.get(key);
                     assemblyLists.push(
                         <Grid item  key={key}>
-                            <Button  onClick={handleClick}>
+                            <Button id={key} onClick={handleClick}>
                                 {key}
                             </Button>
-                            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                                    {RecItems(DeepFirst)}
+                            <Menu id={key} anchorEl={anchorElset} open={openSet} onClose={handleClose}>
+                                    {RecItems(DeepFirst, key)}
                             </Menu>
                         </Grid>
                     )
@@ -120,9 +139,7 @@ export function WorkPlaceTools (){
     
 
 
-    const BuildNestedMenu = ()=>{
-       
-    }
+    
 
     return(
         <Grid item>
