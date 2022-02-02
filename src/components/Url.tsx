@@ -11,7 +11,7 @@ const GUID = uuidv4()
 //document.location.origin
 
 
-function CreateCokies(name: string, value: string) {
+export function CreateCokies(name: string, value: string) {
     document.cookie = name + "=" + value;
 };
 export function get_cookie(cookie_name: string): string {

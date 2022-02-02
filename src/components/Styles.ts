@@ -4,6 +4,9 @@ import {makeStyles, ThemeProvider} from "@material-ui/styles";
 
 export const useStyles = makeStyles((theme: { mixins: { toolbar: any; }; })=>({
   
+  customizeToolbar: {
+    minHeight: 36
+  },
 
   colorList:{
     color:"white"

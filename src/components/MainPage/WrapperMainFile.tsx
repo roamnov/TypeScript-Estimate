@@ -19,7 +19,7 @@ export default function WrapperRightSide() {
     <Box sx={{ display: 'flex' , height:"100%", overflow:"hidden"}}>
       <CssBaseline />
       <AppBar  position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} style={{backgroundColor:"#628eb8"}}>
-      <DashboardNavbar/>
+        <DashboardNavbar/>
       </AppBar>
       <SideBar  isLoading={setIsLoading} setSelected={setSelected}/>
       <FullRightSide isLoading={isLoading} id= {selected?.id}  clsic= {selected?.clsic} name= {selected?.name}  />

@@ -10,14 +10,14 @@ import { useNavigate, Navigate } from "react-router-dom";
 
 
 
-const MainPage = () => {
+const MainPage = ( ) => {
     let navigate = useNavigate();
     const Value = React.useContext(LoginIn); 
-    console.log("ЗАЙДИ И ПОСМОТРИ")
+    console.log(Value)
   
     return(
         <>
-       <WrapperRightSide/>
+       <WrapperRightSide />
         
         </> 
     )

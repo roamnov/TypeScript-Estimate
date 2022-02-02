@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import useLocalStorage from "../Hooks/useLocalStorage";
 import {
   Paper,
@@ -16,7 +16,7 @@ import {
 } from "@material-ui/core";
 //стили и интерфейсы пропсов
 import { useStyles } from "../Styles";
-import { componentProps } from "../ComponentInterface";
+import { componentProps, ProjectEnterInfo } from "../ComponentInterface";
 import money from "../../static/images/money.png"
 //копмпоненты
 import SelectDrx from "./SelectDrx";
@@ -24,37 +24,44 @@ import SelectUser from "./SelectUser";
 import SelectWorkPlace from "./SelectWorkPlace";
 import PasswordInput from "./PasswordInput";
 import axios from "axios";
-import URL, { AxiosRequest, XMLrequest } from "../Url";
+import URL, { AxiosRequest, CreateCokies, XMLrequest } from "../Url";
 import { purple, red } from "@material-ui/core/colors";
 import { Link,  useNavigate } from "react-router-dom";
-import { LoginIn } from "../Wrapper";
+import { DrxContext, LoginIn } from "../Wrapper";
 
 
 
 
 
-const SignIn = (props: componentProps) => {
+const SignIn = (props: ProjectEnterInfo) => {
   const styles = useStyles();
 
   
   let navigate = useNavigate();
-  const [authtoken, setAutnToken] = useLocalStorage(false, "auth")
+  //const {drxLog , setDrxLog} = useContext(DrxContext);
   const [error, setError] = useState<string | null>("");
-  const [loginAnswer, setLoginAnswer] = useState("");
   const [drx, setDrx] = useState("");
   const [user, setUser] = useState("");
   const [workplace, setWorkPlace] = useState("");
   const [password, setPassword] = useState();
-  const [open, setOpen] = React.useState(true);
+
  
   
 
-  const ThemeContext = React.createContext('light');
+  //const ThemeContext = React.createContext('light');
 
-  const GoToMain =()=>{
+  const GoToMain =(jsonEnter: any)=>{
     //useLocalStorage(drx, "drx")
     //setAutnToken(true, "auth")
+    
+    //setDrxLog(drx)
+    console.log(jsonEnter["AppName"])
+    const AppName = jsonEnter["AppName"];
+    CreateCokies("drx",AppName === undefined? drx:AppName )
+    props.setData(drx)
     navigate("main");
+    
+    
   }
 
   function CheckAnswerFromServer(answer?: Object) {
@@ -87,8 +94,7 @@ const SignIn = (props: componentProps) => {
     let params = new Map();
     params.set('comand','enter');
     let rest = XMLrequest(params,  LoginData);
-    
-    rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain()
+    rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain(rest)
     //let res = AxiosRequest(params, "post",LoginData)
     //res.then((responce)=>{console.log(responce)})
     /*

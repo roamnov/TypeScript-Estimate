@@ -112,3 +112,9 @@ export interface ModalProgressProps{
     children?: React.ReactNode[] | React.ReactNode;
     open:Boolean;
 }
+
+export interface ProjectEnterInfo extends componentProps{
+    Json?: object;
+    setData: (value:any) => void | any;
+    open?:Boolean;
+}
