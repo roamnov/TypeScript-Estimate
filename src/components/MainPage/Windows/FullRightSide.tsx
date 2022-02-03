@@ -11,6 +11,7 @@ import NestedMenu from '../Tools/NestedMenu';
 import SectionsDBview from '../Sections/dbview';
 import { WorkPlaceTools } from '../Tools/WorkPlaceTools';
 import StickyFooter from '../NotWorkArea(Side&Head)/Footer';
+import StillDevelopmentPage from './StillDevelopmentPage';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
@@ -32,7 +33,7 @@ export default function FullRightSide(props: InfoAboutClick) {
       return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <SectionsDBview CLSID = {props.clsic}/>) 
     }
     if(props.id !== undefined){
-      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <DocsReportsMainWindow id={props.id}/>) 
+      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <StillDevelopmentPage/>) 
     }
   }
 
