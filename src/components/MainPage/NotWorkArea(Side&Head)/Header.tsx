@@ -30,9 +30,7 @@ const DashboardNavbar = ({  ...rest }) => {
   const HandleSingOut = (event: any) => {
     let params = new Map();
     params.set('comand','leave');
-    //useLocalStorage("","drx")
     XMLrequest(params)
-    setAutnToken(false, "auth")
     CreateCokies("drx","");
   };
 

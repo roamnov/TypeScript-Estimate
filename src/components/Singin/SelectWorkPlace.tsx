@@ -1,31 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  Paper,
   Grid,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Autocomplete,
   TextField,
+  CircularProgress,
 } from "@mui/material";
 import { useStyles } from "../Styles";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { menuSelect } from "../ComponentInterface";
 import axios from "axios";
-import URL, { XMLrequest } from "../Url";
+import URL, { get_cookie, XMLrequest } from "../Url";
 
 const SelectWorkPlace = (props: menuSelect) => {
-  const styles = useStyles();
-
+  
+  let LastWorkPlace = get_cookie("LastLogin").split(",");
   const [workplaces, setWorkPlaces] = useState([]);
-  const [value, setValue] = React.useState<string | null>();
+  const [value, setValue] = React.useState<string | null>(LastWorkPlace === undefined? "": LastWorkPlace[2]);
   const [inputValue, setInputValue] = React.useState("");
+  const [loading, setLoad] = useState(true);
 
   const getWorkPlaces = (event:any) => {
+      setLoad(true);
       let params = new Map();
       params.set('comand','getworkplacelist');
       params.set('ConfigName',props.drxInfo);
       params.set('UserName',props.userInfo);
+      setLoad(false)
       setWorkPlaces(XMLrequest(params));
         
   };
@@ -42,7 +41,8 @@ const SelectWorkPlace = (props: menuSelect) => {
   return (
     <Grid item xs>
       <Autocomplete
-        id="workplaces"
+        loading={loading}
+        loadingText={props.userInfo=== "" ?"Необходимо выбрать пользователя":<CircularProgress/>}
         freeSolo
         fullWidth
         value={value}

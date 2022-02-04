@@ -150,7 +150,7 @@ const SectionTools = (props:SectionToolsToFooter) =>{
                                 
                             </Grid>
                             <Grid item>
-                                <Button value={1} onClick={(e)=>InputTextChange(e,RequestID)} > Ок</Button>
+                                <Button value={1} onClick={(e)=>InputTextChange(e,RequestID)} >Ок</Button>
                                 <Button value={2} onClick={(e)=>InputTextChange(e,RequestID)}> Отмена</Button>
                             </Grid>
                         </Grid>

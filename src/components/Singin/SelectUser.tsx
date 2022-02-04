@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import {
-  Paper,
   Grid,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Autocomplete,
   TextField,
+  CircularProgress,
 } from "@mui/material";
 import { useStyles } from "../Styles";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { componentProps, menuSelect } from "../ComponentInterface";
+import { menuSelect } from "../ComponentInterface";
 import axios from "axios";
-import URL, { XMLrequest } from "../Url";
+import URL, { get_cookie, XMLrequest } from "../Url";
 
 const SelectUser = (props: menuSelect) => {
-  const styles = useStyles();
-  const [value, setValue] = React.useState<string | null>();
+
+  let LastUser = get_cookie("LastLogin").split(",");
+  const [value, setValue] = React.useState<string | null>(LastUser === undefined? "": LastUser[1]);
   const [inputValue, setInputValue] = React.useState("");
   const [users, setUserList] = useState([]);
+  const [loading, setLoad] = useState(true);
 
 
   const getUser = () => {
+      setLoad(true);
       let params = new Map();
       params.set('comand','getuserlist');
       params.set('ConfigName',props.drxInfo);
+      setLoad(false)
       setUserList(XMLrequest(params));
       
   };
@@ -37,12 +37,14 @@ const SelectUser = (props: menuSelect) => {
     }
     return array;
   }
-
+ 
   return (
     <Grid item xs>
       <Autocomplete
         freeSolo
         fullWidth
+        loading={loading}
+        loadingText={props.drxInfo === "" ?"Необходимо выбрать конифгурацию":<CircularProgress/>}
         value={value}
         onChange={(event: any, newValue: string | null) => {
           setValue(newValue);
@@ -55,7 +57,7 @@ const SelectUser = (props: menuSelect) => {
         
         options={MenuItems(users)}
         renderInput={(params) => (
-          <TextField {...params} onClick={getUser} label="Имя пользователя" />
+          <TextField {...params}  onClick={getUser} label="Имя пользователя" />
         )}
       />
     </Grid>

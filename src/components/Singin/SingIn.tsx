@@ -58,6 +58,7 @@ const SignIn = (props: ProjectEnterInfo) => {
     console.log(jsonEnter["AppName"])
     const AppName = jsonEnter["AppName"];
     CreateCokies("drx",AppName === undefined? drx:AppName )
+    CreateCokies("LastLogin", jsonEnter);
     props.setData(drx)
     navigate("main");
     
@@ -90,11 +91,12 @@ const SignIn = (props: ProjectEnterInfo) => {
       WorkPlace: workplace,
       //Comp: "NPO5898",
     };
+    const LoginLast= drx + ","+user+ ","+ workplace; 
     //console.log(typeof(LoginData))
     let params = new Map();
     params.set('comand','enter');
     let rest = XMLrequest(params,  LoginData);
-    rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain(rest)
+    rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain(LoginLast)
     //let res = AxiosRequest(params, "post",LoginData)
     //res.then((responce)=>{console.log(responce)})
     /*

@@ -157,7 +157,7 @@ export default function SideBar(props: MainBoxBackClick) {
             mainCollapse = data2.get(ID);
             openSet = data2.get(ID);
             assemblyLists.push(
-              <ListItemButton className={classes.colorList} key={ID} component="li" id={ID} >
+              <ListItemButton className={classes.colorList} key={ID} component="li" id={ID} onClick={updateSelected} >
                 <ListItemIcon>{Img}</ListItemIcon>
                 <ListItemText primary={Name} />
                 {SectionList[keyS] !== undefined  && SectionList[keyS]["Deep"] >= 1? (openSet ? (<ExpandLess id={ID} onClick={handleClick} />) : ( <ExpandMore id={ID} onClick={handleClick} /> )): (<></>)}
