@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 
 import SendIcon from '@mui/icons-material/Send';
-import Select from 'react-select';
+
 import Editor from "../../../../Editor/Editor"
 import CheckBox from "../../../../CheckBox/CheckBox"
 

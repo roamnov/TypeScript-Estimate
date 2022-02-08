@@ -33,7 +33,7 @@ import { DrxContext, LoginIn } from "../Wrapper";
 
 
 
-const SignIn = (props: ProjectEnterInfo) => {
+const SignIn = () => {
   const styles = useStyles();
 
   
@@ -59,7 +59,7 @@ const SignIn = (props: ProjectEnterInfo) => {
     const AppName = jsonEnter["AppName"];
     CreateCokies("drx",AppName === undefined? drx:AppName )
     CreateCokies("LastLogin", jsonEnter);
-    props.setData(drx)
+    // props.setData(drx)
     navigate("main");
     
     

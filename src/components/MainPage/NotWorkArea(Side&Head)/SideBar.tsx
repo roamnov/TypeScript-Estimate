@@ -14,6 +14,7 @@ import { MainBoxBackClick,InfoAboutClick } from "../../ComponentInterface";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { styled } from '@mui/material/styles';
+import { IconButton, ListItem } from "@mui/material";
 
 const defaultDrawerWidth = window.innerWidth/100 * 16.791045;
 const minDrawerWidth = 1;
@@ -157,11 +158,15 @@ export default function SideBar(props: MainBoxBackClick) {
             mainCollapse = data2.get(ID);
             openSet = data2.get(ID);
             assemblyLists.push(
-              <ListItemButton className={classes.colorList} key={ID} component="li" id={ID} onClick={updateSelected} >
-                <ListItemIcon>{Img}</ListItemIcon>
-                <ListItemText primary={Name} />
-                {SectionList[keyS] !== undefined  && SectionList[keyS]["Deep"] >= 1? (openSet ? (<ExpandLess id={ID} onClick={handleClick} />) : ( <ExpandMore id={ID} onClick={handleClick} /> )): (<></>)}
-              </ListItemButton>
+              <ListItem style={{paddingTop: 0, paddingBottom: 0, paddingLeft: 0}}>
+                <ListItemButton className={classes.colorList} key={ID} component="li" id={ID} onClick={updateSelected} >
+                  <ListItemIcon>{Img}</ListItemIcon>
+                  <ListItemText primary={Name} />
+                </ListItemButton>
+                  <IconButton>
+                    {SectionList[keyS] !== undefined  && SectionList[keyS]["Deep"] >= 1? (openSet ? (<ExpandLess id={ID} onClick={handleClick} />) : ( <ExpandMore id={ID} onClick={handleClick} /> )): (<></>)}
+                  </IconButton>
+              </ListItem>
             );
           } else if (currentDeep !== null) {
             //если есть DEEP
@@ -188,11 +193,15 @@ export default function SideBar(props: MainBoxBackClick) {
               assemblyLists.push(
                 <Collapse  key={ID}  in={openSet && mainCollapse}    timeout="auto" unmountOnExit > 
                   {(openSet = data2.get(ID))}
-                  <ListItemButton className={classes.colorList} key={ID} sx={{ pl: howDeep , "& .Mui-selected":{backgroundColor:"rgb(35, 114, 191)"} }} id={ID} selected={selected === ID} >
-                    <ListItemIcon>{Img}</ListItemIcon>
-                    <ListItemText primary={Name} />
-                    {openSet ? ( <ExpandLess id={ID} onClick={handleClick} /> ) : (<ExpandMore id={ID} onClick={handleClick} />)}
-                  </ListItemButton>
+                  <ListItem style={{paddingTop: 0, paddingBottom: 0, paddingLeft: 0}}>
+                    <ListItemButton className={classes.colorList} key={ID} sx={{ pl: howDeep , "& .Mui-selected":{backgroundColor:"rgb(35, 114, 191)"} }} id={ID} selected={selected === ID} >
+                      <ListItemIcon>{Img}</ListItemIcon>
+                      <ListItemText primary={Name} />
+                    </ListItemButton>
+                    <IconButton>
+                      {openSet ? ( <ExpandLess id={ID} onClick={handleClick} /> ) : (<ExpandMore id={ID} onClick={handleClick} />)}
+                  </IconButton>
+                  </ListItem>
                 </Collapse>
               );
             } else {
@@ -228,7 +237,7 @@ export default function SideBar(props: MainBoxBackClick) {
       sx={{ml: drawerWidth/100*11.9444444444444444}}
       style={{ overflowX: "hidden", }}
       >
-       
+       <Toolbar/>
       <div onMouseDown={e => handleMouseDown()} className={classes.dragger} >
             {buttonDragger}
       </div>

@@ -41,6 +41,7 @@ const SelectWorkPlace = (props: menuSelect) => {
   return (
     <Grid item xs>
       <Autocomplete
+        id="field1234"
         loading={loading}
         loadingText={props.userInfo=== "" ?"Необходимо выбрать пользователя":<CircularProgress/>}
         freeSolo
@@ -56,7 +57,7 @@ const SelectWorkPlace = (props: menuSelect) => {
         }}
         
         options={MenuItems(workplaces)}
-        renderInput={(params) => <TextField onClick={getWorkPlaces} {...params} label="Рабочее место" />}
+        renderInput={(params) => <TextField onClick={getWorkPlaces}  autoComplete="off" {...params}  inputProps={{ ...params.inputProps, autoComplete: 'ndsaadssa', }}label="Рабочее место" />}
       />
       
     </Grid>

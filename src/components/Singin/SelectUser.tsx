@@ -41,6 +41,7 @@ const SelectUser = (props: menuSelect) => {
   return (
     <Grid item xs>
       <Autocomplete
+        
         freeSolo
         fullWidth
         loading={loading}
@@ -57,7 +58,7 @@ const SelectUser = (props: menuSelect) => {
         
         options={MenuItems(users)}
         renderInput={(params) => (
-          <TextField {...params}  onClick={getUser} label="Имя пользователя" />
+          <TextField {...params} autoComplete="username" id="username" name="username" inputProps={{  ...params.inputProps, autoComplete: 'username', }} onClick={getUser}  label="Имя пользователя" />
         )}
       />
     </Grid>

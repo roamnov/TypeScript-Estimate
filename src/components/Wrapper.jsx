@@ -35,7 +35,7 @@ const Wrapper = () =>{
             <DrxContext.Provider value={drx}>
                 <HashRouter>
                     <Routes>
-                        <Route  path='/' element={<SignIn setData={setDrx}/>}/>
+                        <Route  path='/' element={<SignIn  />}/>
                         <Route  path='/main' element={<MainPage/>}/>
                     </Routes>
                 </HashRouter>
