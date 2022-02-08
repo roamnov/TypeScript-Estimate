@@ -2076,8 +2076,10 @@ let json = Stimate.SynchRequest('dbview/handleTable', request, 'id=' + testBD);
     //if (json) dataId = json.ID;
     var grP = document.getElementById("gridpanel"+IDbd)
     if(grP)
+    {
+        grP.innerHTML = ""
       initGrid(grP, testID);
-   
+    }
     
 }
 return(

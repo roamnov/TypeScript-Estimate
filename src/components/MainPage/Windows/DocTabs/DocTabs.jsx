@@ -62,14 +62,17 @@ export default function DocTabs(name, doccfgid, parent, cont) {
         let divBtn = document.getElementById("DocTabsBtn");
         let btnScrollLeft = document.getElementById("btnScrollTabDocLeft");
         let btnScrollRight = document.getElementById("btnScrollTabDocRight");
-        if (SummWidth(divBtn) < divBtn.clientWidth) {
+        console.log("__________________________________________")
+        console.log(divBtn.getBoundingClientRect().width)
+        console.log("__________________________________________")
+        /*if (SummWidth(divBtn) < divBtn.clientWidth) {
             btnScrollLeft.classList.remove("hidden")
             btnScrollRight.classList.remove("hidden")
         }
         else {
             btnScrollLeft.classList.add("hidden")
             btnScrollRight.classList.add("hidden")
-        }
+        }*/
     }
     function AddTab() {
         let divBtn = document.getElementById("DocTabsBtn")
