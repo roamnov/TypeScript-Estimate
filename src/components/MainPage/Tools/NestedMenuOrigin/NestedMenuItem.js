@@ -135,6 +135,9 @@ export const NestedMenuItem = React.forwardRef(function NestedMenuItem(props, re
 					vertical: 'top',
 					horizontal: 'left',
 				}}
+				PaperProps={{
+					style: { pointerEvents: "auto" }
+				}}
 				open={open}
 				autoFocus={false}
 				disableAutoFocus

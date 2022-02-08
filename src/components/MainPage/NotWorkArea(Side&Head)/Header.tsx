@@ -14,7 +14,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import URL, { CreateCokies, get_cookie, XMLrequest } from "../../Url";
-import imageHeader from '../../../static/images/header.jpg';
 import useLocalStorage from '../../Hooks/useLocalStorage';
 import {useStyles} from "../../Styles"
 import { Typography } from '@mui/material';

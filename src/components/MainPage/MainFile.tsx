@@ -13,7 +13,7 @@ const MainPage = () => {
     function ClickDocument(ev: any) {
         let AllList, list, itemList
         AllList = document.querySelectorAll("div.css-b62m3t-container")
-        // console.log(AllList)
+        console.log(AllList)
         for (let i = 0; i<=AllList.length - 1; i = i+1)
         {
             list = AllList[i];
