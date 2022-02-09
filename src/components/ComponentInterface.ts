@@ -103,8 +103,8 @@ export interface FooterProps{
     ID?:string;
 }
 
-export interface SectionToolsToFooter{
-    setChildren: (value:any) => void | any;
+export interface SectionToolsProps{
+    SectionID?: string;
 }
 
 export interface ModalProgressProps{

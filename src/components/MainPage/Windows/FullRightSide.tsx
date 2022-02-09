@@ -37,28 +37,20 @@ export default function FullRightSide(props: InfoAboutClick) {
     }
   }
 
+  
 
   return (
     
-    <Grid container 
-          direction="column" 
-          justifyContent="center" 
-          sx={{ flexGrow: 1, pt: 8, pl:2 }}  
-          alignItems="stretch" 
-          >
-    <div id ="WorkPlace">
-      {getTabs()}
-    <Grid item  >
-    
-      {props.isLoading?<div></div>:<Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" > <SectionTools setChildren={setSectionToolsData}/> <WorkPlaceTools/> </Grid>}
-      <StickyFooter />
-    </Grid>
-    
-    <Grid item xs   >
+    <Grid container   direction="column"     justifyContent="center"   sx={{ flexGrow: 1, pt: 8, pl:2 }}    alignItems="stretch"    >
+      <div id ="WorkPlace">
+      <Grid item  >
+        {props.isLoading?<div></div>:<Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" > <SectionTools /> <WorkPlaceTools/> </Grid>}
+        <StickyFooter />
+      </Grid>{getTabs()}
       
-    </Grid>  
-   </div>
-  </Grid>
+        
+       </div>
+    </Grid>
   );
 }
 

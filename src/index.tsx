@@ -9,7 +9,6 @@ import { GlobalStyleDocTabs, GlobalStyleTree, GlobalStyleDBview, GlobalStyleGrid
 //let pref = require('./components/stimweb/tools/trsview.html')
 
 ReactDOM.render(
-  <HashRouter>
     <React.StrictMode>
       <GlobalStyleDocTabs />
       <GlobalStyleTree />
@@ -17,12 +16,8 @@ ReactDOM.render(
       <GlobalStyleGrid />
       <GlobalStyleDropList />
       <GlobalStyleCheckBox />
-      <Routes>
-        <Route path='/' element={<SignIn />} />
-        <Route path='/main' element={<MainPage />} />
-      </Routes>
-    </React.StrictMode>
-  </HashRouter>,
+      <Wrapper/>
+    </React.StrictMode>,
   document.getElementById('root')
 );
 

@@ -7,6 +7,7 @@ import MainPage from "./MainPage/MainFile";
 //Стили и пропсы
 import {useStyles} from "./Styles";
 import {componentProps} from "./ComponentInterface";
+import WrapperRightSide from "./MainPage/WrapperMainFile";
 
 import { BrowserRouter, HashRouter, Route, Router, Routes } from "react-router-dom"
 import { Container } from "@material-ui/core";
@@ -36,7 +37,9 @@ const Wrapper = () =>{
                 <HashRouter>
                     <Routes>
                         <Route  path='/' element={<SignIn  />}/>
-                        <Route  path='/main' element={<MainPage/>}/>
+                        <Route path='/main' element={<WrapperRightSide/>}>
+                          
+                        </Route>                    
                     </Routes>
                 </HashRouter>
             </DrxContext.Provider>

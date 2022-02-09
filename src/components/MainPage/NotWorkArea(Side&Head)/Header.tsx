@@ -34,7 +34,7 @@ const DashboardNavbar = ({  ...rest }) => {
   };
 
   return (
-    
+    <AppBar  position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} style={{backgroundColor:"#628eb8"}}>
       <Toolbar className={classes.customizeToolbar}>
         <Typography
             variant="h5"
@@ -63,6 +63,7 @@ const DashboardNavbar = ({  ...rest }) => {
        </Link>
         
       </Toolbar>
+      </AppBar>
     
   );
 };

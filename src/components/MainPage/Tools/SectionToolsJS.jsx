@@ -16,7 +16,7 @@ import ChangeStatusProgressFooter from '../NotWorkArea(Side&Head)/ChangeStatusPr
 //
 //https://mui.com/components/toggle-button/
 //
-const SectionTools = (props:SectionToolsProps) =>{
+const SectionToolsJS = (props) =>{
     const [Program, setProgram] = React.useState([<></>]);
     const [data, setData] = React.useState({});
 
@@ -48,12 +48,12 @@ const SectionTools = (props:SectionToolsProps) =>{
         setMenuBarSection(json["MenuBar"])
     }
 
-    const InputChange = (event:any)=>{
+    const InputChange = (event)=>{
         console.log(inputText)
         setInputText(event.target.value)
     }
 
-    function InputTextChange(event: any, RequestID:any){
+    function InputTextChange(event, RequestID){
         let params = new Map, data, json, ClickedButton= event.target.value ,inputResult = event.target.form[0]["value"];
         //const data1 = new FormData(event.currentTarget);
 
@@ -71,7 +71,7 @@ const SectionTools = (props:SectionToolsProps) =>{
         tokenProcessing(json);
     }
 
-    function handleClickMessageBox (event: any, RequestID:any, emptyReq?: boolean, requestData?:any){//MessageBox
+    function handleClickMessageBox (event, RequestID, emptyReq, requestData){//MessageBox
         let params = new Map, data, json, DlgResValue,  clickValue = event.target.value;
         setValue(clickValue);
         
@@ -90,8 +90,8 @@ const SectionTools = (props:SectionToolsProps) =>{
     }
     
 
-    function EmptyRequest(RequestID:string){
-        let params = new Map, data, json:object;
+    function EmptyRequest(RequestID){
+        let params = new Map, data, json;
         data = { "Result":"" }
         params.set('prefix', 'project');
         params.set("comand", "ResumeRequest");
@@ -103,10 +103,10 @@ const SectionTools = (props:SectionToolsProps) =>{
     }
 
 
-    function  tokenProcessing (json: any){///project~ResumeRequest?LicGUID=D100CAB54337ED32E087B59F6CE41511&RequestID=18892&WSM=1 HTTP/1.1
+    function  tokenProcessing (json){///project~ResumeRequest?LicGUID=D100CAB54337ED32E087B59F6CE41511&RequestID=18892&WSM=1 HTTP/1.1
         if(json.Break !== undefined){
             
-            let returnJSX= [], returnSmth = [], Token,Module, RequestID:any,andResult,jsonResponse;
+            let returnJSX= [], returnSmth = [], Token,Module, RequestID,andResult,jsonResponse;
         
             Module = json.Module;
             Token = json.Token;
@@ -184,7 +184,7 @@ const SectionTools = (props:SectionToolsProps) =>{
     }
 
 
-    async function handeleExecToolprogram (event:any , type?:string){///tools~ExecToolProgram
+    async function handeleExecToolprogram (event , type){///tools~ExecToolProgram
         let Path = event.currentTarget.getAttribute("id"),  params = new Map(), json, Type, Module, Token, Break;
         Path = event.currentTarget.getAttribute("id");
         params.set('prefix', 'tools');
@@ -198,17 +198,17 @@ const SectionTools = (props:SectionToolsProps) =>{
         //setData(json);
     }
     
-    const RenderButtons=(ButtonsLocal: any)=>{
+    const RenderButtons=(ButtonsLocal)=>{
         //console.log(ButtonsLocal)
         if(ButtonsLocal !== undefined){
-            let items = [], Path, Type:string;
+            let items = [], Path, Type;
             for (const [key, value] of Object.entries(ButtonsLocal)) {
                 //console.log(value)
                 Path = backValue(value, 'Path');
                 Type = backValue(value, 'Type');
                 items.push(
                     <Tooltip  title={key} arrow>
-                            <IconButton id={Path}  color='primary'  component="span" onClick={(e: any) => handeleExecToolprogram(e,Type)} >
+                            <IconButton id={Path}  color='primary'  component="span" onClick={(e) => handeleExecToolprogram(e,Type)} >
                      
                                 {ImgURL(backValue(value, 'Image'))}
                              
@@ -220,7 +220,7 @@ const SectionTools = (props:SectionToolsProps) =>{
             }
         }
 
-    const backValue = (value:any, param:string)=>{
+    const backValue = (value, param)=>{
         return value[param]
     }
     
@@ -246,9 +246,6 @@ export default SectionTools;
 
 
 
-function getAttribute(arg0: string): any {
-    throw new Error('Function not implemented.');
-}
 /* <button onClick={GetSectionTools}> НАЖМИ ДЛЯ ЗАПРОСА</button>
 React.useEffect(() => {
         console.log(buttons)
