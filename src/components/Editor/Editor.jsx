@@ -1,3 +1,4 @@
+@@ -1,137 +1,138 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 export default function Editor(props) {
@@ -38,8 +39,9 @@ export default function Editor(props) {
     let lbl = parent.querySelector("#react-select-3-placeholder")
     if (lbl) {
       lbl.innerText = div.innerText;
+      let indexVal =div.getAttribute("indexval")
       if (props.onCloseUpList)
-        props.onCloseUpList(lbl.getAttribute("indexVal"), lbl.innerText)
+        props.onCloseUpList(indexVal)
     }
     let list = parent.querySelector("div.select__menu")
     if (list) {
@@ -53,7 +55,7 @@ export default function Editor(props) {
       let it = [];
       for (let pair of items) {
         it.push(<div className="select__option css-yt9ioa-option" aria-disabled="false" id={"react-select-53-option-" + pair[0]} tabindex="-1" onMouseOver={(ev) => { HoverItem(ev) }}
-          onMouseOut={(ev) => { NoHoverItem(ev) }} onClick={(e) => ClickListMenu(e)} indexVal={pair[0]}>
+          onMouseOut={(ev) => { NoHoverItem(ev) }} onClick={(e) => ClickListMenu(e)} indexval={pair[0]}>
           {pair[1]}
         </div>)
       }
@@ -89,7 +91,7 @@ export default function Editor(props) {
   if (props.list) {
     list = props.list.split(',')
   }
-  DropList = <div className="basic-single css-b62m3t-container" style={props.width ? { width: props.width + "px" } : { width: "100%" }}>
+  DropList = <div className="basic-single css-b62m3t-container" style={props.style}>
     <span id="react-select-3-live-region" className="css-7pg0cj-a11yText">
     </span>
     <span aria-live="polite" aria-atomic="false" aria-relevant="additions text" className="css-7pg0cj-a11yText">
