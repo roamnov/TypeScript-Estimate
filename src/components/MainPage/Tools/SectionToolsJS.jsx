@@ -25,7 +25,7 @@ const SectionToolsJS = (props) =>{
     const [value, setValue] = React.useState();
     
 
-    const [dataButtonsDefault, setDataButtonsDefault] = React.useState();
+    const [dataButtonsDefault, setDataButtonsDefault] = React.useState([]);
     const [open1, setOpen1] = React.useState(false);
     const [menuBarDefault, setMenuBarDefault] = React.useState();
     const [ID, setID] = React.useState();
@@ -34,7 +34,6 @@ const SectionToolsJS = (props) =>{
 
     React.useEffect(() => {
        GetWorkPlaceTools();
-       console.log(props.ID)
     }, []);
 
 
@@ -63,14 +62,22 @@ const SectionToolsJS = (props) =>{
         setAnchorElAss(anchorElAss.set(ID,null));
     };
 
+    const GetSectionTools =  () =>{
+        let params = new Map(), json;
+        params.set('prefix','tools');
+        params.set('comand','GetSectionTools');
+        params.set('SectionID', props.ID);
+        json = XMLrequest(params)
+        setButtonsSection(json["Buttons"]);
+        setMenuBarSection(json["MenuBar"])
+    }
 
     const GetWorkPlaceTools = ( ) =>{
         let params = new Map, json;
         params.set('prefix','config'); 
         params.set('comand','GetWorkPlaceTools');
         json = XMLrequest(params)
-        console.log(json["Buttons"]);
-        setDataButtonsDefault(json["Buttons"]);
+        setDataButtonsDefault(json["Buttons"]["Button"]);
         setMenuBarDefault(json["MenuBar"]);
         CreateMap(json["MenuBar"]);
         //Rec(json["MenuBar"]);
@@ -167,18 +174,9 @@ const SectionToolsJS = (props) =>{
 
     
 
-    const GetSectionTools =  () =>{
-        let params = new Map(), json;
-        params.set('prefix','tools');
-        params.set('comand','GetSectionTools');
-        params.set('SectionID', props.ID);
-        json = XMLrequest(params)
-        setButtonsSection(json["Buttons"]);
-        setMenuBarSection(json["MenuBar"])
-    }
+    
 
     const InputChange = (event)=>{
-        console.log(inputText)
         setInputText(event.target.value)
     }
 
@@ -327,9 +325,9 @@ const SectionToolsJS = (props) =>{
         //setData(json);
     }
     
-    const RenderButtons=(ButtonsLocal)=>{
-        //console.log(ButtonsLocal)
-        if(ButtonsLocal !== undefined){
+    const RenderButtons=(ButtonsLocal, WichButton)=>{
+        console.log(ButtonsLocal)
+        if(ButtonsLocal !== undefined && WichButton === "SectionTools"){
             let items = [], Path, Type;
             for (const [key, value] of Object.entries(ButtonsLocal)) {
                 //console.log(value)
@@ -348,6 +346,23 @@ const SectionToolsJS = (props) =>{
                     )
                 }
               return items
+            }else if( ButtonsLocal !== undefined && WichButton === "WorkPlace"){
+
+                let items = [], Token,  Hint;
+                Hint = ButtonsLocal.Hint;
+                Token = ButtonsLocal.Token;
+                items.push(
+                    <Grid item>    
+                        <Tooltip  title={Hint} arrow>
+                                <IconButton id={Token}  color='primary'  component="span" onClick={(e) => handeleExecToolprogram(e)} >
+                        
+                                    {ImgURL(ButtonsLocal.Image)}
+                                
+                                </IconButton>
+                        </Tooltip>
+                    </Grid>
+                    )
+                return items    
             }
         }
 
@@ -363,8 +378,9 @@ const SectionToolsJS = (props) =>{
            <Grid id="RenderDefault"> </Grid>
 
            <Grid item> 
-                <Grid container  direction="row"  justifyContent="flex-start" alignItems="center" sx={{pl:2}}>
-                    {RenderButtons(buttonsSection)}
+                <Grid container  direction="row"  justifyContent="flex-start" alignItems="center" >
+                    {RenderButtons(dataButtonsDefault, "WorkPlace")}
+                    {RenderButtons(buttonsSection, "SectionTools")}
                     {Program}
                 </Grid>
             </Grid>
