@@ -1,12 +1,10 @@
 import  React from 'react';
-import {  Backdrop,  Box,  Button, Grid, IconButton, LinearProgress, Modal, Step, StepLabel, Stepper, TextField, Tooltip } from "@mui/material"
+import {  Backdrop,  Box,  Button, Grid, IconButton, TextField, Menu, MenuItem, Tooltip } from "@mui/material"
 import URL, { XMLrequest } from '../../Url';
-
+import { NestedMenuItem } from "./NestedMenuOrigin/NestedMenuItem";
 import { ImgURL } from "../../Url";
 import ModalContainer from '../../Containers/ModalContainer';
 import items from "./Items.json"
-import AlertMini from '../../AlertMini';
-import { SectionToolsProps} from '../../ComponentInterface';
 import ReactDOM from 'react-dom';
 import ModalProgress from '../../Containers/ModalProgress';
 import axios from 'axios';
@@ -27,22 +25,153 @@ const SectionToolsJS = (props) =>{
     const [value, setValue] = React.useState();
     
 
-
-    
+    const [dataButtonsDefault, setDataButtonsDefault] = React.useState();
+    const [open1, setOpen1] = React.useState(false);
+    const [menuBarDefault, setMenuBarDefault] = React.useState();
+    const [ID, setID] = React.useState();
+    const [AssMass, setAssMass] = React.useState(new Map());
+    const [anchorElAss, setAnchorElAss] = React.useState(new Map());
 
     React.useEffect(() => {
-       GetSectionTools();
-    }, [])
+       GetWorkPlaceTools();
+       console.log(props.ID)
+    }, []);
 
-    React.useEffect(()=>{
+
+    React.useEffect(() => {
+        if(props.ID !== undefined){
+            GetSectionTools();
+        }
+     }, [props.ID])
+ 
+     React.useEffect(()=>{
         tokenProcessing(data)
-    }, [data])
+     }, [data])
+    
+    const handleClick = (event) =>{
+        setOpen1(!open1)
+        const id =event.currentTarget.getAttribute("id");
+        setAssMass(AssMass.set(id,true));
+        setAnchorElAss(anchorElAss.set(id,event.currentTarget));
+        setID(id);        
+    }
+
+    const handleClose = (event) => {
+        setOpen1(!open1)
+        const id = event.currentTarget.getAttribute("id")
+        setAssMass(AssMass.set(ID,false))
+        setAnchorElAss(anchorElAss.set(ID,null));
+    };
+
+
+    const GetWorkPlaceTools = ( ) =>{
+        let params = new Map, json;
+        params.set('prefix','config'); 
+        params.set('comand','GetWorkPlaceTools');
+        json = XMLrequest(params)
+        console.log(json["Buttons"]);
+        setDataButtonsDefault(json["Buttons"]);
+        setMenuBarDefault(json["MenuBar"]);
+        CreateMap(json["MenuBar"]);
+        //Rec(json["MenuBar"]);
+    } 
+    
+    function CreateMap(List){
+        for (const [key, value] of Object.entries(List)) {
+            setAnchorElAss(anchorElAss.set(key,null));
+            setAssMass(AssMass.set(key,false));
+            
+        }
+    }
+
+    
+    function RecItems(jsonItems, CurrentID ){
+        
+        if ( jsonItems !== undefined){
+            let DeepFirst, Token, keyS= 0, ArrItems, openSet;
+            let assemblyLists = [];
+
+            for (const [key, value] of Object.entries(jsonItems)) {
+                //console.log(value)
+                keyS = Number(key)+ 1;
+                Token = jsonItems[key]["Token"];
+                DeepFirst = value;
+                
+                ArrItems = Object.keys(DeepFirst);
+                if (ArrItems[1]=== "Token"){//это то что будет внутри item
+                    assemblyLists.push(
+                        <Grid key={key}>
+                            <MenuItem  onClick={handleClose} >
+                            {key}
+                            </MenuItem>  
+                        </Grid>
+                        
+                    )
+                    
+                }else{// это item который будет распахиваться
+                    openSet = AssMass.get(CurrentID);
+                    assemblyLists.push(
+                        <Grid key={key}>
+                            <NestedMenuItem   onClick={handleClose} label={key}  parentMenuOpen={openSet}  >
+                                {RecItems(DeepFirst, CurrentID)}  
+                            </NestedMenuItem>
+                        </Grid>
+                        
+                    )
+                    
+                }
+            }
+            return assemblyLists 
+        }
+    }
+
+
+    
+    function Rec(jsonItems){
+        //console.log(AssMass)
+        if ( jsonItems !== undefined){
+            let DeepFirst, Token, keyS= 0, ArrItems, openSet, anchorElset;
+            let assemblyLists = [];
+
+            for (const [key, value] of Object.entries(jsonItems)) {
+                //console.log(value)
+                keyS = Number(key)+ 1;
+                Token = jsonItems[key]["Token"];
+                DeepFirst = value;
+               
+                ArrItems = Object.keys(DeepFirst);
+                //console.log(Object.keys(jsonItems))
+                //console.log(value)
+
+                if (ArrItems[1]=== "Token"){//это то что будет внутри item
+                    
+                }else{// это item который будет распахиваться
+                    openSet = AssMass.get(key);
+                    anchorElset = anchorElAss.get(key);
+                    assemblyLists.push(
+                        <Grid item  key={key}>
+                            <Button id={key} onClick={handleClick}>
+                                {key}
+                            </Button>
+                            <Menu id={key} anchorEl={anchorElset} open={openSet} onClose={handleClose} >
+                                    {RecItems(DeepFirst, key)}
+                            </Menu>
+                        </Grid>
+                    )
+                }
+            }
+            return assemblyLists 
+        }
+    }
+
+
+    
 
     const GetSectionTools =  () =>{
         let params = new Map(), json;
         params.set('prefix','tools');
         params.set('comand','GetSectionTools');
-        params.set('SectionID', '143');
+        params.set('SectionID', props.ID);
         json = XMLrequest(params)
         setButtonsSection(json["Buttons"]);
         setMenuBarSection(json["MenuBar"])
@@ -207,13 +336,15 @@ const SectionToolsJS = (props) =>{
                 Path = backValue(value, 'Path');
                 Type = backValue(value, 'Type');
                 items.push(
-                    <Tooltip  title={key} arrow>
-                            <IconButton id={Path}  color='primary'  component="span" onClick={(e) => handeleExecToolprogram(e,Type)} >
-                     
-                                {ImgURL(backValue(value, 'Image'))}
-                             
-                            </IconButton>
-                    </Tooltip>
+                    <Grid item>    
+                        <Tooltip  title={key} arrow>
+                                <IconButton id={Path}  color='primary'  component="span" onClick={(e) => handeleExecToolprogram(e,Type)} >
+                        
+                                    {ImgURL(backValue(value, 'Image'))}
+                                
+                                </IconButton>
+                        </Tooltip>
+                    </Grid>
                     )
                 }
               return items
@@ -226,23 +357,28 @@ const SectionToolsJS = (props) =>{
     
 
     return(
-        <Grid item sx={{pl:2}} justifyContent="center">
-           <div id="RenderModal">
-         
-           </div>
-           <div id="RenderModalSub">
-               
-           </div>
-           <Grid id="RenderDefault">
-                
-           </Grid>
-            {RenderButtons(buttonsSection)}
-            {Program}
+        <Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" sx={{pl:2}} >
+           <div id="RenderModal">  </div>
+           <div id="RenderModalSub"> </div>
+           <Grid id="RenderDefault"> </Grid>
+
+           <Grid item> 
+                <Grid container  direction="row"  justifyContent="flex-start" alignItems="center" sx={{pl:2}}>
+                    {RenderButtons(buttonsSection)}
+                    {Program}
+                </Grid>
+            </Grid>
+
+            <Grid item> 
+                <Grid container direction="row"  justifyContent="flex-start" alignItems="center" >
+                    {Rec(menuBarDefault)}
+                </Grid>
+            </Grid>
         </Grid>
     )
 }
 
-export default SectionTools;
+export default SectionToolsJS;
 
 
 

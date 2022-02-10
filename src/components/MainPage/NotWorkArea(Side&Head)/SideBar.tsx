@@ -235,7 +235,7 @@ export default function SideBar(props: MainBoxBackClick) {
       variant="permanent"
       PaperProps={{ style: { width: drawerWidth,   backgroundColor: '#628cb6' } }}
       sx={{ml: drawerWidth/100*11.9444444444444444}}
-      style={{ overflowX: "hidden", }}
+      style={{ overflowX: "hidden",  scrollbarWidth:"none" }}
       >
        <Toolbar/>
       <div onMouseDown={e => handleMouseDown()} className={classes.dragger} >
@@ -252,7 +252,7 @@ export default function SideBar(props: MainBoxBackClick) {
           bgcolor: '#628cb6',
           marginTop: 1,
         }}
-       
+        style={{ scrollbarWidth:"none"}}
         aria-labelledby="nested-list-subheader"
       >
         {Menu(data)}

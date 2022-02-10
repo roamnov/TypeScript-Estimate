@@ -12,6 +12,7 @@ import SectionsDBview from '../Sections/dbview';
 import { WorkPlaceTools } from '../Tools/WorkPlaceTools';
 import StickyFooter from '../NotWorkArea(Side&Head)/Footer';
 import StillDevelopmentPage from './StillDevelopmentPage';
+import SectionToolsJS from '../Tools/SectionToolsJS';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
@@ -44,7 +45,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     <Grid container   direction="column"     justifyContent="center"   sx={{ flexGrow: 1, pt: 8, pl:2 }}    alignItems="stretch"    >
       <div id ="WorkPlace">
       <Grid item  >
-        {props.isLoading?<div></div>:<Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" > <SectionTools /> <WorkPlaceTools/> </Grid>}
+        {props.isLoading?<div></div>:<Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" > <SectionToolsJS ID={props.id}/> </Grid>}
         <StickyFooter />
       </Grid>{getTabs()}
       
