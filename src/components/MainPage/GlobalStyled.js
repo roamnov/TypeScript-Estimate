@@ -721,7 +721,7 @@ ul.pagination li a:hover:not(.active) {
 `
 const GlobalStyleDocTabs = createGlobalStyle`
 #DocTabsBtn {
-    display: flex;
+    display: none;
     overflow: hidden;
 }
 #DocTabsContent
