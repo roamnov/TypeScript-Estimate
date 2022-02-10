@@ -4,14 +4,9 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import IconButton from '@mui/material/IconButton';
 import { XMLrequest } from '../../../../Url';
 import { useState, useEffect } from 'react';
-
-
 import CodeEditor from '@uiw/react-textarea-code-editor';
-
-import SendIcon from '@mui/icons-material/Send';
-
+import Switch from '../../../../Switch/Switch';
 import Editor from "../../../../Editor/Editor"
-import CheckBox from "../../../../CheckBox/CheckBox"
 
 export function clickTab(event) {
   let lbl = event.currentTarget;
@@ -38,16 +33,13 @@ export function clickTab(event) {
 }
 export default function Tree(props) {
   let data;
+
   const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight - 205);
 
   const handleResize = () => {
     setCurrentHeight(window.innerHeight - 205);
   }
-  const [connect, setConnect] = React.useState('');
 
-  const handleChange = (event) => {
-    setConnect(event.target.value);
-  };
   function fetchData(params) {
     if (!params) {
       params = new Map();
@@ -101,8 +93,7 @@ export default function Tree(props) {
       }
     }
   }
-  function GetObjectValues(id)
-  {
+  function GetObjectValues() {
     let params = new Map();
     let list = new Map();
       params.set('prefix', 'dbview');
@@ -111,17 +102,32 @@ export default function Tree(props) {
       for (var key in otv) {
         if (otv.hasOwnProperty(key)) {
           if (otv[key].id)
-          list.set(otv[key].id, otv[key].text)
+              list.set(otv[key].id, otv[key].text)
           else
           list.set(0, otv[key])
-           
-        }
-     }
-      return list
+      }
+    }
+    return list
   }
-  function ClickCheck()
+  function ClickCheck(id, val) {
+    let params = new Map();
+        params.set('prefix', 'dbview');
+        params.set('comand', 'SetScriptType');
+        params.set('ID', id);
+        params.set('Value', val);
+        fetchData(params)
+  }
+  function SetConnectionNo (index)
   {
+    let params = new Map();
+    let idItem
+    params.set('prefix', 'dbview');
+    params.set('comand', 'SetConnectionNo');
+    idItem = document.querySelector("div.tabs.activetabs").querySelector("label.tablbl.activetab").id.split("_")[1]
+    params.set('ID', idItem);
+    params.set('Value', index);
 
+    fetchData(params)
   }
   function CreateTabsData(idItem, query) {
     let tabs;
@@ -132,15 +138,15 @@ export default function Tree(props) {
         <div id={"gridpanel" + idItem} style={{ position: "absolute", height: "calc(100% - 10px)", width: "calc(100% - 10px)" }} ></div>
       </section>
       <section id={"content_tab2_" + idItem} className='contentactive'>
-        <div style={{ display: "flex", width:"100%" }}>
+        <div style={{ display: "flex", width: "100%" }}>
           <div >
-            <Editor EditStyle = {1} caption="Подключение" width = {250} GetObjectValues = {()=>GetObjectValues(idItem)}/>
+            <Editor idItem = {idItem} EditStyle={1} caption="Подключение" style={{ width: "250px", top: "4px" }} GetObjectValues={GetObjectValues} onCloseUpList = {SetConnectionNo}/>
           </div>
-          <div >
-            <CheckBox label = "Запрос модифицирования" style = {{top: "3px"}} onClick = {()=>ClickCheck()}/>
+          <div style={{ "padding-left": "10px" }}>
+            <Switch idItem = {idItem} label="Запрос модифицирования" onClick={ClickCheck} checked = {query.IsReq ? query.IsReq : 0}/>
           </div>
         </div>
-        <div style={{overflow: "auto"}}>
+        <div style={{ overflow: "auto" }}>
           <CodeEditor
             value={query.content}
             language="sql"
@@ -166,7 +172,7 @@ export default function Tree(props) {
       let params = new Map();
       params.set('prefix', 'dbview');
       params.set('comand', 'HandleSQLScript');
-      params.set('SectionID', id);
+      params.set('SectionID', "143");
       params.set('ID', id);
       let otv = XMLrequest(params);
       tabs = document.createElement("div")
