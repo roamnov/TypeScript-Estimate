@@ -331,6 +331,7 @@ const SectionToolsJS = (props) =>{
         //console.log(ButtonsLocal)
         if(ButtonsLocal !== undefined){
             let items = [], Path, Type;
+            items.push(<Grid item>{props.defaultButton}</Grid> )
             for (const [key, value] of Object.entries(ButtonsLocal)) {
                 //console.log(value)
                 Path = backValue(value, 'Path');

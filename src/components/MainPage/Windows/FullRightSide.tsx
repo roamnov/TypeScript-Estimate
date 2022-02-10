@@ -31,10 +31,10 @@ export default function FullRightSide(props: InfoAboutClick) {
   const getTabs = ()=>{
     if(props.id !== undefined && props.clsic  == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"){
       
-      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <SectionsDBview CLSID = {props.clsic}/>) 
+      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <SectionsDBview CLSID = {props.clsic} id = {props.id}/>) 
     }
     if(props.id !== undefined){
-      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <StillDevelopmentPage/>) 
+      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <StillDevelopmentPage id = {props.id}/>) 
     }
   }
 
@@ -45,12 +45,13 @@ export default function FullRightSide(props: InfoAboutClick) {
     <Grid container   direction="column"     justifyContent="center"   sx={{ flexGrow: 1, pt: 8, pl:2 }}    alignItems="stretch"    >
       <div id ="WorkPlace">
       <Grid item  >
-        {props.isLoading?<div></div>:<Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" > <SectionToolsJS ID={props.id}/> </Grid>}
-        <StickyFooter />
+        {props.isLoading?<div></div>:<Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" >  </Grid>}
+        
       </Grid>{getTabs()}
       
         
        </div>
+       <StickyFooter />
     </Grid>
   );
 }
