@@ -83,6 +83,25 @@ const SectionToolsJS = (props) =>{
         //Rec(json["MenuBar"]);
     } 
     
+    function AssignObjectsForMenuBar(){
+        let KeysDefaut, KeysSections,MenuBar, Test 
+        MenuBar = Object.assign({}, menuBarDefault)
+        KeysDefaut = Object.keys(MenuBar);
+        KeysSections = Object.keys(menuBarSection);
+        for (const  valueDefaut of KeysDefaut) {
+            
+            for (const  valueSection of KeysSections) {
+                if (valueDefaut === valueSection){
+
+                }
+            }
+        }
+        Test = menuBarDefault + menuBarSection;
+        MenuBar = Object.assign(MenuBar,menuBarSection)
+        console.log(Test)
+        return MenuBar 
+    }
+
     function CreateMap(List){
         for (const [key, value] of Object.entries(List)) {
             setAnchorElAss(anchorElAss.set(key,null));
@@ -95,17 +114,19 @@ const SectionToolsJS = (props) =>{
     function RecItems(jsonItems, CurrentID ){
         
         if ( jsonItems !== undefined){
-            let DeepFirst, Token, keyS= 0, ArrItems, openSet;
+            let DeepFirst, Token, keyS= 0, ArrItems, openSet, Path;
             let assemblyLists = [];
 
             for (const [key, value] of Object.entries(jsonItems)) {
                 //console.log(value)
                 keyS = Number(key)+ 1;
                 Token = jsonItems[key]["Token"];
+                Path = jsonItems[key]["Path"];
                 DeepFirst = value;
                 
                 ArrItems = Object.keys(DeepFirst);
-                if (ArrItems[1]=== "Token"){//это то что будет внутри item
+                
+                if (ArrItems[1]=== "Token" || Path !==undefined ){//это то что будет внутри item
                     assemblyLists.push(
                         <Grid key={key}>
                             <MenuItem  onClick={handleClose} >
@@ -135,21 +156,18 @@ const SectionToolsJS = (props) =>{
 
     
     function Rec(jsonItems){
-        //console.log(AssMass)
         if ( jsonItems !== undefined){
-            let DeepFirst, Token, keyS= 0, ArrItems, openSet, anchorElset;
+            
+            let DeepFirst, Token, keyS= 0, ArrItems, openSet, anchorElset, Path;
             let assemblyLists = [];
 
             for (const [key, value] of Object.entries(jsonItems)) {
-                //console.log(value)
                 keyS = Number(key)+ 1;
                 Token = jsonItems[key]["Token"];
                 DeepFirst = value;
-               
                 ArrItems = Object.keys(DeepFirst);
-                //console.log(Object.keys(jsonItems))
-                //console.log(value)
-
+            
+                
                 if (ArrItems[1]=== "Token"){//это то что будет внутри item
                     
                 }else{// это item который будет распахиваться
@@ -326,9 +344,10 @@ const SectionToolsJS = (props) =>{
     }
     
     const RenderButtons=(ButtonsLocal, WichButton)=>{
-        console.log(ButtonsLocal)
+        
         if(ButtonsLocal !== undefined && WichButton === "SectionTools"){
             let items = [], Path, Type;
+            
             items.push(<Grid item>{props.defaultButton}</Grid> )
             for (const [key, value] of Object.entries(ButtonsLocal)) {
                 //console.log(value)
@@ -383,12 +402,14 @@ const SectionToolsJS = (props) =>{
                     {RenderButtons(dataButtonsDefault, "WorkPlace")}
                     {RenderButtons(buttonsSection, "SectionTools")}
                     {Program}
+                    
                 </Grid>
             </Grid>
 
             <Grid item> 
                 <Grid container direction="row"  justifyContent="flex-start" alignItems="center" >
-                    {Rec(menuBarDefault)}
+                    {Rec(AssignObjectsForMenuBar())}
+                    {}
                 </Grid>
             </Grid>
         </Grid>

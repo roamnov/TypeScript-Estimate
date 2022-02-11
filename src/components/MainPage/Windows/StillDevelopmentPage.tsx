@@ -13,18 +13,16 @@ const StillDevelopmentPage = (props: any) => {
     }, []);
 
     return (
+        <><SectionToolsJS ID={props.id} />
         <Grid container direction="row" justifyContent="center" alignItems="center" style={{ height: `${currentHeight}px` }}>
-            <Grid item >
-                <div>
-                    <SectionToolsJS ID={props.id} />
-                </div>
+            <Grid item>
                 <div>
                     <Typography variant="h4">
                         Функционал находится в разработке.
                     </Typography>
                 </div>
             </Grid>
-        </Grid>
+        </Grid></>
     )
 }
 
