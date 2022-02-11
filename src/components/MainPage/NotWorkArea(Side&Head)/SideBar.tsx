@@ -158,13 +158,13 @@ export default function SideBar(props: MainBoxBackClick) {
             mainCollapse = data2.get(ID);
             openSet = data2.get(ID);
             assemblyLists.push(
-              <ListItem style={{paddingTop: 0, paddingBottom: 0, paddingLeft: 0}}  sx={{  "& .Mui-selected":{backgroundColor:"rgb(35, 114, 191)"} }} selected={selected === ID}>
+              <ListItem key={ID} style={{paddingTop: 0, paddingBottom: 0, paddingLeft: 0}}  sx={{  "& .Mui-selected":{backgroundColor:"rgb(35, 114, 191)"} }} selected={selected === ID}>
                 <ListItemButton className={classes.colorList} key={ID} component="li" id={ID} onClick={updateSelected}>
                   <ListItemIcon>{Img}</ListItemIcon>
                   <ListItemText primary={Name} style={{color:"white"}} />
                 </ListItemButton>
-                  <IconButton>
-                    {SectionList[keyS] !== undefined  && SectionList[keyS]["Deep"] >= 1? (openSet ? (<ExpandLess id={ID} onClick={handleClick} />) : ( <ExpandMore id={ID} onClick={handleClick} /> )): (<></>)}
+                  <IconButton id={ID} onClick={handleClick} >
+                    {SectionList[keyS] !== undefined  && SectionList[keyS]["Deep"] >= 1? (openSet ? (<ExpandLess  />) : ( <ExpandMore  /> )): (<></>)}
                   </IconButton>
               </ListItem>
             );
@@ -193,13 +193,13 @@ export default function SideBar(props: MainBoxBackClick) {
               assemblyLists.push(
                 <Collapse  key={ID}  in={openSet && mainCollapse}    timeout="auto" unmountOnExit > 
                   {(openSet = data2.get(ID))}
-                  <ListItem style={{paddingTop: 0, paddingBottom: 0, paddingLeft: 0}}>
+                  <ListItem key={ID} style={{paddingTop: 0, paddingBottom: 0, paddingLeft: 0}}>
                     <ListItemButton className={classes.colorList} key={ID} sx={{ pl: howDeep , "& .Mui-selected":{backgroundColor:"rgb(35, 114, 191)"} }} id={ID} selected={selected === ID} >
                       <ListItemIcon>{Img}</ListItemIcon>
                       <ListItemText primary={Name} style={{color:"white"}} />
                     </ListItemButton>
-                    <IconButton>
-                      {openSet ? ( <ExpandLess id={ID} onClick={handleClick} /> ) : (<ExpandMore id={ID} onClick={handleClick} />)}
+                    <IconButton id={ID} onClick={handleClick} >
+                      {openSet ? ( <ExpandLess  /> ) : (<ExpandMore  />)}
                   </IconButton>
                   </ListItem>
                 </Collapse>
@@ -212,7 +212,7 @@ export default function SideBar(props: MainBoxBackClick) {
                   timeout="auto"
                   unmountOnExit
                 >
-                  <List component="div" disablePadding >
+                  <List key={ID} component="div" disablePadding >
                     <ListItemButton className={classes.colorList}  key={ID} sx={{ pl: howDeep, "& .Mui-selected":{backgroundColor:"rgb(35, 114, 191)"} }}  selected={selected === ID}  id={ID} onClick={updateSelected} >
                       <ListItemIcon>{Img}</ListItemIcon>
                       <ListItemText primary={Name} style={{color:"white"}}/>

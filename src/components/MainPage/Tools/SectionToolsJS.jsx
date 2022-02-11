@@ -25,7 +25,7 @@ const SectionToolsJS = (props) =>{
     const [value, setValue] = React.useState();
     
 
-    const [dataButtonsDefault, setDataButtonsDefault] = React.useState();
+    const [dataButtonsDefault, setDataButtonsDefault] = React.useState([]);
     const [open1, setOpen1] = React.useState(false);
     const [menuBarDefault, setMenuBarDefault] = React.useState();
     const [ID, setID] = React.useState();
@@ -34,7 +34,6 @@ const SectionToolsJS = (props) =>{
 
     React.useEffect(() => {
        GetWorkPlaceTools();
-       console.log(props.ID)
     }, []);
 
 
@@ -63,19 +62,46 @@ const SectionToolsJS = (props) =>{
         setAnchorElAss(anchorElAss.set(ID,null));
     };
 
+    const GetSectionTools =  () =>{
+        let params = new Map(), json;
+        params.set('prefix','tools');
+        params.set('comand','GetSectionTools');
+        params.set('SectionID', props.ID);
+        json = XMLrequest(params)
+        setButtonsSection(json["Buttons"]);
+        setMenuBarSection(json["MenuBar"])
+    }
 
     const GetWorkPlaceTools = ( ) =>{
         let params = new Map, json;
         params.set('prefix','config'); 
         params.set('comand','GetWorkPlaceTools');
         json = XMLrequest(params)
-        console.log(json["Buttons"]);
-        setDataButtonsDefault(json["Buttons"]);
+        setDataButtonsDefault(json["Buttons"]["Button"]);
         setMenuBarDefault(json["MenuBar"]);
         CreateMap(json["MenuBar"]);
         //Rec(json["MenuBar"]);
     } 
     
+    function AssignObjectsForMenuBar(){
+        let KeysDefaut, KeysSections,MenuBar, Test 
+        MenuBar = Object.assign({}, menuBarDefault)
+        KeysDefaut = Object.keys(MenuBar);
+        KeysSections = Object.keys(menuBarSection);
+        for (const  valueDefaut of KeysDefaut) {
+            
+            for (const  valueSection of KeysSections) {
+                if (valueDefaut === valueSection){
+
+                }
+            }
+        }
+        Test = menuBarDefault + menuBarSection;
+        MenuBar = Object.assign(MenuBar,menuBarSection)
+        console.log(Test)
+        return MenuBar 
+    }
+
     function CreateMap(List){
         for (const [key, value] of Object.entries(List)) {
             setAnchorElAss(anchorElAss.set(key,null));
@@ -88,17 +114,19 @@ const SectionToolsJS = (props) =>{
     function RecItems(jsonItems, CurrentID ){
         
         if ( jsonItems !== undefined){
-            let DeepFirst, Token, keyS= 0, ArrItems, openSet;
+            let DeepFirst, Token, keyS= 0, ArrItems, openSet, Path;
             let assemblyLists = [];
 
             for (const [key, value] of Object.entries(jsonItems)) {
                 //console.log(value)
                 keyS = Number(key)+ 1;
                 Token = jsonItems[key]["Token"];
+                Path = jsonItems[key]["Path"];
                 DeepFirst = value;
                 
                 ArrItems = Object.keys(DeepFirst);
-                if (ArrItems[1]=== "Token"){//это то что будет внутри item
+                
+                if (ArrItems[1]=== "Token" || Path !==undefined ){//это то что будет внутри item
                     assemblyLists.push(
                         <Grid key={key}>
                             <MenuItem  onClick={handleClose} >
@@ -128,21 +156,18 @@ const SectionToolsJS = (props) =>{
 
     
     function Rec(jsonItems){
-        //console.log(AssMass)
         if ( jsonItems !== undefined){
-            let DeepFirst, Token, keyS= 0, ArrItems, openSet, anchorElset;
+            
+            let DeepFirst, Token, keyS= 0, ArrItems, openSet, anchorElset, Path;
             let assemblyLists = [];
 
             for (const [key, value] of Object.entries(jsonItems)) {
-                //console.log(value)
                 keyS = Number(key)+ 1;
                 Token = jsonItems[key]["Token"];
                 DeepFirst = value;
-               
                 ArrItems = Object.keys(DeepFirst);
-                //console.log(Object.keys(jsonItems))
-                //console.log(value)
-
+            
+                
                 if (ArrItems[1]=== "Token"){//это то что будет внутри item
                     
                 }else{// это item который будет распахиваться
@@ -167,18 +192,9 @@ const SectionToolsJS = (props) =>{
 
     
 
-    const GetSectionTools =  () =>{
-        let params = new Map(), json;
-        params.set('prefix','tools');
-        params.set('comand','GetSectionTools');
-        params.set('SectionID', props.ID);
-        json = XMLrequest(params)
-        setButtonsSection(json["Buttons"]);
-        setMenuBarSection(json["MenuBar"])
-    }
+    
 
     const InputChange = (event)=>{
-        console.log(inputText)
         setInputText(event.target.value)
     }
 
@@ -327,10 +343,11 @@ const SectionToolsJS = (props) =>{
         //setData(json);
     }
     
-    const RenderButtons=(ButtonsLocal)=>{
-        //console.log(ButtonsLocal)
-        if(ButtonsLocal !== undefined){
+    const RenderButtons=(ButtonsLocal, WichButton)=>{
+        
+        if(ButtonsLocal !== undefined && WichButton === "SectionTools"){
             let items = [], Path, Type;
+            
             items.push(<Grid item>{props.defaultButton}</Grid> )
             for (const [key, value] of Object.entries(ButtonsLocal)) {
                 //console.log(value)
@@ -347,6 +364,23 @@ const SectionToolsJS = (props) =>{
                     )
                 }
               return items
+            }else if( ButtonsLocal !== undefined && WichButton === "WorkPlace"){
+
+                let items = [], Token,  Hint;
+                Hint = ButtonsLocal.Hint;
+                Token = ButtonsLocal.Token;
+                items.push(
+                    <Grid item>    
+                        <Tooltip  title={Hint} arrow>
+                                <IconButton id={Token}  color='primary'  component="span" onClick={(e) => handeleExecToolprogram(e)} >
+                        
+                                    {ImgURL(ButtonsLocal.Image)}
+                                
+                                </IconButton>
+                        </Tooltip>
+                    </Grid>
+                    )
+                return items    
             }
         }
 
@@ -362,15 +396,18 @@ const SectionToolsJS = (props) =>{
            <Grid id="RenderDefault"> </Grid>
 
            <Grid item> 
-                <Grid container  direction="row"  justifyContent="flex-start" alignItems="center" sx={{pl:2}}>
-                    {RenderButtons(buttonsSection)}
+                <Grid container  direction="row"  justifyContent="flex-start" alignItems="center" >
+                    {RenderButtons(dataButtonsDefault, "WorkPlace")}
+                    {RenderButtons(buttonsSection, "SectionTools")}
                     {Program}
+                    
                 </Grid>
             </Grid>
 
             <Grid item> 
                 <Grid container direction="row"  justifyContent="flex-start" alignItems="center" >
-                    {Rec(menuBarDefault)}
+                    {Rec(AssignObjectsForMenuBar())}
+                    {}
                 </Grid>
             </Grid>
         </Grid>
