@@ -33,7 +33,6 @@ export function XMLrequest(params: any, postData?: any) {
 
     var LicGUID: string, request = new XMLHttpRequest(), res = "", method;
     LicGUID = licG; //get_cookie('LicGUID');
-    // console.log(global.foo)
     if (LicGUID == undefined) {
         var s = "0123456789ABCDEFGHIKLMNOPQRSTVXYZ";
         for (var n = 0; n <= 31; n++) {
@@ -83,8 +82,8 @@ export function XMLrequest(params: any, postData?: any) {
 export default function URL(params: any, postData?: any) {
 
     var LicGUID: string;
-    LicGUID = get_cookie('LicGUID');
-    if (LicGUID == '') {
+    LicGUID = licG; //get_cookie('LicGUID');
+    if (LicGUID == undefined) {
         var s = "0123456789ABCDEFGHIKLMNOPQRSTVXYZ";
         for (var n = 0; n <= 31; n++) {
             if (n === 0) {
@@ -93,8 +92,8 @@ export default function URL(params: any, postData?: any) {
                 LicGUID = LicGUID + s[getRandomArbitrary(1, 31)];
             }
         }
-
-        // CreateCokies('LicGUID', LicGUID)
+        licG = LicGUID
+        //CreateCokies('LicGUID', LicGUID)
     }
     var attachment = "";
 
@@ -119,7 +118,8 @@ export async function AxiosRequest(params: any, postData?: object | AxiosRequest
     var LicGUID: string, res, method;
     // let res = Object;
     LicGUID = get_cookie('LicGUID');
-    if (LicGUID == '') {
+    LicGUID = licG; //get_cookie('LicGUID');
+    if (LicGUID == undefined) {
         var s = "0123456789ABCDEFGHIKLMNOPQRSTVXYZ";
         for (var n = 0; n <= 31; n++) {
             if (n === 0) {
@@ -128,7 +128,8 @@ export async function AxiosRequest(params: any, postData?: object | AxiosRequest
                 LicGUID = LicGUID + s[getRandomArbitrary(1, 31)];
             }
         }
-        CreateCokies('LicGUID', LicGUID)
+        licG = LicGUID
+        //CreateCokies('LicGUID', LicGUID)
     }
     var attachment = "";
     for (let pair of params) {
