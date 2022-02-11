@@ -32,7 +32,7 @@ export default function SectionsDBview(props) {
     </Tooltip>
     let DBview = <div id="SectionsDBview" >
         <div style={{ height: "45px" }}>
-            
+
             <SectionToolsJS ID={props.id} defaultButton={defaultButton} />
         </div>
         <div style={{ display: "flex" }}>

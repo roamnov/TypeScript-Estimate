@@ -340,9 +340,7 @@ const SectionToolsJS = (props) =>{
                     <Grid item>    
                         <Tooltip  title={key} arrow>
                                 <IconButton id={Path}  color='primary'  component="span" onClick={(e) => handeleExecToolprogram(e,Type)} >
-                        
                                     {ImgURL(backValue(value, 'Image'))}
-                                
                                 </IconButton>
                         </Tooltip>
                     </Grid>

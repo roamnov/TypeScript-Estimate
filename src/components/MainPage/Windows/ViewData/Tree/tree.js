@@ -7,6 +7,9 @@ import { useState, useEffect } from 'react';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import Switch from '../../../../Switch/Switch';
 import Editor from "../../../../Editor/Editor"
+import Tooltip from '@mui/material/Tooltip';
+import UndoIcon from '@mui/icons-material/Undo';
+import CheckIcon from '@mui/icons-material/Check';
 
 export function clickTab(event) {
   let lbl = event.currentTarget;
@@ -96,14 +99,14 @@ export default function Tree(props) {
   function GetObjectValues() {
     let params = new Map();
     let list = new Map();
-      params.set('prefix', 'dbview');
-      params.set('comand', 'GetConnectionList');
-      let otv = XMLrequest(params);
-      for (var key in otv) {
-        if (otv.hasOwnProperty(key)) {
-          if (otv[key].id)
-              list.set(otv[key].id, otv[key].text)
-          else
+    params.set('prefix', 'dbview');
+    params.set('comand', 'GetConnectionList');
+    let otv = XMLrequest(params);
+    for (var key in otv) {
+      if (otv.hasOwnProperty(key)) {
+        if (otv[key].id)
+          list.set(otv[key].id, otv[key].text)
+        else
           list.set(0, otv[key])
       }
     }
@@ -111,14 +114,13 @@ export default function Tree(props) {
   }
   function ClickCheck(id, val) {
     let params = new Map();
-        params.set('prefix', 'dbview');
-        params.set('comand', 'SetScriptType');
-        params.set('ID', id);
-        params.set('Value', val);
-        fetchData(params)
+    params.set('prefix', 'dbview');
+    params.set('comand', 'SetScriptType');
+    params.set('ID', id);
+    params.set('Value', val);
+    fetchData(params)
   }
-  function SetConnectionNo (index)
-  {
+  function SetConnectionNo(index) {
     let params = new Map();
     let idItem
     params.set('prefix', 'dbview');
@@ -128,6 +130,40 @@ export default function Tree(props) {
     params.set('Value', index);
 
     fetchData(params)
+  }
+  function ApplyCode(e) {
+    let el = e.currentTarget;
+
+    let buttons = document.querySelector("section.contentactive").querySelector("#ButtonCode");
+    if (buttons) {
+      if (buttons.style.display == "block") {
+        buttons.style.display = "none"
+      }
+      let tab = document.querySelector("section.contentactive")
+      let text = tab.querySelector(".w-tc-editor-text").innerText;
+      let params = new Map();
+      params.set('prefix', 'dbview');
+      params.set('comand', 'HandleSQLScript');
+      let Data = {
+        id: tab.id.split("_")[1],
+        content: text,
+        //Comp: "NPO5898",
+      };
+
+    }
+  }
+  function RestoreCode(e) {
+
+  }
+  function EditCode(e) {
+    let el = e.currentTarget;
+    if (!el.textChanged) {
+      el.textChanged = true;
+      let buttons = document.querySelector("section.contentactive").querySelector("#ButtonCode");
+      if (buttons) {
+        buttons.style.display = "block"
+      }
+    }
   }
   function CreateTabsData(idItem, query) {
     let tabs;
@@ -140,14 +176,27 @@ export default function Tree(props) {
       <section id={"content_tab2_" + idItem} className='contentactive'>
         <div style={{ display: "flex", width: "100%" }}>
           <div >
-            <Editor idItem = {idItem} EditStyle={1} caption="Подключение" style={{ width: "250px", top: "4px" }} GetObjectValues={GetObjectValues} onCloseUpList = {SetConnectionNo}/>
+            <Editor idItem={idItem} EditStyle={1} caption="Подключение" style={{ width: "250px", top: "4px" }} GetObjectValues={GetObjectValues} onCloseUpList={SetConnectionNo} />
           </div>
           <div style={{ "padding-left": "10px" }}>
-            <Switch idItem = {idItem} label="Запрос модифицирования" onClick={ClickCheck} checked = {query.IsReq ? query.IsReq : 0}/>
+            <Switch idItem={idItem} label="Запрос модифицирования" onClick={ClickCheck} checked={query.IsReq ? query.IsReq : 0} />
+          </div>
+          <div id="ButtonCode" style={{ display: "none" }}>
+            <Tooltip title="Сохранить редактирование" >
+              <IconButton aria-label="CancelEdit" size="small" onClick={ApplyCode}>
+                <CheckIcon style={{ fill: "#628cb6" }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Отменить редактирование" >
+              <IconButton aria-label="CancelEdit" size="small" onClick={RestoreCode}>
+                <UndoIcon style={{ fill: "#628cb6" }} />
+              </IconButton>
+            </Tooltip>
           </div>
         </div>
-        <div style={{ overflow: "auto" }}>
+        <div style={{ overflow: "auto" }} >
           <CodeEditor
+            onInput={EditCode}
             value={query.content}
             language="sql"
             placeholder="Please enter SQL code."

@@ -44,7 +44,7 @@ const SignIn = () => {
   const [user, setUser] = useState("");
   const [workplace, setWorkPlace] = useState("");
   const [password, setPassword] = useState();
-
+  
  
   
 
@@ -83,7 +83,19 @@ const SignIn = () => {
 
 
   const handleSingIn = () => {
+    
     let res:object 
+    
+    
+    const LoginLast= drx + ","+user+ ","+ workplace; 
+    //console.log(typeof(LoginData))
+    let params = new Map();
+    params.set('comand','GetUserInfo');
+    params.set('ConfigName',drx);
+    params.set('UserName',user);
+    let  rest
+    rest = XMLrequest(params)["Server"];
+    let IP = rest;
     let LoginData = {
       ConfigName: drx,
       UserName: user,
@@ -91,11 +103,12 @@ const SignIn = () => {
       WorkPlace: workplace,
       //Comp: "NPO5898",
     };
-    const LoginLast= drx + ","+user+ ","+ workplace; 
-    //console.log(typeof(LoginData))
-    let params = new Map();
+    //setIP(rest);
+    params = new Map();
     params.set('comand','enter');
-    let rest = XMLrequest(params,  LoginData);
+    if (IP !="")
+    params.set('IP', IP);
+    rest = XMLrequest(params,  LoginData);
     rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain(LoginLast)
     //let res = AxiosRequest(params, "post",LoginData)
     //res.then((responce)=>{console.log(responce)})
