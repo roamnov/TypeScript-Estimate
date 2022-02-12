@@ -10,6 +10,10 @@ import Editor from "../../../../Editor/Editor"
 import Tooltip from '@mui/material/Tooltip';
 import UndoIcon from '@mui/icons-material/Undo';
 import CheckIcon from '@mui/icons-material/Check';
+import MonacoEditor from '@uiw/react-monacoeditor';
+import CodeMirror from '@uiw/react-codemirror';
+import { sql } from '@codemirror/lang-sql';
+import { javascript } from '@codemirror/lang-javascript';
 
 export function clickTab(event) {
   let lbl = event.currentTarget;
@@ -195,19 +199,12 @@ export default function Tree(props) {
           </div>
         </div>
         <div style={{ overflow: "auto" }} >
-          <CodeEditor
-            onInput={EditCode}
-            value={query.content}
-            language="sql"
-            placeholder="Please enter SQL code."
-            padding={5}
-            //minHeight={windowInnerHeight}
-            style={{
-              fontSize: 12,
-              backgroundColor: "#f5f5f5",
-              fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-            }}
-          />
+        <CodeMirror
+      value={query.content}
+      height="100%"
+      extensions={[sql()]}
+      
+    />
         </div>
       </section>
 
