@@ -164,9 +164,11 @@ const SectionToolsJS = (props) =>{
                 Params = jsonItems[key]["Params"];
                 DeepFirst = value;
                 
+                
                 ArrItems = Object.keys(DeepFirst);
                 
-                if (ArrItems[1]=== "Token" || Path !==undefined ){//это то что будет внутри item
+                if (Token !== undefined || Path !==undefined ){//это то что будет внутри item
+                    
                     assemblyLists.push(
                         <Grid key={key}>
                             <MenuItem id={key}  onClick={(event)=> handleClickItemMenu(event, Path,Token, Params)} >
@@ -200,7 +202,7 @@ const SectionToolsJS = (props) =>{
     
     function Rec(jsonItems){
         if ( jsonItems !== undefined){
-            
+            console.log(jsonItems)
             let DeepFirst, ArrItems, openSet, anchorElset;
             let assemblyLists = [];
             
@@ -209,7 +211,7 @@ const SectionToolsJS = (props) =>{
                 
                 DeepFirst = value;
                 ArrItems = Object.keys(DeepFirst);
-            
+                
                 
                 if (ArrItems[1]!== "Token"){//это то что будет внутри item
                     openSet = AssMass.get(key);
