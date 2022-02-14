@@ -10,7 +10,6 @@ import Editor from "../../../../Editor/Editor"
 import Tooltip from '@mui/material/Tooltip';
 import UndoIcon from '@mui/icons-material/Undo';
 import CheckIcon from '@mui/icons-material/Check';
-import MonacoEditor from '@uiw/react-monacoeditor';
 import CodeMirror from '@uiw/react-codemirror';
 import { sql } from '@codemirror/lang-sql';
 

@@ -118,3 +118,9 @@ export interface ProjectEnterInfo extends componentProps{
     setData: (value:any) => void | any;
     open?:Boolean;
 }
+
+export interface DialogContainerProps{
+    title:string,
+    contentText:any,
+
+}

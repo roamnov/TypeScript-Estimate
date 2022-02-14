@@ -28,6 +28,7 @@ import URL, { AxiosRequest, CreateCokies, XMLrequest } from "../Url";
 import { purple, red } from "@material-ui/core/colors";
 import { Link,  useNavigate } from "react-router-dom";
 import { DrxContext, LoginIn } from "../Wrapper";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 
 
@@ -44,6 +45,7 @@ const SignIn = () => {
   const [user, setUser] = useState("");
   const [workplace, setWorkPlace] = useState("");
   const [password, setPassword] = useState();
+  const [open, setOpen] = useState(false);
   
  
   
@@ -67,7 +69,7 @@ const SignIn = () => {
 
   function CheckAnswerFromServer(answer?: Object) {
     let test: string;
-
+    setOpen(false)
     switch (answer) {
       case "ConfigName":
         setError(`Файл подключения ${drx} не найден.`);
@@ -85,7 +87,7 @@ const SignIn = () => {
   const handleSingIn = () => {
     
     let res:object 
-    
+    setOpen(true)
     
     const LoginLast= drx + ","+user+ ","+ workplace; 
     //console.log(typeof(LoginData))
@@ -172,7 +174,7 @@ const SignIn = () => {
         </Grid>
       
         <Grid item>
-          
+        
           <Button
           style={{backgroundColor: "#0098ad"}}
             type="submit"
@@ -188,6 +190,12 @@ const SignIn = () => {
       </Grid>
       </Box>
       </Paper>
+      <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={open}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
     </Container>
   );
 };

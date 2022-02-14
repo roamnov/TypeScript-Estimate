@@ -32,7 +32,7 @@ var licG: any
 export function XMLrequest(params: any, postData?: any) {
 
     var LicGUID: string, request = new XMLHttpRequest(), res = "", method;
-    LicGUID = licG; //get_cookie('LicGUID');
+    LicGUID =  get_cookie('LicGUID');
     if (LicGUID == undefined) {
         var s = "0123456789ABCDEFGHIKLMNOPQRSTVXYZ";
         for (var n = 0; n <= 31; n++) {
@@ -42,8 +42,7 @@ export function XMLrequest(params: any, postData?: any) {
                 LicGUID = LicGUID + s[getRandomArbitrary(1, 31)];
             }
         }
-        licG = LicGUID
-        //CreateCokies('LicGUID', LicGUID)
+        CreateCokies('LicGUID', LicGUID)
     }
     var attachment = "";
     for (let pair of params) {

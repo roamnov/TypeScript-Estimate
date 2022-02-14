@@ -1,14 +1,16 @@
 import  React from 'react';
-import {  Backdrop,  Box,  Button, Grid, IconButton, TextField, Menu, MenuItem, Tooltip } from "@mui/material"
+import { Button, Grid, IconButton, TextField, Menu, MenuItem, Tooltip } from "@mui/material"
 import URL, { XMLrequest } from '../../Url';
 import { NestedMenuItem } from "./NestedMenuOrigin/NestedMenuItem";
 import { ImgURL } from "../../Url";
 import ModalContainer from '../../Containers/ModalContainer';
 import items from "./Items.json"
+import Reference from "./Reference.json"
 import ReactDOM from 'react-dom';
 import ModalProgress from '../../Containers/ModalProgress';
 import axios from 'axios';
 import ChangeStatusProgressFooter from '../NotWorkArea(Side&Head)/ChangeStatusProgress';
+import DialogContainer from '../../Containers/DialogContainer';
 
 
 //
@@ -62,6 +64,24 @@ const SectionToolsJS = (props) =>{
         setAnchorElAss(anchorElAss.set(ID,null));
     };
 
+    const handleClickItemMenu = (event, Path, Token, Params)=>{
+        let JSXInfoAboutClickedItem = [];
+        setOpen1(!open1)
+        const id = event.currentTarget.getAttribute("id")
+        setAssMass(AssMass.set(ID,false))
+        setAnchorElAss(anchorElAss.set(ID,null));
+        JSXInfoAboutClickedItem.push(
+            <>
+            {Path === undefined?<></>:<>Path: {Path}</>}
+            <br/>
+            {Token === undefined?<></>:<>Token: {Token}</>}
+            <br/>
+            {Params === undefined?<></>:<>Params: {Params}</>}
+            </>
+        )
+        ReactDOM.render(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />,document.getElementById('RenderModalSub'))
+    }
+
     const GetSectionTools =  () =>{
         let params = new Map(), json;
         params.set('prefix','tools');
@@ -80,27 +100,38 @@ const SectionToolsJS = (props) =>{
         setDataButtonsDefault(json["Buttons"]["Button"]);
         setMenuBarDefault(json["MenuBar"]);
         CreateMap(json["MenuBar"]);
-        //Rec(json["MenuBar"]);
+        
     } 
     
     function AssignObjectsForMenuBar(){
-        let KeysDefaut, KeysSections,MenuBar, Test 
-        MenuBar = Object.assign({}, menuBarDefault)
-        KeysDefaut = Object.keys(MenuBar);
-        KeysSections = Object.keys(menuBarSection);
-        for (const  valueDefaut of KeysDefaut) {
-            
-            for (const  valueSection of KeysSections) {
-                if (valueDefaut === valueSection){
-
+    
+        if(isEmptyObject(menuBarSection)){
+            let MenuBar = Object.assign({}, menuBarDefault, Reference )
+            return MenuBar
+        }else{
+            let KeysDefaut, KeysSections,MenuBar, SameMenus ={}
+            MenuBar = Object.assign({}, menuBarDefault)
+            SameMenus  = Object.assign({}, menuBarDefault)  
+            KeysDefaut = Object.keys(MenuBar);
+            KeysSections = Object.keys(menuBarSection);
+            for (const  valueDefaut of KeysDefaut) {
+                for (const  valueSection of KeysSections) {
+                    if (valueDefaut === valueSection){
+                        SameMenus[valueDefaut] = Object.assign(SameMenus[valueDefaut],menuBarDefault[valueDefaut],menuBarSection[valueDefaut] )
+                        
+                    }
                 }
             }
+            
+            MenuBar = Object.assign(MenuBar,menuBarSection)
+            MenuBar = Object.assign(MenuBar,SameMenus, Reference)
+        
+            return MenuBar
         }
-        Test = menuBarDefault + menuBarSection;
-        MenuBar = Object.assign(MenuBar,menuBarSection)
-        console.log(Test)
-        return MenuBar 
+         
     }
+
+   
 
     function CreateMap(List){
         for (const [key, value] of Object.entries(List)) {
@@ -111,17 +142,26 @@ const SectionToolsJS = (props) =>{
     }
 
     
+    function isEmptyObject(obj) {
+        for (var i in obj) {
+            if (obj.hasOwnProperty(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     function RecItems(jsonItems, CurrentID ){
         
         if ( jsonItems !== undefined){
-            let DeepFirst, Token, keyS= 0, ArrItems, openSet, Path;
+            let DeepFirst, Token, Params, ArrItems, openSet, Path , Image;
             let assemblyLists = [];
 
             for (const [key, value] of Object.entries(jsonItems)) {
-                //console.log(value)
-                keyS = Number(key)+ 1;
                 Token = jsonItems[key]["Token"];
                 Path = jsonItems[key]["Path"];
+                Image = jsonItems[key]["Image"];
+                Params = jsonItems[key]["Params"];
                 DeepFirst = value;
                 
                 ArrItems = Object.keys(DeepFirst);
@@ -129,8 +169,11 @@ const SectionToolsJS = (props) =>{
                 if (ArrItems[1]=== "Token" || Path !==undefined ){//это то что будет внутри item
                     assemblyLists.push(
                         <Grid key={key}>
-                            <MenuItem  onClick={handleClose} >
-                            {key}
+                            <MenuItem id={key}  onClick={(event)=> handleClickItemMenu(event, Path,Token, Params)} >
+                                <Grid sx={{pr:0.5}}>
+                                    {Image === undefined?<div style={{paddingLeft:"16px"}}></div> :ImgURL(Image, "16px", "16px" )}
+                                </Grid>
+                                {key}
                             </MenuItem>  
                         </Grid>
                         
@@ -140,7 +183,7 @@ const SectionToolsJS = (props) =>{
                     openSet = AssMass.get(CurrentID);
                     assemblyLists.push(
                         <Grid key={key}>
-                            <NestedMenuItem   onClick={handleClose} label={key}  parentMenuOpen={openSet}  >
+                            <NestedMenuItem style={{paddingLeft:"10px"}}  leftIcon={Image === undefined?<div style={{paddingLeft:"16px"}}></div> :ImgURL(Image, "16px", "16px" )}  label={key}  parentMenuOpen={openSet}  >
                                 {RecItems(DeepFirst, CurrentID)}  
                             </NestedMenuItem>
                         </Grid>
@@ -158,19 +201,17 @@ const SectionToolsJS = (props) =>{
     function Rec(jsonItems){
         if ( jsonItems !== undefined){
             
-            let DeepFirst, Token, keyS= 0, ArrItems, openSet, anchorElset, Path;
+            let DeepFirst, ArrItems, openSet, anchorElset;
             let assemblyLists = [];
+            
 
             for (const [key, value] of Object.entries(jsonItems)) {
-                keyS = Number(key)+ 1;
-                Token = jsonItems[key]["Token"];
+                
                 DeepFirst = value;
                 ArrItems = Object.keys(DeepFirst);
             
                 
-                if (ArrItems[1]=== "Token"){//это то что будет внутри item
-                    
-                }else{// это item который будет распахиваться
+                if (ArrItems[1]!== "Token"){//это то что будет внутри item
                     openSet = AssMass.get(key);
                     anchorElset = anchorElAss.get(key);
                     assemblyLists.push(
@@ -407,7 +448,6 @@ const SectionToolsJS = (props) =>{
             <Grid item> 
                 <Grid container direction="row"  justifyContent="flex-start" alignItems="center" >
                     {Rec(AssignObjectsForMenuBar())}
-                    {}
                 </Grid>
             </Grid>
         </Grid>
@@ -415,39 +455,3 @@ const SectionToolsJS = (props) =>{
 }
 
 export default SectionToolsJS;
-
-
-
-/* <button onClick={GetSectionTools}> НАЖМИ ДЛЯ ЗАПРОСА</button>
-React.useEffect(() => {
-        console.log(buttons)
-        console.log(menuBar)
-    }, [menuBar])
-
-React.useEffect(() => {
-        let params = new Map();
-        params.set('prefix','tools');
-        params.set('comand','GetSectionTools');
-        params.set('SectionID', '143');
-        axios.get(URL(params)).then((response) =>{
-            setButtons(response.data["Buttons"]);
-            setMenuBar(response.data["MenuBar"])
-      
-        })
-    }, [])
-
-
-<Toolbar />
-          <ButtonGroup size="small" variant="text" aria-label="text button group">
-            <Button >Настройки</Button>
-            <Button>Сервис</Button>
-            <Button>Справочники</Button>
-        </ButtonGroup>
-        <img src={palochka} />
-        <HomeIcon  />
-        <FolderIcon />
-        <TouchAppIcon/>
-        <DescriptionIcon />
-        <RequestPageIcon />
-        <SaveAltIcon/>
-*/
