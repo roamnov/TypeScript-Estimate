@@ -38,7 +38,7 @@ export function clickTab(event) {
 }
 export default function Tree(props) {
   let data;
-  const [queryContent, setCode] = React.useState("");
+  var ApplyButtons;
   const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight - 205);
 
   const handleResize = () => {
@@ -142,20 +142,46 @@ export default function Tree(props) {
         buttons.style.display = "none"
       }
       let tab = document.querySelector("section.contentactive")
-      let text = tab.querySelector(".w-tc-editor-text").innerText;
+      let text = tab.querySelector(".cm-theme-light").querySelector(".cm-content").innerText;
+      let Code = tab.querySelector("#Code");
+      Code.textChanged = false;
       let params = new Map();
       params.set('prefix', 'dbview');
       params.set('comand', 'HandleSQLScript');
       let Data = {
-        id: tab.id.split("_")[1],
-        content: text,
+        id: tab.id.split("_")[2],
+        $content: text,
         //Comp: "NPO5898",
-      };
+      }
+      XMLrequest(params, Data)
 
     }
   }
   function RestoreCode(e) {
-
+    let el = e.currentTarget;
+    let buttons = document.querySelector("section.contentactive").querySelector("#ButtonCode");
+    if (buttons) {
+      if (buttons.style.display == "block") {
+        buttons.style.display = "none"
+      }
+    }
+    let tab = document.querySelector("section.contentactive")
+    let params = new Map();
+    params.set('prefix', 'dbview');
+    params.set('comand', 'HandleSQLScript');
+    params.set('SectionID', "143");
+     params.set('ID', tab.id.split("_")[2]);
+    let otv = XMLrequest(params);
+    let editor = <CodeMirror
+      value={XMLrequest(params)["content"]}
+      height="100%"
+      extensions={[sql()]}
+    />
+    let Code 
+    Code = tab.querySelector("#Code");
+    ReactDOM.render(editor, Code)
+    Code.textChanged = false;
+    Code.addEventListener("input", EditCode)
   }
   function EditCode(e) {
     let el = e.currentTarget;
@@ -167,10 +193,10 @@ export default function Tree(props) {
       }
     }
   }
-  
+
   function CreateTabsData(idItem, query) {
     let tabs;
-    setCode(query.content)
+    ApplyButtons = false;
     tabs = <>
       <label id={"tab1_" + idItem} title="Данные" onClick={(event) => clickTab(event)} className='tablbl'> Данные</label>
       <label id={"tab2_" + idItem} title="SQL - скрипт" className='tablbl activetab' onClick={(event) => clickTab(event)}> SQL - скрипт</label>
@@ -198,9 +224,9 @@ export default function Tree(props) {
             </Tooltip>
           </div>
         </div>
-        <div style={{ overflow: "auto" }} >
+        <div style={{ overflow: "auto" }} id="Code" onInput={(e) => EditCode(e)}>
           <CodeMirror
-            value={queryContent}
+            value={query.content}
             height="100%"
             extensions={[sql()]}
             
@@ -225,7 +251,6 @@ export default function Tree(props) {
       tabs.classList.add("tabs")
       tabs.classList.add("activetabs")
       tabs.id = "tabDataView" + id;
-      setCode(otv.content)
       ReactDOM.render(CreateTabsData(id, otv), tabs)
       if (tabs) {
         DBviewData.appendChild(tabs)
