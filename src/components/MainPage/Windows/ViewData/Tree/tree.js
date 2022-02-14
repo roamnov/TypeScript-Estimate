@@ -13,7 +13,6 @@ import CheckIcon from '@mui/icons-material/Check';
 import MonacoEditor from '@uiw/react-monacoeditor';
 import CodeMirror from '@uiw/react-codemirror';
 import { sql } from '@codemirror/lang-sql';
-import { javascript } from '@codemirror/lang-javascript';
 
 export function clickTab(event) {
   let lbl = event.currentTarget;
@@ -40,7 +39,7 @@ export function clickTab(event) {
 }
 export default function Tree(props) {
   let data;
-
+  const [queryContent, setCode] = React.useState("");
   const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight - 205);
 
   const handleResize = () => {
@@ -169,8 +168,10 @@ export default function Tree(props) {
       }
     }
   }
+  
   function CreateTabsData(idItem, query) {
     let tabs;
+    setCode(query.content)
     tabs = <>
       <label id={"tab1_" + idItem} title="Данные" onClick={(event) => clickTab(event)} className='tablbl'> Данные</label>
       <label id={"tab2_" + idItem} title="SQL - скрипт" className='tablbl activetab' onClick={(event) => clickTab(event)}> SQL - скрипт</label>
@@ -199,12 +200,12 @@ export default function Tree(props) {
           </div>
         </div>
         <div style={{ overflow: "auto" }} >
-        <CodeMirror
-      value={query.content}
-      height="100%"
-      extensions={[sql()]}
-      
-    />
+          <CodeMirror
+            value={queryContent}
+            height="100%"
+            extensions={[sql()]}
+            
+          />
         </div>
       </section>
 
@@ -224,7 +225,8 @@ export default function Tree(props) {
       tabs = document.createElement("div")
       tabs.classList.add("tabs")
       tabs.classList.add("activetabs")
-      tabs.id = "tabDataView" + id
+      tabs.id = "tabDataView" + id;
+      setCode(otv.content)
       ReactDOM.render(CreateTabsData(id, otv), tabs)
       if (tabs) {
         DBviewData.appendChild(tabs)
