@@ -8,6 +8,7 @@ import ManWhoSoldTheWorld from '../stimategrid/test'
 import { clickTab } from '../Windows/ViewData/Tree/tree'
 import { SelectIconSave } from '../../../components/MainPage/MainFile'
 import SectionToolsJS from '../Tools/SectionToolsJS';
+
 export default function SectionsDBview(props) {
     function OpenData() {
         let tree = document.getElementById("TreeDBView");
@@ -33,7 +34,7 @@ export default function SectionsDBview(props) {
     let DBview = <div id="SectionsDBview" >
         <div style={{ height: "45px" }}>
 
-            <SectionToolsJS ID={props.id} defaultButton={defaultButton} />
+            <SectionToolsJS WorkPlaceTools={props.WorkPlaceTools} ID={props.id} defaultButton={defaultButton} />
         </div>
         <div style={{ display: "flex" }}>
             <div id="DBviewTree">
