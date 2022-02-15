@@ -13,13 +13,14 @@ import { WorkPlaceTools } from '../Tools/WorkPlaceTools';
 import StickyFooter from '../NotWorkArea(Side&Head)/Footer';
 import StillDevelopmentPage from './StillDevelopmentPage';
 import SectionToolsJS from '../Tools/SectionToolsJS';
+import { XMLrequest } from '../../Url';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
 
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
-  const [sectionToolsData, setSectionToolsData] = React.useState();
+  const [WorkPalceToolsData, setWorkPalceToolsData] = React.useState();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -27,14 +28,27 @@ export default function FullRightSide(props: InfoAboutClick) {
     setOpen(!open)
   }
 
+  React.useEffect(() => {
+    GetWorkPlaceTools();
+ }, []);
+
+
+ const GetWorkPlaceTools = ( ) =>{
+  let params = new Map, json;
+  params.set('prefix','config'); 
+  params.set('comand','GetWorkPlaceTools');
+  json = XMLrequest(params)
+  setWorkPalceToolsData(json);
+  
+} 
 
   const getTabs = ()=>{
     if(props.id !== undefined && props.clsic  == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"){
       
-      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <SectionsDBview CLSID = {props.clsic} id = {props.id}/>) 
+      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <SectionsDBview WorkPlaceTools={WorkPalceToolsData} CLSID = {props.clsic} id = {props.id}/>) 
     }
     if(props.id !== undefined){
-      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <StillDevelopmentPage id = {props.id}/>) 
+      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <StillDevelopmentPage WorkPlaceTools={WorkPalceToolsData} id = {props.id}/>) 
     }
   }
 

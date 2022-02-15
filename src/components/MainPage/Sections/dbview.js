@@ -8,6 +8,7 @@ import Tooltip from '@mui/material/Tooltip';
 import ManWhoSoldTheWorld from '../stimategrid/test'
 import { clickTab } from '../Windows/ViewData/Tree/tree'
 import SectionToolsJS from '../Tools/SectionToolsJS';
+
 export default function SectionsDBview(props) {
     function OpenData() {
         let tree = document.getElementById("TreeDBView");

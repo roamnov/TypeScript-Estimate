@@ -27,16 +27,14 @@ const SectionToolsJS = (props) =>{
     const [value, setValue] = React.useState();
     
 
-    const [dataButtonsDefault, setDataButtonsDefault] = React.useState([]);
+    const [dataButtonsDefault, setDataButtonsDefault] = React.useState(props.WorkPlaceTools["Buttons"]["Button"]);
     const [open1, setOpen1] = React.useState(false);
-    const [menuBarDefault, setMenuBarDefault] = React.useState();
+    const [menuBarDefault, setMenuBarDefault] = React.useState(props.WorkPlaceTools["MenuBar"]);
     const [ID, setID] = React.useState();
     const [AssMass, setAssMass] = React.useState(new Map());
     const [anchorElAss, setAnchorElAss] = React.useState(new Map());
 
-    React.useEffect(() => {
-       GetWorkPlaceTools();
-    }, []);
+    
 
 
     React.useEffect(() => {
@@ -64,19 +62,22 @@ const SectionToolsJS = (props) =>{
         setAnchorElAss(anchorElAss.set(ID,null));
     };
 
-    const handleClickItemMenu = (event, Path, Token, Params)=>{
+    const handleClickItemMenu = (event)=>{
         let JSXInfoAboutClickedItem = [];
         setOpen1(!open1)
-        const id = event.currentTarget.getAttribute("id")
+        const id = event.currentTarget.getAttribute("id");
+        const Path = event.currentTarget.getAttribute("path")
+        const Token = event.currentTarget.getAttribute("token")
+        const Params = event.currentTarget.getAttribute("params")
         setAssMass(AssMass.set(ID,false))
         setAnchorElAss(anchorElAss.set(ID,null));
         JSXInfoAboutClickedItem.push(
             <>
-            {Path === undefined?<></>:<>Path: {Path}</>}
+            {Path === null?<></>:<>Path: {Path}</>}
             <br/>
-            {Token === undefined?<></>:<>Token: {Token}</>}
+            {Token === null?<></>:<>Token: {Token}</>}
             <br/>
-            {Params === undefined?<></>:<>Params: {Params}</>}
+            {Params === null?<></>:<>Params: {Params}</>}
             </>
         )
         ReactDOM.render(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />,document.getElementById('RenderModalSub'))
@@ -92,16 +93,6 @@ const SectionToolsJS = (props) =>{
         setMenuBarSection(json["MenuBar"])
     }
 
-    const GetWorkPlaceTools = ( ) =>{
-        let params = new Map, json;
-        params.set('prefix','config'); 
-        params.set('comand','GetWorkPlaceTools');
-        json = XMLrequest(params)
-        setDataButtonsDefault(json["Buttons"]["Button"]);
-        setMenuBarDefault(json["MenuBar"]);
-        CreateMap(json["MenuBar"]);
-        
-    } 
     
     function AssignObjectsForMenuBar(){
     
@@ -164,14 +155,16 @@ const SectionToolsJS = (props) =>{
                 Params = jsonItems[key]["Params"];
                 DeepFirst = value;
                 
+                
                 ArrItems = Object.keys(DeepFirst);
                 
-                if (ArrItems[1]=== "Token" || Path !==undefined ){//это то что будет внутри item
+                if (Token !== undefined || Path !==undefined ){//это то что будет внутри item
+                    let prS = Image === undefined? 0.5:0.2 
                     assemblyLists.push(
                         <Grid key={key}>
-                            <MenuItem id={key}  onClick={(event)=> handleClickItemMenu(event, Path,Token, Params)} >
-                                <Grid sx={{pr:0.5}}>
-                                    {Image === undefined?<div style={{paddingLeft:"16px"}}></div> :ImgURL(Image, "16px", "16px" )}
+                            <MenuItem token={Token} params={Params} path={Path}  id={key}  onClick={handleClickItemMenu} style={{height:"25px", marginLeft:2}}>
+                                <Grid sx={{pr:prS, pt:0.5}}>
+                                    {Image === undefined?<div style={{paddingLeft:"13px"}}></div> :ImgURL(Image, "16px", "16px" )}
                                 </Grid>
                                 {key}
                             </MenuItem>  
@@ -181,15 +174,15 @@ const SectionToolsJS = (props) =>{
                     
                 }else{// это item который будет распахиваться
                     openSet = AssMass.get(CurrentID);
-                    assemblyLists.push(
-                        <Grid key={key}>
-                            <NestedMenuItem style={{paddingLeft:"10px"}}  leftIcon={Image === undefined?<div style={{paddingLeft:"16px"}}></div> :ImgURL(Image, "16px", "16px" )}  label={key}  parentMenuOpen={openSet}  >
-                                {RecItems(DeepFirst, CurrentID)}  
-                            </NestedMenuItem>
-                        </Grid>
+                    if(key !== "Image" && key !== "-"){
                         
-                    )
-                    
+                        assemblyLists.push(
+                            <Grid key={key}>
+                                <NestedMenuItem style={{paddingLeft:"10px", height:"25px", marginLeft:2}}  leftIcon={Image === undefined?<div style={{paddingLeft:"16px"}}></div> :ImgURL(Image, "16px", "16px",7,3 ,-5)}  label={key}  parentMenuOpen={openSet}  >
+                                    {RecItems(DeepFirst, CurrentID)}  
+                                </NestedMenuItem>
+                            </Grid> )
+                    }
                 }
             }
             return assemblyLists 
@@ -200,18 +193,15 @@ const SectionToolsJS = (props) =>{
     
     function Rec(jsonItems){
         if ( jsonItems !== undefined){
-            
             let DeepFirst, ArrItems, openSet, anchorElset;
             let assemblyLists = [];
-            
-
             for (const [key, value] of Object.entries(jsonItems)) {
                 
                 DeepFirst = value;
                 ArrItems = Object.keys(DeepFirst);
-            
+                // console.log(key + "----------------------------------")
                 
-                if (ArrItems[1]!== "Token"){//это то что будет внутри item
+                if (ArrItems[1]!== "Token" ){//это то что будет внутри item
                     openSet = AssMass.get(key);
                     anchorElset = anchorElAss.get(key);
                     assemblyLists.push(

@@ -10,10 +10,12 @@ const StillDevelopmentPage = (props: any) => {
     }
     useEffect(() => {
         window.addEventListener("resize", handleResize, false);
+        
     }, []);
+    
 
     return (
-        <><SectionToolsJS ID={props.id} />
+        <><SectionToolsJS WorkPlaceTools={props.WorkPlaceTools} ID={props.id} />
         <Grid container direction="row" justifyContent="center" alignItems="center" style={{ height: `${currentHeight}px` }}>
             <Grid item>
                 <div>
