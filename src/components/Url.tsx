@@ -107,7 +107,7 @@ export default function URL(params: any, postData?: any) {
     if (attachment)
         attachment = "&" + attachment;
     let comand = params.get("comand");
-    let origin = json.currentURL ? document.location.origin : json.serverLocal;
+    let origin = setHost();
 
     return `${origin}/mobile~${params.get("prefix") == undefined ? 'project' : params.get("prefix")}/${comand}?LicGUID=${LicGUID}${attachment ? attachment : ""}`;
 }
@@ -142,7 +142,7 @@ export async function AxiosRequest(params: any, postData?: object | AxiosRequest
     if (attachment)
         attachment = "&" + attachment;
     let comand = params.get("comand");
-    let url = `${json.serverLocal}/mobile~${params.get("prefix") == undefined ? 'project' : params.get("prefix")}/${comand}?LicGUID=${LicGUID}${attachment ? attachment : ""}`;
+    let url = `${setHost()}/mobile~${params.get("prefix") == undefined ? 'project' : params.get("prefix")}/${comand}?LicGUID=${LicGUID}${attachment ? attachment : ""}`;
     postData === undefined ? method = "get" : method = "post"
     if (method === "get") {
         await axios.get(url).then((response) => { res = response.data })
@@ -153,9 +153,9 @@ export async function AxiosRequest(params: any, postData?: object | AxiosRequest
     return res
 }
 
-export function ImgURL(attachment?: any, h?: string, w?: string, marginL?:any, marginT?:any,marginR?:any , path?: string) {
-    let origin = json.currentURL ? document.location.origin : json.serverLocal;
-    return <img key={path} style={{ height: h, width: w, marginLeft: marginL, marginTop: marginT, marginRight:marginR }} src={`${origin}/server~${attachment}`} />;
+export function ImgURL(attachment?: any, h?: string, w?: string, path?: string) {
+    let origin = setHost();
+    return <img key={path} style={{ height: h, width: w }} src={`${origin}/server~${attachment}`} />;
 }
 
 export function ImgBASE64(attachment?: any, path?: string) {
