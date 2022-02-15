@@ -1,12 +1,12 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import ResizePanel from '../ResizebleComponent/ResizebleComponent';
+//import ResizePanel from "react-resize-panel";
 import Tree from '../Windows/ViewData/Tree/tree';
 import { Button } from '@material-ui/core';
 import Tooltip from '@mui/material/Tooltip';
 import ManWhoSoldTheWorld from '../stimategrid/test'
 import { clickTab } from '../Windows/ViewData/Tree/tree'
-import { SelectIconSave } from '../../../components/MainPage/MainFile'
 import SectionToolsJS from '../Tools/SectionToolsJS';
 export default function SectionsDBview(props) {
     function OpenData() {
@@ -33,12 +33,15 @@ export default function SectionsDBview(props) {
     let DBview = <div id="SectionsDBview" >
         <div style={{ height: "45px" }}>
 
-            <SectionToolsJS ID={props.id} defaultButton={defaultButton} />
+            <SectionToolsJS WorkPlaceTools={props.WorkPlaceTools} ID={props.id} defaultButton={defaultButton} />
         </div>
         <div style={{ display: "flex" }}>
-            <div id="DBviewTree">
-                <Tree CLSID={props.CLSID} multiCheck={false} />
-            </div>
+            <ResizePanel direction="e" style={{ width: '30%' }}>
+                <div id="DBviewTree">
+                    <Tree CLSID={props.CLSID} multiCheck={false} />
+                </div>
+            </ResizePanel>
+
             <div id="DBviewData" >
 
             </div>

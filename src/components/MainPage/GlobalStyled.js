@@ -352,10 +352,10 @@ const GlobalStyleDBview = createGlobalStyle`
     flex-direction: column;
 }
 #DBviewTree {
-    width: 30%;
+    white-space: nowrap;
 }
 #DBviewData{
-width: 67%;
+width: 84%;
 /*height: inherit;*/
 position: relative;
 }

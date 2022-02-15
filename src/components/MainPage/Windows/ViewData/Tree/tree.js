@@ -1,10 +1,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import IconButton from '@mui/material/IconButton';
 import { XMLrequest } from '../../../../Url';
-import { useState, useEffect } from 'react';
-import CodeEditor from '@uiw/react-textarea-code-editor';
 import Switch from '../../../../Switch/Switch';
 import Editor from "../../../../Editor/Editor"
 import Tooltip from '@mui/material/Tooltip';
@@ -159,39 +156,44 @@ export default function Tree(props) {
   }
   function RestoreCode(e) {
     let el = e.currentTarget;
-    let buttons = document.querySelector("section.contentactive").querySelector("#ButtonCode");
+    let tab = document.querySelector("section.contentactive")
+    let buttons = tab.querySelector(".ButtonCode");
     if (buttons) {
       if (buttons.style.display == "block") {
         buttons.style.display = "none"
       }
     }
-    let tab = document.querySelector("section.contentactive")
     let params = new Map();
     params.set('prefix', 'dbview');
     params.set('comand', 'HandleSQLScript');
     params.set('SectionID', "143");
-     params.set('ID', tab.id.split("_")[2]);
+    params.set('ID', tab.id.split("_")[2]);
     let otv = XMLrequest(params);
-    let editor = <CodeMirror
-      value={XMLrequest(params)["content"]}
+    let editor =<CodeMirror
+      value={otv["content"]}
       height="100%"
       extensions={[sql()]}
     />
-    let Code 
-    Code = tab.querySelector("#Code");
+    let Code
+    Code = tab.querySelector(".Code");
+   // Code.innerHTML = ""
     ReactDOM.render(editor, Code)
     Code.textChanged = false;
-    Code.addEventListener("input", EditCode)
+    Code.addEventListener("KeyUp", EditCode)
   }
   function EditCode(e) {
     let el = e.currentTarget;
-    if (!el.textChanged) {
-      el.textChanged = true;
-      let buttons = document.querySelector("section.contentactive").querySelector("#ButtonCode");
+    let b
+    b = "ShiftRight,ShiftLeft,ControlLeft,MetaLeft,AltLeft,CapsLock,ArrowLeft,ArrowRight,ArrowUp,ArrowDown,Escape,AudioVolumeMute,F1, F2,F3,F4,F5,F6,F7,F8,F9,F10,Insert,NumLock,Home,PageUp,PageDown,End"
+    b = b.split(",");
+    if (b.indexOf(e.code) == -1) {
+      let tab = document.querySelector("section.contentactive")
+      let buttons = tab.querySelector(".ButtonCode");
       if (buttons) {
         buttons.style.display = "block"
       }
     }
+
   }
 
   function CreateTabsData(idItem, query) {
@@ -211,7 +213,7 @@ export default function Tree(props) {
           <div style={{ "padding-left": "10px" }}>
             <Switch idItem={idItem} label="Запрос модифицирования" onClick={ClickCheck} checked={query.IsReq ? query.IsReq : 0} />
           </div>
-          <div id="ButtonCode" style={{ display: "none" }}>
+          <div className = "ButtonCode" style={{ display: "none" }}>
             <Tooltip title="Сохранить редактирование" >
               <IconButton aria-label="CancelEdit" size="small" onClick={ApplyCode}>
                 <CheckIcon style={{ fill: "#628cb6" }} />
@@ -224,12 +226,12 @@ export default function Tree(props) {
             </Tooltip>
           </div>
         </div>
-        <div style={{ overflow: "auto" }} id="Code" onInput={(e) => EditCode(e)}>
+        <div style={{ overflow: "auto" }} id="Code" onKeyUp={(e) => EditCode(e)}>
           <CodeMirror
             value={query.content}
             height="100%"
             extensions={[sql()]}
-            
+
           />
         </div>
       </section>
