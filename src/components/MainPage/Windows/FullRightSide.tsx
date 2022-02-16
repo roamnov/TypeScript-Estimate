@@ -20,7 +20,6 @@ export default function FullRightSide(props: InfoAboutClick) {
 
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
-  const [WorkPalceToolsData, setWorkPalceToolsData] = React.useState();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -28,27 +27,15 @@ export default function FullRightSide(props: InfoAboutClick) {
     setOpen(!open)
   }
 
-  React.useEffect(() => {
-    GetWorkPlaceTools();
- }, []);
-
-
- const GetWorkPlaceTools = ( ) =>{
-  let params = new Map, json;
-  params.set('prefix','config'); 
-  params.set('comand','GetWorkPlaceTools');
-  json = XMLrequest(params)
-  setWorkPalceToolsData(json);
-  
-} 
+ 
 
   const getTabs = ()=>{
     if(props.id !== undefined && props.clsic  == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"){
       
-      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <SectionsDBview WorkPlaceTools={WorkPalceToolsData} CLSID = {props.clsic} id = {props.id}/>) 
+      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <SectionsDBview  CLSID = {props.clsic} id = {props.id}/>) 
     }
     if(props.id !== undefined){
-      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <StillDevelopmentPage WorkPlaceTools={WorkPalceToolsData} id = {props.id}/>) 
+      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <StillDevelopmentPage  id = {props.id}/>) 
     }
   }
 
@@ -65,7 +52,10 @@ export default function FullRightSide(props: InfoAboutClick) {
       
         
        </div>
-       <StickyFooter />
+       {props.id ===undefined?<Grid style={{marginTop: 20}}><SectionToolsJS   /></Grid>  :<></>}
+       {props.id ===undefined?<></>:<StickyFooter/>}
+       
+       
     </Grid>
   );
 }
