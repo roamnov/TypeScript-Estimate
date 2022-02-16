@@ -62,9 +62,9 @@ export default function DocTabs(name, doccfgid, parent, cont) {
         let divBtn = document.getElementById("DocTabsBtn");
         let btnScrollLeft = document.getElementById("btnScrollTabDocLeft");
         let btnScrollRight = document.getElementById("btnScrollTabDocRight");
-        console.log("__________________________________________")
+      /*  console.log("__________________________________________")
         console.log(divBtn.getBoundingClientRect().width)
-        console.log("__________________________________________")
+        console.log("__________________________________________")*/
         /*if (SummWidth(divBtn) < divBtn.clientWidth) {
             btnScrollLeft.classList.remove("hidden")
             btnScrollRight.classList.remove("hidden")
@@ -149,7 +149,7 @@ export default function DocTabs(name, doccfgid, parent, cont) {
     var docTabs = document.getElementById("DocTabs")
 
     if (docTabs) {
-        docTabs.querySelectorAll('.TabDocActiv').forEach(n => n.classList.remove('TabDocActiv'));
+        docTabs.querySelectorAll('.TabDocContent').forEach(n => n.classList.remove('TabDocContentActiv'));
         AddTab()
     }
     else {

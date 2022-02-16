@@ -10,6 +10,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import CodeMirror from '@uiw/react-codemirror';
 import { sql } from '@codemirror/lang-sql';
 
+
+
 export function clickTab(event) {
   let lbl = event.currentTarget;
   if (!lbl)
@@ -154,6 +156,14 @@ export default function Tree(props) {
 
     }
   }
+  function CreateCodeMirror (d)
+  {
+   return  <CodeMirror
+            value={d.content}
+            height="100%"
+            extensions={[sql()]}
+          />
+  }
   function RestoreCode(e) {
     let el = e.currentTarget;
     let tab = document.querySelector("section.contentactive")
@@ -169,15 +179,12 @@ export default function Tree(props) {
     params.set('SectionID', "143");
     params.set('ID', tab.id.split("_")[2]);
     let otv = XMLrequest(params);
-    let editor =<CodeMirror
-      value={otv["content"]}
-      height="100%"
-      extensions={[sql()]}
-    />
+    let editor =CreateCodeMirror(otv)    
     let Code
     Code = tab.querySelector(".Code");
-   // Code.innerHTML = ""
     ReactDOM.render(editor, Code)
+   // Code.innerHTML = ""
+    
     Code.textChanged = false;
     Code.addEventListener("KeyUp", EditCode)
   }
@@ -226,13 +233,9 @@ export default function Tree(props) {
             </Tooltip>
           </div>
         </div>
-        <div style={{ overflow: "auto" }} id="Code" onKeyUp={(e) => EditCode(e)}>
-          <CodeMirror
-            value={query.content}
-            height="100%"
-            extensions={[sql()]}
-
-          />
+        <div style={{ overflow: "auto" }} className="Code" onKeyUp={(e) => EditCode(e)}>
+        {CreateCodeMirror(query)}
+          
         </div>
       </section>
 
@@ -333,7 +336,7 @@ export default function Tree(props) {
   fetchData()
 
   return (
-    <div id="TreeDBView" className='react-checkbox-tree rct-icons-fa5' style={{ height: `${currentHeight}px`, overflow: "scroll", overflowX: "hidden", scrollbarWidth: "none" }}>
+    <div id="TreeDBView" className='react-checkbox-tree rct-icons-fa5' style={{ height: `${currentHeight}px`, overflowX: "auto", scrollbarWidth: "none" }}>
       <ol>
         {CreateListTree()}
       </ol>

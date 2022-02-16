@@ -8,6 +8,7 @@ import Tooltip from '@mui/material/Tooltip';
 import ManWhoSoldTheWorld from '../stimategrid/test'
 import { clickTab } from '../Windows/ViewData/Tree/tree'
 import SectionToolsJS from '../Tools/SectionToolsJS';
+import Split from 'react-split'
 
 export default function SectionsDBview(props) {
     function OpenData() {
@@ -36,16 +37,16 @@ export default function SectionsDBview(props) {
 
             <SectionToolsJS WorkPlaceTools={props.WorkPlaceTools} ID={props.id} defaultButton={defaultButton} />
         </div>
-        <div style={{ display: "flex" }}>
-            <ResizePanel direction="e" style={{ width: '30%' }}>
+        <div >
+       
+            <Split
+                class="wrap" sizes={[25, 67]}>
                 <div id="DBviewTree">
                     <Tree CLSID={props.CLSID} multiCheck={false} />
                 </div>
-            </ResizePanel>
-
-            <div id="DBviewData" >
-
-            </div>
+                <div id="DBviewData" >
+                </div>
+            </ Split>
         </div>
     </div >
     return (DBview);

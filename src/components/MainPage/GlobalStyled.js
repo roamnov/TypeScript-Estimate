@@ -1,12 +1,13 @@
 import styled, { createGlobalStyle } from 'styled-components';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
+import { GlobalStyles } from '@material-ui/styled-engine';
 
 const GlobalStyleTree = createGlobalStyle`
 
 .hiddenBlock
 {
-    display: block;
+    display: none;
     height: 0px;
     opacity: 0;
     z-index: -99999;
@@ -1137,9 +1138,27 @@ const GlobalStyleCheckBox = createGlobalStyle`
 	opacity: 0.5;
 }
 `
+const GlobalStyleResizePanel = createGlobalStyle`
+.gutter-horizontal {
+    cursor: ew-resize;
+  }
+  
+  .gutter-vertical {
+    cursor: ns-resize;
+  }
+  .wrap {
+    display: flex;
+  }
+  .gutter {
+    background-color: #85bee5;
+    width: 5px !important;
+    flex-shrink: 0;
+  }  
+`
 export {GlobalStyleTree}
 export {GlobalStyleDBview}
 export {GlobalStyleGrid}
 export {GlobalStyleDocTabs}
 export {GlobalStyleDropList}
 export {GlobalStyleCheckBox}
+export {GlobalStyleResizePanel}
