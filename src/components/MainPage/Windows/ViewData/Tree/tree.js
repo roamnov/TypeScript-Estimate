@@ -38,6 +38,7 @@ export function clickTab(event) {
 export default function Tree(props) {
   let data;
   var ApplyButtons;
+  const [sqlCode, setSqlCode] = React.useState("")
   const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight - 205);
 
   const handleResize = () => {
@@ -134,21 +135,21 @@ export default function Tree(props) {
   }
   function ApplyCode(e) {
     let el = e.currentTarget;
-
-    let buttons = document.querySelector("section.contentactive").querySelector("#ButtonCode");
+    let tab = document.querySelector("div.tabs.activetabs")
+    let buttons = tab.querySelector(".ButtonCode");
     if (buttons) {
       if (buttons.style.display == "block") {
         buttons.style.display = "none"
       }
-      let tab = document.querySelector("section.contentactive")
+
       let text = tab.querySelector(".cm-theme-light").querySelector(".cm-content").innerText;
-      let Code = tab.querySelector("#Code");
+      let Code = tab.querySelector(".Code");
       Code.textChanged = false;
       let params = new Map();
       params.set('prefix', 'dbview');
       params.set('comand', 'HandleSQLScript');
       let Data = {
-        id: tab.id.split("_")[2],
+        id: document.querySelector("div.tabs.activetabs").querySelector("label.tablbl.activetab").id.split("_")[1],
         $content: text,
         //Comp: "NPO5898",
       }
@@ -156,17 +157,17 @@ export default function Tree(props) {
 
     }
   }
-  function CreateCodeMirror (d)
-  {
-   return  <CodeMirror
-            value={d.content}
-            height="100%"
-            extensions={[sql()]}
-          />
+  function CreateCodeMirror(d) {
+    let C = <div className='CodeMirror'><CodeMirror
+      value={d}
+      height="100%"
+      extensions={[sql()]}
+    /></div>
+    return C
   }
   function RestoreCode(e) {
     let el = e.currentTarget;
-    let tab = document.querySelector("section.contentactive")
+    let tab = document.querySelector("div.tabs.activetabs")
     let buttons = tab.querySelector(".ButtonCode");
     if (buttons) {
       if (buttons.style.display == "block") {
@@ -177,14 +178,16 @@ export default function Tree(props) {
     params.set('prefix', 'dbview');
     params.set('comand', 'HandleSQLScript');
     params.set('SectionID', "143");
-    params.set('ID', tab.id.split("_")[2]);
+    params.set('ID', tab.querySelector('.tablbl.activetab').id.split("_")[1]);
     let otv = XMLrequest(params);
-    let editor =CreateCodeMirror(otv)    
+    setSqlCode(otv.content)
+    let editor = CreateCodeMirror(otv.content)
     let Code
-    Code = tab.querySelector(".Code");
+    Code = document.createElement("div") // tab.querySelector(".Code");
+    //Code.innerHTML = ""
     ReactDOM.render(editor, Code)
-   // Code.innerHTML = ""
-    
+
+
     Code.textChanged = false;
     Code.addEventListener("KeyUp", EditCode)
   }
@@ -194,7 +197,7 @@ export default function Tree(props) {
     b = "ShiftRight,ShiftLeft,ControlLeft,MetaLeft,AltLeft,CapsLock,ArrowLeft,ArrowRight,ArrowUp,ArrowDown,Escape,AudioVolumeMute,F1, F2,F3,F4,F5,F6,F7,F8,F9,F10,Insert,NumLock,Home,PageUp,PageDown,End"
     b = b.split(",");
     if (b.indexOf(e.code) == -1) {
-      let tab = document.querySelector("section.contentactive")
+      let tab = document.querySelector("div.tabs.activetabs")
       let buttons = tab.querySelector(".ButtonCode");
       if (buttons) {
         buttons.style.display = "block"
@@ -220,7 +223,7 @@ export default function Tree(props) {
           <div style={{ "padding-left": "10px" }}>
             <Switch idItem={idItem} label="Запрос модифицирования" onClick={ClickCheck} checked={query.IsReq ? query.IsReq : 0} />
           </div>
-          <div className = "ButtonCode" style={{ display: "none" }}>
+          <div className="ButtonCode" style={{ display: "none" }}>
             <Tooltip title="Сохранить редактирование" >
               <IconButton aria-label="CancelEdit" size="small" onClick={ApplyCode}>
                 <CheckIcon style={{ fill: "#628cb6" }} />
@@ -234,8 +237,8 @@ export default function Tree(props) {
           </div>
         </div>
         <div style={{ overflow: "auto" }} className="Code" onKeyUp={(e) => EditCode(e)}>
-        {CreateCodeMirror(query)}
-          
+          {CreateCodeMirror(query.content)}
+
         </div>
       </section>
 
