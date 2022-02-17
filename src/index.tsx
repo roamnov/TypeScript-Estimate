@@ -7,7 +7,6 @@ import MainPage from './components/MainPage/MainFile';
 import SignIn from './components/Singin/SingIn';
 import { GlobalStyleDocTabs, GlobalStyleTree, GlobalStyleDBview, GlobalStyleGrid,GlobalStyleDropList, GlobalStyleCheckBox, GlobalStyleResizePanel } from "./components/MainPage/GlobalStyled"
 //let pref = require('./components/stimweb/tools/trsview.html')
-
 ReactDOM.render(
     <React.StrictMode>
       <GlobalStyleDocTabs />

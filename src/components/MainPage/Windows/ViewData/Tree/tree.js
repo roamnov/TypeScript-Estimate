@@ -38,7 +38,6 @@ export function clickTab(event) {
 export default function Tree(props) {
   let data;
   var ApplyButtons;
-  const [sqlCode, setSqlCode] = React.useState("")
   const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight - 205);
 
   const handleResize = () => {
@@ -180,10 +179,10 @@ export default function Tree(props) {
     params.set('SectionID', "143");
     params.set('ID', tab.querySelector('.tablbl.activetab').id.split("_")[1]);
     let otv = XMLrequest(params);
-    setSqlCode(otv.content)
+   
     let editor = CreateCodeMirror(otv.content)
     let Code
-    Code = document.createElement("div") // tab.querySelector(".Code");
+    Code = tab.querySelector(".Code");
     //Code.innerHTML = ""
     ReactDOM.render(editor, Code)
 

@@ -721,87 +721,13 @@ ul.pagination li a:hover:not(.active) {
 }
 `
 const GlobalStyleDocTabs = createGlobalStyle`
-#DocTabsBtn {
-    display: none;
-    overflow: hidden;
-}
-#DocTabsContent
-{
-    /*position: absolute;*/
-    width: 100%;
-    /*height: 100%;*/
-}
-.TabDoc {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #ddd;
-    text-decoration: none;
-    padding: .25rem .75rem;
-    color: #B3B3B3;
-    background: #E7E7E7;
-    margin-left: .25rem;
-    max-width: 150px;
-    white-space: nowrap; 
-}
-
-.TabDocActiv {
-    font-weight: bold;
-    border-bottom-color: #fff;
-    background: #fff;
-    color: #186baa;
-    
-}
-.TabDocContent
-{
-    display: none;
-    position: relative;
-    height: inherit;
-    margin-top: 20px;
-}
-.TabDocContent.TabDocContentActiv
+.TabDocActiv
 {
     display: block;
-   /* position: absolute;
-    width: 100%;*/
 }
-.TabDoc span {
-    width: calc(100% - 25px);
-    height: 100%;
-    cursor: pointer;
-    overflow: hidden;
-}
-.TabDocActiv span
+.TabDocNoActiv
 {
-    cursor: default !important;
-}
-.TabDoc.TabDocActiv .btnCloseTab {
-    background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M15.125 12.28125L12.28125 15.125L22.21875 25L12.28125 34.875L15.125 37.71875L25.0625 27.84375L35 37.71875L37.8125 34.875L27.90625 25L37.8125 15.125L35 12.28125L25.0625 22.15625Z"  /></svg>');
-    cursor: pointer;
-    height: 20px;
-    width: 20px;
-    display: block;
-}
-.btnCloseTab:hover {
-    background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path fill = "red" d="M15.125 12.28125L12.28125 15.125L22.21875 25L12.28125 34.875L15.125 37.71875L25.0625 27.84375L35 37.71875L37.8125 34.875L27.90625 25L37.8125 15.125L35 12.28125L25.0625 22.15625Z"  /></svg>') !important;
-}
-.TabDoc .btnCloseTab
-{
-display: none;
-}
-.btnScrollTabDocLeft
-{
-    position: absolute;
-   height: 30px;
-   width: 30px;
-   background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M16 3C8.832031 3 3 8.832031 3 16C3 23.167969 8.832031 29 16 29C23.167969 29 29 23.167969 29 16C29 8.832031 23.167969 3 16 3 Z M 16 5C22.085938 5 27 9.914063 27 16C27 22.085938 22.085938 27 16 27C9.914063 27 5 22.085938 5 16C5 9.914063 9.914063 5 16 5 Z M 14.21875 9.28125L12.78125 10.71875L18.0625 16L12.78125 21.28125L14.21875 22.71875L20.21875 16.71875L20.90625 16L20.21875 15.28125Z" fill="red" /></svg>'); 
-}
-.btnScrollTabDocRight
-{
-    position: absolute;
-   height: 30px;
-   width: 30px;
-   background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M16 3C8.832031 3 3 8.832031 3 16C3 23.167969 8.832031 29 16 29C23.167969 29 29 23.167969 29 16C29 8.832031 23.167969 3 16 3 Z M 16 5C22.085938 5 27 9.914063 27 16C27 22.085938 22.085938 27 16 27C9.914063 27 5 22.085938 5 16C5 9.914063 9.914063 5 16 5 Z M 17.78125 9.28125L11.78125 15.28125L11.09375 16L11.78125 16.71875L17.78125 22.71875L19.21875 21.28125L13.9375 16L19.21875 10.71875Z" fill="red" /></svg>'); 
+    display: none;
 }
 `
 const GlobalStyleDropList = createGlobalStyle`
