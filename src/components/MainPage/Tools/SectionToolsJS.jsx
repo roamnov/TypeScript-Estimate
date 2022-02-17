@@ -44,9 +44,14 @@ const SectionToolsJS = (props) =>{
     React.useEffect(() => {
         
         if(props.ID !== undefined){
-            setMenuBarSection([]);
-            GetSectionTools();
-           
+            
+            if (navigator.userAgent.includes('Firefox')) {
+                setTimeout(() => {
+                    GetSectionTools();   
+                }, 1000);
+              }else{
+                GetSectionTools();  
+              } 
         }else{
             
         }
@@ -54,7 +59,14 @@ const SectionToolsJS = (props) =>{
 
 
      React.useEffect(() => {
-        GetWorkPlaceTools();     
+        
+        if (navigator.userAgent.includes('Firefox')) {
+            setTimeout(() => {
+                GetWorkPlaceTools();    
+            }, 1000);
+          }else{
+            GetWorkPlaceTools();    
+          } 
         
      }, []);
  
@@ -96,9 +108,9 @@ const SectionToolsJS = (props) =>{
             </>
         )
         if(Token === "ModalOpenAboutVersion"){
-           // ReactDOM.render(<DialogContainer title={'Cправка о версии'} contentText={<div>Текущая версия веб клиента:{CurrentVersion}</div>} />,document.getElementById('RenderModalSub'))
+            ReactDOM.render(<DialogContainer title={'Cправка о версии'} contentText={<div>Текущая версия веб клиента:{CurrentVersion}</div>} />,document.getElementById('RenderModalSub'))
         }else{
-            //ReactDOM.render(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />,document.getElementById('RenderModalSub'))
+            ReactDOM.render(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />,document.getElementById('RenderModalSub'))
            //setDid(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />)
         }
         
@@ -170,7 +182,7 @@ const SectionToolsJS = (props) =>{
             setAssMass(AssMass.set(key,false));
             
         }
-        console.log(AssMass)
+       
     }
 
     
@@ -205,7 +217,7 @@ const SectionToolsJS = (props) =>{
                     
                     assemblyLists.push(
                         <Grid key={key}>
-                            <MenuItem   id={key}  onClick={handleClickItemMenu} style={{height:"25px", marginLeft:2}}>
+                            <MenuItem  token={Token} params={Params} path={Path} id={key}  onClick={handleClickItemMenu} style={{height:"25px", marginLeft:2}}>
                                 <Grid sx={{pr:prS, pt:0.5}}>
                                     {Image === undefined?<div style={{paddingLeft:"13px"}}></div> :ImgURL(Image, "16px", "16px" )}
                                 </Grid>
