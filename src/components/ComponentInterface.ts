@@ -124,3 +124,8 @@ export interface DialogContainerProps{
     contentText:any,
 
 }
+
+export interface Test {
+    tools: object,
+    id: string
+}

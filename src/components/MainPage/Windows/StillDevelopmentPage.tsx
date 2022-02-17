@@ -5,6 +5,7 @@ import SectionToolsJS from '../Tools/SectionToolsJS';
 
 const StillDevelopmentPage = (props: any) => {
     const [currentHeight, setCurrentHeight] = useState(window.innerHeight - 189);
+    
     const handleResize = () => {
         setCurrentHeight(window.innerHeight - 189);
     }
@@ -15,7 +16,7 @@ const StillDevelopmentPage = (props: any) => {
     
 
     return (
-        <><SectionToolsJS WorkPlaceTools={props.WorkPlaceTools} ID={props.id} />
+        <><SectionToolsJS  ID={props.id} />
         <Grid container direction="row" justifyContent="center" alignItems="center" style={{ height: `${currentHeight}px` }}>
             <Grid item>
                 <div>

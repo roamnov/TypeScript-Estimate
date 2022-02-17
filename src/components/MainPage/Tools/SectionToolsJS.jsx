@@ -11,6 +11,7 @@ import ModalProgress from '../../Containers/ModalProgress';
 import axios from 'axios';
 import ChangeStatusProgressFooter from '../NotWorkArea(Side&Head)/ChangeStatusProgress';
 import DialogContainer from '../../Containers/DialogContainer';
+import { CurrentVersion } from '../../SetHost';
 
 
 //
@@ -27,21 +28,47 @@ const SectionToolsJS = (props) =>{
     const [value, setValue] = React.useState();
     
 
-    const [dataButtonsDefault, setDataButtonsDefault] = React.useState(props.WorkPlaceTools["Buttons"]["Button"]);
+    const [dataButtonsDefault, setDataButtonsDefault] = React.useState();
     const [open1, setOpen1] = React.useState(false);
-    const [menuBarDefault, setMenuBarDefault] = React.useState(props.WorkPlaceTools["MenuBar"]);
+    const [menuBarDefault, setMenuBarDefault] = React.useState(undefined);
     const [ID, setID] = React.useState();
     const [AssMass, setAssMass] = React.useState(new Map());
     const [anchorElAss, setAnchorElAss] = React.useState(new Map());
+    const [Did, setDid] = React.useState(<></>);
 
+    
+ 
     
 
 
     React.useEffect(() => {
+        
         if(props.ID !== undefined){
-            GetSectionTools();
+            
+            if (navigator.userAgent.includes('Firefox')) {
+                setTimeout(() => {
+                    GetSectionTools();   
+                }, 1000);
+              }else{
+                GetSectionTools();  
+              } 
+        }else{
+            
         }
      }, [props.ID])
+
+
+     React.useEffect(() => {
+        
+        if (navigator.userAgent.includes('Firefox')) {
+            setTimeout(() => {
+                GetWorkPlaceTools();    
+            }, 1000);
+          }else{
+            GetWorkPlaceTools();    
+          } 
+        
+     }, []);
  
      React.useEffect(()=>{
         tokenProcessing(data)
@@ -80,7 +107,13 @@ const SectionToolsJS = (props) =>{
             {Params === null?<></>:<>Params: {Params}</>}
             </>
         )
-        ReactDOM.render(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />,document.getElementById('RenderModalSub'))
+        if(Token === "ModalOpenAboutVersion"){
+            ReactDOM.render(<DialogContainer title={'Cправка о версии'} contentText={<div>Текущая версия веб клиента:{CurrentVersion}</div>} />,document.getElementById('RenderModalSub'))
+        }else{
+            ReactDOM.render(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />,document.getElementById('RenderModalSub'))
+           //setDid(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />)
+        }
+        
     }
 
     const GetSectionTools =  () =>{
@@ -93,30 +126,49 @@ const SectionToolsJS = (props) =>{
         setMenuBarSection(json["MenuBar"])
     }
 
+    const GetWorkPlaceTools = ( ) =>{
+        let params = new Map, json;
+        params.set('prefix','config'); 
+        params.set('comand','GetWorkPlaceTools');
+        json = XMLrequest(params)
+        setDataButtonsDefault(json["Buttons"]["Button"]);
+        setMenuBarDefault(json["MenuBar"]);
+        CreateMap(json["MenuBar"]);
+        
+    } 
+
     
     function AssignObjectsForMenuBar(){
-    
+        
         if(isEmptyObject(menuBarSection)){
-            let MenuBar = Object.assign({}, menuBarDefault, Reference )
+            let MenuBar = {}
+            MenuBar = Object.assign({}, menuBarDefault, Reference )
+            
+
             return MenuBar
         }else{
-            let KeysDefaut, KeysSections,MenuBar, SameMenus ={}
+            let KeysDefaut, KeysSections,MenuBar = {}, SameMenus ={}
+            const test = Object.assign({}, menuBarDefault)
+             
             MenuBar = Object.assign({}, menuBarDefault)
+            
             SameMenus  = Object.assign({}, menuBarDefault)  
             KeysDefaut = Object.keys(MenuBar);
             KeysSections = Object.keys(menuBarSection);
             for (const  valueDefaut of KeysDefaut) {
                 for (const  valueSection of KeysSections) {
                     if (valueDefaut === valueSection){
-                        SameMenus[valueDefaut] = Object.assign(SameMenus[valueDefaut],menuBarDefault[valueDefaut],menuBarSection[valueDefaut] )
+                        SameMenus[valueDefaut] = Object.assign(SameMenus[valueDefaut],menuBarSection[valueDefaut] ,menuBarDefault[valueDefaut])
+                        
                         
                     }
                 }
             }
-            
+           
             MenuBar = Object.assign(MenuBar,menuBarSection)
             MenuBar = Object.assign(MenuBar,SameMenus, Reference)
-        
+           
+
             return MenuBar
         }
          
@@ -130,6 +182,7 @@ const SectionToolsJS = (props) =>{
             setAssMass(AssMass.set(key,false));
             
         }
+       
     }
 
     
@@ -147,6 +200,7 @@ const SectionToolsJS = (props) =>{
         if ( jsonItems !== undefined){
             let DeepFirst, Token, Params, ArrItems, openSet, Path , Image;
             let assemblyLists = [];
+            
 
             for (const [key, value] of Object.entries(jsonItems)) {
                 Token = jsonItems[key]["Token"];
@@ -160,9 +214,10 @@ const SectionToolsJS = (props) =>{
                 
                 if (Token !== undefined || Path !==undefined ){//это то что будет внутри item
                     let prS = Image === undefined? 0.5:0.2 
+                    
                     assemblyLists.push(
                         <Grid key={key}>
-                            <MenuItem token={Token} params={Params} path={Path}  id={key}  onClick={handleClickItemMenu} style={{height:"25px", marginLeft:2}}>
+                            <MenuItem  token={Token} params={Params} path={Path} id={key}  onClick={handleClickItemMenu} style={{height:"25px", marginLeft:2}}>
                                 <Grid sx={{pr:prS, pt:0.5}}>
                                     {Image === undefined?<div style={{paddingLeft:"13px"}}></div> :ImgURL(Image, "16px", "16px" )}
                                 </Grid>
@@ -175,7 +230,6 @@ const SectionToolsJS = (props) =>{
                 }else{// это item который будет распахиваться
                     openSet = AssMass.get(CurrentID);
                     if(key !== "Image" && key !== "-"){
-                        
                         assemblyLists.push(
                             <Grid key={key}>
                                 <NestedMenuItem style={{paddingLeft:"10px", height:"25px", marginLeft:2}}  leftIcon={Image === undefined?<div style={{paddingLeft:"16px"}}></div> :ImgURL(Image, "16px", "16px",7,3 ,-5)}  label={key}  parentMenuOpen={openSet}  >
@@ -193,17 +247,20 @@ const SectionToolsJS = (props) =>{
     
     function Rec(jsonItems){
         if ( jsonItems !== undefined){
-            let DeepFirst, ArrItems, openSet, anchorElset;
+            // console.log(jsonItems)
+            let DeepFirst, ArrItems, openSet, anchorElset, Token;
             let assemblyLists = [];
+            //CreateMap(jsonItems)
             for (const [key, value] of Object.entries(jsonItems)) {
-                
+                Token = jsonItems[key]["Token"];
                 DeepFirst = value;
                 ArrItems = Object.keys(DeepFirst);
                 // console.log(key + "----------------------------------")
                 
-                if (ArrItems[1]!== "Token" ){//это то что будет внутри item
+                if (Token === undefined){//это то что будет внутри item
                     openSet = AssMass.get(key);
                     anchorElset = anchorElAss.get(key);
+                    
                     assemblyLists.push(
                         <Grid item  key={key}>
                             <Button id={key} onClick={handleClick}>
@@ -423,7 +480,7 @@ const SectionToolsJS = (props) =>{
     return(
         <Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" sx={{pl:2}} >
            <div id="RenderModal">  </div>
-           <div id="RenderModalSub"> </div>
+           <div id="RenderModalSub"> {Did}</div>
            <Grid id="RenderDefault"> </Grid>
 
            <Grid item> 
