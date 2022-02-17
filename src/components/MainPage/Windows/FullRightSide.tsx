@@ -4,7 +4,7 @@ import { IdToTree, InfoAboutClick, TabPanelProps,InfoAboutClickDown } from "../.
 //import init from "../stimweb/tools"
 //import Init from '../stimategrid/test';
 import SectionTools from '../Tools/SectionTools';
-import DocTabs from './DocTabs/DocTabs';
+import {AppTabs} from './DocTabs/DocTabs';
 import ManWhoSoldTheWorld from '../stimategrid/test';
 import DocsReportsMainWindow from './Docs&Reports/Docs&ReportsWindow';
 import NestedMenu from '../Tools/NestedMenu';
@@ -29,15 +29,14 @@ export default function FullRightSide(props: InfoAboutClick) {
 
  
 
-  const getTabs = ()=>{
-    if(props.id !== undefined && props.clsic  == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}"){
-      
-      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <SectionsDBview  CLSID = {props.clsic} id = {props.id}/>) 
+  let content
+  if (props.id !== undefined && props.clsic == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}") {
+
+    content = <SectionsDBview  CLSID = {props.clsic} id = {props.id}/>
+  } else
+    if (props.id !== undefined) {
+      content = <StillDevelopmentPage  id = {props.id}/>
     }
-    if(props.id !== undefined){
-      return DocTabs(props.name, props.id, document.getElementById("WorkPlace"), <StillDevelopmentPage  id = {props.id}/>) 
-    }
-  }
 
   
 
@@ -48,9 +47,8 @@ export default function FullRightSide(props: InfoAboutClick) {
       <Grid item  >
         {props.isLoading?<div></div>:<Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" >  </Grid>}
         
-      </Grid>{getTabs()}
-      
-        
+      </Grid>      
+      {AppTabs(props.id, content)}
        </div>
        {props.id ===undefined?<Grid style={{marginTop: 20}}><SectionToolsJS   /></Grid>  :<></>}
        {props.id ===undefined?<></>:<StickyFooter/>}
