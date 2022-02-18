@@ -26,6 +26,7 @@ const SectionToolsJS = (props) =>{
     const [inputText, setInputText] = React.useState();
     const [buttonsSection, setButtonsSection] = React.useState([]);
     const [value, setValue] = React.useState();
+    const [selestedFile, setSelectedFile] = React.useState();
     
 
     const [dataButtonsDefault, setDataButtonsDefault] = React.useState();
@@ -48,7 +49,7 @@ const SectionToolsJS = (props) =>{
             if (navigator.userAgent.includes('Firefox')) {
                 setTimeout(() => {
                     GetSectionTools();   
-                }, 1000);
+                }, 500);
               }else{
                 GetSectionTools();  
               } 
@@ -63,7 +64,7 @@ const SectionToolsJS = (props) =>{
         if (navigator.userAgent.includes('Firefox')) {
             setTimeout(() => {
                 GetWorkPlaceTools();    
-            }, 1000);
+            }, 500);
           }else{
             GetWorkPlaceTools();    
           } 
@@ -280,7 +281,24 @@ const SectionToolsJS = (props) =>{
 
     
 
-    
+    function buildFileSelector(Type,RequestID){
+        const fileSelector = document.createElement('input');
+        fileSelector.setAttribute('type', 'file');
+        fileSelector.setAttribute('accept', '.zip');
+        fileSelector.click();
+        fileSelector.onchange = function(e){
+            let file = e.target.files[0]
+            let reader = new FileReader();
+            reader.readAsDataURL(file)
+            reader.onload=(event)=>{
+                setSelectedFile({name:file.name , RCDATA: e.target.result.substr(37) });
+            }
+        }
+      }
+
+    function getDataFromInputFile(event){
+
+    }  
 
     const InputChange = (event)=>{
         setInputText(event.target.value)
@@ -405,7 +423,16 @@ const SectionToolsJS = (props) =>{
                 case "SetProgressLabel":
                     EmptyRequest(RequestID);
                     break;
-
+                case "SelectFile":
+                    let  Filter
+                    Filter = json.Params.Filter
+                                        
+                        
+                    break;
+                case "GetFileStream":
+                    break;
+                    // <Result Result="1" FileName="D:\react\TypeScript-Estimate\build\build.zip" Index="1">D:\react\TypeScript-Estimate\build\build.zip
+                    // </Result>
             }
 
         }
@@ -427,6 +454,7 @@ const SectionToolsJS = (props) =>{
         //params.set("Checked", "0") УЗНАТЬ КАК WSM ПОЛУЧАТЬ ////////////////////////////////////////////////////////
         params.set("WSM", "1");
         await axios.get(URL(params)).then((res)=> setData(res.data))
+       
         //json = XMLrequest(params);
         //setData(json);
     }
@@ -488,13 +516,15 @@ const SectionToolsJS = (props) =>{
                     {RenderButtons(dataButtonsDefault, "WorkPlace")}
                     {RenderButtons(buttonsSection, "SectionTools")}
                     {Program}
-                    
+                    {}
                 </Grid>
             </Grid>
 
             <Grid item> 
                 <Grid container direction="row"  justifyContent="flex-start" alignItems="center" >
                     {Rec(AssignObjectsForMenuBar())}
+                    <Button onClick={buildFileSelector}>sas</Button>
+                   
                 </Grid>
             </Grid>
         </Grid>
