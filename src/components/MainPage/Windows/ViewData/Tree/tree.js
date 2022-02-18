@@ -96,6 +96,11 @@ export default function Tree(props) {
         ol.classList.remove("showBlock")
       }
     }
+    let TreeDBView = document.getElementById("TreeDBView");
+    if (TreeDBView)
+    {
+      TreeDBView.scrollLeft = -1*TreeDBView.scrollWidth;
+    }
   }
   function GetObjectValues() {
     let params = new Map();
@@ -336,9 +341,12 @@ export default function Tree(props) {
   }
 
   fetchData()
-
+  function resizeTreeDBView (ev)
+    {
+        console.log(ev)
+    }
   return (
-    <div id="TreeDBView" className='react-checkbox-tree rct-icons-fa5' style={{ height: `${currentHeight}px`, overflowX: "auto", scrollbarWidth: "none" }}>
+    <div id="TreeDBView" className='react-checkbox-tree rct-icons-fa5' style={{ height: `${currentHeight}px`, overflowX: "auto" }} onResize = {resizeTreeDBView}>
       <ol>
         {CreateListTree()}
       </ol>

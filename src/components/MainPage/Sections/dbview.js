@@ -27,6 +27,7 @@ export default function SectionsDBview(props) {
             }
         }
     }
+  
     let defaultButton = <Tooltip title="Показать данные" >
         <Button variant="outlined" size="small" onClick={() => OpenData()}>
             Открыть
@@ -41,7 +42,7 @@ export default function SectionsDBview(props) {
        
             <Split
                 class="wrap" sizes={[25, 67]}>
-                <div id="DBviewTree">
+                <div id="DBviewTree" >
                     <Tree CLSID={props.CLSID} multiCheck={false} />
                 </div>
                 <div id="DBviewData" >
