@@ -45,7 +45,7 @@ export const useStyles = makeStyles((theme: { mixins: { toolbar: any; }; })=>({
   buttonDragger: {
     //width: "1px",
     cursor:"pointer",
-    height: "2.5%",
+   // height: "2.5%",
     padding: "0 0 0 0",
     position: "absolute",
     left: -5,
