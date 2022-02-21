@@ -12,6 +12,9 @@ import axios from 'axios';
 import ChangeStatusProgressFooter from '../NotWorkArea(Side&Head)/ChangeStatusProgress';
 import DialogContainer from '../../Containers/DialogContainer';
 import { CurrentVersion } from '../../SetHost';
+import { triggerBase64Download } from 'common-base64-downloader-react';
+import { download } from './Tools';
+
 
 
 //
@@ -35,7 +38,7 @@ const SectionToolsJS = (props) =>{
     const [ID, setID] = React.useState();
     const [AssMass, setAssMass] = React.useState(new Map());
     const [anchorElAss, setAnchorElAss] = React.useState(new Map());
-    const [Did, setDid] = React.useState(<></>);
+   
 
     
  
@@ -284,21 +287,29 @@ const SectionToolsJS = (props) =>{
     function buildFileSelector(Type,RequestID){
         const fileSelector = document.createElement('input');
         fileSelector.setAttribute('type', 'file');
-        fileSelector.setAttribute('accept', '.zip');
-        fileSelector.click();
+        fileSelector.setAttribute('accept', Type);
+        fileSelector.setAttribute("reqId", RequestID)
         fileSelector.onchange = function(e){
+            let params = new Map, data, json, ReqID = e.currentTarget.getAttribute("reqId");
+            params.set('prefix', 'project');
+            params.set("comand", "ResumeRequest");
+            params.set("RequestID",ReqID);
+            params.set("WSM", "1");
             let file = e.target.files[0]
+            data = {"FileName":file.name, Result: "1"  }
             let reader = new FileReader();
             reader.readAsDataURL(file)
             reader.onload=(event)=>{
-                setSelectedFile({name:file.name , RCDATA: e.target.result.substr(37) });
+                
+                setSelectedFile({name:file.name , RCDATA: event.target.result });
+                json = XMLrequest(params, data)
+                setData(json);
             }
         }
+        fileSelector.click();
       }
 
-    function getDataFromInputFile(event){
-
-    }  
+    
 
     const InputChange = (event)=>{
         setInputText(event.target.value)
@@ -353,12 +364,26 @@ const SectionToolsJS = (props) =>{
         //tokenProcessing(json);
     }
 
+    function dataURLtoFile(dataurl, filename) {
+ 
+        var arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), 
+            n = bstr.length, 
+            u8arr = new Uint8Array(n);
+            
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        
+        return new File([u8arr], filename, {type:mime});
+    }
+
 
     function  tokenProcessing (json){///project~ResumeRequest?LicGUID=D100CAB54337ED32E087B59F6CE41511&RequestID=18892&WSM=1 HTTP/1.1
         if(json.Break !== undefined){
-            
-            let returnJSX= [], returnSmth = [], Token,Module, RequestID,andResult,jsonResponse;
-        
+            let returnJSX= [], returnSmth = [], Token,Module, RequestID,andResult;
+            console.log(json)
             Module = json.Module;
             Token = json.Token;
             RequestID= json.Params.RequestID;
@@ -426,13 +451,55 @@ const SectionToolsJS = (props) =>{
                 case "SelectFile":
                     let  Filter
                     Filter = json.Params.Filter
-                                        
+                    
+                    if(Filter === undefined){
+                        Filter= "file"
+                        buildFileSelector(Filter, RequestID) 
+                    }else{
+                        Filter = Filter.split("*") 
+                        buildFileSelector(Filter[1], RequestID) 
+                    }   
+                                                              
                         
                     break;
                 case "GetFileStream":
+                    let FileName= json.Params.FileName, data, params = new Map
+                    if(FileName === selestedFile.name){
+                        params.set('prefix', 'project');
+                        params.set("comand", "ResumeRequest");
+                        params.set("RequestID",RequestID );
+                        params.set("WSM", "1");
+                        data = {RCDATA: selestedFile.RCDATA}
+                        setData(XMLrequest(params,data))
+                    }
+                    
                     break;
-                    // <Result Result="1" FileName="D:\react\TypeScript-Estimate\build\build.zip" Index="1">D:\react\TypeScript-Estimate\build\build.zip
-                    // </Result>
+                case "ShellExecute":
+                    let RCDATA =""
+                    console.log(json)
+                    RCDATA = json.RCDATA
+                    // let stas= 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNv1OCegAAAAMSURBVBhXY/jPYAwAAzQBM849AKsAAAAASUVORK5CYII='
+                    console.log(RCDATA)
+                    if(RCDATA[4] !== ":"){
+                        //triggerBase64Download(RCDATA, 'download_name')
+                        let FixedRCDATA
+                        FixedRCDATA = RCDATA.replace("data","data:")
+                        FixedRCDATA = FixedRCDATA.replace("base64", ";base64,")
+                       // triggerBase64Download(FixedRCDATA, 'download_name')
+                       download(FixedRCDATA, "asas")
+                    }else{
+                        triggerBase64Download(RCDATA, 'download_name')
+                    }
+                    //console.log(RCDATA)
+                    //const link= document.createElement("a")
+                    //link.setAttribute('href', RCDATA);
+                    //link.click();
+                    //const linkSource = `data:application/pdf;base64,${pdf}`;
+                    //download(RCDATA, "dlText.txt","text/plain")
+                    //dataURLtoFile(RCDATA,"test.txt")
+                    //triggerBase64Download(RCDATA, 'download_name')
+                    break;
+                    
             }
 
         }
@@ -445,7 +512,7 @@ const SectionToolsJS = (props) =>{
 
 
     async function handeleExecToolprogram (event , type){///tools~ExecToolProgram
-        let Path = event.currentTarget.getAttribute("id"),  params = new Map(), json, Type, Module, Token, Break;
+        let Path = event.currentTarget.getAttribute("id"),  params = new Map();
         Path = event.currentTarget.getAttribute("id");
         params.set('prefix', 'tools');
         params.set("comand", "ExecToolProgram");
@@ -508,7 +575,7 @@ const SectionToolsJS = (props) =>{
     return(
         <Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" sx={{pl:2}} >
            <div id="RenderModal">  </div>
-           <div id="RenderModalSub"> {Did}</div>
+           <div id="RenderModalSub"> </div>
            <Grid id="RenderDefault"> </Grid>
 
            <Grid item> 
@@ -522,9 +589,7 @@ const SectionToolsJS = (props) =>{
 
             <Grid item> 
                 <Grid container direction="row"  justifyContent="flex-start" alignItems="center" >
-                    {Rec(AssignObjectsForMenuBar())}
-                    <Button onClick={buildFileSelector}>sas</Button>
-                   
+                    {Rec(AssignObjectsForMenuBar())}                   
                 </Grid>
             </Grid>
         </Grid>
