@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import ResizePanel from '../ResizebleComponent/ResizebleComponent';
 //import ResizePanel from "react-resize-panel";
 import Tree from '../Windows/ViewData/Tree/tree';
 import { Button } from '@material-ui/core';

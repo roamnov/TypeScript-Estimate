@@ -35,13 +35,16 @@ export default function WrapperRightSide() {
   const [clsid, setCLSID] = React.useState();
   const [isLoading, setIsLoading] = React.useState(true);
   const [selected, setSelected] = React.useState<InfoAboutClick | undefined>();
+  const [drawerOpen, setdrawerOpen] = React.useState(true);
+  const [nameOpen, setNameOpen] = React.useState();
   document.addEventListener("click", (e) => {ClickDocument(e) })
+  console.log(drawerOpen)
 
   return (
     <Box sx={{ display: 'flex' , height:"100%", overflow:"hidden"}}>
       <CssBaseline />
-      <DashboardNavbar/>
-      <SideBar  isLoading={setIsLoading} setSelected={setSelected}/>
+      <DashboardNavbar open={drawerOpen} name = {selected?.name}/>
+      <SideBar  isLoading={setIsLoading} setSelected={setSelected} setdrawerOpen = {setdrawerOpen} Open={setNameOpen}/>
       <FullRightSide isLoading={isLoading} id= {selected?.id}  clsic= {selected?.clsic} name= {selected?.name}  />
     </Box>
   );

@@ -15,6 +15,7 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { styled } from '@mui/material/styles';
 import { IconButton, ListItem } from "@mui/material";
+import {SetStateNav} from './HiddenNav'
 
 const defaultDrawerWidth = window.innerWidth / 100 * 16.791045;
 const minDrawerWidth = 1;
@@ -67,7 +68,15 @@ export default function SideBar(props: MainBoxBackClick) {
 
   const drawerClick = () => {
     setdrawerOpen(!drawerOpen)
+    props.setdrawerOpen(!drawerOpen);
     drawerOpen ? setDrawerWidth(8) : setDrawerWidth(defaultDrawerWidth)
+    let nav = document.getElementById("HiddenNav");
+    if (!drawerOpen)
+    {
+          nav ? nav.style.display = "none": document.getElementById("HiddenNav")
+    }
+    else
+    nav ? nav.style.display = "block": document.getElementById("HiddenNav")
   }
 
   const handleClick = (event: any) => {
@@ -81,24 +90,39 @@ export default function SideBar(props: MainBoxBackClick) {
     let ID
     let CLSID
     let Name
+    let Patch
+    let img
+    if (event.title)
+    {
+      ID = event.id;
+      CLSID = event.CLSID
+      Name = event.title
+      Patch = event.Patch
+    }
+    else
     if (!event.state) {
-       ID = event.currentTarget.getAttribute("id");
-       CLSID = GetElementAttributeByID(ID, data, "CLSID")
-       Name = event.currentTarget["innerText"]
+      ID = event.currentTarget.getAttribute("id");
+      CLSID = GetElementAttributeByID(ID, data, "CLSID")
+      Name = event.currentTarget["innerText"]
+      Patch = event.currentTarget["title"]? event.currentTarget["title"]+'/'+ Name:Name
+      img = event.currentTarget.querySelector("img").src
       let dataState = {
         id: ID,
         title: Name,
-        CLSID: CLSID
+        CLSID: CLSID,
+        Patch: Patch,
+        img: img        
       };
-      window.history.pushState(dataState, Name);
-      document.title = Name;
+      window.history.pushState(dataState, Patch);
+      document.title = Patch;
+      SetStateNav(dataState, updateSelected)
     }
-    else
-    {
+    else {
       ID = event.state.id;
       CLSID = event.state.CLSID
       Name = event.state.title
     }
+
     setSelected(ID);
     props.setSelected({ id: ID, clsic: CLSID, name: Name })
   };
@@ -110,7 +134,7 @@ export default function SideBar(props: MainBoxBackClick) {
     getSectionList();
   }, []);
 
-  
+
   const getSectionList = async () => {
     let params = new Map(), json;
     params.set('comand', 'GetSectionList');
@@ -150,13 +174,39 @@ export default function SideBar(props: MainBoxBackClick) {
     return backvalue;
   }
 
-
+  function FindParent(id: any, SectionList: any) {
+    let partSectionList = SectionList.slice(0, Number(id)+1);
+    partSectionList = partSectionList.reverse();
+    let Name = new Array;
+    let currentDeep, tDeep, Deep
+    Deep = partSectionList[0]["Deep"]
+    
+    for (let i = 1; i<= partSectionList.length - 1; i = i+1)
+    {
+      if (partSectionList[i]["Deep"])
+      {
+        if (Number(Deep) - Number(partSectionList[i]["Deep"]) == 1)
+        {
+          Name.push(partSectionList[i]["Name"]);
+          Deep = partSectionList[i]["Deep"];
+        }
+      }
+      else
+      {
+        Name.push(partSectionList[i]["Name"]);
+        break;
+      }
+    }
+    Name = Name.reverse();
+    let p = Name.toString()
+    p = p.replace(",", "/")
+    return p
+  }
 
   function Menu(SectionList: any) {
+    let patch
     // фцнкция отрисовки меню
     if (data.length !== undefined) {
-
-
       let Name, ID, currentDeep, openSet, openSetDeep, mainCollapse, deepCollapse, Img, keyS = 0, howDeep = 4
       let assemblyLists = []; //сюда записываем все секции а потом отправляем на отрисовку
 
@@ -188,7 +238,7 @@ export default function SideBar(props: MainBoxBackClick) {
         } else if (currentDeep !== null) {
           //если есть DEEP
           howDeep = 4;
-
+          patch = FindParent(key, SectionList);
           switch (
           currentDeep //Определяем сколько сдвинуть направо отностиельно родителя
           ) {
@@ -230,7 +280,7 @@ export default function SideBar(props: MainBoxBackClick) {
                 unmountOnExit
               >
                 <List key={ID} component="div" disablePadding >
-                  <ListItemButton className={classes.colorList} key={ID} sx={{ pl: howDeep, "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} selected={selected === ID} id={ID} onClick={updateSelected} >
+                  <ListItemButton className={classes.colorList} key={ID} sx={{ pl: howDeep, "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }}  selected={selected === ID} id={ID} onClick={updateSelected} title = {patch}>
                     <ListItemIcon>{Img}</ListItemIcon>
                     <ListItemText primary={Name} style={{ color: "white" }} />
                   </ListItemButton>
@@ -263,7 +313,7 @@ export default function SideBar(props: MainBoxBackClick) {
 
 
       <Box style={{ scrollbarWidth: "none" }} sx={{ overflow: "auto" }}>
-        <Slide direction="right" in={drawerOpen}>
+        <Slide direction="right" in={drawerOpen} >
           <StyledList
             sx={{
               width: "100%",
@@ -272,6 +322,7 @@ export default function SideBar(props: MainBoxBackClick) {
             }}
             style={{ scrollbarWidth: "none" }}
             aria-labelledby="nested-list-subheader"
+            
           >
             {Menu(data)}
           </StyledList>

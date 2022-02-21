@@ -341,12 +341,9 @@ export default function Tree(props) {
   }
 
   fetchData()
-  function resizeTreeDBView (ev)
-    {
-        console.log(ev)
-    }
+
   return (
-    <div id="TreeDBView" className='react-checkbox-tree rct-icons-fa5' style={{ height: `${currentHeight}px`, overflowX: "auto" }} onResize = {resizeTreeDBView}>
+    <div id="TreeDBView" className='react-checkbox-tree rct-icons-fa5' style={{ height: `${currentHeight}px`, overflowX: "auto" }} >
       <ol>
         {CreateListTree()}
       </ol>
