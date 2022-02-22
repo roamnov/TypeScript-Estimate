@@ -14,6 +14,7 @@ import DialogContainer from '../../Containers/DialogContainer';
 import { CurrentVersion } from '../../SetHost';
 import { triggerBase64Download } from 'common-base64-downloader-react';
 import { download } from './Tools';
+import * as mime from 'react-native-mime-types';
 
 
 
@@ -30,7 +31,7 @@ const SectionToolsJS = (props) =>{
     const [buttonsSection, setButtonsSection] = React.useState([]);
     const [value, setValue] = React.useState();
     const [selestedFile, setSelectedFile] = React.useState();
-    
+ 
 
     const [dataButtonsDefault, setDataButtonsDefault] = React.useState();
     const [open1, setOpen1] = React.useState(false);
@@ -38,12 +39,6 @@ const SectionToolsJS = (props) =>{
     const [ID, setID] = React.useState();
     const [AssMass, setAssMass] = React.useState(new Map());
     const [anchorElAss, setAnchorElAss] = React.useState(new Map());
-   
-
-    
- 
-    
-
 
     React.useEffect(() => {
         
@@ -111,12 +106,10 @@ const SectionToolsJS = (props) =>{
             {Params === null?<></>:<>Params: {Params}</>}
             </>
         )
-        if(Token === "ModalOpenAboutVersion"){
-            ReactDOM.render(<DialogContainer title={'Cправка о версии'} contentText={<div>Текущая версия веб клиента:{CurrentVersion}</div>} />,document.getElementById('RenderModalSub'))
-        }else{
+        
             ReactDOM.render(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />,document.getElementById('RenderModalSub'))
            //setDid(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />)
-        }
+    
         
     }
 
@@ -290,7 +283,7 @@ const SectionToolsJS = (props) =>{
         fileSelector.setAttribute('accept', Type);
         fileSelector.setAttribute("reqId", RequestID)
         fileSelector.onchange = function(e){
-            let params = new Map, data, json, ReqID = e.currentTarget.getAttribute("reqId");
+            let params = new Map, data, json, ReqID = e.currentTarget.getAttribute("reqId"), rcdata;
             params.set('prefix', 'project');
             params.set("comand", "ResumeRequest");
             params.set("RequestID",ReqID);
@@ -300,8 +293,8 @@ const SectionToolsJS = (props) =>{
             let reader = new FileReader();
             reader.readAsDataURL(file)
             reader.onload=(event)=>{
-                
-                setSelectedFile({name:file.name , RCDATA: event.target.result });
+                rcdata = event.target.result.split(",")
+                setSelectedFile({name:file.name , RCDATA: rcdata[1] });
                 json = XMLrequest(params, data)
                 setData(json);
             }
@@ -476,28 +469,19 @@ const SectionToolsJS = (props) =>{
                     break;
                 case "ShellExecute":
                     let RCDATA =""
-                    console.log(json)
+                    let FileNameShell = json.Params.FileName;
+                    FileNameShell = FileNameShell.split("\\")
                     RCDATA = json.RCDATA
-                    // let stas= 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNv1OCegAAAAMSURBVBhXY/jPYAwAAzQBM849AKsAAAAASUVORK5CYII='
-                    console.log(RCDATA)
-                    if(RCDATA[4] !== ":"){
-                        //triggerBase64Download(RCDATA, 'download_name')
-                        let FixedRCDATA
-                        FixedRCDATA = RCDATA.replace("data","data:")
-                        FixedRCDATA = FixedRCDATA.replace("base64", ";base64,")
-                       // triggerBase64Download(FixedRCDATA, 'download_name')
-                       download(FixedRCDATA, "asas")
-                    }else{
-                        triggerBase64Download(RCDATA, 'download_name')
-                    }
-                    //console.log(RCDATA)
-                    //const link= document.createElement("a")
-                    //link.setAttribute('href', RCDATA);
-                    //link.click();
-                    //const linkSource = `data:application/pdf;base64,${pdf}`;
-                    //download(RCDATA, "dlText.txt","text/plain")
-                    //dataURLtoFile(RCDATA,"test.txt")
-                    //triggerBase64Download(RCDATA, 'download_name')
+                    let mimeType = mime.lookup(FileNameShell.slice(-1)[0]) 
+                    RCDATA = "data:"+ mimeType+";base64,"+ RCDATA
+                    triggerBase64Download(RCDATA, FileNameShell.slice(-1)[0])
+                    //download(RCDATA, FileNameShell.slice(-1)[0],mimeType )                    
+                    break;
+                case "SelectListIndex":
+                    let Items
+                    Items = json.Params.Items
+                    Items = Items.split(",")
+                    
                     break;
                     
             }
@@ -533,7 +517,6 @@ const SectionToolsJS = (props) =>{
             
             items.push(<Grid item>{props.defaultButton}</Grid> )
             for (const [key, value] of Object.entries(ButtonsLocal)) {
-                //console.log(value)
                 Path = backValue(value, 'Path');
                 Type = backValue(value, 'Type');
                 items.push(

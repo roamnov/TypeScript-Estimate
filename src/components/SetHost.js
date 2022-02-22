@@ -12,4 +12,4 @@ export default function setHost() {
 }
 
 
-export const CurrentVersion = " 2.0.1.2"
+
