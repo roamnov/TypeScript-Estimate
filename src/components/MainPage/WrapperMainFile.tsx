@@ -7,21 +7,44 @@ import SideBar from './NotWorkArea(Side&Head)/SideBar';
 import FullRightSide from './Windows/FullRightSide';
 import { InfoAboutClick } from '../ComponentInterface';
 import ModalContainer from '../Containers/ModalContainer';
+import { Outlet } from 'react-router-dom';
 
 export default function WrapperRightSide() {
   
+  function ClickDocument(ev: any) {
+    let AllList, list, itemList
+    AllList = document.querySelectorAll("div.css-b62m3t-container")
+    // console.log(AllList)
+    for (let i = 0; i<=AllList.length - 1; i = i+1)
+    {
+        list = AllList[i];
+        const withinBoundaries = ev.composedPath().includes(list);
+        if ( ! withinBoundaries ){
+            itemList = list.querySelector("div.select__menu") 
+            if (itemList)
+            {
+                itemList.remove();
+            }
+        }
+        
+    }
+}
+
+
   const [id, setID] = React.useState();
   const [clsid, setCLSID] = React.useState();
   const [isLoading, setIsLoading] = React.useState(true);
   const [selected, setSelected] = React.useState<InfoAboutClick | undefined>();
-  
+  const [drawerOpen, setdrawerOpen] = React.useState(true);
+  const [nameOpen, setNameOpen] = React.useState();
+  document.addEventListener("click", (e) => {ClickDocument(e) })
+  console.log(drawerOpen)
+
   return (
     <Box sx={{ display: 'flex' , height:"100%", overflow:"hidden"}}>
       <CssBaseline />
-      <AppBar  position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} style={{backgroundColor:"#628eb8"}}>
-        <DashboardNavbar/>
-      </AppBar>
-      <SideBar  isLoading={setIsLoading} setSelected={setSelected}/>
+      <DashboardNavbar open={drawerOpen} name = {selected?.name}/>
+      <SideBar  isLoading={setIsLoading} setSelected={setSelected} setdrawerOpen = {setdrawerOpen} Open={setNameOpen}/>
       <FullRightSide isLoading={isLoading} id= {selected?.id}  clsic= {selected?.clsic} name= {selected?.name}  />
     </Box>
   );

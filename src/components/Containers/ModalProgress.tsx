@@ -85,6 +85,7 @@ function ChildModal(Path:any, bool:boolean) {
 }
 
 
+
 export default function ModalProgress(props:ModalProgressProps) {
   const [open, setOpen] = React.useState(true);
   const [activeStep, setActiveStep] = React.useState(0);
@@ -199,7 +200,7 @@ export default function ModalProgress(props:ModalProgressProps) {
   }
 
   function RenderCancelModal(){
-    ReactDOM.render(<ChildModal Path={path} openIt={open}/> , document.getElementById('testG'));
+    ReactDOM.render(<ChildModal Path={path} openIt={open}/> , document.getElementById('RenderModalSub'));
   }
 
   function OpenDialog(){

@@ -125,7 +125,7 @@ export const NestedMenuItem = React.forwardRef(function NestedMenuItem(props, re
 			<Menu
 				// Set pointer events to 'none' to prevent the invisible Popover div
 				// from capturing events for clicks and hovers
-				style={{ pointerEvents: 'none' }}
+				style={{ pointerEvents: 'none'  }}
 				anchorEl={menuItemRef.current}
 				anchorOrigin={{
 					vertical: 'top',
@@ -135,6 +135,9 @@ export const NestedMenuItem = React.forwardRef(function NestedMenuItem(props, re
 					vertical: 'top',
 					horizontal: 'left',
 				}}
+				PaperProps={{
+					style: { pointerEvents: "auto" }
+				}}
 				open={open}
 				autoFocus={false}
 				disableAutoFocus
@@ -143,7 +146,7 @@ export const NestedMenuItem = React.forwardRef(function NestedMenuItem(props, re
 					setIsSubMenuOpen(false)
 				}}
 			>
-				<div ref={menuContainerRef} style={{ pointerEvents: 'auto' }}>
+				<div ref={menuContainerRef} style={{ pointerEvents: 'auto',}}>
 					{children}
 				</div>
 			</Menu>

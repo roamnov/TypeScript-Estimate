@@ -6,7 +6,7 @@ import { ImgURL } from "../../Url";
 import ModalContainer from '../../Containers/ModalContainer';
 import items from "./Items.json"
 import AlertMini from '../../AlertMini';
-import { SectionToolsToFooter } from '../../ComponentInterface';
+import { SectionToolsProps} from '../../ComponentInterface';
 import ReactDOM from 'react-dom';
 import ModalProgress from '../../Containers/ModalProgress';
 import axios from 'axios';
@@ -16,15 +16,18 @@ import ChangeStatusProgressFooter from '../NotWorkArea(Side&Head)/ChangeStatusPr
 //
 //https://mui.com/components/toggle-button/
 //
-const SectionTools = (props:SectionToolsToFooter) =>{
+const SectionTools = (props:SectionToolsProps) =>{
     const [Program, setProgram] = React.useState([<></>]);
     const [data, setData] = React.useState({});
 
     //const [requestId,setRequestId] = React.useState();
-    const [menuBar, setMenuBar] = React.useState([]);
+    const [menuBarSection, setMenuBarSection] = React.useState([]);
     const [inputText, setInputText] = React.useState();
-    const [buttons, setButtons] = React.useState([]);
+    const [buttonsSection, setButtonsSection] = React.useState([]);
     const [value, setValue] = React.useState();
+    
+
+
     
 
     React.useEffect(() => {
@@ -41,8 +44,8 @@ const SectionTools = (props:SectionToolsToFooter) =>{
         params.set('comand','GetSectionTools');
         params.set('SectionID', '143');
         json = XMLrequest(params)
-        setButtons(json["Buttons"]);
-        setMenuBar(json["MenuBar"])
+        setButtonsSection(json["Buttons"]);
+        setMenuBarSection(json["MenuBar"])
     }
 
     const InputChange = (event:any)=>{
@@ -227,7 +230,13 @@ const SectionTools = (props:SectionToolsToFooter) =>{
            <div id="RenderModal">
          
            </div>
-            {RenderButtons(buttons)}
+           <div id="RenderModalSub">
+               
+           </div>
+           <Grid id="RenderDefault">
+                
+           </Grid>
+            {RenderButtons(buttonsSection)}
             {Program}
         </Grid>
     )

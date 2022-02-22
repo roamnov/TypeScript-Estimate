@@ -1,15 +1,16 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import ResizePanel from '../ResizebleComponent/ResizebleComponent';
+//import ResizePanel from "react-resize-panel";
 import Tree from '../Windows/ViewData/Tree/tree';
 import { Button } from '@material-ui/core';
 import Tooltip from '@mui/material/Tooltip';
 import ManWhoSoldTheWorld from '../stimategrid/test'
-import {clickTab} from '../Windows/ViewData/Tree/tree'
-import {SelectIconSave} from '../../../components/MainPage/MainFile'
+import { clickTab } from '../Windows/ViewData/Tree/tree'
+import SectionToolsJS from '../Tools/SectionToolsJS';
+import Split from 'react-split'
+
 export default function SectionsDBview(props) {
-    function OpenData()
-    {
+    function OpenData() {
         let tree = document.getElementById("TreeDBView");
         if (tree) {
             let SelectItemTree = tree.querySelector(".SelectItemTree");
@@ -18,7 +19,7 @@ export default function SectionsDBview(props) {
                 if (span) {
                     let idItem = span.id.split("_")[1]
                     if (idItem) {
-                        clickTab(document.getElementById("tab1_"+idItem))
+                        clickTab(document.getElementById("tab1_" + idItem))
                         ManWhoSoldTheWorld(idItem)
                     }
                 }
@@ -26,22 +27,26 @@ export default function SectionsDBview(props) {
         }
     }
   
+    let defaultButton = <Tooltip title="Показать данные" >
+        <Button variant="outlined" size="small" onClick={() => OpenData()}>
+            Открыть
+        </Button>
+    </Tooltip>
     let DBview = <div id="SectionsDBview" >
-        <div style = {{height: "45px"}}>
-            <Tooltip title="Показать данные" >
-                <Button variant="outlined" size="small" onClick={() => OpenData()}>
-                    Открыть
-                </Button>
-                
-            </Tooltip>
-        </div>
-        <div style={{display: "flex"}}>
-            <div id="DBviewTree">
-                <Tree CLSID={props.CLSID} multiCheck={false} />
-            </div>
-            <div id="DBviewData" >
+        <div style={{ height: "45px" }}>
 
-            </div>
+            <SectionToolsJS WorkPlaceTools={props.WorkPlaceTools} ID={props.id} defaultButton={defaultButton} />
+        </div>
+        <div >
+       
+            <Split
+                class="wrap" sizes={[25, 67]}>
+                <div id="DBviewTree" >
+                    <Tree CLSID={props.CLSID} multiCheck={false} />
+                </div>
+                <div id="DBviewData" >
+                </div>
+            </ Split>
         </div>
     </div >
     return (DBview);

@@ -8,6 +8,7 @@ export interface componentProps{
     dataSelectMenu?: string;
     posts?: any;
     isLoading?: any;
+    drawerOpen?:any;
 
     //--ГРИДЫ
     justify?: "space-around" | "space-between" | "space-evenly" | "center" | "flex-end" | "flex-start" | undefined;
@@ -49,8 +50,9 @@ export interface containerProps{
 
 export interface MainBoxBackClick extends componentProps{
     backId?: any | string;
-   
+    setdrawerOpen: (value:any) => void | any | undefined;
     setSelected: (value:any) => void | any | undefined;
+    Open: (value:any) => void | any | undefined;
 }
 
 export interface IdToTree extends componentProps{
@@ -103,8 +105,8 @@ export interface FooterProps{
     ID?:string;
 }
 
-export interface SectionToolsToFooter{
-    setChildren: (value:any) => void | any;
+export interface SectionToolsProps{
+    SectionID?: string;
 }
 
 export interface ModalProgressProps{
@@ -117,4 +119,20 @@ export interface ProjectEnterInfo extends componentProps{
     Json?: object;
     setData: (value:any) => void | any;
     open?:Boolean;
+}
+
+export interface DialogContainerProps{
+    title:string,
+    contentText:any,
+
+}
+
+export interface Test {
+    tools: object,
+    id: string
+}
+
+export interface Headerprops{
+    open?: boolean;
+    name?: string;
 }

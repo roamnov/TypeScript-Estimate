@@ -1,12 +1,13 @@
 import styled, { createGlobalStyle } from 'styled-components';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
+import { GlobalStyles } from '@material-ui/styled-engine';
 
 const GlobalStyleTree = createGlobalStyle`
 
 .hiddenBlock
 {
-    display: block;
+    display: none;
     height: 0px;
     opacity: 0;
     z-index: -99999;
@@ -352,10 +353,10 @@ const GlobalStyleDBview = createGlobalStyle`
     flex-direction: column;
 }
 #DBviewTree {
-    width: 30%;
+    white-space: nowrap;
 }
 #DBviewData{
-width: 67%;
+width: 84%;
 /*height: inherit;*/
 position: relative;
 }
@@ -720,87 +721,13 @@ ul.pagination li a:hover:not(.active) {
 }
 `
 const GlobalStyleDocTabs = createGlobalStyle`
-#DocTabsBtn {
-    display: flex;
-    overflow: hidden;
-}
-#DocTabsContent
+.TabDocActiv
 {
-    /*position: absolute;*/
-    width: 100%;
-    /*height: 100%;*/
+    display: block;
 }
-.TabDoc {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #ddd;
-    text-decoration: none;
-    padding: .25rem .75rem;
-    color: #B3B3B3;
-    background: #E7E7E7;
-    margin-left: .25rem;
-    max-width: 150px;
-    white-space: nowrap; 
-}
-
-.TabDocActiv {
-    font-weight: bold;
-    border-bottom-color: #fff;
-    background: #fff;
-    color: #186baa;
-    
-}
-.TabDocContent
+.TabDocNoActiv
 {
     display: none;
-    position: relative;
-    height: inherit;
-    margin-top: 20px;
-}
-.TabDocContent.TabDocContentActiv
-{
-    display: block;
-   /* position: absolute;
-    width: 100%;*/
-}
-.TabDoc span {
-    width: calc(100% - 25px);
-    height: 100%;
-    cursor: pointer;
-    overflow: hidden;
-}
-.TabDocActiv span
-{
-    cursor: default !important;
-}
-.TabDoc.TabDocActiv .btnCloseTab {
-    background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M15.125 12.28125L12.28125 15.125L22.21875 25L12.28125 34.875L15.125 37.71875L25.0625 27.84375L35 37.71875L37.8125 34.875L27.90625 25L37.8125 15.125L35 12.28125L25.0625 22.15625Z"  /></svg>');
-    cursor: pointer;
-    height: 20px;
-    width: 20px;
-    display: block;
-}
-.btnCloseTab:hover {
-    background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path fill = "red" d="M15.125 12.28125L12.28125 15.125L22.21875 25L12.28125 34.875L15.125 37.71875L25.0625 27.84375L35 37.71875L37.8125 34.875L27.90625 25L37.8125 15.125L35 12.28125L25.0625 22.15625Z"  /></svg>') !important;
-}
-.TabDoc .btnCloseTab
-{
-display: none;
-}
-.btnScrollTabDocLeft
-{
-    position: absolute;
-   height: 30px;
-   width: 30px;
-   background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M16 3C8.832031 3 3 8.832031 3 16C3 23.167969 8.832031 29 16 29C23.167969 29 29 23.167969 29 16C29 8.832031 23.167969 3 16 3 Z M 16 5C22.085938 5 27 9.914063 27 16C27 22.085938 22.085938 27 16 27C9.914063 27 5 22.085938 5 16C5 9.914063 9.914063 5 16 5 Z M 14.21875 9.28125L12.78125 10.71875L18.0625 16L12.78125 21.28125L14.21875 22.71875L20.21875 16.71875L20.90625 16L20.21875 15.28125Z" fill="red" /></svg>'); 
-}
-.btnScrollTabDocRight
-{
-    position: absolute;
-   height: 30px;
-   width: 30px;
-   background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M16 3C8.832031 3 3 8.832031 3 16C3 23.167969 8.832031 29 16 29C23.167969 29 29 23.167969 29 16C29 8.832031 23.167969 3 16 3 Z M 16 5C22.085938 5 27 9.914063 27 16C27 22.085938 22.085938 27 16 27C9.914063 27 5 22.085938 5 16C5 9.914063 9.914063 5 16 5 Z M 17.78125 9.28125L11.78125 15.28125L11.09375 16L11.78125 16.71875L17.78125 22.71875L19.21875 21.28125L13.9375 16L19.21875 10.71875Z" fill="red" /></svg>'); 
 }
 `
 const GlobalStyleDropList = createGlobalStyle`
@@ -1001,76 +928,158 @@ const GlobalStyleDropList = createGlobalStyle`
 }
 `
 const GlobalStyleCheckBox = createGlobalStyle`
-.label-cbx {
-    user-select: none;
+.css-j204z7-MuiFormControlLabel-root {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
     cursor: pointer;
-    margin-bottom: 0;
-  }
-  .label-cbx input:checked + .checkbox {
-    border-color: #628cb6;
-  }
-  .label-cbx input:checked + .checkbox svg path {
-    fill: #628cb6;
-  }
-  .label-cbx input:checked + .checkbox svg polyline {
-    stroke-dashoffset: 0;
-  }
-  .label-cbx:hover .checkbox svg path {
-    stroke-dashoffset: 0;
-  }
-  .label-cbx .checkbox {
+    vertical-align: middle;
+    -webkit-tap-highlight-color: transparent;
+    margin-left: -11px;
+    margin-right: 16px;
+}
+.css-julti5-root {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    width: 58px;
+    height: 38px;
+    overflow: hidden;
+    padding: 12px;
+    box-sizing: border-box;
     position: relative;
-    top: 2px;
-    float: left;
-    margin-right: 8px;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    z-index: 0;
+    vertical-align: middle;
+}
+.css-5ryogn {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    background-color: transparent;
+    outline: 0;
+    border: 0;
+    margin: 0;
+    border-radius: 0;
+    padding: 0;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    vertical-align: middle;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+    color: inherit;
+    padding: 9px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    color: #fff;
+    -webkit-transition: left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,-webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+.css-5ryogn .MuiSwitch-input {
+    left: -100%;
+    width: 300%;
+}
+.css-1m9pwf3 {
+    cursor: inherit;
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+}
+.css-jsexje-Switch-thumb {
+    box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+    background-color: currentColor;
     width: 20px;
     height: 20px;
-    border: 2px solid #C8CCD4;
-    border-radius: 3px;
-  }
-  .label-cbx .checkbox svg {
-    position: absolute;
-    top: -2px;
-    left: -2px;
-  }
-  .label-cbx .checkbox svg path {
-    fill: none;
-    stroke: #628cb6;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-dasharray: 71px;
-    stroke-dashoffset: 71px;
-    transition: all 0.6s ease;
-  }
-  .label-cbx .checkbox svg polyline {
-    fill: none;
-    stroke: #FFF;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-dasharray: 18px;
-    stroke-dashoffset: 18px;
-    transition: all 0.3s ease;
-  }
-  .label-cbx > span {
+    border-radius: 50%;
+}
+.css-8je8zh-TouchRipple-root {
+    overflow: hidden;
     pointer-events: none;
-    vertical-align: middle;
-  }
-  
-  .cntr {
-    left: 0;
-    width: 100%;
-    position: relative;
-  }
-  
-  .invisible {
     position: absolute;
+    z-index: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: inherit;
+}
+.css-1yjjitx-Switch-track {
+    height: 100%;
+    width: 100%;
+    border-radius: 7px;
     z-index: -1;
-    width: 0;
-    height: 0;
-    opacity: 0;
+    -webkit-transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    background-color: #000;
+    opacity: 0.38;
+}
+.css-ahj2mt-Typography-root {
+    margin: 0;
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+    letter-spacing: 0.00938em;
+}
+.css-5ryogn.checked {
+    color: #1976d2;
+    transform: translateX(20px);
+}
+.css-5ryogn.checked+.Switch-track {
+    background-color: #1976d2;
+	opacity: 0.5;
+}
+`
+const GlobalStyleResizePanel = createGlobalStyle`
+.gutter-horizontal {
+    cursor: ew-resize;
   }
+  
+  .gutter-vertical {
+    cursor: ns-resize;
+  }
+  .wrap {
+    display: flex;
+  }
+  .gutter {
+    background-color: #85bee5;
+    width: 5px !important;
+    flex-shrink: 0;
+  }  
 `
 export {GlobalStyleTree}
 export {GlobalStyleDBview}
@@ -1078,3 +1087,4 @@ export {GlobalStyleGrid}
 export {GlobalStyleDocTabs}
 export {GlobalStyleDropList}
 export {GlobalStyleCheckBox}
+export {GlobalStyleResizePanel}

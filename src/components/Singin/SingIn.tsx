@@ -28,12 +28,13 @@ import URL, { AxiosRequest, CreateCokies, XMLrequest } from "../Url";
 import { purple, red } from "@material-ui/core/colors";
 import { Link,  useNavigate } from "react-router-dom";
 import { DrxContext, LoginIn } from "../Wrapper";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 
 
 
 
-const SignIn = (props: ProjectEnterInfo) => {
+const SignIn = () => {
   const styles = useStyles();
 
   
@@ -44,7 +45,8 @@ const SignIn = (props: ProjectEnterInfo) => {
   const [user, setUser] = useState("");
   const [workplace, setWorkPlace] = useState("");
   const [password, setPassword] = useState();
-
+  const [open, setOpen] = useState(false);
+  
  
   
 
@@ -59,7 +61,7 @@ const SignIn = (props: ProjectEnterInfo) => {
     const AppName = jsonEnter["AppName"];
     CreateCokies("drx",AppName === undefined? drx:AppName )
     CreateCokies("LastLogin", jsonEnter);
-    props.setData(drx)
+    // props.setData(drx)
     navigate("main");
     
     
@@ -67,7 +69,7 @@ const SignIn = (props: ProjectEnterInfo) => {
 
   function CheckAnswerFromServer(answer?: Object) {
     let test: string;
-
+    setOpen(false)
     switch (answer) {
       case "ConfigName":
         setError(`Файл подключения ${drx} не найден.`);
@@ -83,7 +85,19 @@ const SignIn = (props: ProjectEnterInfo) => {
 
 
   const handleSingIn = () => {
+    
     let res:object 
+    setOpen(true)
+    
+    const LoginLast= drx + ","+user+ ","+ workplace; 
+    //console.log(typeof(LoginData))
+    let params = new Map();
+    params.set('comand','GetUserInfo');
+    params.set('ConfigName',drx);
+    params.set('UserName',user);
+    let  rest
+    rest = XMLrequest(params)["Server"];
+    let IP = rest;
     let LoginData = {
       ConfigName: drx,
       UserName: user,
@@ -91,11 +105,12 @@ const SignIn = (props: ProjectEnterInfo) => {
       WorkPlace: workplace,
       //Comp: "NPO5898",
     };
-    const LoginLast= drx + ","+user+ ","+ workplace; 
-    //console.log(typeof(LoginData))
-    let params = new Map();
+    //setIP(rest);
+    params = new Map();
     params.set('comand','enter');
-    let rest = XMLrequest(params,  LoginData);
+    if (IP !="")
+    params.set('IP', IP);
+    rest = XMLrequest(params,  LoginData);
     rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain(LoginLast)
     //let res = AxiosRequest(params, "post",LoginData)
     //res.then((responce)=>{console.log(responce)})
@@ -159,7 +174,7 @@ const SignIn = (props: ProjectEnterInfo) => {
         </Grid>
       
         <Grid item>
-          
+        
           <Button
           style={{backgroundColor: "#0098ad"}}
             type="submit"
@@ -175,6 +190,12 @@ const SignIn = (props: ProjectEnterInfo) => {
       </Grid>
       </Box>
       </Paper>
+      <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={open}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
     </Container>
   );
 };

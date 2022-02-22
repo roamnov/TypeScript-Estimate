@@ -4,13 +4,14 @@ import {useEffect, useState} from "react"
 import { XMLrequest } from "../../Url";
 import { Button, Menu, MenuItem } from "@mui/material";
 import { NestedMenuItem } from "./NestedMenuOrigin/NestedMenuItem";
+import LongMenu from "./dsad";
 
-
+const ITEM_HEIGHT = 48;
 
 export function WorkPlaceTools (){
-    const [dataButtons, setDataButtons] = useState();
+    const [dataButtonsDefault, setDataButtonsDefault] = useState();
     const [open1, setOpen1] = useState(false);
-    const [menuBar, setMenuBar] = useState();
+    const [menuBarDefault, setMenuBarDefault] = useState();
     const [ID, setID] = useState();
     const [AssMass, setAssMass] = useState(new Map());
     const [anchorElAss, setAnchorElAss] = useState(new Map());
@@ -42,8 +43,8 @@ export function WorkPlaceTools (){
         params.set('comand','GetWorkPlaceTools');
         json = XMLrequest(params)
         console.log(json["Buttons"]);
-        setDataButtons(json["Buttons"]);
-        setMenuBar(json["MenuBar"]);
+        setDataButtonsDefault(json["Buttons"]);
+        setMenuBarDefault(json["MenuBar"]);
         CreateMap(json["MenuBar"]);
         //Rec(json["MenuBar"]);
     } 
@@ -125,7 +126,7 @@ export function WorkPlaceTools (){
                             <Button id={key} onClick={handleClick}>
                                 {key}
                             </Button>
-                            <Menu id={key} anchorEl={anchorElset} open={openSet} onClose={handleClose}>
+                            <Menu id={key} anchorEl={anchorElset} open={openSet} onClose={handleClose} >
                                     {RecItems(DeepFirst, key)}
                             </Menu>
                         </Grid>
@@ -143,8 +144,9 @@ export function WorkPlaceTools (){
 
     return(
         <Grid item>
+            
             <Grid container  direction="row"  justifyContent="flex-start" alignItems="center" >
-                {Rec(menuBar)}
+                {Rec(menuBarDefault)}
             </Grid>
         </Grid>
     )

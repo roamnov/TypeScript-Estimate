@@ -10,12 +10,14 @@ const PasswordInput = (props: menuSelect) => {
   return (
     <TextField
       fullWidth
-      name="password"
+      // name="password"
       label="Пароль"
       type="password"
-      id="password"
+      // id="password"
       onChange={clientEmailHandler}
-      
+      inputProps={{
+        autoComplete: 'current-password',
+      }}
       value={props.password}
       
     />

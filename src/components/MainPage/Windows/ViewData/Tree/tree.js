@@ -1,17 +1,16 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import IconButton from '@mui/material/IconButton';
 import { XMLrequest } from '../../../../Url';
-import { useState, useEffect } from 'react';
-
-
-import CodeEditor from '@uiw/react-textarea-code-editor';
-
-import SendIcon from '@mui/icons-material/Send';
-import Select from 'react-select';
+import Switch from '../../../../Switch/Switch';
 import Editor from "../../../../Editor/Editor"
-import CheckBox from "../../../../CheckBox/CheckBox"
+import Tooltip from '@mui/material/Tooltip';
+import UndoIcon from '@mui/icons-material/Undo';
+import CheckIcon from '@mui/icons-material/Check';
+import CodeMirror from '@uiw/react-codemirror';
+import { sql } from '@codemirror/lang-sql';
+
+
 
 export function clickTab(event) {
   let lbl = event.currentTarget;
@@ -38,16 +37,13 @@ export function clickTab(event) {
 }
 export default function Tree(props) {
   let data;
+  var ApplyButtons;
   const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight - 205);
 
   const handleResize = () => {
     setCurrentHeight(window.innerHeight - 205);
   }
-  const [connect, setConnect] = React.useState('');
 
-  const handleChange = (event) => {
-    setConnect(event.target.value);
-  };
   function fetchData(params) {
     if (!params) {
       params = new Map();
@@ -100,31 +96,123 @@ export default function Tree(props) {
         ol.classList.remove("showBlock")
       }
     }
+    let TreeDBView = document.getElementById("TreeDBView");
+    if (TreeDBView)
+    {
+      TreeDBView.scrollLeft = -1*TreeDBView.scrollWidth;
+    }
   }
-  function GetObjectValues(id)
-  {
+  function GetObjectValues() {
     let params = new Map();
     let list = new Map();
-      params.set('prefix', 'dbview');
-      params.set('comand', 'GetConnectionList');
-      let otv = XMLrequest(params);
-      for (var key in otv) {
-        if (otv.hasOwnProperty(key)) {
-          if (otv[key].id)
+    params.set('prefix', 'dbview');
+    params.set('comand', 'GetConnectionList');
+    let otv = XMLrequest(params);
+    for (var key in otv) {
+      if (otv.hasOwnProperty(key)) {
+        if (otv[key].id)
           list.set(otv[key].id, otv[key].text)
-          else
+        else
           list.set(0, otv[key])
-           
-        }
-     }
-      return list
+      }
+    }
+    return list
   }
-  function ClickCheck()
-  {
+  function ClickCheck(id, val) {
+    let params = new Map();
+    params.set('prefix', 'dbview');
+    params.set('comand', 'SetScriptType');
+    params.set('ID', id);
+    params.set('Value', val);
+    fetchData(params)
+  }
+  function SetConnectionNo(index) {
+    let params = new Map();
+    let idItem
+    params.set('prefix', 'dbview');
+    params.set('comand', 'SetConnectionNo');
+    idItem = document.querySelector("div.tabs.activetabs").querySelector("label.tablbl.activetab").id.split("_")[1]
+    params.set('ID', idItem);
+    params.set('Value', index);
+
+    fetchData(params)
+  }
+  function ApplyCode(e) {
+    let el = e.currentTarget;
+    let tab = document.querySelector("div.tabs.activetabs")
+    let buttons = tab.querySelector(".ButtonCode");
+    if (buttons) {
+      if (buttons.style.display == "block") {
+        buttons.style.display = "none"
+      }
+
+      let text = tab.querySelector(".cm-theme-light").querySelector(".cm-content").innerText;
+      let Code = tab.querySelector(".Code");
+      Code.textChanged = false;
+      let params = new Map();
+      params.set('prefix', 'dbview');
+      params.set('comand', 'HandleSQLScript');
+      let Data = {
+        id: document.querySelector("div.tabs.activetabs").querySelector("label.tablbl.activetab").id.split("_")[1],
+        $content: text,
+        //Comp: "NPO5898",
+      }
+      XMLrequest(params, Data)
+
+    }
+  }
+  function CreateCodeMirror(d) {
+    let C = <div className='CodeMirror'><CodeMirror
+      value={d}
+      height="100%"
+      extensions={[sql()]}
+    /></div>
+    return C
+  }
+  function RestoreCode(e) {
+    let el = e.currentTarget;
+    let tab = document.querySelector("div.tabs.activetabs")
+    let buttons = tab.querySelector(".ButtonCode");
+    if (buttons) {
+      if (buttons.style.display == "block") {
+        buttons.style.display = "none"
+      }
+    }
+    let params = new Map();
+    params.set('prefix', 'dbview');
+    params.set('comand', 'HandleSQLScript');
+    params.set('SectionID', "143");
+    params.set('ID', tab.querySelector('.tablbl.activetab').id.split("_")[1]);
+    let otv = XMLrequest(params);
+   
+    let editor = CreateCodeMirror(otv.content)
+    let Code
+    Code = tab.querySelector(".Code");
+    //Code.innerHTML = ""
+    ReactDOM.render(editor, Code)
+
+
+    Code.textChanged = false;
+    Code.addEventListener("KeyUp", EditCode)
+  }
+  function EditCode(e) {
+    let el = e.currentTarget;
+    let b
+    b = "ShiftRight,ShiftLeft,ControlLeft,MetaLeft,AltLeft,CapsLock,ArrowLeft,ArrowRight,ArrowUp,ArrowDown,Escape,AudioVolumeMute,F1, F2,F3,F4,F5,F6,F7,F8,F9,F10,Insert,NumLock,Home,PageUp,PageDown,End"
+    b = b.split(",");
+    if (b.indexOf(e.code) == -1) {
+      let tab = document.querySelector("div.tabs.activetabs")
+      let buttons = tab.querySelector(".ButtonCode");
+      if (buttons) {
+        buttons.style.display = "block"
+      }
+    }
 
   }
+
   function CreateTabsData(idItem, query) {
     let tabs;
+    ApplyButtons = false;
     tabs = <>
       <label id={"tab1_" + idItem} title="Данные" onClick={(event) => clickTab(event)} className='tablbl'> Данные</label>
       <label id={"tab2_" + idItem} title="SQL - скрипт" className='tablbl activetab' onClick={(event) => clickTab(event)}> SQL - скрипт</label>
@@ -132,27 +220,29 @@ export default function Tree(props) {
         <div id={"gridpanel" + idItem} style={{ position: "absolute", height: "calc(100% - 10px)", width: "calc(100% - 10px)" }} ></div>
       </section>
       <section id={"content_tab2_" + idItem} className='contentactive'>
-        <div style={{ display: "flex", width:"100%" }}>
+        <div style={{ display: "flex", width: "100%" }}>
           <div >
-            <Editor EditStyle = {1} caption="Подключение" width = {250} GetObjectValues = {()=>GetObjectValues(idItem)}/>
+            <Editor idItem={idItem} EditStyle={1} caption="Подключение" style={{ width: "250px", top: "4px" }} GetObjectValues={GetObjectValues} onCloseUpList={SetConnectionNo} />
           </div>
-          <div >
-            <CheckBox label = "Запрос модифицирования" style = {{top: "3px"}} onClick = {()=>ClickCheck()}/>
+          <div style={{ "padding-left": "10px" }}>
+            <Switch idItem={idItem} label="Запрос модифицирования" onClick={ClickCheck} checked={query.IsReq ? query.IsReq : 0} />
+          </div>
+          <div className="ButtonCode" style={{ display: "none" }}>
+            <Tooltip title="Сохранить редактирование" >
+              <IconButton aria-label="CancelEdit" size="small" onClick={ApplyCode}>
+                <CheckIcon style={{ fill: "#628cb6" }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Отменить редактирование" >
+              <IconButton aria-label="CancelEdit" size="small" onClick={RestoreCode}>
+                <UndoIcon style={{ fill: "#628cb6" }} />
+              </IconButton>
+            </Tooltip>
           </div>
         </div>
-        <div style={{overflow: "auto"}}>
-          <CodeEditor
-            value={query.content}
-            language="sql"
-            placeholder="Please enter SQL code."
-            padding={5}
-            //minHeight={windowInnerHeight}
-            style={{
-              fontSize: 12,
-              backgroundColor: "#f5f5f5",
-              fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-            }}
-          />
+        <div style={{ overflow: "auto" }} className="Code" onKeyUp={(e) => EditCode(e)}>
+          {CreateCodeMirror(query.content)}
+
         </div>
       </section>
 
@@ -166,13 +256,13 @@ export default function Tree(props) {
       let params = new Map();
       params.set('prefix', 'dbview');
       params.set('comand', 'HandleSQLScript');
-      params.set('SectionID', id);
+      params.set('SectionID', "143");
       params.set('ID', id);
       let otv = XMLrequest(params);
       tabs = document.createElement("div")
       tabs.classList.add("tabs")
       tabs.classList.add("activetabs")
-      tabs.id = "tabDataView" + id
+      tabs.id = "tabDataView" + id;
       ReactDOM.render(CreateTabsData(id, otv), tabs)
       if (tabs) {
         DBviewData.appendChild(tabs)
@@ -253,7 +343,7 @@ export default function Tree(props) {
   fetchData()
 
   return (
-    <div id="TreeDBView" className='react-checkbox-tree rct-icons-fa5' style={{ height: `${currentHeight}px`, overflow: "scroll", overflowX: "hidden", scrollbarWidth: "none" }}>
+    <div id="TreeDBView" className='react-checkbox-tree rct-icons-fa5' style={{ height: `${currentHeight}px`, overflowX: "auto" }} >
       <ol>
         {CreateListTree()}
       </ol>
