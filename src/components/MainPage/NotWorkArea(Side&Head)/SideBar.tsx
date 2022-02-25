@@ -15,7 +15,7 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { styled } from '@mui/material/styles';
 import { IconButton, ListItem } from "@mui/material";
-
+import {SetStateNav} from './HiddenNav'
 const defaultDrawerWidth = window.innerWidth / 100 * 16.791045;
 const minDrawerWidth = 1;
 const maxDrawerWidth = 400;
@@ -68,6 +68,13 @@ export default function SideBar(props: MainBoxBackClick) {
   const drawerClick = () => {
     setdrawerOpen(!drawerOpen)
     drawerOpen ? setDrawerWidth(8) : setDrawerWidth(defaultDrawerWidth)
+    let nav = document.getElementById("HiddenNav");
+    if (!drawerOpen)
+    {
+          nav ? nav.style.display = "none": document.getElementById("HiddenNav")
+    }
+    else
+    nav ? nav.style.display = "block": document.getElementById("HiddenNav")
   }
 
   const handleClick = (event: any) => {
@@ -81,25 +88,42 @@ export default function SideBar(props: MainBoxBackClick) {
     let ID
     let CLSID
     let Name
+    let Patch
+    let img
+    if (event.title)
+    {
+      ID = event.id;
+      CLSID = event.CLSID
+      Name = event.title
+      Patch = event.Patch
+    }
+    else
     if (!event.state) {
-       ID = event.currentTarget.getAttribute("id");
-       CLSID = GetElementAttributeByID(ID, data, "CLSID")
-       Name = event.currentTarget["innerText"]
+      ID = event.currentTarget.getAttribute("id");
+      CLSID = GetElementAttributeByID(ID, data, "CLSID")
+      Name = event.currentTarget["innerText"]
+      Patch = event.currentTarget["title"]? event.currentTarget["title"]+'/'+ Name:Name
+      img = event.currentTarget.querySelector("img").src
       let dataState = {
         id: ID,
         title: Name,
-        CLSID: CLSID
+        CLSID: CLSID,
+        Patch: Patch,
+        img: img        
       };
-      window.history.pushState(dataState, Name);
-      document.title = Name;
+      window.history.pushState(dataState, Patch);
+      document.title = Patch;
+      SetStateNav(dataState, updateSelected)
     }
-    else
-    {
+    else {
       ID = event.state.id;
       CLSID = event.state.CLSID
       Name = event.state.title
     }
+
     setSelected(ID);
+    let NameSection = document.getElementById("NameSection");
+    NameSection ? NameSection.innerText = Name : NameSection = document.createElement("div")
     props.setSelected({ id: ID, clsic: CLSID, name: Name })
   };
 
@@ -251,23 +275,10 @@ export default function SideBar(props: MainBoxBackClick) {
   window.onpopstate = updateSelected;
   return (
 
-    <Drawer
-
-      className={classes.drawer}
-      variant="permanent"
-      PaperProps={{ style: { width: drawerWidth, backgroundColor: '#628cb6' } }}
-      sx={{ ml: drawerWidth / 100 * 11.9444444444444444 }}
-      style={{ overflowX: "hidden", scrollbarWidth: "none" }}
-    >
-      <Toolbar />
-      <div onMouseDown={e => handleMouseDown()} className={classes.dragger} >
-        {buttonDragger}
-      </div>
-
-
-
+    <>
+      
       <Box style={{ scrollbarWidth: "none" }} sx={{ overflow: "auto" }}>
-        <Slide direction="right" in={drawerOpen}>
+        
           <StyledList
             sx={{
               width: "100%",
@@ -279,10 +290,10 @@ export default function SideBar(props: MainBoxBackClick) {
           >
             {Menu(data)}
           </StyledList>
-        </Slide>
+        
       </Box>
 
-    </Drawer>
+    </>
 
   );
 }

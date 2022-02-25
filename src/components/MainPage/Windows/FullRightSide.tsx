@@ -42,8 +42,8 @@ export default function FullRightSide(props: InfoAboutClick) {
 
   return (
     
-    <Grid container   direction="column"     justifyContent="center"   sx={{ flexGrow: 1, pt: 8, pl:2 }}    alignItems="stretch"    >
-      <div id ="WorkPlace">
+    <Grid container   direction="column"     justifyContent="center"   sx={{ flexGrow: 1 }}    alignItems="stretch"    >
+      <div id ="WorkPlace" style = {{ height: "calc(100% - 48px)"}}>
       <Grid item  >
         {props.isLoading?<div></div>:<Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" >  </Grid>}
         

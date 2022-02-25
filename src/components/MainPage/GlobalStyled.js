@@ -432,6 +432,10 @@ position: relative;
 
 `;
 const GlobalStyleGrid = createGlobalStyle`
+.transition
+{
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.6, 1) 0ms;
+}
 .login-form-mask-box {
 	top: 50%;
 	left: 50%;
@@ -1074,6 +1078,8 @@ const GlobalStyleResizePanel = createGlobalStyle`
   }
   .wrap {
     display: flex;
+    width: 100%;
+    overflow: hidden;
   }
   .gutter {
     background-color: #85bee5;

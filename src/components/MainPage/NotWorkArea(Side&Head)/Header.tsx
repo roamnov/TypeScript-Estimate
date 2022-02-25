@@ -19,9 +19,8 @@ import { useStyles } from "../../Styles"
 import { Typography } from '@mui/material';
 import { DrxContext } from '../../Wrapper';
 import { HiddenNavButton } from './HiddenNav'
-import { Headerprops } from '../../ComponentInterface';
 
-const DashboardNavbar = (props: Headerprops) => {
+const DashboardNavbar = (props: any) => {
   const [notifications] = useState([]);
   const [authtoken, setAutnToken] = useLocalStorage(true, "auth")
   let navigate = useNavigate();
@@ -37,14 +36,14 @@ const DashboardNavbar = (props: Headerprops) => {
 
   return (
     <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} style={{ backgroundColor: "#628eb8" }}>
-      <Toolbar className={classes.customizeToolbar} style={{ minHeight: 48, height: 40 }}>
+      <Toolbar className={classes.customizeToolbar} style={{ minHeight: 48, height: 48 }}>
         <Typography
           variant="h5"
           noWrap
           component="div"
           sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
         >
-          {props.name ? drx.replace(".drx", "") + ' / ' + props.name : drx.replace(".drx", "")}
+          {drx.replace(".drx", "")}
         </Typography>
 
         <Box sx={{ flexGrow: 1 }} />
@@ -65,15 +64,9 @@ const DashboardNavbar = (props: Headerprops) => {
           </IconButton>
         </Link>
 
-      </Toolbar>
-      <div id="miniMenu" style={!props.open ? { display: "flex", height:"24px" } : { display: "none" }}>
-        <IconButton>
-          <MenuIcon />
-        </IconButton>
-        <div id="HiddenNav" style={!props.open ? { display: "block" } : { display: "none" }}>
-          <HiddenNavButton />
-        </div>
-      </div>
+        </Toolbar>
+      
+      
     </AppBar>
 
   );

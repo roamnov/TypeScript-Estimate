@@ -50,9 +50,7 @@ export interface containerProps{
 
 export interface MainBoxBackClick extends componentProps{
     backId?: any | string;
-    setdrawerOpen: (value:any) => void | any | undefined;
     setSelected: (value:any) => void | any | undefined;
-    Open: (value:any) => void | any | undefined;
 }
 
 export interface IdToTree extends componentProps{
@@ -132,7 +130,3 @@ export interface Test {
     id: string
 }
 
-export interface Headerprops{
-    open?: boolean;
-    name?: string;
-}
