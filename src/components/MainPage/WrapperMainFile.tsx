@@ -74,7 +74,7 @@ export default function WrapperRightSide() {
 
       <div style={{ display: 'flex', height: "100%", overflow: "hidden", flexDirection: "row" }} id="SideBar_FullRightSide">
         <Split className="wrap" sizes={[20, 80]}>
-          <div style={drawerOpen ? { width: "calc(20% - 5px)",height: "100%", overflow: "hidden", backgroundColor: "#628cb6" } : {height: "100%", overflow: "hidden", backgroundColor: "#628cb6", width: "0px"}} id="SideBar" >
+          <div style={drawerOpen ? { width: "calc(20% - 5px)",height: "100%", overflow: "auto", backgroundColor: "#628cb6" } : {height: "100%", backgroundColor: "#628cb6", width: "0px"}} id="SideBar" >
             <SideBar isLoading={setIsLoading} setSelected={setSelected} />
           </div>
           <div style={ drawerOpen ? { display: 'flex', height: "100%", overflow: "hidden", width: "calc(80% - 5px)" }: { display: 'flex', height: "100%", overflow: "hidden", width: "100%" }} id="FullRightSide">

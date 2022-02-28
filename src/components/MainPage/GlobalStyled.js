@@ -1080,6 +1080,7 @@ const GlobalStyleResizePanel = createGlobalStyle`
     display: flex;
     width: 100%;
     overflow: hidden;
+    height:100%
   }
   .gutter {
     background-color: #85bee5;

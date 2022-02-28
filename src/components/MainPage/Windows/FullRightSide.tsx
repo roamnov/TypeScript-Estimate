@@ -9,6 +9,7 @@ import ManWhoSoldTheWorld from '../stimategrid/test';
 import DocsReportsMainWindow from './Docs&Reports/Docs&ReportsWindow';
 import NestedMenu from '../Tools/NestedMenu';
 import SectionsDBview from '../Sections/dbview';
+import SectionsDocuments from '../Sections/Documents';
 import { WorkPlaceTools } from '../Tools/WorkPlaceTools';
 import StickyFooter from '../NotWorkArea(Side&Head)/Footer';
 import StillDevelopmentPage from './StillDevelopmentPage';
@@ -34,6 +35,11 @@ export default function FullRightSide(props: InfoAboutClick) {
 
     content = <SectionsDBview  CLSID = {props.clsic} id = {props.id}/>
   } else
+  if (props.id !== undefined && props.clsic =="{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}")
+  {
+    content = <SectionsDocuments  CLSID = {props.clsic} id = {props.id}/>
+  }
+  else
     if (props.id !== undefined) {
       content = <StillDevelopmentPage  id = {props.id}/>
     }
