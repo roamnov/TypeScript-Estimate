@@ -15,7 +15,7 @@ import { CurrentVersion } from '../../SetHost';
 import { triggerBase64Download } from 'common-base64-downloader-react';
 import { download } from './Tools';
 import * as mime from 'react-native-mime-types';
-
+import ModalSelectListIndex from "./../../Containers/ModalSelectListIndex.jsx"
 
 
 //
@@ -376,7 +376,7 @@ const SectionToolsJS = (props) =>{
     function  tokenProcessing (json){///project~ResumeRequest?LicGUID=D100CAB54337ED32E087B59F6CE41511&RequestID=18892&WSM=1 HTTP/1.1
         if(json.Break !== undefined){
             let returnJSX= [], returnSmth = [], Token,Module, RequestID,andResult;
-            console.log(json)
+          
             Module = json.Module;
             Token = json.Token;
             RequestID= json.Params.RequestID;
@@ -473,14 +473,13 @@ const SectionToolsJS = (props) =>{
                     FileNameShell = FileNameShell.split("\\")
                     RCDATA = json.RCDATA
                     let mimeType = mime.lookup(FileNameShell.slice(-1)[0]) 
+                    console.log(mime.lookup("xls"))
                     RCDATA = "data:"+ mimeType+";base64,"+ RCDATA
-                    triggerBase64Download(RCDATA, FileNameShell.slice(-1)[0])
-                    //download(RCDATA, FileNameShell.slice(-1)[0],mimeType )                    
+                    //triggerBase64Download(RCDATA, FileNameShell.slice(-1)[0])
+                    download(RCDATA, FileNameShell.slice(-1)[0],mimeType )                    
                     break;
                 case "SelectListIndex":
-                    let Items
-                    Items = json.Params.Items
-                    Items = Items.split(",")
+                    ReactDOM.render(<ModalSelectListIndex Json={json} /> , document.getElementById('RenderModal'));
                     
                     break;
                     
