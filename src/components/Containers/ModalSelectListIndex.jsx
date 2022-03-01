@@ -104,7 +104,7 @@ export default function ModalSelectListIndex (props){
     function CloseWindow(json){
       let params = new Map, data, ReqID;
       ReqID = json.Params.RequestID;
-      data = { "Result":"" }
+      data = { "Result":"0" }
       params.set('prefix', 'project');
       params.set("comand", "ResumeRequest");
       params.set("RequestID",ReqID );
@@ -118,7 +118,7 @@ export default function ModalSelectListIndex (props){
       let params = new Map, data, json, ReqID, ID;
       ReqID = jsonProp.Params.RequestID;
       ID =event.currentTarget.getAttribute("id")
-      data = { "Result":ID }
+      data = { "Result":"1" , "Index":ID}
       params.set('prefix', 'project');
       params.set("comand", "ResumeRequest");
       params.set("RequestID",ReqID );
@@ -168,7 +168,6 @@ export default function ModalSelectListIndex (props){
         <Dialog
             open={open}
             fullWidth
-            onClose={handleClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
@@ -176,7 +175,7 @@ export default function ModalSelectListIndex (props){
           Выбирите элемент из списка.
         </DialogTitle>
         <DialogContent>
-            <Grid container   style={{"flex-flow": "inherit"}}  justifyContent="center"  alignItems="center" id={"FormConfirmAndClose"}>
+            <Grid container   style={{"flex-flow": "inherit"}}  justifyContent="center"   id={"FormConfirmAndClose"}>
               <Grid item >
                   <List dense={true}>
                       {JSX}
