@@ -166,7 +166,7 @@ const SectionTools = (props:SectionToolsProps) =>{
                     break;
 
                 case "ShowProgressDialog":
-                    ReactDOM.render(<ModalProgress open={true}  Json={json} /> , document.getElementById('RenderModal'));
+                   // ReactDOM.render(<ModalProgress open={true}  Json={json} /> , document.getElementById('RenderModal'));
                     break;
 
                 case "SetProgressLabel":

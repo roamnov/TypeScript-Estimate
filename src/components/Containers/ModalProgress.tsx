@@ -61,7 +61,9 @@ function ChildModal(Path:any, bool:boolean) {
     params.set("comand", "StopProcess");
     params.set("smart", "1");
     params.set("Path", Path.Path);
-    XMLrequest(params);
+    console.log(Path.Path)
+    await axios.get(URL(params));
+    //XMLrequest(params);
     setOpen(false);
   }
 
@@ -105,6 +107,7 @@ export default function ModalProgress(props:ModalProgressProps) {
   React.useEffect(()=>{
     tokenProcessing(props.Json);
     OpenDialog();
+    setActiveStep(0);
   }, [props.Json])
 
   function setCharAt(str: string,index: number,chr: any) {
@@ -200,13 +203,25 @@ export default function ModalProgress(props:ModalProgressProps) {
   }
 
   function RenderCancelModal(){
-    ReactDOM.render(<ChildModal Path={path} openIt={open}/> , document.getElementById('RenderModalSub'));
+    ReactDOM.render(<ChildModal Path={props.path} openIt={open}/> , document.getElementById('RenderModalSub'));
   }
 
   function OpenDialog(){
     if (props.open){
       setOpen(true)
     }
+  }
+
+  async function Asd(){
+    let params = new Map;
+    
+    params.set('prefix', 'programs');
+    params.set("comand", "StopProcess");
+    params.set("smart", "1");
+    params.set("Path", props.path);
+    await axios.get(URL(params)).then((res)=> setData(res.data));
+    XMLrequest(params);
+    
   }
 
   return (
@@ -245,6 +260,7 @@ export default function ModalProgress(props:ModalProgressProps) {
               </Grid>
               <Grid item >
                 <Button onClick={RenderCancelModal}>Отмена</Button>
+                <Button onClick={Asd}>sdsa</Button>
             </Grid>
           </Grid>
         </DialogActions>

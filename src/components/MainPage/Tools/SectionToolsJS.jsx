@@ -95,6 +95,7 @@ const SectionToolsJS = (props) =>{
         const Path = event.currentTarget.getAttribute("path")
         const Token = event.currentTarget.getAttribute("token")
         const Params = event.currentTarget.getAttribute("params")
+        const Type = event.currentTarget.getAttribute("type")
         setAssMass(AssMass.set(ID,false))
         setAnchorElAss(anchorElAss.set(ID,null));
         JSXInfoAboutClickedItem.push(
@@ -106,8 +107,12 @@ const SectionToolsJS = (props) =>{
             {Params === null?<></>:<>Params: {Params}</>}
             </>
         )
-        
+        if(Path !== undefined){
             ReactDOM.render(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />,document.getElementById('RenderModalSub'))
+        }else{
+            ReactDOM.render(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />,document.getElementById('RenderModalSub'))
+        }
+        
            //setDid(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />)
     
         
@@ -211,10 +216,11 @@ const SectionToolsJS = (props) =>{
                 
                 if (Token !== undefined || Path !==undefined ){//это то что будет внутри item
                     let prS = Image === undefined? 0.5:0.2 
-                    
+                    console.log(jsonItems)
+                    let Type = jsonItems[key]["Type"];
                     assemblyLists.push(
                         <Grid key={key}>
-                            <MenuItem  token={Token} params={Params} path={Path} id={key}  onClick={handleClickItemMenu} style={{height:"25px", marginLeft:2}}>
+                            <MenuItem  token={Token} params={Params} path={Path} type={Type} id={key}  onClick={handleClickItemMenu} style={{height:"25px", marginLeft:2}}>
                                 <Grid sx={{pr:prS, pt:0.5}}>
                                     {Image === undefined?<div style={{paddingLeft:"13px"}}></div> :ImgURL(Image, "16px", "16px" )}
                                 </Grid>
@@ -435,7 +441,8 @@ const SectionToolsJS = (props) =>{
                     break;
 
                 case "ShowProgressDialog":
-                    ReactDOM.render(<ModalProgress open={true}  Json={json} /> , document.getElementById('RenderModal'));
+                    let Path = json.Params.Path;
+                    ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} /> , document.getElementById('RenderModal'));
                     break;
 
                 case "SetProgressLabel":
