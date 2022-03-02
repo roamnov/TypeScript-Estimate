@@ -9,7 +9,7 @@ import UndoIcon from '@mui/icons-material/Undo';
 import CheckIcon from '@mui/icons-material/Check';
 import CodeMirror from '@uiw/react-codemirror';
 import { sql } from '@codemirror/lang-sql';
-
+import { Tabs, TabItem, TabItemsGroup } from 'smart-webcomponents-react/tabs';
 
 
 export function clickTab(event) {
@@ -213,6 +213,40 @@ export default function Tree(props) {
   function CreateTabsData(idItem, query) {
     let tabs;
     ApplyButtons = false;
+    tabs = <Tabs class="Tabs" selectedIndex={1} style={{  height: "100%", width: "100%" }} >
+      <TabItem label="Данные">
+        <div id={"gridpanel" + idItem} style={{  position: "relative", height: "calc(100% - 10px)", width: "calc(100% - 10px)" }} ></div>
+        </TabItem>
+					<TabItem label="SQL - скрипт">
+          <div style={{ display: "flex", width: "100%" }}>
+          <div >
+            <Editor idItem={idItem} EditStyle={1} caption="Подключение" style={{ width: "250px", top: "4px" }} GetObjectValues={GetObjectValues} onCloseUpList={SetConnectionNo} />
+          </div>
+          <div style={{ "padding-left": "10px" }}>
+            <Switch idItem={idItem} label="Запрос модифицирования" onClick={ClickCheck} checked={query.IsReq ? query.IsReq : 0} />
+          </div>
+          <div className="ButtonCode" style={{ display: "none" }}>
+            <Tooltip title="Сохранить редактирование" >
+              <IconButton aria-label="CancelEdit" size="small" onClick={ApplyCode}>
+                <CheckIcon style={{ fill: "#628cb6" }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Отменить редактирование" >
+              <IconButton aria-label="CancelEdit" size="small" onClick={RestoreCode}>
+                <UndoIcon style={{ fill: "#628cb6" }} />
+              </IconButton>
+            </Tooltip>
+          </div>
+        </div>
+        <div style={{ overflow: "auto", height: "calc(100% - 40px)" }} className="Code" onKeyUp={(e) => EditCode(e)}>
+          {CreateCodeMirror(query.content)}
+
+        </div>
+          </TabItem>
+    </Tabs>
+
+
+/*
     tabs = <>
       <label id={"tab1_" + idItem} title="Данные" onClick={(event) => clickTab(event)} className='tablbl'> Данные</label>
       <label id={"tab2_" + idItem} title="SQL - скрипт" className='tablbl activetab' onClick={(event) => clickTab(event)}> SQL - скрипт</label>
@@ -246,7 +280,7 @@ export default function Tree(props) {
         </div>
       </section>
 
-    </>
+    </>*/
     return tabs;
   }
   function ShowTabsData(id) {

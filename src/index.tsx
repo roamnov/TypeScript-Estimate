@@ -5,7 +5,7 @@ import Wrapper from "./components/Wrapper";
 import { BrowserRouter, HashRouter, Route, Routes } from 'react-router-dom';
 import MainPage from './components/MainPage/MainFile';
 import SignIn from './components/Singin/SingIn';
-import { GlobalStyleDocTabs, GlobalStyleTree, GlobalStyleDBview, GlobalStyleGrid,GlobalStyleDropList, GlobalStyleCheckBox, GlobalStyleResizePanel } from "./components/MainPage/GlobalStyled"
+import { GlobalStyleDocTabs, GlobalStyleTree, GlobalStyleDBview, GlobalStyleGrid,GlobalStyleDropList, GlobalStyleCheckBox, GlobalStyleResizePanel, StyleSmartWebcomponents } from "./components/MainPage/GlobalStyled";
 //let pref = require('./components/stimweb/tools/trsview.html')
 ReactDOM.render(
     <React.StrictMode>
@@ -16,7 +16,9 @@ ReactDOM.render(
       <GlobalStyleDropList />
       <GlobalStyleCheckBox />
       <GlobalStyleResizePanel />
+      <StyleSmartWebcomponents />
       <Wrapper/>
+      
     </React.StrictMode>,
   document.getElementById('root')
 );
