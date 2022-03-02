@@ -108,6 +108,8 @@ export default function ModalProgress(props:ModalProgressProps) {
     tokenProcessing(props.Json);
     OpenDialog();
     setActiveStep(0);
+    setCurrentLoad("Load");
+    setTextLoad("");
   }, [props.Json])
 
   function setCharAt(str: string,index: number,chr: any) {
@@ -140,8 +142,10 @@ export default function ModalProgress(props:ModalProgressProps) {
         Path = json.Params.Path;
         Sections = json.Params.Sections;
         Title = json.Params.Title;
-        SectionsArray = Sections.split(",");
-        for (const [key, value] of Object.entries(SectionsArray)) {
+        
+        if(Sections !== undefined){
+          SectionsArray = Sections.split(",");
+          for (const [key, value] of Object.entries(SectionsArray)) {
             let FixedSection:any;
             FixedSection = value;
             Section = value;
@@ -157,6 +161,8 @@ export default function ModalProgress(props:ModalProgressProps) {
             }
             returnSmth.push(FixedSection)
         }
+        }
+        
         setAllSteps(returnSmth);
         setTitle(Title);
         setPath(Path);
@@ -231,8 +237,8 @@ export default function ModalProgress(props:ModalProgressProps) {
         <DialogTitle>
            {Title} 
         </DialogTitle>
-        <DialogContent>
-          <Grid container direction="row" justifyContent="space-evenly" alignItems="center" spacing={2} >
+        <DialogContent style={{paddingLeft:"35px"}}>
+          <Grid style={{display:"block"}} container direction="row" justifyContent="space-evenly" alignItems="center" spacing={2} >
             <Grid item id="Steps">
               <Stepper activeStep={activeStep} orientation="vertical" connector={<></>}>
                   {AllSteps.map((step:any) => (
