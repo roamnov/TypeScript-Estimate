@@ -108,7 +108,7 @@ const SectionToolsJS = (props) =>{
             </>
         )
         if(Path !== undefined){
-            ReactDOM.render(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />,document.getElementById('RenderModalSub'))
+            handeleExecToolprogram(event)
         }else{
             ReactDOM.render(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />,document.getElementById('RenderModalSub'))
         }
@@ -442,6 +442,8 @@ const SectionToolsJS = (props) =>{
 
                 case "ShowProgressDialog":
                     let Path = json.Params.Path;
+                    let doc = document.getElementById('RenderModal')
+                    doc.innerHTML = "";
                     ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} /> , document.getElementById('RenderModal'));
                     break;
 
@@ -502,12 +504,12 @@ const SectionToolsJS = (props) =>{
 
 
     async function handeleExecToolprogram (event , type){///tools~ExecToolProgram
-        let Path = event.currentTarget.getAttribute("id"),  params = new Map();
-        Path = event.currentTarget.getAttribute("id");
+        let Path = event.currentTarget.getAttribute("path"), Type, params = new Map();
+        Type = event.currentTarget.getAttribute("type");
         params.set('prefix', 'tools');
         params.set("comand", "ExecToolProgram");
         params.set("Path", Path);
-        params.set("Type", type);
+        params.set("Type", Type);
         //params.set("Checked", "0") УЗНАТЬ КАК WSM ПОЛУЧАТЬ ////////////////////////////////////////////////////////
         params.set("WSM", "1");
         await axios.get(URL(params)).then((res)=> setData(res.data))
@@ -528,7 +530,7 @@ const SectionToolsJS = (props) =>{
                 items.push(
                     <Grid item>    
                         <Tooltip  title={key} arrow>
-                                <IconButton id={Path}  color='primary'  component="span" onClick={(e) => handeleExecToolprogram(e,Type)} >
+                                <IconButton path={Path} type={Type}  color='primary'  component="span" onClick={handeleExecToolprogram} >
                                     {ImgURL(backValue(value, 'Image'))}
                                 </IconButton>
                         </Tooltip>
@@ -544,7 +546,7 @@ const SectionToolsJS = (props) =>{
                 items.push(
                     <Grid item>    
                         <Tooltip  title={Hint} arrow>
-                                <IconButton id={Token}  color='primary'  component="span" onClick={(e) => handeleExecToolprogram(e)} >
+                                <IconButton path={Token}  color='primary'  component="span" onClick={(e) => handeleExecToolprogram(e)} >
                         
                                     {ImgURL(ButtonsLocal.Image)}
                                 
