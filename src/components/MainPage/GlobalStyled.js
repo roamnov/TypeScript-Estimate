@@ -33942,7 +33942,7 @@ function StyleSmartWebcomponents()
         .smart-splitter smart-splitter-bar[item-collapsed] .smart-splitter-far-collapse-button>span,
         .smart-splitter smart-splitter-bar[item-collapsed] .smart-splitter-near-collapse-button>span {
             -webkit-transform: rotate(270deg);
-            transform: rotate(270deg)
+            transform: rotate(90deg)
         }
 
         .smart-splitter smart-splitter-bar[item-collapsed] .smart-splitter-far-collapse-button.smart-visibility-hidden,
@@ -33951,13 +33951,13 @@ function StyleSmartWebcomponents()
         }
 
         .smart-splitter smart-splitter-bar[item-collapsed] .smart-splitter-near-collapse-button>span {
-            -webkit-transform: translate(-50%, -50%) rotate(270deg);
-            transform: translate(-50%, -50%) rotate(270deg)
+            -webkit-transform: translate(-50%, -50%) rotate(180deg);
+            transform: translate(-50%, -50%) rotate(180deg)
         }
 
         .smart-splitter smart-splitter-bar[item-collapsed] .smart-splitter-far-collapse-button>span {
-            -webkit-transform: translate(-50%, -50%) rotate(90deg);
-            transform: translate(-50%, -50%) rotate(90deg)
+            -webkit-transform: translate(-50%, -50%) rotate(0deg);
+            transform: translate(-50%, -50%) rotate(0deg)
         }
 
         .smart-splitter smart-splitter-item {
@@ -34128,8 +34128,8 @@ function StyleSmartWebcomponents()
         .smart-splitter .smart-splitter-far-collapse-button .smart-arrow:after,
         .smart-splitter .smart-splitter-near-collapse-button .smart-arrow:after {
             align-items: center;
-            content: "\\e901";
-            content: var(--smart-icon-arrow-down);
+            content: "\\00AB";
+            
             display: flex;
             height: 100%;
             justify-content: center;
@@ -34142,13 +34142,10 @@ function StyleSmartWebcomponents()
 
         .smart-splitter .smart-splitter-far-collapse-button>span {
             -webkit-transform: translate(-50%, -50%) rotate(270deg);
-            transform: translate(-50%, -50%) rotate(270deg)
+            transform: translate(-50%, -50%) rotate(180deg)
         }
 
-        .smart-splitter .smart-splitter-near-collapse-button .smart-arrow {
-            -webkit-transform: translate(-55%, -50%) rotate(90deg);
-            transform: translate(-55%, -50%) rotate(90deg)
-        }
+        
 
         .smart-splitter:not([readonly])>.smart-container>smart-splitter-bar[hover] {
             cursor: w-resize
@@ -34265,14 +34262,14 @@ function StyleSmartWebcomponents()
         }
 
         .smart-splitter[orientation=horizontal]>.smart-container>smart-splitter-bar .smart-splitter-far-collapse-button>span {
-            -webkit-transform: translate(-50%, -45%) rotate(0);
-            transform: translate(-50%, -45%) rotate(0)
+            -webkit-transform: translate(-50%, -45%) rotate(-90deg);
+            transform: translate(-50%, -45%) rotate(-90deg)
         }
 
         .smart-splitter[orientation=horizontal]>.smart-container>smart-splitter-bar .smart-splitter-near-collapse-button>span,
         .smart-splitter[orientation=horizontal]>.smart-container>smart-splitter-bar[item-collapsed] .smart-splitter-far-collapse-button>span {
-            -webkit-transform: translate(-50%, -50%) rotate(180deg);
-            transform: translate(-50%, -50%) rotate(180deg)
+            -webkit-transform: translate(-50%, -50%) rotate(90deg);
+            transform: translate(-50%, -50%) rotate(90deg)
         }
 
         .smart-splitter[orientation=horizontal]>.smart-container>smart-splitter-bar .smart-splitter-resize-button>span:before {
@@ -34289,7 +34286,7 @@ function StyleSmartWebcomponents()
 
         .smart-splitter[orientation=horizontal]>.smart-container>smart-splitter-bar[item-collapsed] .smart-splitter-near-collapse-button>span {
             -webkit-transform: translate(-50%, -50%) rotate(0);
-            transform: translate(-50%, -50%) rotate(0)
+            transform: translate(-50%, -50%) rotate(-90deg)
         }
 
         .smart-splitter[orientation=horizontal]>.smart-container>.smart-splitter-bar-feedback {
