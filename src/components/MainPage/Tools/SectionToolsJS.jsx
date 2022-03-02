@@ -216,7 +216,6 @@ const SectionToolsJS = (props) =>{
                 
                 if (Token !== undefined || Path !==undefined ){//это то что будет внутри item
                     let prS = Image === undefined? 0.5:0.2 
-                    console.log(jsonItems)
                     let Type = jsonItems[key]["Type"];
                     assemblyLists.push(
                         <Grid key={key}>

@@ -67,7 +67,7 @@ export interface TabPanelProps {
 
   export interface InfoAboutClick extends componentProps{
     id: string | undefined;
-    clsic?: string | undefined;
+    clsid?: string | undefined;
     name: string | undefined;
   }
 

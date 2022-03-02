@@ -124,7 +124,7 @@ export default function SideBar(props: MainBoxBackClick) {
     setSelected(ID);
     let NameSection = document.getElementById("NameSection");
     NameSection ? NameSection.innerText = Name : NameSection = document.createElement("div")
-    props.setSelected({ id: ID, clsic: CLSID, name: Name })
+    props.setSelected({ id: ID, clsid: CLSID, name: Name })
   };
 
 

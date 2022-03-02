@@ -15,6 +15,7 @@ import StickyFooter from '../NotWorkArea(Side&Head)/Footer';
 import StillDevelopmentPage from './StillDevelopmentPage';
 import SectionToolsJS from '../Tools/SectionToolsJS';
 import { XMLrequest } from '../../Url';
+import FormsMainFile from '../../Forms/FormsMainFile';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
@@ -31,18 +32,19 @@ export default function FullRightSide(props: InfoAboutClick) {
  
 
   let content
-  if (props.id !== undefined && props.clsic == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}") {
+  if (props.id !== undefined && props.clsid === "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}") {//Просмотр данных
+    content = <SectionsDBview  CLSID = {props.clsid} id = {props.id}/>
 
-    content = <SectionsDBview  CLSID = {props.clsic} id = {props.id}/>
-  } else
-  if (props.id !== undefined && props.clsic =="{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}")
-  {
-    content = <SectionsDocuments  CLSID = {props.clsic} id = {props.id}/>
+  }else if (props.id !== undefined && props.clsid === "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}"){
+    content = <SectionsDocuments  CLSID = {props.clsid} id = {props.id}/>
+
+  }else if(props.id !== undefined && props.clsid ==="{C0CED968-8834-405D-8801-A3838BF536F3}"){//Формы
+    content = <FormsMainFile id = {props.id}/>
+
+  }else if (props.id !== undefined) {
+    content = <StillDevelopmentPage  id = {props.id}/>
+
   }
-  else
-    if (props.id !== undefined) {
-      content = <StillDevelopmentPage  id = {props.id}/>
-    }
 
   
 
