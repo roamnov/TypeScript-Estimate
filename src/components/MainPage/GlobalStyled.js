@@ -56078,7 +56078,7 @@ const GlobalStyleDBview = createGlobalStyle`
     white-space: nowrap;
 }
 #DBviewData{
-width: 84%;
+width: 99%;
 /*height: inherit;*/
 position: relative;
 }
