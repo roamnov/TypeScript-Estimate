@@ -1,4 +1,4 @@
-import { Button, Grid } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, Grid } from "@mui/material";
 import React,{useEffect, useState} from "react";
 import { XMLrequest } from "../Url";
 
@@ -30,46 +30,52 @@ export default function FormsMainFile(props:any){
     }
 
     function BackColor(color:any){
-        switch (color){
-            case "Черный":
-                break;
-            case "Бордовый":
-                break;
-            case "Зеленый":
-                break;
-            case "Коричневый":
-                break;
-            case "Темно-синий":
-                break;
-            case "Пурпурный":
-                break
-            case "Тёмно-зеленый":
-                break
-            case "Серый":
-                break
-            case "Светло-серый":
-                break
-            case "Красный":
-                break
-            case "Светло-зеленый":
-                break
-            case "Желтый":
-                break
-            case "Голубой":
-                break
-            case "Фиолетовый":
-                break
-            case "Светло-голубой":
-                break
-            case "Белый":
-                break
-            case "Подсказка":
-                break
-            case "":
-                break    
-
-            
+        let colorArr = color.split(":")
+        if (color === undefined) return "rgb(240,240,240)"
+        if(colorArr[1] === undefined){
+            switch (color){
+                case "Черный":
+                    return "black"
+                case "Бордовый":
+                    return "rgb(124,10,2)"
+                case "Зеленый":
+                    return "green"
+                case "Коричневый":
+                    return "brown"
+                case "Темно-синий":
+                    return "darkblue"
+                case "Пурпурный":
+                    return "purple"
+                case "Тёмно-зеленый":
+                    return "darkgreen"
+                case "Серый":
+                    return "gray"
+                case "Светло-серый":
+                    return "lightgray"
+                case "Красный":
+                    return "red"
+                case "Светло-зеленый":
+                    return "lightgreen"
+                case "Желтый":
+                    return "yellow"
+                case "Голубой":
+                    return "rgb(0, 191, 255)"
+                case "Фиолетовый":
+                    return "rgb(138, 43, 226)"
+                case "Светло-голубой":
+                    return "aqua"
+                case "Белый":
+                    return "white"
+                case "Подсказка":
+                    return "rgb(245, 245, 220)"
+                case "":
+                    break 
+            }
+        }else{
+            return `rgb(${colorArr[0]},${colorArr[1]},${colorArr[2]})`
         }
+
+        
     }
     
     
@@ -88,19 +94,25 @@ export default function FormsMainFile(props:any){
                 break;
             case "TButton":
                 
-                let BackColorArr, BGC
+                console.log(json)
                 Text = json.Text
                 Height = json.Height
                 Width = json.Width
-                BackColorArr = json["Back-color"]
-                BackColorArr = BackColorArr.split(":")
-
                 ReturnComponent.push(
-                    <Button variant="contained" style={{ position:"absolute", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`}}>{Text}</Button>
+                    <Button variant="contained" style={{color: BackColor(json["Font-color"]),backgroundColor:BackColor(json["Back-color"]) ,position:"absolute", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`}}>{Text}</Button>
                 )
-                console.log(BackColorArr)
+                
                 break;
             case "TSectionCheckBox":
+                console.log(json)
+                Height = json.Height
+                Width = json.Width
+                Text = json.Text
+                ReturnComponent.push(
+                    <Grid style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`}}  >
+                        <FormControlLabel control={<Checkbox defaultChecked />} label={Text} />
+                    </Grid>
+                )
                 break;
             case "TSectionEditor":
                 break;
