@@ -78,7 +78,7 @@ export default function WrapperRightSide() {
             <SideBar isLoading={setIsLoading} setSelected={setSelected} />
           </div>
           <div style={ drawerOpen ? { display: 'flex', height: "100%", overflow: "hidden", width: "calc(80% - 5px)" }: { display: 'flex', height: "100%", overflow: "hidden", width: "100%" }} id="FullRightSide">
-            <FullRightSide isLoading={isLoading} id={selected?.id} clsid={selected?.clsid} name={selected?.name} />
+            <FullRightSide isLoading={isLoading} id={selected?.id} clsic={selected?.clsic} name={selected?.name} />
           </div>
         </Split>
       </div>

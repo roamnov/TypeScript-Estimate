@@ -183,9 +183,6 @@ export default function ModalProgress(props:ModalProgressProps) {
         Index = json.Params.Index;
         if(isNaN(Index)) Index = 0;  
         MAX = json.Params.Count;
-        if(MAX === undefined && Index === 0){
-          Token=Token+"TextOnly"
-        }
         setCount(normalise(Index,MAX));
         setPrevToken(Token);
         EmptyRequest(RequestID);
@@ -193,11 +190,11 @@ export default function ModalProgress(props:ModalProgressProps) {
       }else if(Token === "SetProgressLabel"){
         let Text;
         Text = json.Params.Text;
-        if (PrevToken === "StepProgress" ){
+        if (PrevToken === "StepProgress"){
           setCurrentLoad("Mix");
           setTextLoad(Text);
           
-        }else if (PrevToken === "SetProgressSection" || PrevToken ==="SetProgressLabel"|| PrevToken === "ShowProgressDialog" || PrevToken ==="StepProgressTextOnly" ){
+        }else if (PrevToken === "SetProgressSection" || PrevToken ==="SetProgressLabel"|| PrevToken === "ShowProgressDialog" ){
           setTextLoad(Text);
           setCurrentLoad("Text");
         }
@@ -206,9 +203,6 @@ export default function ModalProgress(props:ModalProgressProps) {
 
       }else if(Token === "HideProgressDialog"){
         setPrevToken(Token);
-        setActiveStep(0);
-        setCurrentLoad("");
-        setTextLoad("");
         setOpen(false);
       }
     }

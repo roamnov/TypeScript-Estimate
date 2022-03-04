@@ -45,7 +45,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     content = <SectionsReportDocuments  CLSID = {props.clsic} id = {props.id}/>
   }
   else
-  if(props.id !== undefined && props.clsid ==="{C0CED968-8834-405D-8801-A3838BF536F3}"){//Формы
+  if(props.id !== undefined && props.clsic ==="{C0CED968-8834-405D-8801-A3838BF536F3}"){//Формы
     content = <FormsMainFile id = {props.id}/>
 
   } else
@@ -82,5 +82,4 @@ export default function FullRightSide(props: InfoAboutClick) {
     </Grid>
   );
 }
-
 
