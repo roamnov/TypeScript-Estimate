@@ -265,7 +265,7 @@ const SectionToolsJS = (props) =>{
                     
                     assemblyLists.push(
                         <Grid item  key={key}>
-                            <Button id={key} onClick={handleClick}>
+                            <Button id={key} onClick={handleClick} style={{textTransform:"none"}}>
                                 {key}
                             </Button>
                             <Menu id={key} anchorEl={anchorElset} open={openSet} onClose={handleClose} >

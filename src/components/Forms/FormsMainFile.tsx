@@ -1,4 +1,4 @@
-import { Button, Checkbox, FormControlLabel, Grid } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, Grid, TextField } from "@mui/material";
 import React,{useEffect, useState} from "react";
 import { XMLrequest } from "../Url";
 
@@ -94,43 +94,64 @@ export default function FormsMainFile(props:any){
                 break;
             case "TButton":
                 
-                console.log(json)
+                // console.log(json)
                 Text = json.Text
                 Height = json.Height
                 Width = json.Width
                 ReturnComponent.push(
-                    <Button variant="contained" style={{color: BackColor(json["Font-color"]),backgroundColor:BackColor(json["Back-color"]) ,position:"absolute", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`}}>{Text}</Button>
+                    <Button variant="contained" style={{color: BackColor(json["Font-color"]),backgroundColor:BackColor(json["Back-color"]) ,position:"absolute", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`, textTransform:"none"}}>{Text}</Button>
                 )
                 
                 break;
             case "TSectionCheckBox":
-                console.log(json)
+                
                 Height = json.Height
                 Width = json.Width
                 Text = json.Text
                 ReturnComponent.push(
                     <Grid style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`}}  >
-                        <FormControlLabel control={<Checkbox defaultChecked />} label={Text} />
+                        <FormControlLabel style={{width:"max-content"}} control={<Checkbox defaultChecked />} label={Text} />
                     </Grid>
                 )
                 break;
             case "TSectionEditor":
+                console.log(json)
+                Height = json.Height
+                Width = json.Width
+                Text = json.Text
+                ReturnComponent.push(
+                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`  }}>
+                        <TextField variant="standard"  defaultValue={Text}  />
+                    </Grid>
+                    
+                )
                 break;
+            case "TSectionPanel1":
+                Height = json.Height
+                Width = json.Width
+                ReturnComponent.push(
+                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`  }}>
+                        {FormDataProcessing(json)}
+                    </Grid>
+                )
+                break;
+            
         }
         return ReturnComponent;
     }
 
     function FormDataProcessing(json:any){
         if(dataForms !== undefined){
-            
+            console.log(json)
             let val:any, returnAll=[]
             json = json.Form;
             for(const [key, value] of Object.entries(json)) {
                 val = value
-                if(val.Type !==undefined){
-                    returnAll.push(
-                      CheckAndReturnComponent(value)  
-                    ) 
+                if(val.Type !==undefined ){
+                    
+                        returnAll.push( CheckAndReturnComponent(value)) 
+                    
+                    
                 }
             } 
             return returnAll 
