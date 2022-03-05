@@ -56,7 +56,7 @@ export default function FullRightSide(props: InfoAboutClick) {
             Выполнить
         </Button>
     </Tooltip>
-    content = <SectionReport CLSID = {props.clsic} id = {props.id}/>
+    content = <SectionReport CLSID = {props.clsic} id = {props.id} defaultButton = {defaultButton}/>
   }
   else
     if (props.id !== undefined) {

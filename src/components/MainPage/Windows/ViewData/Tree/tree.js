@@ -47,11 +47,18 @@ export default function Tree(props) {
   function fetchData(params) {
     if (!params) {
       params = new Map();
-      params.set('prefix', 'dbview');
+      if (props.CLSID === "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}") {
+        params.set('prefix', 'dbview');
+      } else
+        if (props.CLSID === "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}") {
+          params.set('prefix', 'reports');
+          params.set('SectionID', props.SectionID);
+        }
       params.set('comand', 'GetGroupTree');
     }
     data = XMLrequest(params)["Tree"]["items"]
   }
+
   function ShowChild(event) {
     let span = event.currentTarget;
     let id = span.id.split("_")[1];
@@ -97,9 +104,9 @@ export default function Tree(props) {
       }
     }
     let TreeDBView = document.getElementById("TreeDBView");
-    if (TreeDBView)
-    {
-      TreeDBView.scrollLeft = -1*TreeDBView.scrollWidth;
+    if (TreeDBView) {
+      let w = TreeDBView.getBoundingClientRect().width
+      TreeDBView.scrollLeft = -99999999;
     }
   }
   function GetObjectValues() {
@@ -181,10 +188,10 @@ export default function Tree(props) {
     let params = new Map();
     params.set('prefix', 'dbview');
     params.set('comand', 'HandleSQLScript');
-    params.set('SectionID', "143");
+    params.set('SectionID', props.SectionID);
     params.set('ID', tab.querySelector('.tablbl.activetab').id.split("_")[1]);
     let otv = XMLrequest(params);
-   
+
     let editor = CreateCodeMirror(otv.content)
     let Code
     Code = tab.querySelector(".Code");
@@ -213,12 +220,12 @@ export default function Tree(props) {
   function CreateTabsData(idItem, query) {
     let tabs;
     ApplyButtons = false;
-    tabs = <Tabs class="Tabs" selectedIndex={1} style={{  height: "100%", width: "100%" }} >
+    tabs = <Tabs class="Tabs" selectedIndex={1} style={{ height: "100%", width: "100%" }} >
       <TabItem label="Данные">
-        <div id={"gridpanel" + idItem} style={{  position: "relative", height: "calc(100% - 10px)", width: "calc(100% - 10px)" }} ></div>
-        </TabItem>
-					<TabItem label="SQL - скрипт">
-          <div style={{ display: "flex", width: "100%" }}>
+        <div id={"gridpanel" + idItem} style={{ position: "relative", height: "calc(100% - 10px)", width: "calc(100% - 10px)" }} ></div>
+      </TabItem>
+      <TabItem label="SQL - скрипт">
+        <div style={{ display: "flex", width: "100%" }}>
           <div >
             <Editor idItem={idItem} EditStyle={1} caption="Подключение" style={{ width: "250px", top: "4px" }} GetObjectValues={GetObjectValues} onCloseUpList={SetConnectionNo} />
           </div>
@@ -242,45 +249,45 @@ export default function Tree(props) {
           {CreateCodeMirror(query.content)}
 
         </div>
-          </TabItem>
+      </TabItem>
     </Tabs>
 
 
-/*
-    tabs = <>
-      <label id={"tab1_" + idItem} title="Данные" onClick={(event) => clickTab(event)} className='tablbl'> Данные</label>
-      <label id={"tab2_" + idItem} title="SQL - скрипт" className='tablbl activetab' onClick={(event) => clickTab(event)}> SQL - скрипт</label>
-      <section id={"content_tab1_" + idItem} >
-        <div id={"gridpanel" + idItem} style={{ position: "absolute", height: "calc(100% - 10px)", width: "calc(100% - 10px)" }} ></div>
-      </section>
-      <section id={"content_tab2_" + idItem} className='contentactive'>
-        <div style={{ display: "flex", width: "100%" }}>
-          <div >
-            <Editor idItem={idItem} EditStyle={1} caption="Подключение" style={{ width: "250px", top: "4px" }} GetObjectValues={GetObjectValues} onCloseUpList={SetConnectionNo} />
-          </div>
-          <div style={{ "padding-left": "10px" }}>
-            <Switch idItem={idItem} label="Запрос модифицирования" onClick={ClickCheck} checked={query.IsReq ? query.IsReq : 0} />
-          </div>
-          <div className="ButtonCode" style={{ display: "none" }}>
-            <Tooltip title="Сохранить редактирование" >
-              <IconButton aria-label="CancelEdit" size="small" onClick={ApplyCode}>
-                <CheckIcon style={{ fill: "#628cb6" }} />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Отменить редактирование" >
-              <IconButton aria-label="CancelEdit" size="small" onClick={RestoreCode}>
-                <UndoIcon style={{ fill: "#628cb6" }} />
-              </IconButton>
-            </Tooltip>
-          </div>
-        </div>
-        <div style={{ overflow: "auto" }} className="Code" onKeyUp={(e) => EditCode(e)}>
-          {CreateCodeMirror(query.content)}
-
-        </div>
-      </section>
-
-    </>*/
+    /*
+        tabs = <>
+          <label id={"tab1_" + idItem} title="Данные" onClick={(event) => clickTab(event)} className='tablbl'> Данные</label>
+          <label id={"tab2_" + idItem} title="SQL - скрипт" className='tablbl activetab' onClick={(event) => clickTab(event)}> SQL - скрипт</label>
+          <section id={"content_tab1_" + idItem} >
+            <div id={"gridpanel" + idItem} style={{ position: "absolute", height: "calc(100% - 10px)", width: "calc(100% - 10px)" }} ></div>
+          </section>
+          <section id={"content_tab2_" + idItem} className='contentactive'>
+            <div style={{ display: "flex", width: "100%" }}>
+              <div >
+                <Editor idItem={idItem} EditStyle={1} caption="Подключение" style={{ width: "250px", top: "4px" }} GetObjectValues={GetObjectValues} onCloseUpList={SetConnectionNo} />
+              </div>
+              <div style={{ "padding-left": "10px" }}>
+                <Switch idItem={idItem} label="Запрос модифицирования" onClick={ClickCheck} checked={query.IsReq ? query.IsReq : 0} />
+              </div>
+              <div className="ButtonCode" style={{ display: "none" }}>
+                <Tooltip title="Сохранить редактирование" >
+                  <IconButton aria-label="CancelEdit" size="small" onClick={ApplyCode}>
+                    <CheckIcon style={{ fill: "#628cb6" }} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Отменить редактирование" >
+                  <IconButton aria-label="CancelEdit" size="small" onClick={RestoreCode}>
+                    <UndoIcon style={{ fill: "#628cb6" }} />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            </div>
+            <div style={{ overflow: "auto" }} className="Code" onKeyUp={(e) => EditCode(e)}>
+              {CreateCodeMirror(query.content)}
+    
+            </div>
+          </section>
+    
+        </>*/
     return tabs;
   }
   function ShowTabsData(id) {
@@ -290,7 +297,7 @@ export default function Tree(props) {
       let params = new Map();
       params.set('prefix', 'dbview');
       params.set('comand', 'HandleSQLScript');
-      params.set('SectionID', "143");
+      params.set('SectionID', props.SectionID);
       params.set('ID', id);
       let otv = XMLrequest(params);
       tabs = document.createElement("div")
@@ -333,24 +340,27 @@ export default function Tree(props) {
 
   function CreateListTree(idItem) {
     if (idItem) {
+      let params = new Map();
+      params.set('comand', 'GetGroupTree');
+      params.set('SectionID', props.SectionID);
+      params.set('GroupID', idItem);
+      params.set('Current', idItem);
       if (props.CLSID === "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}") {
-        let params = new Map();
         params.set('prefix', 'dbview');
-        params.set('comand', 'GetGroupTree');
-        params.set('SectionID', '143');
-        params.set('GroupID', idItem);
-        params.set('Current', idItem);
-        fetchData(params)
-      }
+      } else
+        if (props.CLSID === "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}") {
+          params.set('prefix', 'reports');
+        }
+      fetchData(params)
     }
 
     var itemTree = <>
-      {data.map((item) => {
-        return <li className={item.leaf ? "rct-node rct-node-leaf" : "rct-node rct-node-parent rct-node-collapsed"} id={item["id"]}>
+      {data.map((item) => { let id = item["id"]? item["id"]: item["ID"]
+        return <li className={item.leaf ? "rct-node rct-node-leaf" : "rct-node rct-node-parent rct-node-collapsed"} id={id} style = {{whiteSpace: "nowrap"}}>
           <span className='rct-text'>
             {!item.leaf ?
               <button aria-label="Toggle" title="Toggle" type="button" className='rct-collapse rct-collapse-btn'>
-                <span className='rct-icon rct-icon-expand-close' onClick={(event) => ShowChild(event)} id={"itemBtn_" + item["id"]}></span>
+                <span className='rct-icon rct-icon-expand-close' onClick={(event) => ShowChild(event)} id={"itemBtn_" + id}></span>
               </button> :
               <></>
             }
@@ -365,7 +375,7 @@ export default function Tree(props) {
               <span className='rct-node-icon'>
                 <span className={item.leaf ? 'rct-icon rct-icon-leaf' : 'rct-icon rct-icon-parent-close'} ></span>
               </span>
-              <span className='rct-title' id={"item_" + item["id"]} onClick={(event) => clickItem(event)}>{item["text"]}</span>
+              <span className='rct-title' id={"item_" + id} onClick={(event) => clickItem(event)}>{item["text"] ? item["text"]:item["Text"]}</span>
             </label>
           </span>
         </li>
@@ -377,7 +387,7 @@ export default function Tree(props) {
   fetchData()
 
   return (
-    <div id="TreeDBView" className='react-checkbox-tree rct-icons-fa5' style={{ height: `${currentHeight}px`, overflowX: "auto" }} >
+    <div id="TreeDBView" className='react-checkbox-tree rct-icons-fa5' style={{ height: '100%', overflowX: "auto" }} >
       <ol>
         {CreateListTree()}
       </ol>

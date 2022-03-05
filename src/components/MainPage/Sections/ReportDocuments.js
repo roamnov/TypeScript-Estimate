@@ -11,7 +11,7 @@ export default function SectionsReportDocuments(props) {
         <SectionDocuments id={props.id} />
       </TabItem>
       <TabItem label="Отчеты">
-        <SectionReports id={props.id}/>
+        <SectionReports id={props.id} CLSID = {props.CLSID}/>
       </TabItem>
     </Tabs>
 

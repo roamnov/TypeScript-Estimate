@@ -31,7 +31,7 @@ export default function SectionsDBview(props) {
     }
 
     let defaultButton = <Tooltip title="Показать данные" >
-        <Button variant="outlined" size="small" onClick={() => OpenData()}>
+        <Button variant="outlined" style={{ textTransform:"none"}} size="small" onClick={() => OpenData()}>
             Открыть
         </Button>
     </Tooltip>
@@ -41,11 +41,11 @@ export default function SectionsDBview(props) {
 
             <SectionToolsJS WorkPlaceTools={props.WorkPlaceTools} ID={props.id} defaultButton={defaultButton} />
         </div>
-        <div >
-            <Splitter style = {{width: "100%", height: "auto"}}>
+        <div style = {{height: "100%", position: "relative"}}>
+            <Splitter style = {{width: "100%", height: "100%"}}>
                 <SplitterItem size="40%" collapsible id="item_DBviewTree">
                     <div id="DBviewTree" >
-                        <Tree CLSID={props.CLSID} multiCheck={false} />
+                        <Tree CLSID={props.CLSID} multiCheck={false} SectionID = {props.id}/>
                     </div>
                 </SplitterItem>
                 <SplitterItem size="60%" id="item_DBviewData" style = {{ height: "auto"}}>
