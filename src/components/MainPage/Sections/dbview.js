@@ -31,7 +31,7 @@ export default function SectionsDBview(props) {
     }
 
     let defaultButton = <Tooltip title="Показать данные" >
-        <Button variant="outlined" size="small" onClick={() => OpenData()}>
+        <Button variant="outlined" style={{ textTransform:"none"}} size="small" onClick={() => OpenData()}>
             Открыть
         </Button>
     </Tooltip>
