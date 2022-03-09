@@ -1,12 +1,54 @@
-import { Button, Checkbox, FormControlLabel, Grid, TextField } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, Grid, Paper, TextField, Typography } from "@mui/material";
 import React,{useEffect, useState} from "react";
+import { styled } from '@mui/material/styles';
+import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
+import MuiAccordionSummary, { AccordionSummaryProps} from '@mui/material/AccordionSummary';
+import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
+import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import { XMLrequest } from "../Url";
 
+const Accordion = styled((props: AccordionProps) => (
+    <MuiAccordion disableGutters elevation={0} square {...props} />
+  ))(({ theme }) => ({
+    border: `1px solid ${theme.palette.divider}`,
+    '&:not(:last-child)': {
+      borderBottom: 0,
+    },
+    '&:before': {
+      display: 'none',
+    },
+  }));
+  
+  const AccordionSummary = styled((props: AccordionSummaryProps) => (
+    <MuiAccordionSummary
+      expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
+      {...props}
+    />
+  ))(({ theme }) => ({
+    backgroundColor:
+      theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, .05)'
+        : 'rgba(0, 0, 0, .03)',
+    flexDirection: 'row-reverse',
+    '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
+      transform: 'rotate(90deg)',
+    },
+    '& .MuiAccordionSummary-content': {
+      marginLeft: theme.spacing(1),
+    },
+  }));
+  
+  const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
+    padding: theme.spacing(2),
+    borderTop: '1px solid rgba(0, 0, 0, .125)',
+  }));
 
-
+//////////////////////////////////////////////////////////////////////////////////////
 
 export default function FormsMainFile(props:any){
     const [dataForms, setDataForms] = useState();
+    const [expanded, setExpanded] = React.useState<string | false>('panel1');
+    const [expandedMap, setExpandedMap] = React.useState(new Map);
  
 
     useEffect(()=>{
@@ -28,6 +70,25 @@ export default function FormsMainFile(props:any){
         setDataForms(json);
         
     }
+
+    function GetParams(json:any, param:any){
+        return json[param] ===undefined?  json[param.toLowerCase()] : json[param];        
+    }
+
+    function TextFromServerToBrowser(text:any, size:any, positionBool:any){
+        const posit = positionBool? "absolute" : "inherit"
+        return(
+            <Typography style={{fontSize: `${parseInt(size, 10)*0,15}px`, width:"inherit", height:"inherit", position: posit }}> 
+                {text}
+            </Typography>
+        )
+    }
+
+    const handleChangeAccordion =
+    (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+      setExpanded(newExpanded ? panel : false);
+      setExpandedMap(expandedMap.set(panel, !expandedMap.get(panel)))
+    };
 
     function BackColor(color:any){
         let colorArr = color.split(":")
@@ -79,13 +140,15 @@ export default function FormsMainFile(props:any){
     }
     
     
-    function CheckAndReturnComponent(json:any){
-        let ReturnComponent =[],Enabled, Height, Left, Top,Name, Width,  RCDATA, Text
-        Left = json.Left;
-        Top = json.Top;
+    function CheckAndReturnComponent(json:any, SubLabel:boolean){
+        let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, FontSize, ReferenceLink
+        Left = GetParams(json, "Left");
+        Top = GetParams(json, "Top");
+        Height = GetParams(json, "Height")
+        Width = GetParams(json, "Width")
         switch(json.Type){
             case "TImage":
-                RCDATA = json.RCDATA
+                RCDATA = GetParams(json,"RCDATA")
                 ReturnComponent.push(
                     <Grid  style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`}}>
                          <img src={`data:image/png;base64,${RCDATA}`} />
@@ -93,21 +156,15 @@ export default function FormsMainFile(props:any){
                 )
                 break;
             case "TButton":
+                Text = GetParams(json,"Text")
                 
-                // console.log(json)
-                Text = json.Text
-                Height = json.Height
-                Width = json.Width
                 ReturnComponent.push(
                     <Button variant="contained" style={{color: BackColor(json["Font-color"]),backgroundColor:BackColor(json["Back-color"]) ,position:"absolute", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`, textTransform:"none"}}>{Text}</Button>
                 )
                 
                 break;
             case "TSectionCheckBox":
-                
-                Height = json.Height
-                Width = json.Width
-                Text = json.Text
+                Text = GetParams(json,"Text")
                 ReturnComponent.push(
                     <Grid style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`}}  >
                         <FormControlLabel style={{width:"max-content"}} control={<Checkbox defaultChecked />} label={Text} />
@@ -115,24 +172,62 @@ export default function FormsMainFile(props:any){
                 )
                 break;
             case "TSectionEditor":
-                console.log(json)
-                Height = json.Height
-                Width = json.Width
-                Text = json.Text
+                Text = GetParams(json,"Text")
                 ReturnComponent.push(
                     <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`  }}>
-                        <TextField variant="standard"  defaultValue={Text}  />
+                        <TextField variant="standard"  defaultValue={Text} style={{ width: `${Width}px`,height:`${Height}px` }} />
                     </Grid>
                     
                 )
                 break;
-            case "TSectionPanel1":
-                Height = json.Height
-                Width = json.Width
+            case "TSectionPanel":// WITH SUB
                 ReturnComponent.push(
-                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`  }}>
-                        {FormDataProcessing(json)}
+                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px` }}>
+                        <Paper elevation={2}>
+                           {SubDataProcessing(json)} 
+                        </Paper>
                     </Grid>
+                )
+                break;
+            case "TLabel":
+                FontSize =  GetParams(json,"Font-size")
+                Text = GetParams(json,"Text")
+                if(SubLabel){
+                    ReturnComponent.push(
+                        <Grid style={{paddingLeft:`${Left}px` }}>
+                            {TextFromServerToBrowser(Text, FontSize, false)}
+                        </Grid>
+                    )  
+                }else{
+                    ReturnComponent.push(
+                        <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px` }}>
+                            {TextFromServerToBrowser(Text, FontSize, true)}
+                        </Grid>
+                    )   
+                }
+                
+                break;
+
+            case "TCategoryPanelGroup"://WITH SUB
+
+                ReturnComponent.push(
+                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"scroll" }}>
+                        {SubDataProcessing(json)}
+                    </Grid>
+                )
+                break;
+            case "TCategoryPanel"://WITH SUB
+                let Caption = GetParams(json,"caption")
+                let BoolOpen = expandedMap.get(Caption)
+                ReturnComponent.push(
+                    <Accordion expanded={BoolOpen} onChange={handleChangeAccordion(Caption)}>
+                        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+                            <Typography>{Caption}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            {SubDataProcessing(json)} 
+                        </AccordionDetails>
+                    </Accordion> 
                 )
                 break;
             
@@ -142,16 +237,28 @@ export default function FormsMainFile(props:any){
 
     function FormDataProcessing(json:any){
         if(dataForms !== undefined){
-            console.log(json)
             let val:any, returnAll=[]
             json = json.Form;
             for(const [key, value] of Object.entries(json)) {
                 val = value
                 if(val.Type !==undefined ){
-                    
-                        returnAll.push( CheckAndReturnComponent(value)) 
-                    
-                    
+                    returnAll.push( CheckAndReturnComponent(value, false))                     
+                }
+            } 
+            return returnAll 
+        }
+        
+    }
+
+    function SubDataProcessing(json:any){
+        if(dataForms !== undefined){
+            
+            let val:any, returnAll=[]
+            //json = json.Form;
+            for(const [key, value] of Object.entries(json)) {
+                val = value
+                if(val.Type !==undefined ){
+                    returnAll.push( CheckAndReturnComponent(value, true)) 
                 }
             } 
             return returnAll 

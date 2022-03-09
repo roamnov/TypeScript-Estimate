@@ -36,7 +36,7 @@ import { Backdrop, CircularProgress } from "@mui/material";
 
 const SignIn = () => {
   const styles = useStyles();
-
+  document.title = "WEB-КЛИЕНТ";
   
   let navigate = useNavigate();
   //const {drxLog , setDrxLog} = useContext(DrxContext);
