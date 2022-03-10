@@ -17,7 +17,7 @@ import SectionToolsJS from '../Tools/SectionToolsJS';
 import { XMLrequest } from '../../Url';
 import SectionReport from '../Sections/ElementsSections/SectionReports'
 import Tooltip from '@mui/material/Tooltip';
-import FormsMainFile from '../../Forms/FormsMainFile';
+import FormsMainFile from '../../Forms/FormsMainFile.jsx';
 export default function FullRightSide(props: InfoAboutClick) {
 
   const [open, setOpen] = React.useState(false);

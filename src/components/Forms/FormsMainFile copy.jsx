@@ -6,8 +6,9 @@ import MuiAccordionSummary, { AccordionSummaryProps} from '@mui/material/Accordi
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import { XMLrequest } from "../Url";
+import { Tabs, TabItem, TabItemsGroup } from 'smart-webcomponents-react/tabs';
 
-const Accordion = styled((props: AccordionProps) => (
+const Accordion = styled((props) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
   ))(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
@@ -19,7 +20,7 @@ const Accordion = styled((props: AccordionProps) => (
     },
   }));
   
-  const AccordionSummary = styled((props: AccordionSummaryProps) => (
+  const AccordionSummary = styled((props) => (
     <MuiAccordionSummary
       expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
       {...props}
@@ -45,9 +46,9 @@ const Accordion = styled((props: AccordionProps) => (
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-export default function FormsMainFile(props:any){
+export default function FormsMainFile(props){
     const [dataForms, setDataForms] = useState();
-    const [expanded, setExpanded] = React.useState<string | false>('panel1');
+    const [expanded, setExpanded] = React.useState('panel1');
     const [expandedMap, setExpandedMap] = React.useState(new Map);
  
 
@@ -71,11 +72,11 @@ export default function FormsMainFile(props:any){
         
     }
 
-    function GetParams(json:any, param:any){
+    function GetParams(json, param){
         return json[param] ===undefined?  json[param.toLowerCase()] : json[param];        
     }
 
-    function TextFromServerToBrowser(text:any, size:any, positionBool:any){
+    function TextFromServerToBrowser(text, size, positionBool){
         const posit = positionBool? "absolute" : "inherit"
         return(
             <Typography style={{fontSize: `${parseInt(size, 10)*0,15}px`, width:"inherit", height:"inherit", position: posit }}> 
@@ -85,12 +86,12 @@ export default function FormsMainFile(props:any){
     }
 
     const handleChangeAccordion =
-    (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+    (panel) => (event, newExpanded) => {
       setExpanded(newExpanded ? panel : false);
       setExpandedMap(expandedMap.set(panel, !expandedMap.get(panel)))
     };
 
-    function BackColor(color:any){
+    function BackColor(color){
         let colorArr = color.split(":")
         if (color === undefined) return "rgb(240,240,240)"
         if(colorArr[1] === undefined){
@@ -140,7 +141,7 @@ export default function FormsMainFile(props:any){
     }
     
     
-    function CheckAndReturnComponent(json:any, SubLabel:boolean){
+    function CheckAndReturnComponent(json, SubLabel){
         let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, FontSize, ReferenceLink
         Left = GetParams(json, "Left");
         Top = GetParams(json, "Top");
@@ -230,14 +231,30 @@ export default function FormsMainFile(props:any){
                     </Accordion> 
                 )
                 break;
+            case "TTabbedPages"://WITH SUB
+                ReturnComponent.push(
+                    <Tabs class="Tabs" selectedIndex={0} style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px` }} >
+                        {SubDataProcessing(json)} 
+                    </Tabs>
+                )
+                break;
+            case "TTabPagePanel"://WITH SUB
+                Text = GetParams(json,"Text")
+                ReturnComponent.push(
+                   <TabItem label={Text} style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px` }}>
+                       {SubDataProcessing(json)} 
+                    </TabItem> 
+                )
+                
+                break;
             
         }
         return ReturnComponent;
     }
 
-    function FormDataProcessing(json:any){
+    function FormDataProcessing(json){
         if(dataForms !== undefined){
-            let val:any, returnAll=[]
+            let val, returnAll=[]
             json = json.Form;
             for(const [key, value] of Object.entries(json)) {
                 val = value
@@ -250,10 +267,10 @@ export default function FormsMainFile(props:any){
         
     }
 
-    function SubDataProcessing(json:any){
+    function SubDataProcessing(json){
         if(dataForms !== undefined){
             
-            let val:any, returnAll=[]
+            let val, returnAll=[]
             //json = json.Form;
             for(const [key, value] of Object.entries(json)) {
                 val = value
