@@ -7,6 +7,7 @@ import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import { XMLrequest } from "../Url";
 import { Tabs, TabItem, TabItemsGroup } from 'smart-webcomponents-react/tabs';
+import Link from '@mui/material/Link';
 
 const Accordion = styled((props) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -50,7 +51,11 @@ export default function FormsMainFile(props){
     const [dataForms, setDataForms] = useState();
     const [expanded, setExpanded] = React.useState('panel1');
     const [expandedMap, setExpandedMap] = React.useState(new Map);
- 
+    const fontstyles = {
+        "жирный":"bold",
+        "курсив": "ds",
+        "подчеркнутый":"sa"
+    }
 
     useEffect(()=>{
         GetSectionForms();
@@ -76,13 +81,28 @@ export default function FormsMainFile(props){
         return json[param] ===undefined?  json[param.toLowerCase()] : json[param];        
     }
 
-    function TextFromServerToBrowser(text, size, Reference){
-
-        return(
-                    <Typography style={{fontSize: `${parseInt(size, 10)*0,15}px`, }}> 
-                        {text}
+    function TextFromServerToBrowser(json){
+        let Text, FontStyle, ReferenceLink, FontSize
+        FontSize =  GetParams(json,"Font-size")
+        Text = GetParams(json,"Text")
+        ReferenceLink = GetParams(json,"Reference")
+        FontStyle = BackFontweight(GetParams(json,"font-style"))
+        if( ReferenceLink === "1"){
+            return(
+                    <Typography style={{fontSize: `${parseInt(FontSize, 10)*0,15}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle }}> 
+                        <Link href="#"  component="button" variant="body2" underline="hover">
+                        {   Text}
+                        </Link>
                     </Typography>
                 )
+        }else{
+            return(
+                    <Typography style={{fontSize: `${parseInt(FontSize, 10)*0,15}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle }}> 
+                        {Text}
+                    </Typography>
+                )
+        }
+        
            
     }
 
@@ -145,6 +165,12 @@ export default function FormsMainFile(props){
         switch(FS){
             case "жирный":
                 return "bold"
+            case "курсив":
+                return "italic"
+            case "подчеркнутый":
+                return "underline"
+
+            
         }
     }
     
@@ -166,7 +192,7 @@ export default function FormsMainFile(props){
                 RCDATA = GetParams(json,"RCDATA")
                 ReturnComponent.push(
                     <Grid  style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`}}>
-                         <img src={`data:image/png;base64,${RCDATA}`} />
+                         <img style={{width: `${Width}px`,height:`${Height}px`}} src={`data:image/png;base64,${RCDATA}`} />
                     </Grid>
                 )
                 break;
@@ -174,7 +200,10 @@ export default function FormsMainFile(props){
                 Text = GetParams(json,"Text")
                 
                 ReturnComponent.push(
-                    <Button variant="contained" style={{color: BackColor(json["Font-color"]),backgroundColor:BackColor(json["Back-color"]) ,position:"absolute", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`, textTransform:"none"}}>{Text}</Button>
+                    <Button variant="contained" style={{color: BackColor(json["Font-color"]),backgroundColor:BackColor(json["Back-color"]) ,position:"absolute", minWidth: "1px", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`, textTransform:"none"}}>
+                        {Text}
+                        {SubDataProcessing(json)}  
+                    </Button>
                 )
                 
                 break;
@@ -205,24 +234,17 @@ export default function FormsMainFile(props){
                 )
                 break;
             case "TLabel":
-                FontSize =  GetParams(json,"Font-size")
-                Text = GetParams(json,"Text")
                 let FixedWidth = roughScale(Width, 10) + 8
-                ReferenceLink = GetParams(json,"Reference")
-                FontStyle = GetParams(json,"font-style")
                 if(SubLabel === "TCategoryPanel"){
                     ReturnComponent.push(
                         <Grid style={{paddingLeft:`${Left}px`  } }>
-                            <BackFontweight>
-                               {TextFromServerToBrowser(Text, FontSize, false)} 
-                            </BackFontweight>
-                            
+                               {TextFromServerToBrowser(json)}                             
                         </Grid>
                     )  
                 }else{
                     ReturnComponent.push(
                         <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${FixedWidth}px`,height:`${Height}px` }}>
-                            {TextFromServerToBrowser(Text, FontSize, true)}
+                            {TextFromServerToBrowser(json)}
                         </Grid>
                     )   
                 }
@@ -232,7 +254,7 @@ export default function FormsMainFile(props){
             case "TCategoryPanelGroup"://WITH SUB
 
                 ReturnComponent.push(
-                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"scroll" }}>
+                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden" }}>
                         {SubDataProcessing(json)}
                     </Grid>
                 )
@@ -266,6 +288,13 @@ export default function FormsMainFile(props){
                     </TabItem> 
                 )
                 
+                break;
+            case "TGradientPanel"://WITH SUB
+                ReturnComponent.push(
+                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden" }}>
+                        {SubDataProcessing(json)}
+                    </Grid>
+                )
                 break;
             
         }
