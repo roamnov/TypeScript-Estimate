@@ -16,6 +16,7 @@ import { triggerBase64Download } from 'common-base64-downloader-react';
 import { download } from './Tools';
 import * as mime from 'react-native-mime-types';
 import ModalSelectListIndex from "./../../Containers/ModalSelectListIndex.jsx"
+import TokenPorcessingJS from '../../TokenProcessing';
 
 
 //
@@ -511,9 +512,10 @@ const SectionToolsJS = (props) =>{
         params.set("Type", Type);
         //params.set("Checked", "0") УЗНАТЬ КАК WSM ПОЛУЧАТЬ ////////////////////////////////////////////////////////
         params.set("WSM", "1");
-        await axios.get(URL(params)).then((res)=> setData(res.data))
-       
-        //json = XMLrequest(params);
+        //await axios.get(URL(params)).then((res)=> setData(res.data))
+        
+        let json = XMLrequest(params);
+        TokenPorcessingJS(json)
         //setData(json);
     }
     

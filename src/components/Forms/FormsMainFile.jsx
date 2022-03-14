@@ -8,6 +8,7 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import { XMLrequest } from "../Url";
 import { Tabs, TabItem, TabItemsGroup } from 'smart-webcomponents-react/tabs';
 import Link from '@mui/material/Link';
+import TokenPorcessingJS from "../TokenProcessing";
 
 const Accordion = styled((props) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -180,6 +181,17 @@ export default function FormsMainFile(props){
         return parsed ;
       }
       
+    function ClickButton(event){
+        let params = new Map, json;
+        const Name = event.currentTarget.getAttribute("name");
+        params.set('prefix', 'forms');
+        params.set("comand", "ElementEvent");
+        params.set("SectionID", props.id);/////
+        params.set("Name", Name);
+        params.set("WSM", "1");
+        json = XMLrequest(params);
+        // TokenPorcessingJS(json);
+    }
     
     function CheckAndReturnComponent(json, SubLabel){
         let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, FontSize, FontStyle, ReferenceLink
@@ -187,6 +199,7 @@ export default function FormsMainFile(props){
         Top = GetParams(json, "Top");
         Height = GetParams(json, "Height")
         Width = GetParams(json, "Width")
+        Name = GetParams(json, "Name")
         switch(json.Type){
             case "TImage":
                 RCDATA = GetParams(json,"RCDATA")
@@ -200,7 +213,7 @@ export default function FormsMainFile(props){
                 Text = GetParams(json,"Text")
                 
                 ReturnComponent.push(
-                    <Button variant="contained" style={{color: BackColor(json["Font-color"]),backgroundColor:BackColor(json["Back-color"]) ,position:"absolute", minWidth: "1px", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`, textTransform:"none"}}>
+                    <Button name={Name} secid={props.id} onClick={ClickButton} variant="contained" style={{color: BackColor(json["Font-color"]),backgroundColor:BackColor(json["Back-color"]) ,position:"absolute", minWidth: "1px", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`, textTransform:"none"}}>
                         {Text}
                         {SubDataProcessing(json)}  
                     </Button>

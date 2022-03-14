@@ -265,8 +265,7 @@ export default function ModalProgress(props:ModalProgressProps) {
                 
               </Grid>
               <Grid item >
-                <Button onClick={RenderCancelModal}>Отмена</Button>
-                <Button onClick={Asd}>sdsa</Button>
+                <Button style={{textTransform:"none"}} onClick={RenderCancelModal}>Отмена</Button>
             </Grid>
           </Grid>
         </DialogActions>
