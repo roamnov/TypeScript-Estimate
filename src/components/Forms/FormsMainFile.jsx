@@ -1,4 +1,4 @@
-import { Button, Checkbox, FormControlLabel, Grid, Paper, TextField, Typography } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, Grid, Paper, TextField, Typography,CircularProgress } from "@mui/material";
 import React,{Children, useEffect, useState} from "react";
 import { styled } from '@mui/material/styles';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
@@ -8,7 +8,7 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import { XMLrequest } from "../Url";
 import { Tabs, TabItem, TabItemsGroup } from 'smart-webcomponents-react/tabs';
 import Link from '@mui/material/Link';
-import TokenPorcessingJS from "../TokenProcessing";
+import  { tokenProcessingTest } from "../TokenProcessing";
 
 const Accordion = styled((props) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -52,11 +52,16 @@ export default function FormsMainFile(props){
     const [dataForms, setDataForms] = useState();
     const [expanded, setExpanded] = React.useState('panel1');
     const [expandedMap, setExpandedMap] = React.useState(new Map);
-    const fontstyles = {
-        "жирный":"bold",
-        "курсив": "ds",
-        "подчеркнутый":"sa"
+    const [load, setLoad] = React.useState(true)
+    const [currentHeight, setCurrentHeight] = useState(window.innerHeight - 189);
+    
+    const handleResize = () => {
+        setCurrentHeight(window.innerHeight - 189);
     }
+    useEffect(() => {
+        window.addEventListener("resize", handleResize, false);
+        
+    }, []);
 
     useEffect(()=>{
         GetSectionForms();
@@ -75,7 +80,7 @@ export default function FormsMainFile(props){
         params.set("SectionID", props.id);/////
         json = XMLrequest(params);
         setDataForms(json);
-        
+        setLoad(false);        
     }
 
     function GetParams(json, param){
@@ -83,22 +88,23 @@ export default function FormsMainFile(props){
     }
 
     function TextFromServerToBrowser(json){
-        let Text, FontStyle, ReferenceLink, FontSize
-        FontSize =  GetParams(json,"Font-size")
-        Text = GetParams(json,"Text")
-        ReferenceLink = GetParams(json,"Reference")
-        FontStyle = BackFontweight(GetParams(json,"font-style"))
+        let Text, FontStyle, ReferenceLink, FontSize, autoSize
+        autoSize = GetParams(json,"AutoSize") === "0"? "hidden": "unset"
+        FontSize =  GetParams(json,"Font-size");
+        Text = GetParams(json,"Text");
+        ReferenceLink = GetParams(json,"Reference");
+        FontStyle = BackFontweight(GetParams(json,"font-style"));
         if( ReferenceLink === "1"){
             return(
-                    <Typography style={{fontSize: `${parseInt(FontSize, 10)*0,15}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle }}> 
+                    <Typography style={{fontSize: `${parseInt(FontSize, 10)*0,13}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize }}> 
                         <Link href="#"  component="button" variant="body2" underline="hover">
-                        {   Text}
+                            {Text}
                         </Link>
                     </Typography>
                 )
         }else{
             return(
-                    <Typography style={{fontSize: `${parseInt(FontSize, 10)*0,15}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle }}> 
+                    <Typography style={{fontSize: `${parseInt(FontSize, 10)*0,13}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize }}> 
                         {Text}
                     </Typography>
                 )
@@ -190,7 +196,7 @@ export default function FormsMainFile(props){
         params.set("Name", Name);
         params.set("WSM", "1");
         json = XMLrequest(params);
-        // TokenPorcessingJS(json);
+        tokenProcessingTest(json);
     }
     
     function CheckAndReturnComponent(json, SubLabel){
@@ -209,6 +215,7 @@ export default function FormsMainFile(props){
                     </Grid>
                 )
                 break;
+
             case "TButton":
                 Text = GetParams(json,"Text")
                 
@@ -220,6 +227,7 @@ export default function FormsMainFile(props){
                 )
                 
                 break;
+
             case "TSectionCheckBox":
                 Text = GetParams(json,"Text")
                 ReturnComponent.push(
@@ -228,6 +236,7 @@ export default function FormsMainFile(props){
                     </Grid>
                 )
                 break;
+
             case "TSectionEditor":
                 Text = GetParams(json,"Text")
                 ReturnComponent.push(
@@ -237,6 +246,7 @@ export default function FormsMainFile(props){
                     
                 )
                 break;
+
             case "TSectionPanel":// WITH SUB
                 ReturnComponent.push(
                     <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px` }}>
@@ -246,6 +256,7 @@ export default function FormsMainFile(props){
                     </Grid>
                 )
                 break;
+
             case "TLabel":
                 let FixedWidth = roughScale(Width, 10) + 8
                 if(SubLabel === "TCategoryPanel"){
@@ -256,7 +267,7 @@ export default function FormsMainFile(props){
                     )  
                 }else{
                     ReturnComponent.push(
-                        <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${FixedWidth}px`,height:`${Height}px` }}>
+                        <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${FixedWidth}px`,height:`${Height}px`, whiteSpace: "nowrap" }}>
                             {TextFromServerToBrowser(json)}
                         </Grid>
                     )   
@@ -272,6 +283,7 @@ export default function FormsMainFile(props){
                     </Grid>
                 )
                 break;
+
             case "TCategoryPanel"://WITH SUB
                 let Caption = GetParams(json,"caption")
                 let BoolOpen = expandedMap.get(Caption)
@@ -286,6 +298,7 @@ export default function FormsMainFile(props){
                     </Accordion> 
                 )
                 break;
+
             case "TTabbedPages"://WITH SUB
                 ReturnComponent.push(
                     <Tabs class="Tabs" selectedIndex={0} style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px` }} >
@@ -293,6 +306,7 @@ export default function FormsMainFile(props){
                     </Tabs>
                 )
                 break;
+
             case "TTabPagePanel"://WITH SUB
                 Text = GetParams(json,"Text")
                 ReturnComponent.push(
@@ -302,7 +316,16 @@ export default function FormsMainFile(props){
                 )
                 
                 break;
+
             case "TGradientPanel"://WITH SUB
+                ReturnComponent.push(
+                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden" }}>
+                        {SubDataProcessing(json)}
+                    </Grid>
+                )
+                break;
+
+            case "TBevel"://WITH SUB
                 ReturnComponent.push(
                     <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden" }}>
                         {SubDataProcessing(json)}
@@ -345,10 +368,23 @@ export default function FormsMainFile(props){
         
     }
 
-
-    return(
-        <Grid id="mainForms" style={{position:"absolute"}}>
-            {FormDataProcessing(dataForms)}
-        </Grid>
-    )
+    if(load === true){
+        return(
+            <Grid container direction="row" justifyContent="center" alignItems="center" style={{ height: `${currentHeight}px` }}>
+                <Grid item>
+                    <div>
+                        <CircularProgress />
+                    </div>
+                </Grid>
+            </Grid>
+            
+        ) 
+    }else{
+        return(
+            <Grid id="mainForms" style={{position:"absolute"}}>
+                {FormDataProcessing(dataForms)}
+            </Grid>
+        )  
+    }
+    
 }
