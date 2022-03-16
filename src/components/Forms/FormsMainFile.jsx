@@ -9,6 +9,7 @@ import { XMLrequest } from "../Url";
 import { Tabs, TabItem, TabItemsGroup } from 'smart-webcomponents-react/tabs';
 import Link from '@mui/material/Link';
 import  { tokenProcessingTest } from "../TokenProcessing";
+import SectionToolsJS from "../MainPage/Tools/SectionToolsJS";
 
 const Accordion = styled((props) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -67,11 +68,7 @@ export default function FormsMainFile(props){
         GetSectionForms();
     },[]);
 
-    useEffect(()=>{
-       // if(dataForms !== undefined){
-        //     FormDataProcessing(dataForms)
-        // }
-    },[dataForms])
+    
 
     const GetSectionForms=()=>{//GET /forms~GetSectionForm?LicGUID=8C5F5163443EBAC78D42B78939951952&SectionID=482 HTTP/1.0
         let params = new Map, json;
@@ -93,7 +90,7 @@ export default function FormsMainFile(props){
         FontSize =  GetParams(json,"Font-size");
         Text = GetParams(json,"Text");
         ReferenceLink = GetParams(json,"Reference");
-        FontStyle = BackFontweight(GetParams(json,"font-style"));
+        FontStyle = BackFontweight(GetParams(json,"Font-style"));
         if( ReferenceLink === "1"){
             return(
                     <Typography style={{fontSize: `${parseInt(FontSize, 10)*0,13}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize }}> 
@@ -120,8 +117,8 @@ export default function FormsMainFile(props){
     };
 
     function BackColor(color){
-        let colorArr = color.split(":")
         if (color === undefined) return "rgb(240,240,240)"
+        let colorArr = color.split(":")
         if(colorArr[1] === undefined){
             switch (color){
                 case "Черный":
@@ -183,7 +180,7 @@ export default function FormsMainFile(props){
     
     function roughScale(x, base) {
         const parsed = parseInt(x, base);
-        if (isNaN(parsed)) { return 0; }
+        if (isNaN(parsed)) { return 0; };
         return parsed ;
       }
       
@@ -198,29 +195,37 @@ export default function FormsMainFile(props){
         json = XMLrequest(params);
         tokenProcessingTest(json);
     }
+
+    function sortByIndex(arr) {
+        arr.sort((a, b) => a.Index > b.Index ? 1 : -1);
+      }
     
     function CheckAndReturnComponent(json, SubLabel){
-        let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, FontSize, FontStyle, ReferenceLink
+        let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Corners, BGColor;
         Left = GetParams(json, "Left");
         Top = GetParams(json, "Top");
-        Height = GetParams(json, "Height")
-        Width = GetParams(json, "Width")
-        Name = GetParams(json, "Name")
+        Height = GetParams(json, "Height");
+        Width = GetParams(json, "Width");
+        Name = GetParams(json, "Name");
+        Enabled = GetParams(json, "Enabled") === "1"?false:true;
+        Visability = GetParams(json, "Visible");
+        Visability = Visability ==="1"?"visible": Visability === undefined?"visible":"hidden" ;
+        // BGColor = BackColor(GetParams(json, "Back-color"));
         switch(json.Type){
             case "TImage":
-                RCDATA = GetParams(json,"RCDATA")
+                RCDATA = GetParams(json,"RCDATA");
                 ReturnComponent.push(
-                    <Grid  style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`}}>
-                         <img style={{width: `${Width}px`,height:`${Height}px`}} src={`data:image/png;base64,${RCDATA}`} />
+                    <Grid  style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, visibility:Visability }}>
+                        <img style={{width: `${Width}px`,height:`${Height}px`}} src={`data:image/png;base64,${RCDATA}`} />
                     </Grid>
                 )
                 break;
 
             case "TButton":
-                Text = GetParams(json,"Text")
+                Text = GetParams(json,"Text");
                 
                 ReturnComponent.push(
-                    <Button name={Name} secid={props.id} onClick={ClickButton} variant="contained" style={{color: BackColor(json["Font-color"]),backgroundColor:BackColor(json["Back-color"]) ,position:"absolute", minWidth: "1px", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`, textTransform:"none"}}>
+                    <Button disabled={Enabled} name={Name} secid={props.id} onClick={ClickButton} variant="outlined" style={{color: BackColor(json["Font-color"]),backgroundColor:BackColor(json["Back-color"]) ,position:"absolute", minWidth: "1px", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`, textTransform:"none" , visibility:Visability}}>
                         {Text}
                         {SubDataProcessing(json)}  
                     </Button>
@@ -231,8 +236,8 @@ export default function FormsMainFile(props){
             case "TSectionCheckBox":
                 Text = GetParams(json,"Text")
                 ReturnComponent.push(
-                    <Grid style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`}}  >
-                        <FormControlLabel style={{width:"max-content"}} control={<Checkbox defaultChecked />} label={Text} />
+                    <Grid style={{whiteSpace:"nowrap"}}  >
+                        <FormControlLabel style={{width:"max-content" ,  position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability}} control={<Checkbox defaultChecked />} label={Text} />
                     </Grid>
                 )
                 break;
@@ -240,7 +245,7 @@ export default function FormsMainFile(props){
             case "TSectionEditor":
                 Text = GetParams(json,"Text")
                 ReturnComponent.push(
-                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`  }}>
+                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability  }}>
                         <TextField variant="standard"  defaultValue={Text} style={{ width: `${Width}px`,height:`${Height}px` }} />
                     </Grid>
                     
@@ -249,7 +254,7 @@ export default function FormsMainFile(props){
 
             case "TSectionPanel":// WITH SUB
                 ReturnComponent.push(
-                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px` }}>
+                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability, backgroundColor: BGColor }}>
                         <Paper elevation={2}>
                            {SubDataProcessing(json)} 
                         </Paper>
@@ -261,13 +266,13 @@ export default function FormsMainFile(props){
                 let FixedWidth = roughScale(Width, 10) + 8
                 if(SubLabel === "TCategoryPanel"){
                     ReturnComponent.push(
-                        <Grid style={{paddingLeft:`${Left}px`  } }>
+                        <Grid style={{paddingLeft:`${Left}px` , visibility:Visability } }>
                                {TextFromServerToBrowser(json)}                             
                         </Grid>
                     )  
                 }else{
                     ReturnComponent.push(
-                        <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${FixedWidth}px`,height:`${Height}px`, whiteSpace: "nowrap" }}>
+                        <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${FixedWidth}px`,height:`${Height}px`, whiteSpace: "nowrap", visibility:Visability }}>
                             {TextFromServerToBrowser(json)}
                         </Grid>
                     )   
@@ -278,21 +283,21 @@ export default function FormsMainFile(props){
             case "TCategoryPanelGroup"://WITH SUB
 
                 ReturnComponent.push(
-                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden" }}>
+                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", visibility:Visability, backgroundColor: BGColor }}>
                         {SubDataProcessing(json)}
                     </Grid>
                 )
                 break;
 
             case "TCategoryPanel"://WITH SUB
-                let Caption = GetParams(json,"caption")
-                let BoolOpen = expandedMap.get(Caption)
+                let Caption = GetParams(json,"caption");
+                let BoolOpen = expandedMap.get(Caption);
                 ReturnComponent.push(
                     <Accordion expanded={BoolOpen} onChange={handleChangeAccordion(Caption)}>
                         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
                             <Typography>{Caption}</Typography>
                         </AccordionSummary>
-                        <AccordionDetails  style={{ width: `${Width}px`,height:`${Height}px`}}>
+                        <AccordionDetails  style={{ width: `${Width}px`,height:`${Height}px`, display:Visability}}>
                             {SubDataProcessing(json,"TCategoryPanel")} 
                         </AccordionDetails>
                     </Accordion> 
@@ -300,17 +305,25 @@ export default function FormsMainFile(props){
                 break;
 
             case "TTabbedPages"://WITH SUB
+                let SortedTabs = [];
+                for(const [key, value] of Object.entries(json)) {
+                    if(typeof(value) === "object"){
+                        SortedTabs.push(value)
+                    }
+                }
+                sortByIndex(SortedTabs)
                 ReturnComponent.push(
-                    <Tabs class="Tabs" selectedIndex={0} style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px` }} >
-                        {SubDataProcessing(json, "TTabbedPages")} 
+                    <Tabs class="Tabs" selectedIndex={0} style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, display:Visability, backgroundColor: BGColor }} >
+                        {SubDataProcessing(SortedTabs, "TTabbedPages")} 
                     </Tabs>
                 )
                 break;
 
             case "TTabPagePanel"://WITH SUB
-                Text = GetParams(json,"Text")
+                Text = GetParams(json,"Text");
+                Text = Text === undefined? GetParams(json,"Title"): Text;
                 ReturnComponent.push(
-                   <TabItem label={Text} style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px` }}>
+                   <TabItem label={Text} style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, display:Visability, backgroundColor: BGColor }}>
                        {SubDataProcessing(json, "TTabPagePanel")} 
                     </TabItem> 
                 )
@@ -319,7 +332,7 @@ export default function FormsMainFile(props){
 
             case "TGradientPanel"://WITH SUB
                 ReturnComponent.push(
-                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden" }}>
+                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor }}>
                         {SubDataProcessing(json)}
                     </Grid>
                 )
@@ -327,7 +340,7 @@ export default function FormsMainFile(props){
 
             case "TBevel"://WITH SUB
                 ReturnComponent.push(
-                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden" }}>
+                    <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor }}>
                         {SubDataProcessing(json)}
                     </Grid>
                 )
@@ -380,11 +393,13 @@ export default function FormsMainFile(props){
             
         ) 
     }else{
-        return(
-            <Grid id="mainForms" style={{position:"absolute"}}>
+        return(<Grid >
+            <SectionToolsJS ID={props.id} />
+            <Grid id="mainForms" style={{position:"absolute", height: "100%", width:"100%"}}>
                 {FormDataProcessing(dataForms)}
             </Grid>
+        </Grid>
+            
         )  
     }
-    
 }

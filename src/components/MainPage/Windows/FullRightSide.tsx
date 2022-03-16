@@ -34,6 +34,8 @@ export default function FullRightSide(props: InfoAboutClick) {
 
  }
 
+ console.log(props)
+
   let content
   let defaultButton
   if (props.id !== undefined && props.clsic == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}") {
@@ -75,7 +77,7 @@ export default function FullRightSide(props: InfoAboutClick) {
       </Grid>      
       {AppTabs(props.id, content)}
        </div>
-       {props.id ===undefined?<Grid style={{marginTop: 20}}><SectionToolsJS   defaultButton={defaultButton} /></Grid>  :<></>}
+       
        {props.id ===undefined?<></>:<StickyFooter/>}
        
        

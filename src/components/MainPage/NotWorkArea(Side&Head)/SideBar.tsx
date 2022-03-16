@@ -208,7 +208,7 @@ export default function SideBar(props: MainBoxBackClick) {
           mainCollapse = data2.get(ID);
           openSet = data2.get(ID);
           assemblyLists.push(
-            <ListItem   key={ID} style={{ paddingTop: 0, paddingBottom: 0, paddingLeft: 0 }} sx={{ "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} selected={selected === ID}  secondaryAction={
+            <ListItem id={ID}  key={ID} style={{ paddingTop: 0, paddingBottom: 0, paddingLeft: 0 }} sx={{ "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} selected={selected === ID}  secondaryAction={
               <IconButton id={ID} onClick={handleClick} >
                 {SectionList[keyS] !== undefined && SectionList[keyS]["Deep"] >= 1 ? (openSet ? (<ExpandLess />) : (<ExpandMore />)) : (<></>)}
               </IconButton>
