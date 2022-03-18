@@ -6,7 +6,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import URL, { ImgBASE64, XMLrequest } from "../../Url";
+import URL, { CreateCokies, get_cookie, ImgBASE64, XMLrequest } from "../../Url";
 import { ImgURL } from "../../Url";
 import { Box, Drawer, Slide, Toolbar } from "@material-ui/core";
 import { useStyles } from "../../Styles";
@@ -41,12 +41,19 @@ export default function SideBar(props: MainBoxBackClick) {
   const [open, setOpen] = useState(false);
   const [drawerOpen, setdrawerOpen] = useState(true)
   const [data, setData] = useState([]);
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState(get_cookie("CurrentSecID"));
   const [data2, setData2] = useState(new Map());
   const [drawerWidth, setDrawerWidth] = useState(defaultDrawerWidth);
   let e = 0;//event 
 
+  useEffect(()=>{
+    let selected = get_cookie("CurrentSec").split(",");
+    props.setSelected({ id: selected[0], clsic: selected[1], name: selected[2] })    
+  },[])
 
+  useEffect(() => {
+    getSectionList();
+  }, []);
 
   const handleMouseDown = () => {
     document.addEventListener("mouseup", handleMouseUp, true);
@@ -82,6 +89,7 @@ export default function SideBar(props: MainBoxBackClick) {
 
     let ID = event.currentTarget.getAttribute("id");
     setData2(data2.set(ID, !data2.get(event.currentTarget.getAttribute("id"))));
+    
   };
 
   const updateSelected = (event: any) => {
@@ -122,6 +130,9 @@ export default function SideBar(props: MainBoxBackClick) {
     }
 
     setSelected(ID);
+    CreateCokies("CurrentSecID", ID );
+    CreateCokies("CurrentSec", ID+","+ CLSID+","+ Name );
+    
     let NameSection = document.getElementById("NameSection");
     NameSection ? NameSection.innerText = Name : NameSection = document.createElement("div")
     props.setSelected({ id: ID, clsic: CLSID, name: Name })
@@ -130,9 +141,7 @@ export default function SideBar(props: MainBoxBackClick) {
 
 
   //useEffect(()=>props.setSelected(selected),[selected] )
-  useEffect(() => {
-    getSectionList();
-  }, []);
+  
 
   
   const getSectionList = async () => {
@@ -199,7 +208,7 @@ export default function SideBar(props: MainBoxBackClick) {
           mainCollapse = data2.get(ID);
           openSet = data2.get(ID);
           assemblyLists.push(
-            <ListItem   key={ID} style={{ paddingTop: 0, paddingBottom: 0, paddingLeft: 0 }} sx={{ "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} selected={selected === ID}  secondaryAction={
+            <ListItem id={ID}  key={ID} style={{ paddingTop: 0, paddingBottom: 0, paddingLeft: 0 }} sx={{ "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} selected={selected === ID}  secondaryAction={
               <IconButton id={ID} onClick={handleClick} >
                 {SectionList[keyS] !== undefined && SectionList[keyS]["Deep"] >= 1 ? (openSet ? (<ExpandLess />) : (<ExpandMore />)) : (<></>)}
               </IconButton>
