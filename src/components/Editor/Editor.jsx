@@ -1,6 +1,16 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
+import { IconButton, Box } from "@material-ui/core";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import TextField from '@mui/material/TextField';
+import { MaskedTextBox } from 'smart-webcomponents-react/maskedtextbox';
+import { Input } from 'smart-webcomponents-react/input';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import { DateTimePicker } from 'smart-webcomponents-react/datetimepicker';
+import { XMLrequest } from '../Url';
 export default function Editor(props) {
+  const [blur, setBlur] = React.useState();
   let DropList, list;
   const EditStyle_PickList = 1;
   const EditStyle_Calendar = 2;
@@ -38,7 +48,7 @@ export default function Editor(props) {
     let lbl = parent.querySelector("#react-select-3-placeholder")
     if (lbl) {
       lbl.innerText = div.innerText;
-      let indexVal =div.getAttribute("indexval")
+      let indexVal = div.getAttribute("indexval")
       if (props.onCloseUpList)
         props.onCloseUpList(indexVal)
     }
@@ -90,49 +100,89 @@ export default function Editor(props) {
   if (props.list) {
     list = props.list.split(',')
   }
-  DropList = <div className="basic-single css-b62m3t-container" style={props.style}>
-    <span id="react-select-3-live-region" className="css-7pg0cj-a11yText">
-    </span>
-    <span aria-live="polite" aria-atomic="false" aria-relevant="additions text" className="css-7pg0cj-a11yText">
-    </span>
-    <div className="select__control css-1s2u09g-control">
-      <div className="select__value-container css-1d8n9bt">
-        <div className="select__placeholder css-14el2xx-placeholder" id="react-select-3-placeholder">
-          {props.caption}
+  function EnterValue(ev) {
+    if (ev.keyCode == 13) {
+      let el = ev.currentTarget;
+      let val = el.dataset.value;
+      let params = new Map();
+      params.set('prefix', 'programs');
+      params.set('comand', 'SetParamProperty');
+      params.set('ID', el.dataId);
+      params.set('Path', el.dataPath);
+      params.set('TextChanged', "1");
+      params.set('WSM', "1");
+      params.set('Value', val);
+      params.set('CheckState', 0);
+      params.set('ObjRef', el.dataObjref);
+      let otv = XMLrequest(params);
+      if (otv) {
+
+
+      }
+    }
+  }
+  function EditFocus(e) {
+    let el = e.currentTarget;
+    setBlur(e.currentTarget)
+    let val = el.dataEditval;
+    if (val) el.value = val
+  }
+  function SetValueEdit (e) {
+    let el = blur;
+    let val = el.dataValue;
+    if (val) el.value = val
+  }
+
+  DropList = props.EditStyle & EditStyle_Calendar ? <Box data-id={props.id} style={{ position: "relative", width: "100%", ...props.style }}>
+    <Input style={{ width: "100%", height: "100%" }} type="date" value={props.value} />
+  </Box> :
+    <Box style={{ position: "relative", width: "100%", ...props.style }}>
+      <Box data-id={props.id} >
+        {props.mask ?
+          <MaskedTextBox data-id={props.id} onKeyDown={(ev) => EnterValue(ev)} style={{ height: props.style.height, padding: "0px", width: "100%" }} value={props.caption ? props.caption : props.value ? props.value : ""} mask={props.mask} /> :
+          <Input data-path={props.Path}
+            data-id={props.id}
+            data-objref={props.ObjRef}
+            data-editval={props.EditVal}
+            onKeyDown={(ev) => EnterValue(ev)}
+            onClick={(e) => EditFocus(e)}
+            onBlur ={(e) =>SetValueEdit(e)}
+            value={props.caption ? props.caption : props.value ? props.value : ""}
+            data-value={props.caption ? props.caption : props.value ? props.value : ""}
+            style={{ height: props.style.height, padding: "0px", width: "100%" }} >
+          </Input>
+        }
+      </Box>
+      <Box style={{ position: "absolute", top: "0px", right: "0px" }}>
+        <div className="select__indicators css-1wy0on6">
+          {props.EditStyle ?
+            <span className="select__indicator-separator css-1okebmr-indicatorSeparator"></span>
+            : <></>
+          }
+          {props.EditStyle & EditStyle_Ellipsis ?
+            <div aria-hidden="true" onClick={(event) => onDropDownList(event)}>
+              <IconButton style={{ padding: "0px" }}><MoreHorizIcon style={{ position: "relative", top: "3px" }} /></IconButton>
+            </div>
+            : <></>
+          }
+          {props.EditStyle & EditStyle_PickList ?
+            <div aria-hidden="true" onClick={(event) => onDropDownList(event)}>
+              <IconButton style={{ padding: "0px" }}><ArrowDropDownIcon /></IconButton>
+            </div>
+            : <></>
+          }
+          {props.EditStyle & EditStyle_UpDown ?
+            <div className="select__indicator select__dropdown-indicator css-tlfecz-indicatorContainer" aria-hidden="true" onClick={(event) => onDropDownList(event)}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <IconButton style={{ padding: "0px", height: "12px" }}><ArrowDropUpIcon style={{ position: "relative", top: "2px", height: "100%" }} viewBox="6 5 12 12" /></IconButton>
+                <IconButton style={{ padding: "0px", height: "12px" }}><ArrowDropDownIcon style={{ position: "relative", top: "-1px", height: "100%" }} viewBox="6 5 12 12" /></IconButton>
+              </div>
+            </div> :
+            <></>
+          }
+
         </div>
-        <input
-          id="react-select-3-input"
-          tabindex="0"
-          inputmode="none"
-          aria-autocomplete="list"
-          aria-expanded="false"
-          aria-haspopup="true"
-          aria-controls="react-select-3-listbox"
-          aria-owns="react-select-3-listbox"
-          role="combobox"
-          aria-readonly="true"
-          aria-describedby="react-select-3-placeholder"
-          className="css-1hac4vs-dummyInput"
-          value="" />
-      </div>
-      <div className="select__indicators css-1wy0on6">
-        {props.EditStyle ?
-          <span className="select__indicator-separator css-1okebmr-indicatorSeparator">
-          </span>
-          : <></>
-        }
-        {props.EditStyle & EditStyle_PickList ?
-          <div className="select__indicator select__dropdown-indicator css-tlfecz-indicatorContainer" aria-hidden="true" onClick={(event) => onDropDownList(event)}>
-            <svg height="20" width="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false" className="css-8mmkcg">
-              <path d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z">
-              </path>
-            </svg>
-          </div>
-          : <></>
-        }
-      </div>
-    </div>
-    <input name="color" type="hidden" value="" />
-  </div>
+      </Box>
+    </Box>
   return DropList
 }

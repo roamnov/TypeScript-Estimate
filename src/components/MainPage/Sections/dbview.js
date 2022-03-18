@@ -45,7 +45,7 @@ export default function SectionsDBview(props) {
             <Splitter style = {{width: "100%", height: "100%"}}>
                 <SplitterItem size="40%" collapsible id="item_DBviewTree">
                     <div id="DBviewTree" >
-                        <Tree CLSID={props.CLSID} multiCheck={false} SectionID = {props.id}/>
+                        <Tree CLSID={props.CLSID} multiCheck={false} SectionID = {props.id} Module = "DBView"/>
                     </div>
                 </SplitterItem>
                 <SplitterItem size="60%" id="item_DBviewData" style = {{ height: "auto"}}>

@@ -56789,6 +56789,14 @@ const GlobalStyleCheckBox = createGlobalStyle`
     background-color: #1976d2;
 	opacity: 0.5;
 }
+.ActivParams
+{
+    display: block;  
+}
+.NoActivParams
+{
+    display: none;  
+}
 `
 const GlobalStyleResizePanel = createGlobalStyle`
 #watermark
@@ -56821,7 +56829,6 @@ const GlobalStyleResizePanel = createGlobalStyle`
     width: 5px !important;
     flex-shrink: 0;
   } 
-   
 `
 
 

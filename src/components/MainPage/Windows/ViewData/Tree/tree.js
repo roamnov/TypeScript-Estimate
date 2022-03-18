@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import IconButton from '@mui/material/IconButton';
-import { XMLrequest } from '../../../../Url';
+import { ImgURL, XMLrequest } from '../../../../Url';
 import Switch from '../../../../Switch/Switch';
 import Editor from "../../../../Editor/Editor"
 import Tooltip from '@mui/material/Tooltip';
@@ -10,7 +10,9 @@ import CheckIcon from '@mui/icons-material/Check';
 import CodeMirror from '@uiw/react-codemirror';
 import { sql } from '@codemirror/lang-sql';
 import { Tabs, TabItem, TabItemsGroup } from 'smart-webcomponents-react/tabs';
-
+import Params from "../../../Sections/ElementsSections/Params"
+import { Box } from "@mui/material";
+import Splitter, { SplitterItem } from 'smart-webcomponents-react/splitter';
 
 export function clickTab(event) {
   let lbl = event.currentTarget;
@@ -50,7 +52,7 @@ export default function Tree(props) {
       if (props.CLSID === "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}") {
         params.set('prefix', 'dbview');
       } else
-        if (props.CLSID === "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}") {
+        if (props.CLSID === "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}" || props.CLSID === "{B357E5B2-137F-4253-BBEF-E5CFD697E362}") {
           params.set('prefix', 'reports');
           params.set('SectionID', props.SectionID);
         }
@@ -103,7 +105,7 @@ export default function Tree(props) {
         ol.classList.remove("showBlock")
       }
     }
-    let TreeDBView = document.getElementById("TreeDBView");
+    let TreeDBView = document.getElementById("Tree" + props.Module);
     if (TreeDBView) {
       let w = TreeDBView.getBoundingClientRect().width
       TreeDBView.scrollLeft = -99999999;
@@ -314,6 +316,38 @@ export default function Tree(props) {
     }
   }
 
+  function ShowParams(id) {
+    let param = document.getElementById("item_params_reports" + props.SectionID)
+    if (param) {
+      let paramBox = document.getElementById("item_params_reports" + props.SectionID + "_" + id)
+      if (paramBox) {
+        param.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+        paramBox.classList.add("ActivParams");
+        paramBox.classList.remove("NoActivParams")
+      }
+      else {
+        let params = new Map();
+        params.set('prefix', 'reports');
+        params.set('comand', 'GetReportParams');
+        params.set('ReportID', id);
+        params.set('SectionID', props.SectionID);
+        let otv = XMLrequest(params);
+        
+        let parametry = document.createElement("div");
+        param.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+        parametry.classList.add("Params");
+        parametry.classList.add("ActivParams");
+        parametry.id = "item_params_reports" + props.SectionID + "_" + id
+       
+        param.appendChild(parametry);
+        let paramBox = <Params id= {props.SectionID} data = {otv}/>
+        
+        ReactDOM.render(paramBox, parametry)
+      }
+    }
+
+  }
+
   function clickItem(event) {
     let span = event.currentTarget;
     let label = span.parentNode;
@@ -324,15 +358,21 @@ export default function Tree(props) {
     }
     parent.querySelectorAll('.SelectItemTree').forEach(n => n.classList.remove('SelectItemTree'))
     label.classList.add("SelectItemTree");
-    parent = document.getElementById("DBviewData");
-    let tabs = parent.querySelector(".tabs.activetabs");
-    if (tabs)
-      tabs.classList.remove("activetabs");
+
     let id = span.id.split("_")[1];
     switch (props.CLSID) {
       case "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}":
         {
+          parent = document.getElementById("DBviewData");
+          let tabs = parent.querySelector(".tabs.activetabs");
+          if (tabs)
+            tabs.classList.remove("activetabs");
           ShowTabsData(id);
+          break;
+        }
+      case "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}":
+        {
+          ShowParams(id)
           break;
         }
     }
@@ -348,15 +388,16 @@ export default function Tree(props) {
       if (props.CLSID === "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}") {
         params.set('prefix', 'dbview');
       } else
-        if (props.CLSID === "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}") {
+        if (props.CLSID === "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}" || props.CLSID === "{B357E5B2-137F-4253-BBEF-E5CFD697E362}") {
           params.set('prefix', 'reports');
         }
       fetchData(params)
     }
 
     var itemTree = <>
-      {data.map((item) => { let id = item["id"]? item["id"]: item["ID"]
-        return <li className={item.leaf ? "rct-node rct-node-leaf" : "rct-node rct-node-parent rct-node-collapsed"} id={id} style = {{whiteSpace: "nowrap"}}>
+      {data.map((item) => {
+        let id = item["id"] ? item["id"] : item["ID"]
+        return <li className={item.leaf ? "rct-node rct-node-leaf" : "rct-node rct-node-parent rct-node-collapsed"} id={id} style={{ whiteSpace: "nowrap" }}>
           <span className='rct-text'>
             {!item.leaf ?
               <button aria-label="Toggle" title="Toggle" type="button" className='rct-collapse rct-collapse-btn'>
@@ -373,9 +414,9 @@ export default function Tree(props) {
                 <></>
               }
               <span className='rct-node-icon'>
-                <span className={item.leaf ? 'rct-icon rct-icon-leaf' : 'rct-icon rct-icon-parent-close'} ></span>
+                <span className={item.leaf ? 'rct-icon rct-icon-leaf' : 'rct-icon rct-icon-parent-close'}></span>
               </span>
-              <span className='rct-title' id={"item_" + id} onClick={(event) => clickItem(event)}>{item["text"] ? item["text"]:item["Text"]}</span>
+              <span className='rct-title' id={"item_" + id} onClick={(event) => clickItem(event)}>{item["text"] ? item["text"] : item["Text"]}</span>
             </label>
           </span>
         </li>
@@ -387,7 +428,7 @@ export default function Tree(props) {
   fetchData()
 
   return (
-    <div id="TreeDBView" className='react-checkbox-tree rct-icons-fa5' style={{ height: '100%', overflowX: "auto" }} >
+    <div id={"Tree" + props.Module} className='react-checkbox-tree rct-icons-fa5' style={{ height: '100%', overflowX: "auto" }} >
       <ol>
         {CreateListTree()}
       </ol>
