@@ -44,7 +44,12 @@ export default function FullRightSide(props: InfoAboutClick) {
   } else
   if (props.id !== undefined && props.clsic =="{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}")
   {
-    content = <SectionsReportDocuments  CLSID = {props.clsic} id = {props.id}/>
+    defaultButton = <Tooltip title="Сформировать отчет" >
+        <Button variant="outlined" size="small" onClick={() => OpenReport()}>
+            Выполнить
+        </Button>
+    </Tooltip>
+    content = <SectionsReportDocuments  CLSID = {props.clsic} id = {props.id} defaultButton = {defaultButton}/>
   }
   else
   if(props.id !== undefined && props.clsic ==="{C0CED968-8834-405D-8801-A3838BF536F3}"){//Формы
