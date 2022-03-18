@@ -1,5 +1,6 @@
-import { Button, Checkbox, FormControlLabel, Grid, Paper, TextField, Typography,CircularProgress } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, Grid, Paper, TextField, Typography,CircularProgress, Dialog ,DialogActions, DialogTitle, DialogContent    } from "@mui/material";
 import React,{Children, useEffect, useState} from "react";
+import ReactDOM from 'react-dom';
 import { styled } from '@mui/material/styles';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import MuiAccordionSummary, { AccordionSummaryProps} from '@mui/material/AccordionSummary';
@@ -10,6 +11,20 @@ import { Tabs, TabItem, TabItemsGroup } from 'smart-webcomponents-react/tabs';
 import Link from '@mui/material/Link';
 import  { tokenProcessingTest } from "../TokenProcessing";
 import SectionToolsJS from "../MainPage/Tools/SectionToolsJS";
+import Slide from '@mui/material/Slide'
+import Draggable from 'react-draggable';
+import Editor from "../Editor/Editor";
+
+
+function PaperComponent(props) {
+    return (
+      <Draggable
+      cancel={'[class*="MuiDialogContent-root"]'}
+      >
+        <Paper {...props} />
+      </Draggable>
+    );
+  }
 
 const Accordion = styled((props) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -47,6 +62,66 @@ const Accordion = styled((props) => (
     borderTop: '1px solid rgba(0, 0, 0, .125)',
   }));
 
+
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+
+  export function DialogSlide(props) {
+    const [open, setOpen] = React.useState(true);
+    const [heiWid, setHeiWod] = React.useState({height: "0px", width:"0px"})
+
+  
+    useEffect(()=>{
+        if(props !== undefined){
+            setOpen(true)
+            setHeiWod(props.style)
+            
+        }
+    },[props])
+
+    const setForm = ()=>{
+
+    }
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+  
+    return (
+      <div>
+        
+        <Dialog
+          PaperProps={{
+              sx:{
+                  width: heiWid.width,
+                  height: heiWid.height
+              }
+          }}
+          open={open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description"
+          PaperComponent={PaperComponent}
+        >
+          <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+          <DialogContent>
+            {props.content}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Disagree</Button>
+            <Button onClick={handleClose}>Agree</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  }
+
 //////////////////////////////////////////////////////////////////////////////////////
 
 export default function FormsMainFile(props){
@@ -55,7 +130,9 @@ export default function FormsMainFile(props){
     const [expandedMap, setExpandedMap] = React.useState(new Map);
     const [load, setLoad] = React.useState(true)
     const [currentHeight, setCurrentHeight] = useState(window.innerHeight - 189);
+    const [subForms, setSubForms] = useState(undefined);
     
+
     const handleResize = () => {
         setCurrentHeight(window.innerHeight - 189);
     }
@@ -67,6 +144,12 @@ export default function FormsMainFile(props){
     useEffect(()=>{
         GetSectionForms();
     },[]);
+
+    useEffect(()=>{
+        if(subForms !== undefined){
+            BuildFromClicked();
+        }
+    },[subForms])
 
     
 
@@ -82,6 +165,17 @@ export default function FormsMainFile(props){
 
     function GetParams(json, param){
         return json[param] ===undefined?  json[param.toLowerCase()] : json[param];        
+    }
+
+    function BuildFromClicked(){
+        switch(subForms.Token){
+            case "ExecuteModalDialog":
+                let JSX = FormDataProcessing(subForms.jsonData)
+                let height = GetParams(subForms.jsonData.Form, "Height");
+                let width = GetParams(subForms.jsonData.Form, "Width");
+                ReactDOM.render(<DialogSlide content={JSX} style={{height: `${height}px`, width: `${width}px`}} /> , document.getElementById('RenderModal'));
+                break;
+        }
     }
 
     function TextFromServerToBrowser(json){
@@ -115,6 +209,7 @@ export default function FormsMainFile(props){
       setExpanded(newExpanded ? panel : false);
       setExpandedMap(expandedMap.set(panel, !expandedMap.get(panel)))
     };
+
 
     function BackColor(color){
         if (color === undefined) return "rgb(240,240,240)"
@@ -210,7 +305,7 @@ export default function FormsMainFile(props){
         Enabled = GetParams(json, "Enabled") === "1"?false:true;
         Visability = GetParams(json, "Visible");
         Visability = Visability ==="1"?"visible": Visability === undefined?"visible":"hidden" ;
-        // BGColor = BackColor(GetParams(json, "Back-color"));
+        BGColor = BackColor(GetParams(json, "Back-color"));
         switch(json.Type){
             case "TImage":
                 RCDATA = GetParams(json,"RCDATA");
@@ -246,7 +341,11 @@ export default function FormsMainFile(props){
                 Text = GetParams(json,"Text")
                 ReturnComponent.push(
                     <Grid style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability  }}>
+                        {/*
+                        
                         <TextField variant="standard"  defaultValue={Text} style={{ width: `${Width}px`,height:`${Height}px` }} />
+                        */ }
+                        <Editor style={{ width: `${Width}px`,height:`${Height}px` }}/>
                     </Grid>
                     
                 )
@@ -350,7 +449,7 @@ export default function FormsMainFile(props){
         return ReturnComponent;
     }
 
-    function FormDataProcessing(json){
+    function FormDataProcessing(json) {
         if(dataForms !== undefined){
             let val, returnAll=[]
             json = json.Form;
@@ -367,7 +466,6 @@ export default function FormsMainFile(props){
 
     function SubDataProcessing(json, subElement){
         if(dataForms !== undefined){
-            
             let val, returnAll=[]
             //json = json.Form;
             for(const [key, value] of Object.entries(json)) {
@@ -393,10 +491,14 @@ export default function FormsMainFile(props){
             
         ) 
     }else{
-        return(<Grid >
-            <SectionToolsJS ID={props.id} />
+        return(
+        <Grid >
+            <SectionToolsJS ID={props.id} SetBackValue={setSubForms}/>
             <Grid id="mainForms" style={{position:"absolute", height: "100%", width:"100%"}}>
                 {FormDataProcessing(dataForms)}
+            </Grid>
+            <Grid id="RenderFormsModal">
+
             </Grid>
         </Grid>
             

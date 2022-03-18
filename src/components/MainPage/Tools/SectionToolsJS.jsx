@@ -48,7 +48,7 @@ const SectionToolsJS = (props) =>{
             if (navigator.userAgent.includes('Firefox')) {
                 setTimeout(() => {
                     GetSectionTools();   
-                }, 500);
+                }, 100);
               }else{
                 GetSectionTools();  
               } 
@@ -63,7 +63,7 @@ const SectionToolsJS = (props) =>{
         if (navigator.userAgent.includes('Firefox')) {
             setTimeout(() => {
                 GetWorkPlaceTools();    
-            }, 500);
+            }, 100);
           }else{
             GetWorkPlaceTools();    
           } 
@@ -309,7 +309,11 @@ const SectionToolsJS = (props) =>{
         params.set("Type", Type);
         //params.set("Checked", "0") УЗНАТЬ КАК WSM ПОЛУЧАТЬ ////////////////////////////////////////////////////////
         params.set("WSM", "1");
-        await axios.get(URL(params)).then((res)=> tokenProcessingTest(res.data))
+        await axios.get(URL(params)).then((res)=> {
+            if(tokenProcessingTest(res.data) !== undefined){
+                props.SetBackValue(tokenProcessingTest(res.data));
+            } 
+        })
         // let json = XMLrequest(params);
         // tokenProcessingTest(json)
         

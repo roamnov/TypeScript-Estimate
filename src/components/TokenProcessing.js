@@ -213,6 +213,16 @@ export function  tokenProcessingTest (json){
                 ReactDOM.render(<ModalSelectListIndex Json={json} /> , document.getElementById('RenderModal'));
                 
                 break;
+            
+            case "ExecuteModalDialog":
+                if(json.jsonData === undefined){
+                    
+                }else{
+                    return json;
+                }
+                break;
+            case "ExecuteParamDialog":
+                break;
                 
         }
 

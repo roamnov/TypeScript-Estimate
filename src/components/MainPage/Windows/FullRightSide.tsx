@@ -34,7 +34,6 @@ export default function FullRightSide(props: InfoAboutClick) {
 
  }
 
- console.log(props)
 
   let content
   let defaultButton

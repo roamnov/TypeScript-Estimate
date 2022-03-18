@@ -28,7 +28,7 @@ import URL, { AxiosRequest, CreateCokies, XMLrequest } from "../Url";
 import { purple, red } from "@material-ui/core/colors";
 import { Link,  useNavigate } from "react-router-dom";
 import { DrxContext, LoginIn } from "../Wrapper";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Backdrop, CircularProgress, TextField } from "@mui/material";
 
 
 
@@ -67,6 +67,10 @@ const SignIn = () => {
     
   }
 
+  const clientPasswordHandler = (event: any) => {
+    setPassword(event.target.value);
+  };
+
   function CheckAnswerFromServer(answer?: Object) {
     let test: string;
     setOpen(false)
@@ -83,6 +87,35 @@ const SignIn = () => {
     }
   }
 
+  const handlekeyDownSignIn = (e:any) =>{
+    if(e.keyCode === 13) {
+      let res:object 
+      setOpen(true)
+      
+      const LoginLast= drx + ","+user+ ","+ workplace; 
+      
+      let params = new Map();
+      params.set('comand','GetUserInfo');
+      params.set('ConfigName',drx);
+      params.set('UserName',user);
+      let  rest
+      rest = XMLrequest(params)["Server"];
+      let IP = rest;
+      let LoginData = {
+        ConfigName: drx,
+        UserName: user,
+        Password: password,
+        WorkPlace: workplace,
+        //Comp: "NPO5898",
+      };
+      params = new Map();
+      params.set('comand','enter');
+      if (IP !="")
+      params.set('IP', IP);
+      rest = XMLrequest(params,  LoginData);
+      rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain(LoginLast)
+    }
+  }
 
   const handleSingIn = () => {
     
@@ -90,7 +123,7 @@ const SignIn = () => {
     setOpen(true)
     
     const LoginLast= drx + ","+user+ ","+ workplace; 
-    //console.log(typeof(LoginData))
+    
     let params = new Map();
     params.set('comand','GetUserInfo');
     params.set('ConfigName',drx);
@@ -105,7 +138,6 @@ const SignIn = () => {
       WorkPlace: workplace,
       //Comp: "NPO5898",
     };
-    //setIP(rest);
     params = new Map();
     params.set('comand','enter');
     if (IP !="")
@@ -170,18 +202,32 @@ const SignIn = () => {
        {/*  ПОТОМ СДЕЛАТЬ GETUSERINFO */}
 
         <Grid item xs>
-          <PasswordInput password={password} setBackInfo={setPassword} userInfo={undefined} />
+          <TextField
+            fullWidth
+            // name="password"
+            label="Пароль"
+            type="password"
+            // id="password"
+            onChange={clientPasswordHandler}
+            inputProps={{
+              autoComplete: 'current-password',
+            }}
+            onKeyDown={handlekeyDownSignIn}
+            value={password}
+            
+          />
         </Grid>
       
         <Grid item>
         
           <Button
-          style={{backgroundColor: "#0098ad"}}
+            style={{backgroundColor: "#0098ad"}}
             type="submit"
             fullWidth
             variant="contained"
             className="ButtonMargin"
             onClick={handleSingIn}
+            
           >
             Войти
           </Button>
