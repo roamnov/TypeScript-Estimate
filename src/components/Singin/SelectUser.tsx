@@ -57,6 +57,7 @@ const SelectUser = (props: menuSelect) => {
         }}
         
         options={MenuItems(users)}
+        onKeyDown={props.KeyDown}
         renderInput={(params) => (
           <TextField {...params} autoComplete="username" id="username" name="username" inputProps={{  ...params.inputProps, autoComplete: 'username', }} onClick={getUser}  label="Имя пользователя" />
         )}

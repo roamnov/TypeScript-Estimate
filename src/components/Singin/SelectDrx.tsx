@@ -67,6 +67,7 @@ const SelectDrx = (props: menuSelect) => {
         }}
         id="drx"
         options={MenuItems(drxconnect)}
+        onKeyDown={props.KeyDown}
         renderInput={(params) => <TextField onClick={getDrx} {...params} label="Конфигурация" />}
       />
     </Grid>

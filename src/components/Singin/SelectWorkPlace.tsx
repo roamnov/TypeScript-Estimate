@@ -57,6 +57,7 @@ const SelectWorkPlace = (props: menuSelect) => {
         }}
         
         options={MenuItems(workplaces)}
+        onKeyDown={props.KeyDown}
         renderInput={(params) => <TextField onClick={getWorkPlaces}  autoComplete="off" {...params}  inputProps={{ ...params.inputProps, autoComplete: 'ndsaadssa', }}label="Рабочее место" />}
       />
       

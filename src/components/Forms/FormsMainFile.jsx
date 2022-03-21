@@ -80,9 +80,7 @@ const Accordion = styled((props) => (
         }
     },[props])
 
-    const setForm = ()=>{
-
-    }
+    
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -108,8 +106,7 @@ const Accordion = styled((props) => (
           onClose={handleClose}
           aria-describedby="alert-dialog-slide-description"
           PaperComponent={PaperComponent}
-        >
-          <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+        > 
           <DialogContent>
             {props.content}
           </DialogContent>
@@ -170,9 +167,17 @@ export default function FormsMainFile(props){
     function BuildFromClicked(){
         switch(subForms.Token){
             case "ExecuteModalDialog":
+                let height,width
                 let JSX = FormDataProcessing(subForms.jsonData)
-                let height = GetParams(subForms.jsonData.Form, "Height");
-                let width = GetParams(subForms.jsonData.Form, "Width");
+                if(JSX.length === 0){
+                    JSX = SubDataProcessing(subForms.jsonData)
+                    height = GetParams(subForms.jsonData, "Height");
+                    width = GetParams(subForms.jsonData, "Width"); 
+                }else{
+                    height = GetParams(subForms.jsonData.Form, "Height");
+                    width = GetParams(subForms.jsonData.Form, "Width"); 
+                }
+                
                 ReactDOM.render(<DialogSlide content={JSX} style={{height: `${height}px`, width: `${width}px`}} /> , document.getElementById('RenderModal'));
                 break;
         }

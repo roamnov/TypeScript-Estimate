@@ -193,11 +193,11 @@ const SignIn = () => {
           </Button>
         </Grid>
 
-        <SelectDrx drxInfo={drx} setBackInfo={setDrx} password={undefined} userInfo={undefined} />
+        <SelectDrx drxInfo={drx} setBackInfo={setDrx} password={undefined} userInfo={undefined} KeyDown={handlekeyDownSignIn} />
 
-        <SelectUser userInfo={user} drxInfo={drx} setBackInfo={setUser} password={undefined} />
+        <SelectUser userInfo={user} drxInfo={drx} setBackInfo={setUser} password={undefined} KeyDown={handlekeyDownSignIn} />
 
-        <SelectWorkPlace  drxInfo={drx} userInfo={user} workPlaceInfo={workplace} setBackInfo={setWorkPlace} password={undefined}   />
+        <SelectWorkPlace  drxInfo={drx} userInfo={user} workPlaceInfo={workplace} setBackInfo={setWorkPlace} password={undefined}  KeyDown={handlekeyDownSignIn} />
 
        {/*  ПОТОМ СДЕЛАТЬ GETUSERINFO */}
 
