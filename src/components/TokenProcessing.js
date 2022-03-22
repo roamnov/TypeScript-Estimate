@@ -97,7 +97,7 @@ function EmptyRequest(RequestID){
 
 
 var selestedFile    
-export function  tokenProcessingTest (json){
+export function  tokenProcessingTest (json, whereCall){
     if(json.Break !== undefined){
         let returnJSX= [], returnSmth = [], Token,Module, RequestID,andResult;
       
@@ -215,13 +215,15 @@ export function  tokenProcessingTest (json){
                 break;
             
             case "ExecuteModalDialog":
-                if(json.jsonData === undefined){
-                    
-                }else{
+                if(json.jsonData !== undefined || whereCall === "forms"){
                     return json;
+                }else{
+                    
                 }
                 break;
             case "ExecuteParamDialog":
+                let PathNew= json.Params.Path
+                return PathNew
                 break;
                 
         }
