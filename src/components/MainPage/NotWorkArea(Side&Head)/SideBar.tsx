@@ -44,6 +44,7 @@ export default function SideBar(props: MainBoxBackClick) {
   const [selected, setSelected] = useState(get_cookie("CurrentSecID"));
   const [data2, setData2] = useState(new Map());
   const [drawerWidth, setDrawerWidth] = useState(defaultDrawerWidth);
+  const [FirstLoad, setFirstLoad]= useState(false);
   let e = 0;//event 
 
   useEffect(()=>{
@@ -190,7 +191,7 @@ export default function SideBar(props: MainBoxBackClick) {
     if (data.length !== undefined) {
 
 
-      let Name, ID, currentDeep, openSet, openSetDeep, mainCollapse, deepCollapse, Img, keyS = 0, howDeep = 4
+      let Name, ID, currentDeep, openSet, openSetDeep, mainCollapse, deepCollapse, Img, keyS = 0, howDeep = 4, mainCollapseID, openSetID
       let assemblyLists = []; //сюда записываем все секции а потом отправляем на отрисовку
 
 
@@ -202,11 +203,18 @@ export default function SideBar(props: MainBoxBackClick) {
         Img = ImgURL(SectionList[key]["Image"], "32px", "32px");
         //Img = ImgBASE64(SectionList[key]["RCDATA"]);
         keyS += 1;
+        if(ID === selected && FirstLoad === true){
+          data2.set(mainCollapseID, true);
+          data2.set(openSetID, true)
+          setFirstLoad(false)
+        }
 
         if (currentDeep == null) {
           //если нет DEEP то отрисовываем родителя
           mainCollapse = data2.get(ID);
+          mainCollapseID = ID;
           openSet = data2.get(ID);
+          openSetID = ID;
           assemblyLists.push(
             <ListItem id={ID}  key={ID} style={{ paddingTop: 0, paddingBottom: 0, paddingLeft: 0 }} sx={{ "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} selected={selected === ID}  secondaryAction={
               <IconButton id={ID} onClick={handleClick} >
@@ -245,6 +253,7 @@ export default function SideBar(props: MainBoxBackClick) {
             assemblyLists.push(
               <Collapse key={ID} in={openSet && mainCollapse} timeout="auto" unmountOnExit >
                 {(openSet = data2.get(ID))}
+               
                 <ListItem key={ID} style={{ paddingTop: 0, paddingBottom: 0, paddingLeft: 0 }} secondaryAction={
                   <IconButton id={ID} onClick={handleClick} >
                     {openSet ? (<ExpandLess />) : (<ExpandMore />)}
@@ -258,6 +267,7 @@ export default function SideBar(props: MainBoxBackClick) {
                 </ListItem>
               </Collapse>
             );
+            openSetID = ID
           } else {
             assemblyLists.push(
               <Collapse
@@ -283,9 +293,7 @@ export default function SideBar(props: MainBoxBackClick) {
   let buttonDragger = (<div className={classes.buttonDragger} >{drawerOpen ? (<ArrowLeftIcon style={{ fontSize: "1rem" }} id={"01001"} onClick={drawerClick} />) : (<ArrowRightIcon style={{ fontSize: "1rem" }} id={"01001"} onClick={drawerClick} />)} </div>)
   window.onpopstate = updateSelected;
   return (
-
     <>
-      
       <Box style={{ scrollbarWidth: "none" }} sx={{ overflow: "auto" }}>
         
           <StyledList

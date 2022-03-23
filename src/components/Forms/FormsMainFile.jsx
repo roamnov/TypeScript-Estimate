@@ -124,6 +124,7 @@ const Accordion = styled((props) => (
 
 export default function FormsMainFile(props){
     const [dataForms, setDataForms] = useState();
+    const [dataFormsUpd, setdataFormsUpd] = useState();
     const [expanded, setExpanded] = React.useState('panel1');
     const [expandedMap, setExpandedMap] = React.useState(new Map);
     const [load, setLoad] = React.useState(true)
@@ -187,7 +188,7 @@ export default function FormsMainFile(props){
     }
     
 
-    function BuildFromClicked(){//MODAL RENDER METHOD
+    function BuildFromClicked(json){//MODAL RENDER METHOD+
         switch(subForms.Token){
             case "ExecuteModalDialog":
                 let height,width, Path
@@ -201,9 +202,46 @@ export default function FormsMainFile(props){
                     width = GetParams(subForms.jsonData.Form, "Width"); 
                 }
                 Path = subForms.jsonData.Form.Path;
-                ReactDOM.render(<DialogSlide content={JSX} style={{height: `${height}px`, width: `${width}px`}} Path={Path} /> , document.getElementById('RenderModal'));
+                
+                ReactDOM.render(<DialogSlide content={JSX} style={{height: `${height}px`, width: `${width}px`}} Path={Path} /> , document.getElementById('RenderFormsModal'));
                 break;
         }
+    }
+
+    function AssignObjectsForMenuBar(){
+        
+        if(isEmptyObject(dataFormsUpd)){
+            let MenuBar = {}
+            MenuBar = Object.assign({}, dataForms )
+            
+
+            return MenuBar
+        }else{
+            let KeysDefaut, KeysSections,MenuBar = {}, SameMenus ={}
+            const test = Object.assign({}, dataForms)
+             
+            MenuBar = Object.assign({}, dataForms)
+            
+            SameMenus  = Object.assign({}, dataForms)  
+            KeysDefaut = Object.keys(MenuBar);
+            KeysSections = Object.keys(dataFormsUpd);
+            for (const  valueDefaut of KeysDefaut) {
+                for (const  valueSection of KeysSections) {
+                    if (valueDefaut === valueSection){
+                        SameMenus[valueDefaut] = Object.assign(SameMenus[valueDefaut],dataFormsUpd[valueDefaut] ,dataForms[valueDefaut])
+                        
+                        
+                    }
+                }
+            }
+           
+            MenuBar = Object.assign(MenuBar,dataFormsUpd)
+            MenuBar = Object.assign(MenuBar,SameMenus)
+           
+
+            return MenuBar
+        }
+         
     }
 
     function TextFromServerToBrowser(json, keyName){
@@ -329,7 +367,7 @@ export default function FormsMainFile(props){
       }
     
     function CheckAndReturnComponent(json, SubLabel, keyName){
-        let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Corners, BGColor;
+        let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Corners, BGColor, returnSub=[];
         Left = GetParams(json, "Left");
         Top = GetParams(json, "Top");
         Height = GetParams(json, "Height");
@@ -354,7 +392,8 @@ export default function FormsMainFile(props){
                 
                 ReturnComponent.push(
                     <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" style={{color: BackColor(json["Font-color"]),backgroundColor:BackColor(json["Back-color"]) ,position:"absolute", minWidth: "1px", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`, textTransform:"none" , visibility:Visability}}>
-                        {Text}
+                        
+                        {TextFromServerToBrowser(json)}  
                         {SubDataProcessing(json)}  
                     </Button>
                 )
@@ -410,7 +449,7 @@ export default function FormsMainFile(props){
                 if(SubLabel === "TCategoryPanel"){
                     ReturnComponent.push(
                         <Grid keyName={keyName} style={{paddingLeft:`${Left}px` , visibility:Visability } }>
-                               {TextFromServerToBrowser(json, keyName)}                             
+                            {TextFromServerToBrowser(json, keyName)}                             
                         </Grid>
                     )  
                 }else{
@@ -490,19 +529,48 @@ export default function FormsMainFile(props){
                 break;
 
             case "TRadioGroup":
+                let PickList, Columns
+                PickList = GetParams(json, "PickList").split("\r\n");
+                Text = GetParams(json, "PickList").split("\r\n");
+                Columns = GetParams(json,"Columns");
+                
+                for(let key of PickList){
+                    if(key !== ""){
+                        returnSub.push(
+                            <FormControlLabel value={key} control={<Radio />} label={key} />
+                        )
+                    }
+                }
+                ReturnComponent.push(
+                    <FormControl style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`,}}>
+                        <FormLabel >{Text[0]}</FormLabel>
+                            <RadioGroup
+                                row={Columns === "1"?false:true}
+                                name="controlled-radio-buttons-group"
+                                
+                                // onChange={handleChange}
+                            >
+                                
+                                {returnSub}
+                        </RadioGroup>
+                    </FormControl>
+                )
+
                 break;
 
             case "TListBox":
+
                 break
             
         }
         return ReturnComponent;
     }
 
-    function FormDataProcessing(json) {
+function FormDataProcessing(json) {
         if(dataForms !== undefined){
             let val, returnAll=[]
             json = json.Form;
+            console.log(json.hasOwnProperty("пДействия"))
             for(const [key, value] of Object.entries(json)) {
                 val = value
                 if(val.Type !==undefined ){
@@ -543,7 +611,7 @@ export default function FormsMainFile(props){
     }else{
         return(
         <Grid >
-            <SectionToolsJS ID={props.id} SetBackValue={setSubForms}/>
+            <SectionToolsJS ID={props.id} SetBackValue={setSubForms}  buildForms ={FormDataProcessing}/>
             <Grid id="mainForms" style={{position:"absolute", height: "100%", width:"100%"}}>
                 {FormDataProcessing(dataForms)}
             </Grid>

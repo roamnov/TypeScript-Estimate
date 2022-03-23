@@ -17,7 +17,7 @@ import { download } from './Tools';
 import * as mime from 'react-native-mime-types';
 import ModalSelectListIndex from "./../../Containers/ModalSelectListIndex.jsx"
 import { tokenProcessingTest } from  '../../TokenProcessing';
-
+import { DialogSlide } from '../../Forms/FormsMainFile';
 
 //
 //https://mui.com/components/toggle-button/
@@ -74,6 +74,30 @@ const SectionToolsJS = (props) =>{
     //     tokenProcessing(data)
     //  }, [data])
     
+    function BuildFromClicked(json){//MODAL RENDER METHOD+
+        switch(json.Token){
+            case "ExecuteModalDialog":
+                let height,width, Path
+                let JSX = props.buildForms(json.jsonData)
+                if(JSX.length === 0){
+                    JSX = props.buildForms(json.jsonData)
+                    height = GetParams(json.jsonData, "Height");
+                    width = GetParams(json.jsonData, "Width"); 
+                }else{
+                    height = GetParams(json.jsonData.Form, "Height");
+                    width = GetParams(json.jsonData.Form, "Width"); 
+                }
+                Path = json.jsonData.Form.Path;
+                
+                ReactDOM.render(<DialogSlide content={JSX} style={{height: `${height}px`, width: `${width}px`}} Path={Path} /> , document.getElementById('RenderFormsModal'));
+                break;
+        }
+    }
+
+    function GetParams(json, param){
+        return json[param] ===undefined?  json[param.toLowerCase()] : json[param];        
+    }
+
     const handleClick = (event) =>{
         setOpen1(!open1)
         const id =event.currentTarget.getAttribute("id");
@@ -311,7 +335,8 @@ const SectionToolsJS = (props) =>{
         params.set("WSM", "1");
         await axios.get(URL(params)).then((res)=> {
             if(tokenProcessingTest(res.data) !== undefined){
-                props.SetBackValue(tokenProcessingTest(res.data));
+                // props.SetBackValue(tokenProcessingTest(res.data));
+                BuildFromClicked(tokenProcessingTest(res.data))
             } 
         })
         // let json = XMLrequest(params);
