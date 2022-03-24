@@ -44,7 +44,7 @@ export default function SideBar(props: MainBoxBackClick) {
   const [selected, setSelected] = useState(get_cookie("CurrentSecID"));
   const [data2, setData2] = useState(new Map());
   const [drawerWidth, setDrawerWidth] = useState(defaultDrawerWidth);
-  const [FirstLoad, setFirstLoad]= useState(false);
+  const [FirstLoad, setFirstLoad]= useState(true);
   let e = 0;//event 
 
   useEffect(()=>{
@@ -191,7 +191,7 @@ export default function SideBar(props: MainBoxBackClick) {
     if (data.length !== undefined) {
 
 
-      let Name, ID, currentDeep, openSet, openSetDeep, mainCollapse, deepCollapse, Img, keyS = 0, howDeep = 4, mainCollapseID, openSetID
+      let Name, ID, currentDeep, openSet, openSetDeep, mainCollapse, deepCollapse, Img, keyS = 0, howDeep = 4, mainCollapseID, openSetID, deepCollapseID
       let assemblyLists = []; //сюда записываем все секции а потом отправляем на отрисовку
 
 
@@ -199,15 +199,24 @@ export default function SideBar(props: MainBoxBackClick) {
         //ходим по всему объекту
         Name = SectionList[key]["Name"];
         ID = SectionList[key]["ID"];
+        
         currentDeep = SectionList[key]["Deep"];
         Img = ImgURL(SectionList[key]["Image"], "32px", "32px");
         //Img = ImgBASE64(SectionList[key]["RCDATA"]);
         keyS += 1;
         if(ID === selected && FirstLoad === true){
           data2.set(mainCollapseID, true);
-          data2.set(openSetID, true)
+          console.log(currentDeep)
+          if(currentDeep === "2" || currentDeep === "3" ){
+            data2.set(openSetID, true)
+            if(currentDeep === "3"){
+              data2.set(deepCollapseID, true)
+            }
+          }
+          
           setFirstLoad(false)
         }
+        
 
         if (currentDeep == null) {
           //если нет DEEP то отрисовываем родителя
@@ -231,7 +240,7 @@ export default function SideBar(props: MainBoxBackClick) {
         } else if (currentDeep !== null) {
           //если есть DEEP
           howDeep = 4;
-
+          
           switch (
           currentDeep //Определяем сколько сдвинуть направо отностиельно родителя
           ) {
@@ -239,16 +248,18 @@ export default function SideBar(props: MainBoxBackClick) {
               openSet = mainCollapse;
               break;
             case "2":
-              howDeep += 4;
+              howDeep += 5;
               break;
             case "3":
               howDeep += 8;
               break;
           }
+          
           if (SectionList[keyS] !== undefined && SectionList[keyS]["Deep"] > currentDeep) {
             //если ключ НЕ необъявен и след deep больше текущего, то рисуем родителя
 
             currentDeep == "2" ? (deepCollapse = openSet) : (deepCollapse = undefined);
+            currentDeep == "2" ? (deepCollapseID = ID) : (deepCollapseID = undefined);
             openSetDeep = openSet;
             assemblyLists.push(
               <Collapse key={ID} in={openSet && mainCollapse} timeout="auto" unmountOnExit >
@@ -267,7 +278,8 @@ export default function SideBar(props: MainBoxBackClick) {
                 </ListItem>
               </Collapse>
             );
-            openSetID = ID
+            openSetID = ID;
+            
           } else {
             assemblyLists.push(
               <Collapse
