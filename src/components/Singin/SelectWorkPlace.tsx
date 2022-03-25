@@ -17,8 +17,9 @@ const SelectWorkPlace = (props: menuSelect) => {
   const [value, setValue] = React.useState<string | null>(LastWorkPlace === undefined? "": LastWorkPlace[2]);
   const [inputValue, setInputValue] = React.useState("");
   const [loading, setLoad] = useState(true);
+  const [open, setOpen] = useState(false);
 
-  const getWorkPlaces = (event:any) => {
+  const getWorkPlaces = () => {
       setLoad(true);
       let params = new Map();
       params.set('comand','getworkplacelist');
@@ -28,6 +29,14 @@ const SelectWorkPlace = (props: menuSelect) => {
       setWorkPlaces(XMLrequest(params));
         
   };
+
+  const OnKeyEnter=(e:any)=>{
+    if(e.keyCode === 13 && open ===false) {
+      props.KeyDown(e);
+    }else if(e.keyCode === 40 && open ===false) {
+      getWorkPlaces();
+    }
+  }
 
   function MenuItems(userList: any) {
     let array = [];
@@ -42,6 +51,12 @@ const SelectWorkPlace = (props: menuSelect) => {
     <Grid item xs>
       <Autocomplete
         id="field1234"
+        onOpen={(e:any)=>{
+          setOpen(true);
+        }}
+        onClose={(e:any)=>{
+          setOpen(false);
+        }}
         loading={loading}
         loadingText={props.userInfo=== "" ?"Необходимо выбрать пользователя":<CircularProgress/>}
         freeSolo
@@ -57,7 +72,7 @@ const SelectWorkPlace = (props: menuSelect) => {
         }}
         
         options={MenuItems(workplaces)}
-        onKeyDown={props.KeyDown}
+        onKeyDown={OnKeyEnter}
         renderInput={(params) => <TextField onClick={getWorkPlaces}  autoComplete="off" {...params}  inputProps={{ ...params.inputProps, autoComplete: 'ndsaadssa', }}label="Рабочее место" />}
       />
       

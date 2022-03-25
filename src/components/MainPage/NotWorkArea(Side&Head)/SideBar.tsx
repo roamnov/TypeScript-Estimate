@@ -199,21 +199,19 @@ export default function SideBar(props: MainBoxBackClick) {
         //ходим по всему объекту
         Name = SectionList[key]["Name"];
         ID = SectionList[key]["ID"];
-        
         currentDeep = SectionList[key]["Deep"];
         Img = ImgURL(SectionList[key]["Image"], "32px", "32px");
         //Img = ImgBASE64(SectionList[key]["RCDATA"]);
         keyS += 1;
+
         if(ID === selected && FirstLoad === true){
           data2.set(mainCollapseID, true);
-          console.log(currentDeep)
           if(currentDeep === "2" || currentDeep === "3" ){
-            data2.set(openSetID, true)
+            data2.set(openSetID, true);
             if(currentDeep === "3"){
-              data2.set(deepCollapseID, true)
+              data2.set(deepCollapseID, true);
             }
           }
-          
           setFirstLoad(false)
         }
         
@@ -259,7 +257,7 @@ export default function SideBar(props: MainBoxBackClick) {
             //если ключ НЕ необъявен и след deep больше текущего, то рисуем родителя
 
             currentDeep == "2" ? (deepCollapse = openSet) : (deepCollapse = undefined);
-            currentDeep == "2" ? (deepCollapseID = ID) : (deepCollapseID = undefined);
+            currentDeep == "2" ? (deepCollapseID = openSetID) : (deepCollapseID = "0");
             openSetDeep = openSet;
             assemblyLists.push(
               <Collapse key={ID} in={openSet && mainCollapse} timeout="auto" unmountOnExit >
@@ -279,6 +277,8 @@ export default function SideBar(props: MainBoxBackClick) {
               </Collapse>
             );
             openSetID = ID;
+            
+        
             
           } else {
             assemblyLists.push(
