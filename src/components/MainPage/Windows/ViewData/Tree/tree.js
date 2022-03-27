@@ -229,7 +229,7 @@ export default function Tree(props) {
       <TabItem label="SQL - скрипт">
         <div style={{ display: "flex", width: "100%" }}>
           <div >
-            <Editor idItem={idItem} EditStyle={1} caption="Подключение" style={{ width: "250px", top: "4px" }} GetObjectValues={GetObjectValues} onCloseUpList={SetConnectionNo} />
+            <Editor idItem={idItem} EditStyle={1} caption="Подключение" style={{ width: "250px", top: "4px" }} onDropDownList={GetObjectValues} onCloseUpList={SetConnectionNo} />
           </div>
           <div style={{ "padding-left": "10px" }}>
             <Switch idItem={idItem} label="Запрос модифицирования" onClick={ClickCheck} checked={query.IsReq ? query.IsReq : 0} />
@@ -253,43 +253,6 @@ export default function Tree(props) {
         </div>
       </TabItem>
     </Tabs>
-
-
-    /*
-        tabs = <>
-          <label id={"tab1_" + idItem} title="Данные" onClick={(event) => clickTab(event)} className='tablbl'> Данные</label>
-          <label id={"tab2_" + idItem} title="SQL - скрипт" className='tablbl activetab' onClick={(event) => clickTab(event)}> SQL - скрипт</label>
-          <section id={"content_tab1_" + idItem} >
-            <div id={"gridpanel" + idItem} style={{ position: "absolute", height: "calc(100% - 10px)", width: "calc(100% - 10px)" }} ></div>
-          </section>
-          <section id={"content_tab2_" + idItem} className='contentactive'>
-            <div style={{ display: "flex", width: "100%" }}>
-              <div >
-                <Editor idItem={idItem} EditStyle={1} caption="Подключение" style={{ width: "250px", top: "4px" }} GetObjectValues={GetObjectValues} onCloseUpList={SetConnectionNo} />
-              </div>
-              <div style={{ "padding-left": "10px" }}>
-                <Switch idItem={idItem} label="Запрос модифицирования" onClick={ClickCheck} checked={query.IsReq ? query.IsReq : 0} />
-              </div>
-              <div className="ButtonCode" style={{ display: "none" }}>
-                <Tooltip title="Сохранить редактирование" >
-                  <IconButton aria-label="CancelEdit" size="small" onClick={ApplyCode}>
-                    <CheckIcon style={{ fill: "#628cb6" }} />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Отменить редактирование" >
-                  <IconButton aria-label="CancelEdit" size="small" onClick={RestoreCode}>
-                    <UndoIcon style={{ fill: "#628cb6" }} />
-                  </IconButton>
-                </Tooltip>
-              </div>
-            </div>
-            <div style={{ overflow: "auto" }} className="Code" onKeyUp={(e) => EditCode(e)}>
-              {CreateCodeMirror(query.content)}
-    
-            </div>
-          </section>
-    
-        </>*/
     return tabs;
   }
   function ShowTabsData(id) {
@@ -340,7 +303,7 @@ export default function Tree(props) {
         parametry.id = "item_params_reports" + props.SectionID + "_" + id
        
         param.appendChild(parametry);
-        let paramBox = <Params id= {props.SectionID} data = {otv}/>
+        let paramBox = <Params id= {id} SectionID = {props.SectionID} data = {otv}/>
         
         ReactDOM.render(paramBox, parametry)
       }

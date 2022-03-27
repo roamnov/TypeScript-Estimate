@@ -36,10 +36,9 @@ import { Backdrop, CircularProgress, TextField } from "@mui/material";
 
 const SignIn = () => {
   const styles = useStyles();
-  document.title = "WEB-КЛИЕНТ";
+  document.title = "Вход в систему";
   
   let navigate = useNavigate();
-  //const {drxLog , setDrxLog} = useContext(DrxContext);
   const [error, setError] = useState<string | null>("");
   const [drx, setDrx] = useState("");
   const [user, setUser] = useState("");
@@ -53,18 +52,12 @@ const SignIn = () => {
   //const ThemeContext = React.createContext('light');
 
   const GoToMain =(jsonEnter: any)=>{
-    //useLocalStorage(drx, "drx")
-    //setAutnToken(true, "auth")
     
-    //setDrxLog(drx)
     console.log(jsonEnter["AppName"])
     const AppName = jsonEnter["AppName"];
     CreateCokies("drx",AppName === undefined? drx:AppName )
     CreateCokies("LastLogin", jsonEnter);
-    // props.setData(drx)
     navigate("main");
-    
-    
   }
 
   const clientPasswordHandler = (event: any) => {
@@ -91,6 +84,7 @@ const SignIn = () => {
     if(e.keyCode === 13) {
       let res:object 
       setOpen(true)
+      console.log(e)
       
       const LoginLast= drx + ","+user+ ","+ workplace; 
       
@@ -154,7 +148,7 @@ const SignIn = () => {
   };
 
   return (
-    <Container  maxWidth="xs"  >
+    <Container  maxWidth="xs"   >
       <CssBaseline />
       <img src={money} style={{ marginLeft:"30%"}}/>
       <Typography variant="h5" color={"#0098ad"} style={{ marginLeft:"30%"}}> WEB-СМЕТА</Typography>
@@ -178,6 +172,7 @@ const SignIn = () => {
         justifyContent="space-around"
         alignItems="stretch"
         spacing={3}
+        // onKeyDown={handlekeyDownSignIn}
       >
         <Grid item xs>
           <Button
@@ -195,7 +190,7 @@ const SignIn = () => {
 
         <SelectDrx drxInfo={drx} setBackInfo={setDrx} password={undefined} userInfo={undefined} KeyDown={handlekeyDownSignIn} />
 
-        <SelectUser userInfo={user} drxInfo={drx} setBackInfo={setUser} password={undefined} KeyDown={handlekeyDownSignIn} />
+        <SelectUser userInfo={user} drxInfo={drx} setBackInfo={setUser} password={undefined} KeyDown={handleSingIn} />
 
         <SelectWorkPlace  drxInfo={drx} userInfo={user} workPlaceInfo={workplace} setBackInfo={setWorkPlace} password={undefined}  KeyDown={handlekeyDownSignIn} />
 

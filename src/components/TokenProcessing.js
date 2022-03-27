@@ -97,7 +97,7 @@ function EmptyRequest(RequestID){
 
 
 var selestedFile    
-export function  tokenProcessingTest (json, whereCall){
+export function  tokenProcessingTest (json){
     if(json.Break !== undefined){
         let returnJSX= [], returnSmth = [], Token,Module, RequestID,andResult;
       
@@ -212,18 +212,6 @@ export function  tokenProcessingTest (json, whereCall){
             case "SelectListIndex":
                 ReactDOM.render(<ModalSelectListIndex Json={json} /> , document.getElementById('RenderModal'));
                 
-                break;
-            
-            case "ExecuteModalDialog":
-                if(json.jsonData !== undefined || whereCall === "forms"){
-                    return json;
-                }else{
-                    
-                }
-                break;
-            case "ExecuteParamDialog":
-                let PathNew= json.Params.Path
-                return PathNew
                 break;
                 
         }

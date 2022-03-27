@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, {  useEffect, useState } from "react";
 import {
   Grid,
   Autocomplete,
@@ -17,7 +17,9 @@ const SelectUser = (props: menuSelect) => {
   const [inputValue, setInputValue] = React.useState("");
   const [users, setUserList] = useState([]);
   const [loading, setLoad] = useState(true);
+  const [open, setOpen] = useState(false);
 
+  
 
   const getUser = () => {
       setLoad(true);
@@ -28,6 +30,14 @@ const SelectUser = (props: menuSelect) => {
       setUserList(XMLrequest(params));
       
   };
+
+  const OnKeyEnter=(e:any)=>{
+    if(e.keyCode === 13 && open ===false) {
+      props.KeyDown(e);
+    }else if(e.keyCode === 40 && open ===false) {
+      getUser();
+    }
+  }
 
   function MenuItems(userList: any) {
     let array = [];
@@ -41,7 +51,16 @@ const SelectUser = (props: menuSelect) => {
   return (
     <Grid item xs>
       <Autocomplete
-        
+        // open={true}
+        onOpen={(e:any)=>{
+          setOpen(true);
+        }}
+        onClose={(e:any)=>{
+          setOpen(false);
+        }}
+        disableListWrap={true}
+        clearOnBlur
+        selectOnFocus
         freeSolo
         fullWidth
         loading={loading}
@@ -57,9 +76,9 @@ const SelectUser = (props: menuSelect) => {
         }}
         
         options={MenuItems(users)}
-        onKeyDown={props.KeyDown}
+        onKeyDown={OnKeyEnter}
         renderInput={(params) => (
-          <TextField {...params} autoComplete="username" id="username" name="username" inputProps={{  ...params.inputProps, autoComplete: 'username', }} onClick={getUser}  label="Имя пользователя" />
+          <TextField {...params}  autoComplete="username" id="username" name="username" inputProps={{  ...params.inputProps, autoComplete: 'username', }} onClick={getUser}  label="Имя пользователя" />
         )}
       />
     </Grid>

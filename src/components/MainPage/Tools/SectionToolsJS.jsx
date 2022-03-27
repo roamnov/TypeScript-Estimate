@@ -132,9 +132,10 @@ const SectionToolsJS = (props) =>{
             {Params === null?<></>:<>Params: {Params}</>}
             </>
         )
-        if(Path !== undefined){
+       
+        if(Path !== null){
             handeleExecToolprogram(event)
-        }else{
+        }else if(Type === "oproge"){
             ReactDOM.render(<DialogContainer title={id} contentText={JSXInfoAboutClickedItem} />,document.getElementById('RenderModalSub'))
         }
         

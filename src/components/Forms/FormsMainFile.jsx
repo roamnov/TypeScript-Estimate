@@ -185,6 +185,7 @@ export default function FormsMainFile(props){
             }
         }
         return true;
+        
     }
     
 
@@ -359,6 +360,9 @@ export default function FormsMainFile(props){
         TokenReturn = tokenProcessingTest(json, "forms");
         if( TokenReturn !== undefined){
             GetParamDialog(TokenReturn);
+        }else if(json.Form !== undefined){
+            // CheckAndReturnComponent(json);
+            setDataForms(json);
         }
     }
 
