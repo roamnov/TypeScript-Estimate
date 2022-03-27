@@ -39,6 +39,7 @@ export interface menuSelect extends componentProps{
     workPlaceInfo?: any | string;
     password: any | string;
     setBackInfo: (value:any) => void | any | undefined ;
+    KeyDown: (value:any) => void | any | undefined ;
 
 }
 export interface AlertLeftCorner extends componentProps{
@@ -130,4 +131,3 @@ export interface Test {
     tools: object,
     id: string
 }
-
