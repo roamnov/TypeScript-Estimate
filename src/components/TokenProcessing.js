@@ -9,6 +9,7 @@ import { Button, Grid, IconButton, TextField, Menu, MenuItem, Tooltip } from "@m
 import { download } from './MainPage/Tools/Tools';
 import * as mime from 'react-native-mime-types';
 import items from "./MainPage/Tools/Items.json"
+// import { ModalProgressContainer } from './Containers/ModalProgressContainer';
 
 
 
@@ -97,7 +98,7 @@ function EmptyRequest(RequestID){
 
 
 var selestedFile    
-export function  tokenProcessingTest (json){
+export function  tokenProcessingTest (json, returnJSXToParent){
     if(json.Break !== undefined){
         let returnJSX= [], returnSmth = [], Token,Module, RequestID,andResult;
       
@@ -164,7 +165,16 @@ export function  tokenProcessingTest (json){
                 let Path = json.Params.Path;
                 let doc = document.getElementById('RenderModal')
                 doc.innerHTML = "";
-                ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} /> , document.getElementById('RenderModal'));
+                let sas = true
+                if(sas === true){
+                    // return <ModalProgress open={true}  Json={json} path={Path} />
+                    
+                    // let test =  ModalProgressContainer( true ,json, Path)
+                    // console.log(test)
+                }else{
+                    ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} /> , document.getElementById('RenderModal'));
+                }
+                
                 break;
 
             case "SetProgressLabel":

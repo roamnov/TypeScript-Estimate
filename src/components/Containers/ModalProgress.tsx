@@ -203,6 +203,10 @@ export default function ModalProgress(props:ModalProgressProps) {
 
       }else if(Token === "HideProgressDialog"){
         setPrevToken(Token);
+        if(props.setData !== undefined){
+          props.setData(json);
+        }
+        
         setOpen(false);
       }
     }

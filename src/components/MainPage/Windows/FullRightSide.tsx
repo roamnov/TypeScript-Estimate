@@ -19,10 +19,13 @@ import SectionReport from '../Sections/ElementsSections/SectionReports'
 import Tooltip from '@mui/material/Tooltip';
 import FormsMainFile from '../../Forms/FormsMainFile.jsx';
 import {tokenProcessingTest} from '../../TokenProcessing'
+import ReactDOM from 'react-dom';
+import ModalProgress from '../../Containers/ModalProgress';
 export default function FullRightSide(props: InfoAboutClick) {
 
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
+  const [openReportData, setOpenReportData] = React.useState([]);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -33,7 +36,7 @@ export default function FullRightSide(props: InfoAboutClick) {
  function OpenReport (ev:any)
  {
    let btn = ev.currentTarget
-   
+   let json
    let Param = document.querySelector(".TabDoc.TabDocActiv .Params.ActivParams")
    let idParams 
    Param ?  idParams = Param.id.split("_"): idParams = ""
@@ -52,9 +55,20 @@ export default function FullRightSide(props: InfoAboutClick) {
    params.set('ReportID', ReportID);
    params.set('HTML', 1);
    params.set('WSM', 1);
-   
-   let TokenReturn = tokenProcessingTest(XMLrequest(params));
-   console.log(TokenReturn)
+   json = XMLrequest(params)
+   switch(json.Token){
+     case "ShowProgressDialog":
+      let Path = json.Params.Path;
+      let doc = document.getElementById('RenderModal')
+      if(doc !== null){
+        doc.innerHTML = "";
+      }
+      ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} setData={setOpenReportData}/> , document.getElementById('RenderModal'));
+      break
+   }
+   console.log(openReportData)
+  //  let TokenReturn = tokenProcessingTest();
+  //  console.log(TokenReturn)
 
  }
 

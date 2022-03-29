@@ -18,6 +18,7 @@ const SelectUser = (props: menuSelect) => {
   const [users, setUserList] = useState([]);
   const [loading, setLoad] = useState(true);
   const [open, setOpen] = useState(false);
+  const [autoComplete, setAutoComplete] = useState("username");
 
   
 
@@ -28,11 +29,12 @@ const SelectUser = (props: menuSelect) => {
       params.set('ConfigName',props.drxInfo);
       setLoad(false)
       setUserList(XMLrequest(params));
-      
+      setAutoComplete("username");
   };
 
   const OnKeyEnter=(e:any)=>{
     if(e.keyCode === 13 && open ===false) {
+      setAutoComplete("1");
       props.KeyDown(e);
     }else if(e.keyCode === 40 && open ===false) {
       getUser();
@@ -78,7 +80,7 @@ const SelectUser = (props: menuSelect) => {
         options={MenuItems(users)}
         onKeyDown={OnKeyEnter}
         renderInput={(params) => (
-          <TextField {...params}  autoComplete="username" id="username" name="username" inputProps={{  ...params.inputProps, autoComplete: 'username', }} onClick={getUser}  label="Имя пользователя" />
+          <TextField {...params}  autoComplete= {autoComplete} id={autoComplete} name={autoComplete}  onClick={getUser}  label="Имя пользователя" />
         )}
       />
     </Grid>
