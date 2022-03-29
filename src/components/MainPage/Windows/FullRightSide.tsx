@@ -18,6 +18,7 @@ import { XMLrequest } from '../../Url';
 import SectionReport from '../Sections/ElementsSections/SectionReports'
 import Tooltip from '@mui/material/Tooltip';
 import FormsMainFile from '../../Forms/FormsMainFile.jsx';
+import {tokenProcessingTest} from '../../TokenProcessing'
 export default function FullRightSide(props: InfoAboutClick) {
 
   const [open, setOpen] = React.useState(false);
@@ -29,12 +30,33 @@ export default function FullRightSide(props: InfoAboutClick) {
     setOpen(!open)
   }
 
- function OpenReport ()
+ function OpenReport (ev:any)
  {
+   let btn = ev.currentTarget
+   
+   let Param = document.querySelector(".TabDoc.TabDocActiv .Params.ActivParams")
+   let idParams 
+   Param ?  idParams = Param.id.split("_"): idParams = ""
+   let SectionID = idParams[2].replace(/[^+\d]/g, '')
+   let ReportID = idParams[3]
+   let path = "Reports\\Params\\"+ReportID+"\\"+SectionID
+   let params = new Map();
+  /* params.set('prefix', 'programs');
+   params.set('comand', 'FixParamHistory');
+   params.set('Path', path);
+   XMLrequest(params)*/
+   params.clear();
+   params.set('prefix', 'reports');
+   params.set('comand', 'ExecuteReport');
+   params.set('SectionID', SectionID);
+   params.set('ReportID', ReportID);
+   params.set('HTML', 1);
+   params.set('WSM', 1);
+   
+   let TokenReturn = tokenProcessingTest(XMLrequest(params));
+   console.log(TokenReturn)
 
  }
-
- console.log(props)
 
   let content
   let defaultButton
@@ -45,7 +67,7 @@ export default function FullRightSide(props: InfoAboutClick) {
   if (props.id !== undefined && props.clsic =="{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}")
   {
     defaultButton = <Tooltip title="Сформировать отчет" >
-        <Button variant="outlined" size="small" onClick={() => OpenReport()}>
+        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)}>
             Выполнить
         </Button>
     </Tooltip>
@@ -59,7 +81,7 @@ export default function FullRightSide(props: InfoAboutClick) {
   if(props.id !== undefined && props.clsic =="{B357E5B2-137F-4253-BBEF-E5CFD697E362}")
   {
      defaultButton = <Tooltip title="Сформировать отчет" >
-        <Button variant="outlined" size="small" onClick={() => OpenReport()}>
+        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)}>
             Выполнить
         </Button>
     </Tooltip>

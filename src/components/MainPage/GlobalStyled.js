@@ -56587,14 +56587,15 @@ const GlobalStyleDropList = createGlobalStyle`
     border-color: rgb(179, 179, 179);
 }
 .css-26l3qy-menu {
-    top: 100%;
     background-color: rgb(255, 255, 255);
     border-radius: 4px;
     box-shadow: rgb(0 0 0 / 10%) 0px 0px 0px 1px, rgb(0 0 0 / 10%) 0px 4px 11px;
     margin-bottom: 8px;
     margin-top: 4px;
     position: absolute;
-    width: 100%;
+    height:200px;
+    overflow-x: hidden;
+    overflow-y: auto;
     z-index: 1;
     box-sizing: border-box;
 }

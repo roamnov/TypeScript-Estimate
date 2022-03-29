@@ -13,7 +13,13 @@ import { Calendar } from 'smart-webcomponents-react/calendar';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Popover from '@mui/material/Popover';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import List from '@mui/material/List';
+
 export default function Editor(props) {
+  const [value, SetValue] = React.useState(props.caption ? props.caption : props.value ? props.value : "")
   const [blur, setBlur] = React.useState();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -85,7 +91,7 @@ export default function Editor(props) {
   else
     lp = "4px"
   var CheckID = CreateName()
-
+  var EditID = CreateName()
   function CreateName() {
     var res, s = "0123456789ABCDEFGHIKLMNOPQRSTVXYZ";
     for (var n = 0; n <= 31; n++) {
@@ -110,6 +116,7 @@ export default function Editor(props) {
     if (props.MultiCheckSet & Math.pow(2, mcs_Checked)) {
       countCheckState.push(<IconButton
         data-CheckState={props.CheckState}
+        for={EditID}
         style={{ padding: "0px", width: props.style.height, height: props.style.height, backgroundImage: Checked, backgroundRepeat: "no-repeat" }}
         onMouseOver={(e) => MouseOverCheck(e)} onMouseOut={(e) => MouseOutCheck(e)}
         onClick={(e) => SelectCheckState(e)}>
@@ -121,6 +128,7 @@ export default function Editor(props) {
         onClick={(e) => SelectCheckState(e)}
         data-CheckState={mcs_Bullet}
         data-checkid={CheckID}
+        for={EditID}
         style={{ padding: "0px", width: props.style.height, height: props.style.height, backgroundImage: Bullet, backgroundRepeat: "no-repeat" }}
         onMouseOver={(e) => MouseOverCheck(e)}
         onMouseOut={(e) => MouseOutCheck(e)}></IconButton>)
@@ -130,6 +138,7 @@ export default function Editor(props) {
         onClick={(e) => SelectCheckState(e)}
         data-CheckState={mcs_DownArrow}
         data-checkid={CheckID}
+        for={EditID}
         style={{ padding: "0px", width: props.style.height, height: props.style.height, backgroundImage: DownArrow, backgroundRepeat: "no-repeat" }}
         onMouseOver={(e) => MouseOverCheck(e)}
         onMouseOut={(e) => MouseOutCheck(e)}></IconButton>)
@@ -138,6 +147,7 @@ export default function Editor(props) {
       countCheckState.push(<IconButton
         onClick={(e) => SelectCheckState(e)}
         data-checkid={CheckID}
+        for={EditID}
         data-CheckState={mcs_Horizontal}
         style={{ padding: "0px", width: props.style.height, height: props.style.height, backgroundImage: Horizontal, backgroundRepeat: "no-repeat" }}
         onMouseOver={(e) => MouseOverCheck(e)}
@@ -147,6 +157,7 @@ export default function Editor(props) {
       countCheckState.push(<IconButton
         onClick={(e) => SelectCheckState(e)}
         data-checkid={CheckID}
+        for={EditID}
         data-CheckState={mcs_LeftArrow}
         style={{ padding: "0px", width: props.style.height, height: props.style.height, backgroundImage: LeftArrow, backgroundRepeat: "no-repeat" }}
         onMouseOver={(e) => MouseOverCheck(e)}
@@ -156,6 +167,7 @@ export default function Editor(props) {
       countCheckState.push(<IconButton
         onClick={(e) => SelectCheckState(e)}
         data-checkid={CheckID}
+        for={EditID}
         data-CheckState={mcs_LeftArrowBlue}
         style={{ padding: "0px", width: props.style.height, height: props.style.height, backgroundImage: LeftArrowBlue, backgroundRepeat: "no-repeat" }}
         onMouseOver={(e) => MouseOverCheck(e)}
@@ -165,6 +177,7 @@ export default function Editor(props) {
       countCheckState.push(<IconButton
         onClick={(e) => SelectCheckState(e)}
         data-checkid={CheckID}
+        for={EditID}
         data-CheckState={mcs_Reject}
         style={{ padding: "0px", width: props.style.height, height: props.style.height, backgroundImage: Reject, backgroundRepeat: "no-repeat" }}
         onMouseOver={(e) => MouseOverCheck(e)}
@@ -174,6 +187,7 @@ export default function Editor(props) {
       countCheckState.push(<IconButton
         onClick={(e) => SelectCheckState(e)}
         data-checkid={CheckID}
+        for={EditID}
         data-CheckState={mcs_Required}
         style={{ padding: "0px", width: props.style.height, height: props.style.height, backgroundImage: Bullet, backgroundRepeat: "no-repeat" }}
         onMouseOver={(e) => MouseOverCheck(e)}
@@ -183,6 +197,7 @@ export default function Editor(props) {
       countCheckState.push(<IconButton
         onClick={(e) => SelectCheckState(e)}
         data-checkid={CheckID}
+        for={EditID}
         data-CheckState={mcs_RightArrow}
         style={{ padding: "0px", width: props.style.height, height: props.style.height, backgroundImage: Required, backgroundRepeat: "no-repeat" }}
         onMouseOver={(e) => MouseOverCheck(e)}
@@ -192,6 +207,7 @@ export default function Editor(props) {
       countCheckState.push(<IconButton
         onClick={(e) => SelectCheckState(e)}
         data-checkid={CheckID}
+        for={EditID}
         data-CheckState={mcs_RightArrowRed}
         style={{ padding: "0px", width: props.style.height, height: props.style.height, backgroundImage: RightArrowRed, backgroundRepeat: "no-repeat" }}
         onMouseOver={(e) => MouseOverCheck(e)}
@@ -201,6 +217,7 @@ export default function Editor(props) {
       countCheckState.push(<IconButton
         onClick={(e) => SelectCheckState(e)}
         data-checkid={CheckID}
+        for={EditID}
         data-checkctate={mcs_Unknown}
         style={{ padding: "0px", width: props.style.height, height: props.style.height, backgroundImage: Unknown, backgroundRepeat: "no-repeat" }}
         onMouseOver={(e) => MouseOverCheck(e)}
@@ -210,6 +227,7 @@ export default function Editor(props) {
       countCheckState.push(<IconButton
         onClick={(e) => SelectCheckState(e)}
         data-checkid={CheckID}
+        for={EditID}
         data-CheckState={props.CheckState}
         style={{ padding: "0px", width: props.style.height, height: props.style.height, backgroundImage: UpArrow, backgroundRepeat: "no-repeat" }}
         onMouseOver={(e) => MouseOverCheck(e)}
@@ -219,6 +237,7 @@ export default function Editor(props) {
       countCheckState.push(<IconButton
         onClick={(e) => SelectCheckState(e)}
         data-checkid={CheckID}
+        for={EditID}
         data-CheckState={props.CheckState}
         style={{ padding: "0px", width: props.style.height, height: props.style.height, backgroundImage: Vertical, backgroundRepeat: "no-repeat" }}
         onMouseOver={(e) => MouseOverCheck(e)}
@@ -228,6 +247,7 @@ export default function Editor(props) {
       countCheckState.push(<IconButton
         onClick={(e) => SelectCheckState(e)}
         data-checkid={CheckID}
+        for={EditID}
         data-CheckState={mcs_Unchecked}
         style={{ padding: "0px", width: props.style.height, height: props.style.height, backgroundImage: Unchecked, backgroundRepeat: "no-repeat" }}
         onMouseOver={(e) => MouseOverCheck(e)}
@@ -256,9 +276,7 @@ export default function Editor(props) {
           vertical: 'top',
           horizontal: 'left',
         }}
-        onClose={handlePopoverClose}
-
-      >
+        onClose={handlePopoverClose}>
         {gb}
       </Popover>
     } else
@@ -313,31 +331,39 @@ export default function Editor(props) {
       let itemList
       let it = [];
       for (let pair of items) {
-        it.push(<div className="select__option css-yt9ioa-option" aria-disabled="false" id={"react-select-53-option-" + pair[0]} tabindex="-1" onMouseOver={(ev) => { HoverItem(ev) }}
+        /*it.push(<div className="select__option css-yt9ioa-option" aria-disabled="false" id={"react-select-53-option-" + pair[0]} tabindex="-1" onMouseOver={(ev) => { HoverItem(ev) }}
           onMouseOut={(ev) => { NoHoverItem(ev) }} onClick={(e) => ClickListMenu(e)} indexval={pair[0]}>
           {pair[1]}
-        </div>)
+        </div>)*/
+        it.push(<ListItem className = "select__menu" key={pair[0]} component="div" disablePadding>
+          <ListItemButton style={{paddingLeft: "0px", paddingTop: "0px", paddingRight: "0px",  paddingBottom: "0px", whiteSpace: "nowrap"}}>
+            <ListItemText primary={pair[1]} />
+          </ListItemButton>
+        </ListItem>)
       }
       itemList = <>{it.map((item) => { return item })}</>
       return itemList
     }
+    
     let div = e.currentTarget;
+    let id = div.getAttribute("for");
+    let edit = document.getElementById(id)
     let parent;
-    parent = div;
-    while (!parent.classList.contains("basic-single")) {
+    parent = document.getElementById("root");
+   /* while (!parent.classList.contains("basic-single")) {
       parent = parent.parentNode;
-    }
+    }*/
+    
     if (props.onDropDownList) {
-      list = props.onDropDownList(parent.querySelector(".smart-input"))
+      list = props.onDropDownList(edit)
       let DropListmenu
       if (list) {
-        DropListmenu = <div className="select__menu-list css-11unzgr">
-          {
-            CreateList(list)
-          }
-        </div>
-
+        DropListmenu = CreateList(list)
         let divList = document.createElement("div")
+       // divList.classList.add("css-b62m3t-container")
+        divList.style.width = edit.getBoundingClientRect().width+ "px"
+        divList.style.top = edit.getBoundingClientRect().top + edit.getBoundingClientRect().height + "px"
+        divList.style.left = edit.getBoundingClientRect().left+ "px"
         divList.classList.add("select__menu")
         divList.classList.add("css-26l3qy-menu")
         ReactDOM.render(DropListmenu, divList);
@@ -355,8 +381,9 @@ export default function Editor(props) {
   function EnterValue(ev) {
     if (ev.keyCode == 13) {
       let el = ev.currentTarget;
+      let val
       if (!el) el = ev
-      let val = el.dataset.value;
+      val = el.dataset.value;
       let params = new Map();
       if (el.dataType === "ParamItem") {
         params.set('prefix', 'programs');
@@ -449,6 +476,7 @@ export default function Editor(props) {
   DropList = props.EditStyle & EditStyle_Calendar ? <Box data-id={props.id} style={{ position: "relative", width: "100%", ...props.style }}>
     <Input style={{ width: "100%", height: "100%", borderRadius: "0px", borderRightWidth: "0px", borderTopWidth: "0px", borderLeftWidth: "0px", borderColor: "black" }} type="date" value={props.value}
       onKeyDown={(ev) => EnterValue(ev)}
+      id={EditID}
       data-id={props.id}
       data-path={props.Path}
       data-objref={props.ObjRef}
@@ -459,12 +487,14 @@ export default function Editor(props) {
     <Box className='basic-single css-b62m3t-container' data-id={props.id} data-sectionid={props.sectionid} style={{ position: "relative", width: "100%", ...props.style }} >
       <Box>
         {props.mask ?
-          <MaskedTextBox data-id={props.id} onKeyDown={(ev) => EnterValue(ev)} style={{ height: props.style.height, padding: "0px", width: "100%", paddingRight: p, paddingLeft: lp, borderRadius: "0px", borderRightWidth: "0px", borderTopWidth: "0px", borderLeftWidth: "0px", borderColor: "black" }} value={props.caption ? props.caption : props.value ? props.value : ""} mask={props.mask} /> :
+          <MaskedTextBox id={EditID} data-id={props.id} onKeyDown={(ev) => EnterValue(ev)} style={{ height: props.style.height, padding: "0px", width: "100%", paddingRight: p, paddingLeft: lp, borderRadius: "0px", borderRightWidth: "0px", borderTopWidth: "0px", borderLeftWidth: "0px", borderColor: "black" }} value={props.caption ? props.caption : props.value ? props.value : ""} mask={props.mask} /> :
           <Input data-path={props.Path}
+            id={EditID}
             data-id={props.id}
             data-objref={props.ObjRef}
             data-editval={props.EditVal}
             data-sectionid={props.SectionID}
+            data-checkstate={props.CheckState}
             onKeyDown={(ev) => EnterValue(ev)}
             data-type={props.Type}
             onClick={(e) => EditFocus(e)}
@@ -480,23 +510,28 @@ export default function Editor(props) {
         <Box style={{ position: "absolute", top: "0px", right: "0px" }}>
           <ButtonGroup variant="text" aria-label="text button group">
             {props.EditStyle & EditStyle_Ellipsis ?
-              <Button style={{ padding: "0px", minWidth: props.style.height }} ><MoreHorizIcon style={{ position: "relative", top: "3px", fill: "black" }} /></Button>
+              <IconButton style={{ padding: "0px", minWidth: props.style.height }} ><MoreHorizIcon style={{ position: "relative", top: "3px", fill: "black" }} /></IconButton>
               :
               <></>}
             {props.EditStyle & EditStyle_PickList ?
-              <Button style={{ padding: "0px", minWidth: props.style.height }}><ArrowDropDownIcon style={{ fill: "black" }} /></Button>
+              <IconButton
+                onClick={onDropDownList}
+                for={EditID}
+                style={{ padding: "0px", minWidth: props.style.height }}>
+                <ArrowDropDownIcon style={{ fill: "black" }} />
+              </IconButton>
               :
               <></>}
             {props.EditStyle & EditStyle_UpDown ?
               <ButtonGroup orientation="vertical"
                 aria-label="vertical contained button group"
                 variant="text">
-                <Button style={{ padding: "0px", minWidth: props.style.height, borderRightWidth: "0px", height: (Number(props.style.height.replace(/[^+\d]/g, '')) / 2) + "px" }} >
+                <IconButton style={{ padding: "0px", minWidth: props.style.height, borderRightWidth: "0px", height: (Number(props.style.height.replace(/[^+\d]/g, '')) / 2) + "px" }} >
                   <ArrowDropUpIcon style={{ position: "relative", height: "100%", fill: "black" }} viewBox="6 5 12 12" />
-                </Button>
-                <Button style={{ padding: "0px", minWidth: props.style.height, height: (Number(props.style.height.replace(/[^+\d]/g, '')) / 2) + "px" }} >
-                  <ArrowDropDownIcon style={{ position: "relative", height: "100%", fill: "black" }} viewBox="6 5 12 12" />
-                </Button>
+                </IconButton>
+                <IconButton style={{ padding: "0px", minWidth: props.style.height, height: (Number(props.style.height.replace(/[^+\d]/g, '')) / 2) + "px" }} >
+                  <ArrowDropDownIcon style={{ position: "relative", height: "100%", fill: "black", top: "-4px" }} viewBox="6 5 12 12" />
+                </IconButton>
               </ButtonGroup >
               :
               <></>}

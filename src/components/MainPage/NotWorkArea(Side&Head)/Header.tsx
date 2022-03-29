@@ -32,6 +32,7 @@ const DashboardNavbar = (props: any) => {
     params.set('comand', 'leave');
     XMLrequest(params)
     CreateCokies("drx", "");
+    CreateCokies("LicG", "");
   };
 
   return (
