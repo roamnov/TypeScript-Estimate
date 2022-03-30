@@ -223,6 +223,9 @@ export function  tokenProcessingTest (json, returnJSXToParent){
                 ReactDOM.render(<ModalSelectListIndex Json={json} /> , document.getElementById('RenderModal'));
                 
                 break;
+            case "GetDirectory":
+                EmptyRequest(RequestID);
+                break;
                 
         }
 

@@ -15,6 +15,9 @@ import Slide from '@mui/material/Slide'
 import Draggable from 'react-draggable';
 import Editor from "../Editor/Editor";
 import EditStyleJson from "./EditStyleB.json"
+import axios from 'axios';
+import URL from "../Url"
+
 
 
 function PaperComponent(props) {
@@ -130,6 +133,8 @@ export default function FormsMainFile(props){
     const [load, setLoad] = React.useState(true)
     const [currentHeight, setCurrentHeight] = useState(window.innerHeight - 189);
     const [subForms, setSubForms] = useState(undefined);
+    const [mainBGColor,setMainBGColor] = useState();
+    const [cursor,setCursor] = useState("auto");
     
 
     const handleResize = () => {
@@ -347,8 +352,9 @@ export default function FormsMainFile(props){
         return parsed ;
       }
       
-    function ClickFormElement(event){
+    async function ClickFormElement(event){
         let params = new Map, json, Name, TokenReturn;
+        // setCursor("wait")
         Name = event.currentTarget.getAttribute("name");
         Name = Name === null? event.currentTarget.getAttribute("keyName"): Name
         params.set('prefix', 'forms');
@@ -357,6 +363,7 @@ export default function FormsMainFile(props){
         params.set("Name", Name);
         params.set("WSM", "1");
         json = XMLrequest(params);
+        // await axios.get(URL(params)).then((res)=> setData(res.data));
         TokenReturn = tokenProcessingTest(json, "forms");
         if( TokenReturn !== undefined){
             GetParamDialog(TokenReturn);
@@ -395,7 +402,7 @@ export default function FormsMainFile(props){
                 Text = GetParams(json,"Text");
                 
                 ReturnComponent.push(
-                    <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" style={{color: BackColor(json["Font-color"]),backgroundColor:BackColor(json["Back-color"]) ,position:"absolute", minWidth: "1px", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`, textTransform:"none" , visibility:Visability}}>
+                    <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" style={{color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]) ,position:"absolute", minWidth: "1px", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`, textTransform:"none" , visibility:Visability}}>
                         
                         {TextFromServerToBrowser(json)}  
                         {SubDataProcessing(json)}  
@@ -416,15 +423,24 @@ export default function FormsMainFile(props){
             case "TSectionEditor":
                 let EditStyle, EditStyleCompleteInt = 0;
                 Text = GetParams(json,"Text")
-                EditStyle = GetParams(json, "EditStyle").split(",");
+                // console.log(GetParams(json, "EditStyle"))
+                EditStyle = GetParams(json, "EditStyle");
+                try{
+                    EditStyle = EditStyle === undefined? EditStyle: EditStyle.split(",");
+                }catch{
+
+                }
                 
-                for (const [keyEdit, valueEdit] of Object.entries(EditStyle)) {
+                if(EditStyle !== undefined){
+                   for (const [keyEdit, valueEdit] of Object.entries(EditStyle)) {
                     for (const [keyJson, value] of Object.entries(EditStyleJson)) {
                         if(valueEdit === keyJson){
                             EditStyleCompleteInt =EditStyleCompleteInt+ value
                         }
                     }
+                } 
                 }
+                
                 
                 ReturnComponent.push(
                     <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability  }}>
@@ -432,7 +448,7 @@ export default function FormsMainFile(props){
                         
                         <TextField variant="standard"  defaultValue={Text} style={{ width: `${Width}px`,height:`${Height}px` }} />
                         */ }
-                        <Editor EditStyle={EditStyleCompleteInt} style={{ width: `${Width}px`,height:`${Height}px` }}/>
+                        <Editor value={Text} EditStyle={EditStyleCompleteInt} style={{ width: `${Width}px`,height:`${Height}px` }}/>
                     </Grid>
                     
                 )
@@ -580,7 +596,8 @@ function FormDataProcessing(json) {
                 if(val.Type !==undefined ){
                     returnAll.push( CheckAndReturnComponent(value, false, key))                     
                 }
-            } 
+            }
+            // setCursor("auto") 
             return returnAll 
         }
         
@@ -616,7 +633,7 @@ function FormDataProcessing(json) {
         return(
         <Grid >
             <SectionToolsJS ID={props.id} SetBackValue={setSubForms}  buildForms ={FormDataProcessing}/>
-            <Grid id="mainForms" style={{position:"absolute", height: "100%", width:"100%"}}>
+            <Grid id="mainForms" style={{position:"absolute", height: "100%", width:"100%", backgroundColor:"s", cursor: cursor}}>
                 {FormDataProcessing(dataForms)}
             </Grid>
             <Grid id="RenderFormsModal">
