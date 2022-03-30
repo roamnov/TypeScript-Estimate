@@ -32,6 +32,10 @@ export default function FullRightSide(props: InfoAboutClick) {
   const openGrid= ()=>{
     setOpen(!open)
   }
+  
+  React.useEffect(()=>{
+    console.log(openReportData)
+  },[openReportData])
 
  function OpenReport (ev:any)
  {
@@ -66,7 +70,7 @@ export default function FullRightSide(props: InfoAboutClick) {
       ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} setData={setOpenReportData}/> , document.getElementById('RenderModal'));
       break
    }
-   console.log(openReportData)
+  //  console.log(openReportData)
   //  let TokenReturn = tokenProcessingTest();
   //  console.log(TokenReturn)
 
