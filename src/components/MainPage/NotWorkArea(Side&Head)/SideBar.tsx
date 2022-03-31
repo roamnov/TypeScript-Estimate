@@ -14,8 +14,10 @@ import { MainBoxBackClick, InfoAboutClick } from "../../ComponentInterface";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { styled } from '@mui/material/styles';
-import { IconButton, ListItem } from "@mui/material";
+import { Button, Grid, IconButton, ListItem, Menu } from "@mui/material";
 import {SetStateNav} from './HiddenNav'
+import SideBarButton from "./SideBarButton";
+import ReactDOM from "react-dom";
 const defaultDrawerWidth = window.innerWidth / 100 * 16.791045;
 const minDrawerWidth = 1;
 const maxDrawerWidth = 400;
@@ -45,6 +47,8 @@ export default function SideBar(props: MainBoxBackClick) {
   const [data2, setData2] = useState(new Map());
   const [drawerWidth, setDrawerWidth] = useState(defaultDrawerWidth);
   const [FirstLoad, setFirstLoad]= useState(true);
+  const [anchorElAss, setAnchorElAss] = useState(new Map());
+  const [openButton, setOpenButton] = useState(false);
   let e = 0;//event 
 
   useEffect(()=>{
@@ -184,9 +188,10 @@ export default function SideBar(props: MainBoxBackClick) {
     return backvalue;
   }
 
+ 
 
 
-  function Menu(SectionList: any) {
+  function MenuList(SectionList: any) {
     // фцнкция отрисовки меню
     if (data.length !== undefined) {
 
@@ -299,7 +304,9 @@ export default function SideBar(props: MainBoxBackClick) {
           }
         }
       }
+      // ReactDOM.render(<SideBarButton json={data}/>,document.getElementById('ses'))
       return assemblyLists;
+      
     }
   }
   let buttonDragger = (<div className={classes.buttonDragger} >{drawerOpen ? (<ArrowLeftIcon style={{ fontSize: "1rem" }} id={"01001"} onClick={drawerClick} />) : (<ArrowRightIcon style={{ fontSize: "1rem" }} id={"01001"} onClick={drawerClick} />)} </div>)
@@ -307,7 +314,7 @@ export default function SideBar(props: MainBoxBackClick) {
   return (
     <>
       <Box style={{ scrollbarWidth: "none" }} sx={{ overflow: "auto" }}>
-        
+          
           <StyledList
             sx={{
               width: "100%",
@@ -317,7 +324,7 @@ export default function SideBar(props: MainBoxBackClick) {
             style={{ scrollbarWidth: "none" }}
             aria-labelledby="nested-list-subheader"
           >
-            {Menu(data)}
+            {MenuList(data)}
           </StyledList>
         
       </Box>

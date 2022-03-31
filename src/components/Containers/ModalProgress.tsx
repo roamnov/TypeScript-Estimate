@@ -77,8 +77,8 @@ function ChildModal(Path:any, bool:boolean) {
             <p id="child-modal-description">
               Остановить процесс?
             </p>
-            <Button onClick={handleCloseButton}>Да</Button>
-            <Button onClick={handleClose}>Нет</Button>
+            <Button size="small" variant="outlined" style={{textTransform:"none", marginRight:"10px"}} onClick={handleCloseButton}>Да</Button>
+            <Button size="small" variant="outlined" style={{textTransform:"none"}} onClick={handleClose}>Нет</Button>
           </Box>
         </Modal>
       </Draggable>
@@ -231,7 +231,7 @@ export default function ModalProgress(props:ModalProgressProps) {
     params.set("comand", "StopProcess");
     params.set("smart", "1");
     params.set("Path", props.path);
-    await axios.get(URL(params)).then((res)=> setData(res.data));
+    // await axios.get(URL(params)).then((res)=> setData(res.data));
     XMLrequest(params);
     
   }
@@ -258,10 +258,10 @@ export default function ModalProgress(props:ModalProgressProps) {
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions style={{height:"60px"}}>
+        <DialogActions style={{height:"60px", paddingRight:"4px"}}>
           <Grid container direction="row" justifyContent="center" alignItems="center" >
            
-              <Grid item style={{width:"65%"}}>
+              <Grid item style={{width:"78%", paddingRight:"26px", paddingTop: "4px"}}>
                 <Grid style={{}}>
                   {currentLoad === "Text" || currentLoad ==="Mix"?TextLoad:<></>}
                 </Grid>
@@ -270,11 +270,15 @@ export default function ModalProgress(props:ModalProgressProps) {
                 </Grid>
                 
               </Grid>
-              <Grid item >
-                <Button style={{textTransform:"none"}} onClick={RenderCancelModal}>Отмена</Button>
+              <Grid item style={{paddingLeft:"20px"}} >
+                
+               <Button size="small" variant="outlined" style={{textTransform:"none"}} onClick={RenderCancelModal}>Отмена</Button>
             </Grid>
+            
+
           </Grid>
         </DialogActions>
+        
       </Dialog>
     </div>
   );
