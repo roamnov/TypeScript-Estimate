@@ -395,7 +395,7 @@ const SectionToolsJS = (props) =>{
         <Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" sx={{pl:2}} >
            <div id="RenderModal">  </div>
            <div id="RenderModalSub"> </div>
-           <Grid id="RenderDefault"> </Grid>
+           
 
            <Grid item> 
                 <Grid container  direction="row"  justifyContent="flex-start" alignItems="center" >
@@ -411,6 +411,7 @@ const SectionToolsJS = (props) =>{
                     {Rec(AssignObjectsForMenuBar())}                   
                 </Grid>
             </Grid>
+            <Grid id="RenderDefault" > </Grid>
         </Grid>
     )
 }
