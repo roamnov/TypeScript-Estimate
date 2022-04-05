@@ -1,19 +1,31 @@
 import {  useState } from "react";
 import { NestedMenuItem } from "../Tools/NestedMenuOrigin/NestedMenuItem"
-import { Button, Grid, IconButton, TextField, Menu, MenuItem, Tooltip, ListItemIcon } from "@mui/material"
+import { Button, Grid, IconButton, TextField, Menu, MenuItem, Tooltip, ListItemIcon, Typography } from "@mui/material"
 import { ImgURL, get_cookie } from "../../Url";
+import { XMLrequest } from "../../Url";
 
 export default function SideBarButton(props){
     // const [open, setOpen] = useState(false);
     const [drawerOpen, setdrawerOpen] = useState(true)
-    const [data, setData] = useState([]);
+    const [data, setData] = useState(undefined);
     const [selected, setSelected] = useState(get_cookie("CurrentSecID"));
     const [data2, setData2] = useState(new Map());
     const [selectedIndex, setSelectedIndex] = useState(1);
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
+      if(data=== undefined){ 
+        let params = new Map(), json;
+        params.set('comand', 'GetSectionList');
+        params.set('Simple', '0');
+        params.set('full', '1');
+        params.set(`png`, `1`);
+        json = XMLrequest(params)
+        setData(json["Sections"]);
+      }
+      
     };
     const handleClose = () => {
       setAnchorEl(null);
@@ -31,12 +43,55 @@ export default function SideBarButton(props){
       return true;
       
   }
-  
+
+
+    function MenuButton(SectionList){
+      if (SectionList !== undefined) {
+        let Name, ID, Img, mainCollapseID, openSetID
+        let assemblyLists = [];
+        for (const [key, value] of Object.entries(SectionList)) {
+          Name = SectionList[key]["Name"];
+          ID = SectionList[key]["ID"];
+          // currentDeep = SectionList[key]["Deep"];
+          Img = ImgURL(SectionList[key]["Image"], "32px", "32px");
+          // Img = ImgBASE64(SectionList[key]["RCDATA"]);
+          // keyS += 1;
+          //   mainCollapse = data2.get(ID);
+          //   mainCollapseID = ID;
+          //   openSet = data2.get(ID);
+          //   openSetID = ID;
+            console.log(value["Sections"])
+            if(value["Sections"]!== undefined){
+            assemblyLists.push(
+              <Grid key={key}>
+                  <NestedMenuItem leftIcon={Img} label={Name} parentMenuOpen={true}>
+                    {MenuButtonItems(value["Sections"])}
+                  </NestedMenuItem>
+              </Grid>
+            );
+            }else{
+              assemblyLists.push(
+              <Grid  key={key}>
+                  <MenuItem style={{paddingLeft: "4px"}}>
+                    <Grid>
+                      {Img}
+                    </Grid>
+                    <Typography variant="body1" sx={{pl:1,pd:1}}>
+                      {Name}
+                    </Typography>
+                  </MenuItem>
+              </Grid>)
+            }
+          
+        }
+        return assemblyLists;
+      }
+    }  
     
     function MenuButtonItems(SectionList){
       
-      if (SectionList.lenht !== 0) {
-        let Name, ID, currentDeep, openSet, openSetDeep, mainCollapse, deepCollapse, Img, keyS = 0, howDeep = 4, mainCollapseID, openSetID, deepCollapseID
+
+        let Name, ID, currentDeep, openSet,  Img
         let assemblyLists = [];
         for (const [key, value] of Object.entries(SectionList)) {
           Name = SectionList[key]["Name"];
@@ -44,74 +99,43 @@ export default function SideBarButton(props){
           currentDeep = SectionList[key]["Deep"];
           Img = ImgURL(SectionList[key]["Image"], "32px", "32px");
           //Img = ImgBASE64(SectionList[key]["RCDATA"]);
-          keyS += 1;
-          
-          if (currentDeep == null) {
-            //если нет DEEP то отрисовываем родителя
-            mainCollapse = data2.get(ID);
-            console.log(Name)
-            mainCollapseID = ID;
-            openSet = data2.get(ID);
-            openSetID = ID;
+          // keyS += 1;
+          //если ключ НЕ необъявен и след deep больше текущего, то рисуем родителя
+          // openSetDeep = openSet;
+          if(value["Sections"]!== undefined){
             assemblyLists.push(
               <Grid key={key}>
-                  <NestedMenuItem leftIcon={Img} label={Name}>
-                  
-                    {Name}
+                  <NestedMenuItem leftIcon={Img} label={Name} parentMenuOpen={true}>
+                    {MenuButtonItems(value["Sections"])}
                   </NestedMenuItem>
               </Grid>
             );
-          } else if (currentDeep !== null) {
-            howDeep = 4;
-            switch (
-            currentDeep //Определяем сколько сдвинуть направо отностиельно родителя
-            ) {
-              case "1":
-                openSet = mainCollapse;
-                break;
-              case "2":
-                howDeep += 5;
-                break;
-              case "3":
-                howDeep += 8;
-                break;
+            }else{
+              assemblyLists.push(
+              <Grid  key={key}>
+                  <MenuItem style={{paddingLeft: "4px"}}>
+                    <Grid>
+                      {Img}
+                    </Grid>
+                    <Typography variant="body1"  sx={{pl:1,pd:1}}>
+                      {Name}
+                    </Typography>
+                  </MenuItem>
+              </Grid>)
             }
-            
-            if (SectionList[keyS] !== undefined && SectionList[keyS]["Deep"] > currentDeep) {
-              //если ключ НЕ необъявен и след deep больше текущего, то рисуем родителя
-
-              currentDeep == "2" ? (deepCollapse = openSet) : (deepCollapse = undefined);
-              currentDeep == "2" ? (deepCollapseID = openSetID) : (deepCollapseID = "0");
-              openSetDeep = openSet;
-              // assemblyLists.push(
-                
-              // );
-              openSetID = ID;
-              
-          
-              
-            } else {
-              // assemblyLists.push(
-                
-              // );
-            }
-          
-          }
-  
-  
         }
         return assemblyLists;
-      }
+      
       
     }
 
       return(
           <Grid >
-          <Button size="small" onClick={handleClick} variant="outlined" style={{textTransform:"none", backgroundColor:"white"}}>
+          <Button size="small" onClick={handleClick} variant="text" style={{textTransform:"none", color:"white"}}>
               Выбрать
             </Button>
             <Menu open={open} onClose={handleClose} anchorEl={anchorEl}>
-              {MenuButtonItems(props.json)}
+              {MenuButton(data)}
             </Menu>
           </Grid>
       )

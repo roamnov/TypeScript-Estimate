@@ -304,7 +304,10 @@ export default function SideBar(props: MainBoxBackClick) {
           }
         }
       }
-      // ReactDOM.render(<SideBarButton json={data}/>,document.getElementById('miniMenu'))
+      setTimeout(() => {
+        ReactDOM.render(<SideBarButton />,document.getElementById('HiddenNav'))
+      }, 1000);
+      
       return assemblyLists;
       
     }
@@ -313,7 +316,7 @@ export default function SideBar(props: MainBoxBackClick) {
   window.onpopstate = updateSelected;
   return (
     <>
-    <SideBarButton json={data}/>
+    
       <Box style={{ scrollbarWidth: "none" }} sx={{ overflow: "auto" }}>
           
           <StyledList

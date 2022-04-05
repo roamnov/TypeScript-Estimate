@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useLocalStorage from "../Hooks/useLocalStorage";
 import {
   Paper,
@@ -29,6 +29,31 @@ import { purple, red } from "@material-ui/core/colors";
 import { Link,  useNavigate } from "react-router-dom";
 import { DrxContext, LoginIn } from "../Wrapper";
 import { Backdrop, CircularProgress, TextField } from "@mui/material";
+// import {TestPlug} from "./core"
+
+const VERSIONS_JSON_URL = 'http://stimate.krista.ru/workspaceex/config.json';
+const WORKSPACE_REQUEST_TYPE = "workspace-request";
+const WORKSPACE_RESPONSE_TYPE = "workspace-response";
+const IMG_OK = "images/ok.png";
+const IMG_WARNING = "images/warning.png";
+const IMG_ERROR = "images/error.png";
+
+
+
+var CmsDettachedUID:any;
+var CheckedCryptoUID:any;
+var VersionUID:any;
+var PluginVerUID:any;
+var CertUID:any;
+var CertUIDAsXML:any;
+var scanUid:any;
+var mySerialNumber:any;
+
+
+
+var workspaceConfig:any;
+workspaceConfig = null
+
 
 
 
@@ -46,8 +71,108 @@ const SignIn = () => {
   const [password, setPassword] = useState();
   const [open, setOpen] = useState(false);
   
- 
+  var CERTS_XML_KEY = "certList";
+
+
+  useEffect(()=>{
+    
+
+    window.addEventListener("message", (messageEvent) => {
+      if (WORKSPACE_RESPONSE_TYPE == messageEvent.data.type) {
+          var response = messageEvent.data;
+          switch (response.requestId) {
+              case PluginVerUID:
+                  // var actualExtensionVersion = getActualExtensionVersion();
+                  // if (actualExtensionVersion == 0 || parseFloat(response.result) < actualExtensionVersion) {
+                  //     markExtensionIsOutOfDate(response.result, actualExtensionVersion);
+                  //     showWarning();
+                  // } else {
+                  //     markExtensionIsRelevant(response.result);
+                  // }
+                  // onVersionClick();
+                  break;
+              case VersionUID:
+                  // if (response.result != null) {
+                  //     if (workspaceConfig == null || parseFloat(response.result) < workspaceConfig.hostApp.version) {
+                  //         markHostAppObsolete(response.result, workspaceConfig == null ? 0 : workspaceConfig.hostApp.version);
+                  //         showWarning();
+                  //     } else {
+                  //         markHostAppRelevant(response.result);
+                  //     }
+                  //     elem("tabs").style.display = 'block';
+                  //     onCheckedCryptoProvider();
+                  // } else {
+                  //     markHostAppUninstalled();
+                  //     showWarning();
+                  // }
+                  break;
+              case CheckedCryptoUID:
+                  // elem("cryptoImage").src = IMG_OK;
+                  // if (response.result.indexOf("ошибка при получении криптопровайдера") == -1) {
+                  //     elem("cryptoID").innerHTML = "Криптопровайдер установлен.";
+                  //     elem("cryptoID").style.color = "green";
+                  //     elem("cryptoImage").src = IMG_OK;
+                  //     executeCertListAsXML();
+                  // } else {
+                  //     showWarning();
+                  // }
+                  // elem("cryptoBlock").style.display = 'block';
+                  break;    
+              case CertUIDAsXML:// УСПЕХ
+                      console.log(response.result)
+                  
+                  break;
+              case CmsDettachedUID:
+                  // elem("resultCMS").value = elem("resultCMS").value + "Серийный номер сертификата: " + mySerialNumber + "\n";
+                  // elem("resultCMS").value = elem("resultCMS").value + "Данные по-умолчанию:" + " SGVsbG8sIHdvcmxkIQ== " + "\n";
+                  // elem("resultCMS").value = elem("resultCMS").value + "Подпись в формате Cms: " + response.result + "\n";
+                  break;
+              case scanUid:
+                  // unmask();
+                  // if (response.successful == false) {
+                  //     elem("scanImageId").src = "";
+                  //     alert("Ошибка: " + response.result);
+                  // } else {
+                  //     elem("scanImageId").src = "data:image/jpg;base64, " + response.result;
+                  // }
+                  break;
+          };
+    
+      }
+    }, false);
+
+
+    function executeCertListAsXML() {
+      CertUIDAsXML = uuid();
+      sendRequest(
+          {
+              type: WORKSPACE_REQUEST_TYPE,
+              requestId: CertUIDAsXML, 
+              params: {
+                  command: "certListAsXml"
+              }
+          });
+    }
+    
+    function sendRequest(request:any) {
+      window.postMessage(request, "*");
+    }
+    
+    function uuid() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+          var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+      });
+    }
+    
+    executeCertListAsXML();
+
+  },[])
   
+
+  useEffect(()=>{
+    // TestPlug();
+  },[])
 
   //const ThemeContext = React.createContext('light');
 
@@ -146,6 +271,7 @@ const SignIn = () => {
       response.data["error"] !== undefined? CheckAnswerFromServer(response.data["error"]["Item"]): GoToMain()
     });*/
   };
+  // let page = browser.extension.getBackgroundPage()
 
   return (
     <Container  maxWidth="xs"   >
@@ -176,12 +302,13 @@ const SignIn = () => {
       >
         <Grid item xs>
           <Button
-            style={{ marginTop: 10, backgroundColor: "#0098ad" }}
+            style={{ marginTop: 10, backgroundColor: "#0098ad",textTransform:"none" }}
             type="submit"
             fullWidth
             variant="contained"
             className="ButtonMargin"
-            onClick={handleSingIn} >
+            // onClick={handleSingIn} 
+            >
 
             Вход по ЭП
 
@@ -216,7 +343,7 @@ const SignIn = () => {
         <Grid item>
         
           <Button
-            style={{backgroundColor: "#0098ad"}}
+            style={{backgroundColor: "#0098ad",textTransform:"none",}}
             type="submit"
             fullWidth
             variant="contained"

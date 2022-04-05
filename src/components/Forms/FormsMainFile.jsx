@@ -455,6 +455,14 @@ export default function FormsMainFile(props){
                 break;
 
             case "TSectionPanel":// WITH SUB
+            try{
+                let test = json.Params.Path
+                console.log(test)
+            }catch(err){
+                console.log(err)
+            }
+                
+                // console.log(json)
                 ReturnComponent.push(
                     <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability, backgroundColor: BGColor }}>
                         <Paper elevation={2}>
@@ -590,7 +598,7 @@ function FormDataProcessing(json) {
         if(dataForms !== undefined){
             let val, returnAll=[]
             json = json.Form;
-            console.log(json.hasOwnProperty("пДействия"))
+            // console.log(json.hasOwnProperty("пДействия"))
             for(const [key, value] of Object.entries(json)) {
                 val = value
                 if(val.Type !==undefined ){

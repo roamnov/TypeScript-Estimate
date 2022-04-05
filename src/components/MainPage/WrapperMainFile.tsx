@@ -33,6 +33,7 @@ export default function WrapperRightSide() {
     }
   }
 
+  
 
   const [id, setID] = React.useState();
   const [clsid, setCLSID] = React.useState();
@@ -40,6 +41,7 @@ export default function WrapperRightSide() {
   const [selected, setSelected] = React.useState<InfoAboutClick | undefined>();
   const [drawerOpen, setdrawerOpen] = React.useState(true);
   const [nameOpen, setNameOpen] = React.useState();
+  const [mouseSideBar, setMouseSideBar] = React.useState(false);
 
   document.addEventListener("click", (e) => { ClickDocument(e) })
  
@@ -47,6 +49,17 @@ export default function WrapperRightSide() {
   {
 
     setdrawerOpen(!drawerOpen)
+
+
+  }
+  
+  
+  function mouseSideBarTrue(){
+    setMouseSideBar(false)
+  }
+
+  function mouseSideBarFalse(){
+    setMouseSideBar(false);
   }
 
   return (
@@ -74,10 +87,10 @@ export default function WrapperRightSide() {
 
       <div style={{ display: 'flex', height: "100%", overflow: "hidden", flexDirection: "row" }} id="SideBar_FullRightSide">
         <Split className="wrap" sizes={[20, 80]}>
-          <div style={drawerOpen ? { width: "calc(20% - 5px)",height: "100%", overflow: "auto", backgroundColor: "#628cb6" } : {height: "100%", backgroundColor: "#628cb6", width: "0px"}} id="SideBar" >
+          <div onMouseEnter={mouseSideBarTrue} onMouseLeave={mouseSideBarFalse} style={drawerOpen ? { width: "calc(20% - 5px)",height: "100%", overflow: "auto", backgroundColor: "#628cb6", scrollbarWidth: mouseSideBar? "thin":"none" } : {height: "100%", backgroundColor: "#628cb6", width: "0px"}} id="SideBar" >
             <SideBar isLoading={setIsLoading} setSelected={setSelected} />
           </div>
-          <div style={ drawerOpen ? { display: 'flex', height: "100%", overflow: "hidden", width: "calc(80% - 5px)" }: { display: 'flex', height: "100%", overflow: "hidden", width: "100%" }} id="FullRightSide">
+          <div  style={ drawerOpen ? { display: 'flex', height: "100%", overflow: "hidden", width: "calc(80% - 5px)" }: { display: 'flex', height: "100%", overflow: "hidden", width: "100%" }} id="FullRightSide" >
             <FullRightSide isLoading={isLoading} id={selected?.id} clsic={selected?.clsic} name={selected?.name} />
           </div>
         </Split>
