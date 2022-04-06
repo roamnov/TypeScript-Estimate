@@ -14,7 +14,7 @@ import { MainBoxBackClick, InfoAboutClick } from "../../ComponentInterface";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { styled } from '@mui/material/styles';
-import { Button, Grid, IconButton, ListItem, Menu } from "@mui/material";
+import { Button, Grid, IconButton, ListItem, Menu, Typography } from "@mui/material";
 import {SetStateNav} from './HiddenNav'
 import SideBarButton from "./SideBarButton";
 import ReactDOM from "react-dom";
@@ -44,12 +44,21 @@ export default function SideBar(props: MainBoxBackClick) {
   const [drawerOpen, setdrawerOpen] = useState(true)
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState(get_cookie("CurrentSecID"));
+  const [selectedButton, setSelectedButton] = useState(undefined);
   const [data2, setData2] = useState(new Map());
   const [drawerWidth, setDrawerWidth] = useState(defaultDrawerWidth);
   const [FirstLoad, setFirstLoad]= useState(true);
   const [anchorElAss, setAnchorElAss] = useState(new Map());
   const [openButton, setOpenButton] = useState(false);
   let e = 0;//event 
+
+  useEffect(()=>{
+    if(selectedButton !== undefined){
+      props.setSelected({ id: selectedButton["ID"], clsic: selectedButton["CLSID"], name: selectedButton["Name"] })  
+      console.log(selectedButton) 
+    }
+  },[selectedButton])
+
 
   useEffect(()=>{
     let selected = get_cookie("CurrentSec").split(",");
@@ -103,15 +112,12 @@ export default function SideBar(props: MainBoxBackClick) {
     let Name
     let Patch
     let img
-    if (event.title)
-    {
+    if (event.title){
       ID = event.id;
       CLSID = event.CLSID
       Name = event.title
       Patch = event.Patch
-    }
-    else
-    if (!event.state) {
+    }else if (!event.state) {
       ID = event.currentTarget.getAttribute("id");
       CLSID = GetElementAttributeByID(ID, data, "CLSID")
       Name = event.currentTarget["innerText"]
@@ -235,7 +241,10 @@ export default function SideBar(props: MainBoxBackClick) {
             }>
               <ListItemButton className={classes.colorList} key={ID} component="li" id={ID} onClick={updateSelected}>
                 <ListItemIcon>{Img}</ListItemIcon>
-                <ListItemText primary={Name} style={{ color: "white" }} />
+                <ListItemText primary={Name} style={{ color: "white"  }} />
+                <Typography variant="inherit" noWrap style={{ color: "white"  }}>
+                  {Name}
+                </Typography>
               </ListItemButton>
               
             </ListItem>
@@ -275,7 +284,9 @@ export default function SideBar(props: MainBoxBackClick) {
                 }>
                   <ListItemButton className={classes.colorList} key={ID} sx={{ pl: howDeep, "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} id={ID} selected={selected === ID} >
                     <ListItemIcon>{Img}</ListItemIcon>
-                    <ListItemText primary={Name} style={{ color: "white" }} />
+                    <Typography variant="inherit" noWrap style={{ color: "white"  }}>
+                      {Name}
+                    </Typography>
                   </ListItemButton>
                   
                 </ListItem>
@@ -296,7 +307,9 @@ export default function SideBar(props: MainBoxBackClick) {
                 <List key={ID} component="div" disablePadding >
                   <ListItemButton className={classes.colorList} key={ID} sx={{ pl: howDeep, "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} selected={selected === ID} id={ID} onClick={updateSelected} >
                     <ListItemIcon>{Img}</ListItemIcon>
-                    <ListItemText primary={Name} style={{ color: "white" }} />
+                    <Typography variant="inherit" noWrap style={{ color: "white"  }}>
+                      {Name}
+                    </Typography>
                   </ListItemButton>
                 </List>
               </Collapse>
@@ -305,7 +318,7 @@ export default function SideBar(props: MainBoxBackClick) {
         }
       }
       setTimeout(() => {
-        ReactDOM.render(<SideBarButton />,document.getElementById('HiddenNav'))
+        ReactDOM.render(<SideBarButton setSelected={setSelectedButton}/>,document.getElementById('HiddenNav'))
       }, 1000);
       
       return assemblyLists;

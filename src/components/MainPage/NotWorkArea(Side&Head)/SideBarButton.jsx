@@ -31,6 +31,19 @@ export default function SideBarButton(props){
       setAnchorEl(null);
     };
 
+    function UpdateSelected(event){
+      let ID, CLSID, Name
+      Name = event.target.textContent;
+      ID= event.currentTarget.getAttribute("id");
+      CLSID = event.currentTarget.getAttribute("clsid");
+      // console.log(Name, ID, CLSID)
+      setAnchorEl(null);
+      props.setSelected({
+        "Name": Name,
+        "ID": ID,
+        "CLSID": CLSID
+      })
+    }
 
   
     
@@ -47,11 +60,12 @@ export default function SideBarButton(props){
 
     function MenuButton(SectionList){
       if (SectionList !== undefined) {
-        let Name, ID, Img, mainCollapseID, openSetID
+        let Name, ID, Img, mainCollapseID, openSetID, CLSID
         let assemblyLists = [];
         for (const [key, value] of Object.entries(SectionList)) {
           Name = SectionList[key]["Name"];
           ID = SectionList[key]["ID"];
+          CLSID = SectionList[key]["CLSID"];
           // currentDeep = SectionList[key]["Deep"];
           Img = ImgURL(SectionList[key]["Image"], "32px", "32px");
           // Img = ImgBASE64(SectionList[key]["RCDATA"]);
@@ -60,11 +74,11 @@ export default function SideBarButton(props){
           //   mainCollapseID = ID;
           //   openSet = data2.get(ID);
           //   openSetID = ID;
-            console.log(value["Sections"])
+            
             if(value["Sections"]!== undefined){
             assemblyLists.push(
               <Grid key={key}>
-                  <NestedMenuItem leftIcon={Img} label={Name} parentMenuOpen={true}>
+                  <NestedMenuItem leftIcon={Img} label={Name} parentMenuOpen={true} id={ID} CLSID={CLSID} onClick={UpdateSelected}>
                     {MenuButtonItems(value["Sections"])}
                   </NestedMenuItem>
               </Grid>
@@ -72,7 +86,7 @@ export default function SideBarButton(props){
             }else{
               assemblyLists.push(
               <Grid  key={key}>
-                  <MenuItem style={{paddingLeft: "4px"}}>
+                  <MenuItem id={ID} CLSID={CLSID} style={{paddingLeft: "4px"}} onClick={UpdateSelected}>
                     <Grid>
                       {Img}
                     </Grid>
@@ -91,13 +105,14 @@ export default function SideBarButton(props){
     function MenuButtonItems(SectionList){
       
 
-        let Name, ID, currentDeep, openSet,  Img
+        let Name, ID, currentDeep, openSet,  Img,CLSID
         let assemblyLists = [];
         for (const [key, value] of Object.entries(SectionList)) {
           Name = SectionList[key]["Name"];
           ID = SectionList[key]["ID"];
           currentDeep = SectionList[key]["Deep"];
           Img = ImgURL(SectionList[key]["Image"], "32px", "32px");
+          CLSID = SectionList[key]["CLSID"];
           //Img = ImgBASE64(SectionList[key]["RCDATA"]);
           // keyS += 1;
           //если ключ НЕ необъявен и след deep больше текущего, то рисуем родителя
@@ -105,7 +120,7 @@ export default function SideBarButton(props){
           if(value["Sections"]!== undefined){
             assemblyLists.push(
               <Grid key={key}>
-                  <NestedMenuItem leftIcon={Img} label={Name} parentMenuOpen={true}>
+                  <NestedMenuItem leftIcon={Img} label={Name} parentMenuOpen={true} id={ID} CLSID={CLSID} onClick={UpdateSelected}>
                     {MenuButtonItems(value["Sections"])}
                   </NestedMenuItem>
               </Grid>
@@ -113,7 +128,7 @@ export default function SideBarButton(props){
             }else{
               assemblyLists.push(
               <Grid  key={key}>
-                  <MenuItem style={{paddingLeft: "4px"}}>
+                  <MenuItem style={{paddingLeft: "4px"}} id={ID} CLSID={CLSID} onClick={UpdateSelected}>
                     <Grid>
                       {Img}
                     </Grid>

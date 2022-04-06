@@ -55,7 +55,7 @@ export default function WrapperRightSide() {
   
   
   function mouseSideBarTrue(){
-    setMouseSideBar(false)
+    setMouseSideBar(true)
   }
 
   function mouseSideBarFalse(){
@@ -67,7 +67,7 @@ export default function WrapperRightSide() {
       <div style={{ display: 'flex', height: "82px", overflow: "hidden" }} id="Header">
         <DashboardNavbar />
         <div style={{ height: "34px", overflow: "hidden", width: "100%", backgroundColor: "rgb(98, 142, 184)", position: "relative", top: "48px", boxShadow: "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)" }}>
-          <div id="miniMenu" style={{ display: 'flex', alignItems: "center" }}>
+          <div id="miniMenu" style={{ display: '-webkit-box', alignItems: "center" }}>
             <div id="HideMenu" >
               <Tooltip title={!drawerOpen ? "Показать панель рабочих мест" : "Скрыть панель рабочих мест"} >
                 <IconButton aria-label="CancelEdit" size="small" onClick={ShowMenu}>
@@ -87,7 +87,7 @@ export default function WrapperRightSide() {
 
       <div style={{ display: 'flex', height: "100%", overflow: "hidden", flexDirection: "row" }} id="SideBar_FullRightSide">
         <Split className="wrap" sizes={[20, 80]}>
-          <div onMouseEnter={mouseSideBarTrue} onMouseLeave={mouseSideBarFalse} style={drawerOpen ? { width: "calc(20% - 5px)",height: "100%", overflow: "auto", backgroundColor: "#628cb6", scrollbarWidth: mouseSideBar? "thin":"none" } : {height: "100%", backgroundColor: "#628cb6", width: "0px"}} id="SideBar" >
+          <div onMouseEnter={mouseSideBarTrue} onMouseLeave={mouseSideBarFalse} style={drawerOpen ? { width: "calc(20% - 5px)",height: "100%", overflow: "auto", backgroundColor: "#628cb6", scrollbarWidth: mouseSideBar? "thin":"none", paddingRight: mouseSideBar? "0px":"8px", whiteSpace:"nowrap" } : {height: "100%", backgroundColor: "#628cb6", width: "0px"}} id="SideBar" >
             <SideBar isLoading={setIsLoading} setSelected={setSelected} />
           </div>
           <div  style={ drawerOpen ? { display: 'flex', height: "100%", overflow: "hidden", width: "calc(80% - 5px)" }: { display: 'flex', height: "100%", overflow: "hidden", width: "100%" }} id="FullRightSide" >
