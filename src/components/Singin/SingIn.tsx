@@ -73,99 +73,108 @@ const SignIn = () => {
   
   var CERTS_XML_KEY = "certList";
 
+  function executeCertListAsXML() {
+    CertUIDAsXML = uuid();
+    sendRequest(
+        {
+          type: "workspace-request",
+          requestId: CertUIDAsXML, 
+          params: {
+              command: "sign",
+              data: "ezlDMTM4RUNDLTgzQ0MtNDAyMy1BOEFFLTZDNjI4OTM3OTQ2RH0=",
+              format:"CMS",
+              serialNumber: null,
+              type: "detached"
+            }
+        });
+  }
+
+  window.addEventListener("message", (messageEvent) => {
+    if (WORKSPACE_RESPONSE_TYPE == messageEvent.data.type) {
+        var response = messageEvent.data;
+        console.log(response)
+        switch (response.requestId) {
+          
+            case PluginVerUID:
+                // var actualExtensionVersion = getActualExtensionVersion();
+                // if (actualExtensionVersion == 0 || parseFloat(response.result) < actualExtensionVersion) {
+                //     markExtensionIsOutOfDate(response.result, actualExtensionVersion);
+                //     showWarning();
+                // } else {
+                //     markExtensionIsRelevant(response.result);
+                // }
+                // onVersionClick();
+                break;
+            case VersionUID:
+                // if (response.result != null) {
+                //     if (workspaceConfig == null || parseFloat(response.result) < workspaceConfig.hostApp.version) {
+                //         markHostAppObsolete(response.result, workspaceConfig == null ? 0 : workspaceConfig.hostApp.version);
+                //         showWarning();
+                //     } else {
+                //         markHostAppRelevant(response.result);
+                //     }
+                //     elem("tabs").style.display = 'block';
+                //     onCheckedCryptoProvider();
+                // } else {
+                //     markHostAppUninstalled();
+                //     showWarning();
+                // }
+                break;
+            case CheckedCryptoUID:
+                // elem("cryptoImage").src = IMG_OK;
+                // if (response.result.indexOf("ошибка при получении криптопровайдера") == -1) {
+                //     elem("cryptoID").innerHTML = "Криптопровайдер установлен.";
+                //     elem("cryptoID").style.color = "green";
+                //     elem("cryptoImage").src = IMG_OK;
+                //     executeCertListAsXML();
+                // } else {
+                //     showWarning();
+                // }
+                // elem("cryptoBlock").style.display = 'block';
+                break;    
+            case CertUIDAsXML:// УСПЕХ
+                    console.log(response.result)
+                
+                break;
+            case CmsDettachedUID:
+                // elem("resultCMS").value = elem("resultCMS").value + "Серийный номер сертификата: " + mySerialNumber + "\n";
+                // elem("resultCMS").value = elem("resultCMS").value + "Данные по-умолчанию:" + " SGVsbG8sIHdvcmxkIQ== " + "\n";
+                // elem("resultCMS").value = elem("resultCMS").value + "Подпись в формате Cms: " + response.result + "\n";
+                break;
+            case scanUid:
+                // unmask();
+                // if (response.successful == false) {
+                //     elem("scanImageId").src = "";
+                //     alert("Ошибка: " + response.result);
+                // } else {
+                //     elem("scanImageId").src = "data:image/jpg;base64, " + response.result;
+                // }
+                break;
+        };
+  
+    }
+  }, false);
+
+
+  
+  
+  function sendRequest(request:any) {
+    window.postMessage(request, "*");
+  }
+  
+  function uuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+  }
+  
+  
 
   useEffect(()=>{
     
 
-    window.addEventListener("message", (messageEvent) => {
-      if (WORKSPACE_RESPONSE_TYPE == messageEvent.data.type) {
-          var response = messageEvent.data;
-          switch (response.requestId) {
-              case PluginVerUID:
-                  // var actualExtensionVersion = getActualExtensionVersion();
-                  // if (actualExtensionVersion == 0 || parseFloat(response.result) < actualExtensionVersion) {
-                  //     markExtensionIsOutOfDate(response.result, actualExtensionVersion);
-                  //     showWarning();
-                  // } else {
-                  //     markExtensionIsRelevant(response.result);
-                  // }
-                  // onVersionClick();
-                  break;
-              case VersionUID:
-                  // if (response.result != null) {
-                  //     if (workspaceConfig == null || parseFloat(response.result) < workspaceConfig.hostApp.version) {
-                  //         markHostAppObsolete(response.result, workspaceConfig == null ? 0 : workspaceConfig.hostApp.version);
-                  //         showWarning();
-                  //     } else {
-                  //         markHostAppRelevant(response.result);
-                  //     }
-                  //     elem("tabs").style.display = 'block';
-                  //     onCheckedCryptoProvider();
-                  // } else {
-                  //     markHostAppUninstalled();
-                  //     showWarning();
-                  // }
-                  break;
-              case CheckedCryptoUID:
-                  // elem("cryptoImage").src = IMG_OK;
-                  // if (response.result.indexOf("ошибка при получении криптопровайдера") == -1) {
-                  //     elem("cryptoID").innerHTML = "Криптопровайдер установлен.";
-                  //     elem("cryptoID").style.color = "green";
-                  //     elem("cryptoImage").src = IMG_OK;
-                  //     executeCertListAsXML();
-                  // } else {
-                  //     showWarning();
-                  // }
-                  // elem("cryptoBlock").style.display = 'block';
-                  break;    
-              case CertUIDAsXML:// УСПЕХ
-                      console.log(response.result)
-                  
-                  break;
-              case CmsDettachedUID:
-                  // elem("resultCMS").value = elem("resultCMS").value + "Серийный номер сертификата: " + mySerialNumber + "\n";
-                  // elem("resultCMS").value = elem("resultCMS").value + "Данные по-умолчанию:" + " SGVsbG8sIHdvcmxkIQ== " + "\n";
-                  // elem("resultCMS").value = elem("resultCMS").value + "Подпись в формате Cms: " + response.result + "\n";
-                  break;
-              case scanUid:
-                  // unmask();
-                  // if (response.successful == false) {
-                  //     elem("scanImageId").src = "";
-                  //     alert("Ошибка: " + response.result);
-                  // } else {
-                  //     elem("scanImageId").src = "data:image/jpg;base64, " + response.result;
-                  // }
-                  break;
-          };
-    
-      }
-    }, false);
-
-
-    function executeCertListAsXML() {
-      CertUIDAsXML = uuid();
-      sendRequest(
-          {
-              type: WORKSPACE_REQUEST_TYPE,
-              requestId: CertUIDAsXML, 
-              params: {
-                  command: "certListAsXml"
-              }
-          });
-    }
-    
-    function sendRequest(request:any) {
-      window.postMessage(request, "*");
-    }
-    
-    function uuid() {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-          var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-          return v.toString(16);
-      });
-    }
-    
-    executeCertListAsXML();
+   
 
   },[])
   
@@ -308,6 +317,7 @@ const SignIn = () => {
             variant="contained"
             className="ButtonMargin"
             // onClick={handleSingIn} 
+            onClick={executeCertListAsXML}
             >
 
             Вход по ЭП
