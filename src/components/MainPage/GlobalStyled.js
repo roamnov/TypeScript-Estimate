@@ -133,7 +133,7 @@ function StyleSmartWebcomponents()
             --smart-icon-lock: "\\e821";
             --smart-icon-sort: "\\e823";
             --smart-icon-delete: "\\e826";
-            --smart-icon-search: "\\e828";
+            --smart-icon-search: "\\1F50D";
             --smart-icon-calendar: "\\e829";
             --smart-icon-edit: "\\e82a";
             --smart-icon-popup: "\\e82c";
@@ -150,10 +150,10 @@ function StyleSmartWebcomponents()
             --smart-icon-mail: "\\e83c";
             --smart-icon-up: "\\e83f";
             --smart-icon-first-page: "\\e900";
-            --smart-icon-arrow-down: "\\e901";
+            --smart-icon-arrow-down: "\\2BC6";
             --smart-icon-arrow-left: "\\e902";
             --smart-icon-arrow-right: "\\e903";
-            --smart-icon-arrow-up: "\\e904";
+            --smart-icon-arrow-up: "\\2BC5";
             --smart-icon-arrow-down-filled: "\\e812";
             --smart-icon-arrow-left-filled: "\\e816";
             --smart-icon-arrow-right-filled: "\\e81e";
@@ -15209,7 +15209,7 @@ function StyleSmartWebcomponents()
 
         .smart-gantt-chart .smart-timeline-content:empty:after {
             align-items: center;
-            content: "No Items";
+            content: "Нет результатов";
             display: flex;
             height: 30px;
             height: var(--smart-gantt-chart-task-default-height);
@@ -24742,8 +24742,8 @@ function StyleSmartWebcomponents()
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 9px 12px;
-            padding: var(--smart-list-item-padding);
+            /*padding: 9px 12px;
+            padding: var(--smart-list-item-padding);*/
             position: absolute;
             white-space: nowrap
         }
@@ -24949,10 +24949,11 @@ function StyleSmartWebcomponents()
 
         smart-list-box {
             display: block;
-            height: 250px;
+             height: 250px;
             height: var(--smart-list-box-default-height);
-            width: 250px;
-            width: var(--smart-list-box-default-width)
+          /* width: 250px;
+            width: var(--smart-list-box-default-width)*/
+            max-height: 250px
         }
 
         smart-list-box.smart-element {
@@ -25182,14 +25183,20 @@ function StyleSmartWebcomponents()
             transform: translate(-50%, -50%);
             -webkit-user-select: none;
             -ms-user-select: none;
-            user-select: none
+            user-select: none;
+            color: transparent;
         }
 
         .smart-list-box .smart-content-label {
             border-radius: 0;
             border-radius: var(--smart-list-item-label-border-radius);
             padding: 0;
-            padding: var(--smart-list-item-label-padding)
+            padding: var(--smart-list-item-label-padding)$
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
         }
 
         .smart-list-box[disabled] smart-list-item {

@@ -13,26 +13,35 @@ import { Calendar } from 'smart-webcomponents-react/calendar';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Popover from '@mui/material/Popover';
-import ListItem from '@mui/material/ListItem';
+//import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import List from '@mui/material/List';
-
+import CustomScroll from 'react-custom-scroll';
+import { ListBox, ListItem, ListItemsGroup } from 'smart-webcomponents-react/listbox';
 export default function Editor(props) {
-  const [value, SetValue] = React.useState(props.caption ? props.caption : props.value ? props.value : "")
+
   const [blur, setBlur] = React.useState();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorElList, setAnchorElList] = React.useState(null);
+  const [List, setList] = React.useState();
 
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+  const handlePopoverOpenList = (event) => {
+    setAnchorElList(event.currentTarget);
+  };
   const handlePopoverClose = () => {
     setAnchorEl(null);
+
+  };
+  const handlePopoverCloseList = () => {
+    setAnchorElList(null);
   };
 
   const open = Boolean(anchorEl);
-
+  const openList = Boolean(anchorElList);
   let DropList, list;
   const EditStyle_PickList = 1;
   const EditStyle_Calendar = 2;
@@ -291,21 +300,7 @@ export default function Editor(props) {
     let div = e.currentTarget;
     div.style.transform = ""
   }
-  function HoverItem(e) {
-    let div = e.currentTarget;
-    div.classList.remove("css-yt9ioa-option")
-    div.classList.add("select__option--is-focused")
-    div.classList.add("select__option--is-selected")
-    div.classList.add("css-9gakcf-option")
-  }
 
-  function NoHoverItem(e) {
-    let div = e.currentTarget;
-    div.classList.add("css-yt9ioa-option")
-    div.classList.remove("select__option--is-focused")
-    div.classList.remove("select__option--is-selected")
-    div.classList.remove("css-9gakcf-option")
-  }
   function ClickListMenu(e) {
     let div = e.currentTarget;
     let parent;
@@ -325,52 +320,39 @@ export default function Editor(props) {
       list.remove();
     }
   }
+  function CreateList(items, parent) {
 
-  function onDropDownList(e) {
-    function CreateList(items) {
-      let itemList
-      let it = [];
-      for (let pair of items) {
-        /*it.push(<div className="select__option css-yt9ioa-option" aria-disabled="false" id={"react-select-53-option-" + pair[0]} tabindex="-1" onMouseOver={(ev) => { HoverItem(ev) }}
-          onMouseOut={(ev) => { NoHoverItem(ev) }} onClick={(e) => ClickListMenu(e)} indexval={pair[0]}>
-          {pair[1]}
-        </div>)*/
-        it.push(<ListItem className = "select__menu" key={pair[0]} component="div" disablePadding>
-          <ListItemButton style={{paddingLeft: "0px", paddingTop: "0px", paddingRight: "0px",  paddingBottom: "0px", whiteSpace: "nowrap"}}>
-            <ListItemText primary={pair[1]} />
-          </ListItemButton>
-        </ListItem>)
+    let itemList
+    let it = [];
+    let width = parent.getBoundingClientRect().width
+    let index = 0, indexv, val = parent.dataValue
+
+    for (let pair of items) {
+      let text
+      
+      text = pair[1]
+      if (val === text) { 
+        indexv = index+3
       }
-      itemList = <>{it.map((item) => { return item })}</>
-      return itemList
+        it.push(<ListItem >{text}</ListItem>)
+        index = index + 1;
     }
-    
+    itemList = <ListBox style = {{width: width+ "px"}} selectedIndexes={[indexv]} selectionMode="zeroOrOne" filterable filterInputPlaceholder="Поиск ..."  horizontalScrollBarVisibility="hidden">
+      {
+      it.map((item) => { return item })
+      }
+    </ListBox>
+    return itemList
+  }
+  function onDropDownList(e) {
     let div = e.currentTarget;
     let id = div.getAttribute("for");
     let edit = document.getElementById(id)
-    let parent;
-    parent = document.getElementById("root");
-   /* while (!parent.classList.contains("basic-single")) {
-      parent = parent.parentNode;
-    }*/
-    
     if (props.onDropDownList) {
       list = props.onDropDownList(edit)
-      let DropListmenu
       if (list) {
-        DropListmenu = CreateList(list)
-        let divList = document.createElement("div")
-       // divList.classList.add("css-b62m3t-container")
-        divList.style.width = edit.getBoundingClientRect().width+ "px"
-        divList.style.top = edit.getBoundingClientRect().top + edit.getBoundingClientRect().height + "px"
-        divList.style.left = edit.getBoundingClientRect().left+ "px"
-        divList.classList.add("select__menu")
-        divList.classList.add("css-26l3qy-menu")
-        ReactDOM.render(DropListmenu, divList);
-
-        if (parent) {
-          parent.appendChild(divList);
-        }
+        setList(CreateList(list, edit))
+        setAnchorElList(edit)
       }
     }
   }
@@ -514,12 +496,35 @@ export default function Editor(props) {
               :
               <></>}
             {props.EditStyle & EditStyle_PickList ?
-              <IconButton
-                onClick={onDropDownList}
-                for={EditID}
-                style={{ padding: "0px", minWidth: props.style.height }}>
-                <ArrowDropDownIcon style={{ fill: "black" }} />
-              </IconButton>
+              <>
+                <IconButton
+                  onClick={onDropDownList}
+                  for={EditID}
+                  style={{ padding: "0px", minWidth: props.style.height }}
+                  aria-owns={openList ? 'mouse-over-popover' : undefined} aria-haspopup="true">
+                  <ArrowDropDownIcon style={{ fill: "black" }} />
+
+                </IconButton>
+                <Popover
+                  id="mouse-over-popover"
+                  sx={{
+                    pointerEvents: 'all'
+                  }}
+                  
+                  open={openList}
+                  anchorEl={anchorElList}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                  onClose={handlePopoverCloseList}>
+                  {List}
+                </Popover>
+              </>
               :
               <></>}
             {props.EditStyle & EditStyle_UpDown ?
@@ -546,7 +551,8 @@ export default function Editor(props) {
           aria-haspopup="true"
           onClick={handlePopoverOpen}
         ></IconButton>
-        {ButtonGroupCheck()}
+        {ButtonGroupCheck()
+        }
       </Box> : <></>}
     </Box>
   return DropList
