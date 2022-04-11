@@ -24,11 +24,12 @@ import SelectUser from "./SelectUser";
 import SelectWorkPlace from "./SelectWorkPlace";
 import PasswordInput from "./PasswordInput";
 import axios from "axios";
-import URL, { AxiosRequest, CreateCokies, XMLrequest } from "../Url";
-import { purple, red } from "@material-ui/core/colors";
+import {  CreateCokies, XMLrequest } from "../Url";
 import { Link,  useNavigate } from "react-router-dom";
 import { DrxContext, LoginIn } from "../Wrapper";
 import { Backdrop, CircularProgress, TextField } from "@mui/material";
+import SignInDialog from "../Containers/SignInDialog";
+import ReactDOM from "react-dom";
 // import {TestPlug} from "./core"
 
 const VERSIONS_JSON_URL = 'http://stimate.krista.ru/workspaceex/config.json';
@@ -55,6 +56,77 @@ var workspaceConfig:any;
 workspaceConfig = null
 
 
+window.addEventListener("message", (messageEvent) => {
+  if (WORKSPACE_RESPONSE_TYPE == messageEvent.data.type) {
+      var response = messageEvent.data;
+      var JSX
+      console.log(response)
+      switch (response.requestId) {
+        
+          case PluginVerUID:
+              // var actualExtensionVersion = getActualExtensionVersion();
+              // if (actualExtensionVersion == 0 || parseFloat(response.result) < actualExtensionVersion) {
+              //     markExtensionIsOutOfDate(response.result, actualExtensionVersion);
+              //     showWarning();
+              // } else {
+              //     markExtensionIsRelevant(response.result);
+              // }
+              // onVersionClick();
+              break;
+          case VersionUID:
+              // if (response.result != null) {
+              //     if (workspaceConfig == null || parseFloat(response.result) < workspaceConfig.hostApp.version) {
+              //         markHostAppObsolete(response.result, workspaceConfig == null ? 0 : workspaceConfig.hostApp.version);
+              //         showWarning();
+              //     } else {
+              //         markHostAppRelevant(response.result);
+              //     }
+              //     elem("tabs").style.display = 'block';
+              //     onCheckedCryptoProvider();
+              // } else {
+              //     markHostAppUninstalled();
+              //     showWarning();
+              // }
+              break;
+          case CheckedCryptoUID:
+              // elem("cryptoImage").src = IMG_OK;
+              // if (response.result.indexOf("ошибка при получении криптопровайдера") == -1) {
+              //     elem("cryptoID").innerHTML = "Криптопровайдер установлен.";
+              //     elem("cryptoID").style.color = "green";
+              //     elem("cryptoImage").src = IMG_OK;
+              //     executeCertListAsXML();
+              // } else {
+              //     showWarning();
+              // }
+              // elem("cryptoBlock").style.display = 'block';
+              break;    
+          case CertUIDAsXML:// УСПЕХ
+              if(response.successful === false){
+                JSX = <SignInDialog title={"Ошибка"} contentText={response.result}/>
+              }else{
+                JSX = <SignInDialog title={"Успешно"} contentText={response.result}/>
+              } 
+              ReactDOM.render(JSX,document.getElementById('renderSignIn'))
+              
+              break;
+          case CmsDettachedUID:
+              // elem("resultCMS").value = elem("resultCMS").value + "Серийный номер сертификата: " + mySerialNumber + "\n";
+              // elem("resultCMS").value = elem("resultCMS").value + "Данные по-умолчанию:" + " SGVsbG8sIHdvcmxkIQ== " + "\n";
+              // elem("resultCMS").value = elem("resultCMS").value + "Подпись в формате Cms: " + response.result + "\n";
+              break;
+          case scanUid:
+              // unmask();
+              // if (response.successful == false) {
+              //     elem("scanImageId").src = "";
+              //     alert("Ошибка: " + response.result);
+              // } else {
+              //     elem("scanImageId").src = "data:image/jpg;base64, " + response.result;
+              // }
+              break;
+      };
+
+  }
+}, false);
 
 
 
@@ -87,74 +159,10 @@ const SignIn = () => {
               type: "detached"
             }
         });
+    
   }
 
-  window.addEventListener("message", (messageEvent) => {
-    if (WORKSPACE_RESPONSE_TYPE == messageEvent.data.type) {
-        var response = messageEvent.data;
-        console.log(response)
-        switch (response.requestId) {
-          
-            case PluginVerUID:
-                // var actualExtensionVersion = getActualExtensionVersion();
-                // if (actualExtensionVersion == 0 || parseFloat(response.result) < actualExtensionVersion) {
-                //     markExtensionIsOutOfDate(response.result, actualExtensionVersion);
-                //     showWarning();
-                // } else {
-                //     markExtensionIsRelevant(response.result);
-                // }
-                // onVersionClick();
-                break;
-            case VersionUID:
-                // if (response.result != null) {
-                //     if (workspaceConfig == null || parseFloat(response.result) < workspaceConfig.hostApp.version) {
-                //         markHostAppObsolete(response.result, workspaceConfig == null ? 0 : workspaceConfig.hostApp.version);
-                //         showWarning();
-                //     } else {
-                //         markHostAppRelevant(response.result);
-                //     }
-                //     elem("tabs").style.display = 'block';
-                //     onCheckedCryptoProvider();
-                // } else {
-                //     markHostAppUninstalled();
-                //     showWarning();
-                // }
-                break;
-            case CheckedCryptoUID:
-                // elem("cryptoImage").src = IMG_OK;
-                // if (response.result.indexOf("ошибка при получении криптопровайдера") == -1) {
-                //     elem("cryptoID").innerHTML = "Криптопровайдер установлен.";
-                //     elem("cryptoID").style.color = "green";
-                //     elem("cryptoImage").src = IMG_OK;
-                //     executeCertListAsXML();
-                // } else {
-                //     showWarning();
-                // }
-                // elem("cryptoBlock").style.display = 'block';
-                break;    
-            case CertUIDAsXML:// УСПЕХ
-                    console.log(response.result)
-                
-                break;
-            case CmsDettachedUID:
-                // elem("resultCMS").value = elem("resultCMS").value + "Серийный номер сертификата: " + mySerialNumber + "\n";
-                // elem("resultCMS").value = elem("resultCMS").value + "Данные по-умолчанию:" + " SGVsbG8sIHdvcmxkIQ== " + "\n";
-                // elem("resultCMS").value = elem("resultCMS").value + "Подпись в формате Cms: " + response.result + "\n";
-                break;
-            case scanUid:
-                // unmask();
-                // if (response.successful == false) {
-                //     elem("scanImageId").src = "";
-                //     alert("Ошибка: " + response.result);
-                // } else {
-                //     elem("scanImageId").src = "data:image/jpg;base64, " + response.result;
-                // }
-                break;
-        };
-  
-    }
-  }, false);
-
+ 
 
   
   
@@ -168,26 +176,13 @@ const SignIn = () => {
         return v.toString(16);
     });
   }
-  
-  
-
-  useEffect(()=>{
     
-
-   
-
-  },[])
-  
-
-  useEffect(()=>{
-    // TestPlug();
-  },[])
 
   //const ThemeContext = React.createContext('light');
 
   const GoToMain =(jsonEnter: any)=>{
     
-    console.log(jsonEnter["AppName"])
+    // console.log(jsonEnter["AppName"])
     const AppName = jsonEnter["AppName"];
     CreateCokies("drx",AppName === undefined? drx:AppName )
     CreateCokies("LastLogin", jsonEnter);
@@ -289,26 +284,18 @@ const SignIn = () => {
       <Typography variant="h5" color={"#0098ad"} style={{ marginLeft:"30%"}}> WEB-СМЕТА</Typography>
       <Paper variant='elevation' elevation={10}  >
       
-      <Box
-          sx={{
-            px: 3,
-            pb: 3,
-            pt:1,
-            marginTop: 10,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+      <Box sx={{
+                px: 3,
+                pb: 3,
+                pt:1,
+                marginTop: 10,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }} >
           
-      <Grid
-        container
-        direction="column"
-        justifyContent="space-around"
-        alignItems="stretch"
-        spacing={3}
-        // onKeyDown={handlekeyDownSignIn}
-      >
+      <Grid  container  direction="column" justifyContent="space-around"    alignItems="stretch" spacing={3} >  
+      
         <Grid item xs>
           <Button
             style={{ marginTop: 10, backgroundColor: "#0098ad",textTransform:"none" }}
@@ -325,12 +312,15 @@ const SignIn = () => {
           </Button>
         </Grid>
 
+
+  
         <SelectDrx drxInfo={drx} setBackInfo={setDrx} password={undefined} userInfo={undefined} KeyDown={handlekeyDownSignIn} />
 
         <SelectUser userInfo={user} drxInfo={drx} setBackInfo={setUser} password={undefined} KeyDown={handleSingIn} />
 
         <SelectWorkPlace  drxInfo={drx} userInfo={user} workPlaceInfo={workplace} setBackInfo={setWorkPlace} password={undefined}  KeyDown={handlekeyDownSignIn} />
-
+  
+        <input id="fakeInput"  type={"text"}/>
        {/*  ПОТОМ СДЕЛАТЬ GETUSERINFO */}
 
         <Grid item xs>
@@ -365,6 +355,9 @@ const SignIn = () => {
           </Button>
         </Grid>
         <div style={{justifyContent:"center", alignItems:"center", display:"flex", color:"red"}}>{error !== null ? `${error}` : ""}</div>
+        <Grid id="renderSignIn">
+
+        </Grid>
       </Grid>
       </Box>
       </Paper>

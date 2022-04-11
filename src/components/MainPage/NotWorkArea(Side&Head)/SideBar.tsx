@@ -60,14 +60,13 @@ export default function SideBar(props: MainBoxBackClick) {
   useEffect(()=>{
     if(selectedButton !== undefined){
       props.setSelected({ id: selectedButton["ID"], clsic: selectedButton["CLSID"], name: selectedButton["Name"] })  
-      console.log(selectedButton) 
     }
   },[selectedButton])
 
 
   useEffect(()=>{
     let selected = get_cookie("CurrentSec").split(",");
-    props.setSelected({ id: selected[0], clsic: selected[1], name: selected[2] })    
+    props.setSelected({ id: selected[0], clsic: selected[1], name: selected[2] })      
   },[])
 
   useEffect(() => {
@@ -244,14 +243,14 @@ export default function SideBar(props: MainBoxBackClick) {
             
             secondaryAction={
            
-                <IconButton id={ID} onClick={handleClick} >
-                  {SectionList[keyS] !== undefined && SectionList[keyS]["Deep"] >= 1 ? (openSet ? (<ExpandLess />) : (<ExpandMore />)) : (<></>)}
+                <IconButton id={ID} onClick={handleClick} style={{width:25, height:25}}>
+                  {SectionList[keyS] !== undefined && SectionList[keyS]["Deep"] >= 1 ? (openSet ? (<ExpandLess fontSize="small" />) : (<ExpandMore fontSize="small" />)) : (<></>)}
                 </IconButton>
              
             }  >
               
               <ListItemButton style={{paddingRight:0}} className={classes.colorList} key={ID} component="li" id={ID} onClick={updateSelected}>
-                <ListItemIcon style={{minWidth:"0px", paddingRight:"10px", paddingLeft:25}}>{Img}</ListItemIcon>
+                <ListItemIcon style={{minWidth:"0px", paddingRight:"10px", paddingLeft:10}}>{Img}</ListItemIcon>
                 <ListItemText  style={{ color: "white"  }}  primary={<Typography variant="body1" style={{ fontSize:"0.875rem", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", width: "99.9%" }}>{Name}</Typography>} />
 
               </ListItemButton>
@@ -260,7 +259,7 @@ export default function SideBar(props: MainBoxBackClick) {
           );
         } else if (currentDeep !== null) {
           //если есть DEEP
-          howDeep = 7;
+          howDeep = 4;
           
           switch (
           currentDeep //Определяем сколько сдвинуть направо отностиельно родителя
@@ -268,14 +267,14 @@ export default function SideBar(props: MainBoxBackClick) {
             case "1":
               openSet = mainCollapse;
               howDeep += 2 
-              leftP = "30px"
+              leftP = 19
               break;
             case "2":
-              howDeep +=6;
+              howDeep +=4;
               leftP = "12%"
               break;
             case "3":
-              howDeep += 8;
+              howDeep += 6;
               break;
           }
           
@@ -289,9 +288,9 @@ export default function SideBar(props: MainBoxBackClick) {
               <Collapse key={ID} in={openSet && mainCollapse} timeout="auto" unmountOnExit >
                 {(openSet = data2.get(ID))}
                
-                <ListItem key={ID} style={{ paddingTop: 0, paddingBottom: 0, paddingLeft: 0, paddingRight: 0 }} sx={{"& .MuiListItemSecondaryAction-root":{ right:"auto", left: leftP } }} secondaryAction={
-                  <IconButton id={ID} onClick={handleClick} >
-                    {openSet ? (<ExpandLess />) : (<ExpandMore />)}
+                <ListItem key={ID} style={{ paddingTop: 0, paddingBottom: 0, paddingLeft: 0, paddingRight: 0, display:"inherit" }} sx={{"& .MuiListItemSecondaryAction-root":{ right:"auto", left: leftP } }} secondaryAction={
+                  <IconButton id={ID} onClick={handleClick} style={{width:25, height:25}}>
+                    {openSet ? (<ExpandLess fontSize="small"/>) : (<ExpandMore fontSize="small"/>)}
                 </IconButton>
                 }>
                   <ListItemButton style={{paddingRight:0}} className={classes.colorList} key={ID} sx={{ pl: howDeep, "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} id={ID} selected={selected === ID} onClick={updateSelected}>
@@ -327,6 +326,8 @@ export default function SideBar(props: MainBoxBackClick) {
           }
         }
       }
+      
+     
       setTimeout(() => {
         ReactDOM.render(<SideBarButton setSelected={setSelectedButton}/>,document.getElementById('HiddenNav'))
       }, 1000);

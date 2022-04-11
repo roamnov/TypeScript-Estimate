@@ -458,8 +458,10 @@ export default function FormsMainFile(props){
             try{
                 let test = json.Params.Path
                 console.log(test)
+                // GET /programs~GetTableLayout?LicGUID=72D72A7946ED30AB0808358980788EDA&ObjType=0&Path={7FEC323D-E184-4147-8F44-352DD337B515}&SectionID=482 HTTP/1.0
+                // POST /programs~HandleTable?LicGUID=72D72A7946ED30AB0808358980788EDA&Path={7FEC323D-E184-4147-8F44-352DD337B515}&SectionID=482 HTTP/1.0
             }catch(err){
-                console.log(err)
+                // console.log(err)
             }
                 
                 // console.log(json)

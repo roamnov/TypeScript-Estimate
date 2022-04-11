@@ -13,6 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { IconButton } from '@material-ui/core';
 import Split from 'react-split'
 import Tooltip from '@mui/material/Tooltip';
+import CustomScroll from 'react-custom-scroll';
 
 export default function WrapperRightSide() {
 
@@ -88,7 +89,10 @@ export default function WrapperRightSide() {
       <div style={{ display: 'flex', height: "100%", overflow: "hidden", flexDirection: "row" }} id="SideBar_FullRightSide">
         <Split className="wrap" sizes={[20, 80]}>
           <div onMouseEnter={mouseSideBarTrue} onMouseLeave={mouseSideBarFalse} style={drawerOpen ? { width: "calc(20% - 5px)",height: "100%", overflow: "auto", backgroundColor: "#628cb6", scrollbarWidth: mouseSideBar? "thin":"none", paddingRight: mouseSideBar? "0px":"8px", whiteSpace:"nowrap" } : {height: "100%", backgroundColor: "#628cb6", width: "0px"}} id="SideBar" >
+          <CustomScroll>
             <SideBar isLoading={setIsLoading} setSelected={setSelected} />
+          </CustomScroll>
+            
           </div>
           <div  style={ drawerOpen ? { display: 'flex', height: "100%", overflow: "hidden", width: "calc(80% - 5px)" }: { display: 'flex', height: "100%", overflow: "hidden", width: "100%" }} id="FullRightSide" >
             <FullRightSide isLoading={isLoading} id={selected?.id} clsic={selected?.clsic} name={selected?.name} />

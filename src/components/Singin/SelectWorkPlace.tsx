@@ -50,7 +50,7 @@ const SelectWorkPlace = (props: menuSelect) => {
   return (
     <Grid item xs>
       <Autocomplete
-        id="field1234"
+ 
         onOpen={(e:any)=>{
           setOpen(true);
         }}
@@ -73,7 +73,10 @@ const SelectWorkPlace = (props: menuSelect) => {
         
         options={MenuItems(workplaces)}
         onKeyDown={OnKeyEnter}
-        renderInput={(params) => <TextField onClick={getWorkPlaces}  autoComplete="off" {...params}  inputProps={{ ...params.inputProps, autoComplete: 'ndsaadssa', }}label="Рабочее место" />}
+        renderInput={(params) => <TextField onClick={getWorkPlaces}  autoComplete="off"     {...params} label="Рабочее место"   inputProps={{
+          ...params.inputProps,
+          autoComplete: 'tmntmemtemte',
+        }}  />}
       />
       
     </Grid>
