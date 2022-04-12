@@ -16,7 +16,7 @@ import InputIcon from '@material-ui/icons/Input';
 import URL, { CreateCokies, get_cookie, XMLrequest } from "../../Url";
 import useLocalStorage from '../../Hooks/useLocalStorage';
 import { useStyles } from "../../Styles"
-import { Typography } from '@mui/material';
+import { Tooltip, Typography } from '@mui/material';
 import { DrxContext } from '../../Wrapper';
 import { HiddenNavButton } from './HiddenNav'
 
@@ -58,12 +58,15 @@ const DashboardNavbar = (props: any) => {
             <NotificationsIcon />
           </Badge>
         </IconButton>
-        <Link to={'/'} >
-          <IconButton color="inherit" size="large" onClick={HandleSingOut}>
-            <InputIcon />
+        <Tooltip title={"Выход"}>
+          <Link to={'/'} >
+            <IconButton color="inherit" size="large" onClick={HandleSingOut}>
+              <InputIcon />
 
-          </IconButton>
-        </Link>
+            </IconButton>
+          </Link>
+        </Tooltip>
+        
 
         </Toolbar>
       

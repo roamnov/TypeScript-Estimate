@@ -1,7 +1,5 @@
-import styled, { createGlobalStyle } from 'styled-components';
-import * as React from 'react';
-import ReactDOM from 'react-dom';
-import { GlobalStyles } from '@material-ui/styled-engine';
+import  { createGlobalStyle } from 'styled-components';
+
 
 
 

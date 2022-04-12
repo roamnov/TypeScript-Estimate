@@ -1,10 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { useState } from "react";
-import json from "./host.json";
 import setHost from "./SetHost.js"
-const { v4: uuidv4 } = require('uuid');
 
-const GUID = uuidv4()
 
 //let update:boolean = 
 

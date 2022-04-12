@@ -1,6 +1,10 @@
 import {  useState } from "react";
 import { NestedMenuItem } from "../Tools/NestedMenuOrigin/NestedMenuItem"
-import { Button, Grid, IconButton, TextField, Menu, MenuItem, Tooltip, ListItemIcon, Typography } from "@mui/material"
+import Button from "@mui/material/Button"
+import Grid from "@mui/material/Grid"
+import Menu from "@mui/material/Menu"
+import Typography from "@mui/material/Typography"
+import MenuItem from "@mui/material/MenuItem"
 import { ImgURL, get_cookie } from "../../Url";
 import { XMLrequest } from "../../Url";
 
@@ -9,8 +13,6 @@ export default function SideBarButton(props){
     const [drawerOpen, setdrawerOpen] = useState(true)
     const [data, setData] = useState(undefined);
     const [selected, setSelected] = useState(get_cookie("CurrentSecID"));
-    const [data2, setData2] = useState(new Map());
-    const [selectedIndex, setSelectedIndex] = useState(1);
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 

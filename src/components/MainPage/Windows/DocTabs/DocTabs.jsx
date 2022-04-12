@@ -1,5 +1,4 @@
-import { Box } from '@material-ui/core';
-import * as React from 'react';
+import  Box  from '@material-ui/core/Box';
 import ReactDOM from 'react-dom';
 
 function AppTabs(id, content) {

@@ -1,7 +1,9 @@
 import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/styles";
-import { Tabs, Tab, IconButton } from "@material-ui/core";
+import Tabs from "@mui/material/Tabs"
+import Tab from "@mui/material/Tab"
+import IconButton from "@mui/material/IconButton"
 import CloseIcon from "@material-ui/icons/Close";
 import TabContainer from "./TabContainter";
 

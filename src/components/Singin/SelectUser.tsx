@@ -1,14 +1,10 @@
-import React, {  useEffect, useState } from "react";
-import {
-  Grid,
-  Autocomplete,
-  TextField,
-  CircularProgress,
-} from "@mui/material";
-import { useStyles } from "../Styles";
+import React, {  useState } from "react";
+import Autocomplete from "@mui/material/Autocomplete";
+import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
 import { menuSelect } from "../ComponentInterface";
-import axios from "axios";
-import URL, { get_cookie, XMLrequest } from "../Url";
+import { get_cookie, XMLrequest } from "../Url";
 
 const SelectUser = (props: menuSelect) => {
 
@@ -20,13 +16,13 @@ const SelectUser = (props: menuSelect) => {
   const [open, setOpen] = useState(false);
   const [autoComplete, setAutoComplete] = useState("username");
 
-  function Check(){
-    if(open === true){
-      setAutoComplete("username");
-    }else{
-      setAutoComplete("sdadsadasdda");
-    }
-  }
+  // function Check(){
+  //   if(open === true){
+  //     setAutoComplete("username");
+  //   }else{
+  //     setAutoComplete("sdadsadasdda");
+  //   }
+  // }
 
   const getUser = () => {
       setLoad(true);
@@ -87,10 +83,10 @@ const SelectUser = (props: menuSelect) => {
         options={MenuItems(users)}
         onKeyDown={OnKeyEnter}
         renderInput={(params) => (
-         open? <TextField {...params}   id={autoComplete}   onClick={getUser}  label="Имя пользователя" />  : <TextField {...params}  autoComplete= {autoComplete} id={autoComplete} name={autoComplete}  onClick={getUser}  label="Имя пользователя" />
+          <TextField {...params}  id="username" autoComplete="username" name="username"  onClick={getUser}  label="Имя пользователя" />
         )}
       />
-      {Check()}
+      {}
     </Grid>
   );
 };

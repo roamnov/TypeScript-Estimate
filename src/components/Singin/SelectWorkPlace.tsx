@@ -1,14 +1,10 @@
+import Autocomplete from "@mui/material/Autocomplete";
+import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
-import {
-  Grid,
-  Autocomplete,
-  TextField,
-  CircularProgress,
-} from "@mui/material";
-import { useStyles } from "../Styles";
 import { menuSelect } from "../ComponentInterface";
-import axios from "axios";
-import URL, { get_cookie, XMLrequest } from "../Url";
+import  { get_cookie, XMLrequest } from "../Url";
 
 const SelectWorkPlace = (props: menuSelect) => {
   

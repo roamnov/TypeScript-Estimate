@@ -7,7 +7,14 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import { ModalProgressProps } from '../ComponentInterface';
 import { Grid } from '@material-ui/core';
-import { Box, Button, LinearProgress, Modal, Paper, PaperProps, Step, StepLabel, Stepper, styled } from '@mui/material';
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import LinearProgress from '@mui/material/LinearProgress';
+import Modal from "@mui/material/Modal"
+import Paper, { PaperProps } from "@mui/material/Paper"
+import Step from "@mui/material/Step"
+import StepLabel from "@mui/material/StepLabel"
+import Stepper from "@mui/material/Stepper"
 import URL, {  XMLrequest } from '../Url';
 import axios from 'axios';
 import Draggable from 'react-draggable';

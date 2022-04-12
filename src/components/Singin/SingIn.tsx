@@ -1,32 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
-import useLocalStorage from "../Hooks/useLocalStorage";
-import {
-  Paper,
-  Grid,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Container,
-  CssBaseline,
-  Button,
-  Typography,
-  Box,
-  styled,
-  ButtonProps,
-} from "@material-ui/core";
+import  {  useState } from "react";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline"
+import Button from "@mui/material/Button"
+import Typography from "@mui/material/Typography"
+import Box from "@mui/material/Box"
 //стили и интерфейсы пропсов
 import { useStyles } from "../Styles";
-import { componentProps, ProjectEnterInfo } from "../ComponentInterface";
 import money from "../../static/images/money.png"
 //копмпоненты
 import SelectDrx from "./SelectDrx";
 import SelectUser from "./SelectUser";
 import SelectWorkPlace from "./SelectWorkPlace";
-import PasswordInput from "./PasswordInput";
-import axios from "axios";
 import {  CreateCokies, XMLrequest } from "../Url";
-import { Link,  useNavigate } from "react-router-dom";
-import { DrxContext, LoginIn } from "../Wrapper";
+import {  useNavigate } from "react-router-dom";
 import { Backdrop, CircularProgress, TextField } from "@mui/material";
 import SignInDialog from "../Containers/SignInDialog";
 import ReactDOM from "react-dom";
@@ -320,7 +308,7 @@ const SignIn = () => {
 
         <SelectWorkPlace  drxInfo={drx} userInfo={user} workPlaceInfo={workplace} setBackInfo={setWorkPlace} password={undefined}  KeyDown={handlekeyDownSignIn} />
   
-        <input id="fakeInput"  type={"text"}/>
+        <input  type={"text"} style={{ }} />
        {/*  ПОТОМ СДЕЛАТЬ GETUSERINFO */}
 
         <Grid item xs>

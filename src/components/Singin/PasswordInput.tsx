@@ -1,6 +1,5 @@
-import React from "react";
-import { TextField } from "@material-ui/core";
-import { inputProps, menuSelect } from "../ComponentInterface";
+import TextField from "@mui/material/TextField"
+import {  menuSelect } from "../ComponentInterface";
 
 const PasswordInput = (props: menuSelect) => {
   const clientEmailHandler = (event: any) => {

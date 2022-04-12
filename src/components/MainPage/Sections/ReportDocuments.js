@@ -1,5 +1,5 @@
 import SectionToolsJS from '../Tools/SectionToolsJS';
-import { Tabs, TabItem, TabItemsGroup } from 'smart-webcomponents-react/tabs';
+import { Tabs, TabItem } from 'smart-webcomponents-react/tabs';
 import SectionDocuments from './ElementsSections/SectionDocuments';
 import SectionReports from './ElementsSections/SectionReports';
 export default function SectionsReportDocuments(props) {

@@ -1,6 +1,4 @@
 import Tooltip from '@mui/material/Tooltip';
-import * as React from 'react';
-import ReactDOM from 'react-dom';
 import IconButton from '@mui/material/IconButton';
 
 function ClickMiniButton(e) {

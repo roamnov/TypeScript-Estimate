@@ -1,9 +1,6 @@
-import { Grid, Tab, Tabs } from "@material-ui/core";
-import axios from "axios";
-import { useState, useEffect } from "react";
-import Alert from "../../../Alert";
+import Grid from "@mui/material/Grid"
+import { useState} from "react";
 import { DocsAndReports, TabPanelProps } from "../../../ComponentInterface";
-import TableParams from "../ParamsList/TableParams/TableParams";
 import SectionDocs from "./SectionDocs";
 //import data from '../ParamsList/data.js'
 
