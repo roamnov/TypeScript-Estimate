@@ -9,7 +9,8 @@ export const useStyles = makeStyles((theme: { mixins: { toolbar: any; }; })=>({
   },
 
   colorList:{
-    color:"white"
+    color:"white",
+    
   },
 
   drawer: {

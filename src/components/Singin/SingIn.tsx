@@ -266,7 +266,7 @@ const SignIn = () => {
   // let page = browser.extension.getBackgroundPage()
 
   return (
-    <Container  maxWidth="xs"   >
+    <Container  maxWidth="xs" id={"test"}  >
       <CssBaseline />
       <img src={money} style={{ marginLeft:"30%"}}/>
       <Typography variant="h5" color={"#0098ad"} style={{ marginLeft:"30%"}}> WEB-СМЕТА</Typography>
@@ -308,7 +308,7 @@ const SignIn = () => {
 
         <SelectWorkPlace  drxInfo={drx} userInfo={user} workPlaceInfo={workplace} setBackInfo={setWorkPlace} password={undefined}  KeyDown={handlekeyDownSignIn} />
   
-        <input  type={"text"} style={{ }} />
+       
        {/*  ПОТОМ СДЕЛАТЬ GETUSERINFO */}
 
         <Grid item xs>

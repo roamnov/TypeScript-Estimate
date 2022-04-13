@@ -393,7 +393,7 @@ export default function FormsMainFile(props){
 
     function GridMaker(Path){
         setTimeout(() => {
-            // return ManWhoSoldTheWorld(props.id, Path)
+            return ManWhoSoldTheWorld(props.id, Path)
         }, 1000);
     }
     

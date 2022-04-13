@@ -2036,7 +2036,7 @@ function Init(testID, PathIn) {
        
         source.onHandleRequest = function(request) {
             let params = new Map();
-            
+            console.log("ТУТ")
             // params.set('id',testBD);
             if(PathInInit === undefined){
                 params.set('prefix','dbview'); 
