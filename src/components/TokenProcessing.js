@@ -33,7 +33,8 @@ function buildFileSelector(Type,RequestID){
             rcdata = event.target.result.split(",")
             // setSelectedFile({name:file.name , RCDATA: rcdata[1] });
             selestedFile= {name:file.name , RCDATA: rcdata[1] }
-            json = XMLrequest(params, data)
+            json = XMLrequest(params, data);
+            tokenProcessingTest(json);
             //return json
         }
     }
@@ -199,13 +200,15 @@ export function  tokenProcessingTest (json, returnJSXToParent){
 
             case "GetFileStream":
                 let FileName= json.Params.FileName, data, params = new Map
+                console.log("selestedFile")
                 if(FileName === selestedFile.name){
                     params.set('prefix', 'project');
                     params.set("comand", "ResumeRequest");
                     params.set("RequestID",RequestID );
                     params.set("WSM", "1");
                     data = {RCDATA: selestedFile.RCDATA}
-                    //setData(XMLrequest(params,data))
+                    
+                    tokenProcessingTest(XMLrequest(params,data));
                 }
                 
                 break;

@@ -1,8 +1,9 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
+import Popper from "@mui/material/Popper";
 import TextField from "@mui/material/TextField";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { menuSelect } from "../ComponentInterface";
 import  { get_cookie, XMLrequest } from "../Url";
 
@@ -10,10 +11,37 @@ const SelectWorkPlace = (props: menuSelect) => {
   
   let LastWorkPlace = get_cookie("LastLogin").split(",");
   const [workplaces, setWorkPlaces] = useState([]);
-  const [value, setValue] = React.useState<string | null>(LastWorkPlace === undefined? "": LastWorkPlace[2]);
+  const [value, setValue] = React.useState<any>(LastWorkPlace === undefined? "": LastWorkPlace[2]);
   const [inputValue, setInputValue] = React.useState("");
   const [loading, setLoad] = useState(true);
   const [open, setOpen] = useState(false);
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef);
+  
+  function useOutsideAlerter(ref:any) {
+    useEffect(() => {
+    
+      function handleClickOutside(event: { target: any; }) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setOpen(false)
+        }
+      }
+     
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  }
+
+  const PopperMy = function (props:any) {
+    return <Popper {...props}  placement="bottom-start" onClick={ChangeOpen} />;
+  };
+
+  const ChangeOpen = ()=>{
+    setOpen(!open)
+  }
+
 
   const getWorkPlaces = () => {
       setLoad(true);
@@ -57,6 +85,7 @@ const SelectWorkPlace = (props: menuSelect) => {
         loadingText={props.userInfo=== "" ?"Необходимо выбрать пользователя":<CircularProgress/>}
         freeSolo
         fullWidth
+        disableClearable
         value={value}
         onChange={(event: any, newValue: string | null) => {
           setValue(newValue);

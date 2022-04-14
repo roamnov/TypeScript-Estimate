@@ -266,7 +266,7 @@ const SignIn = () => {
   // let page = browser.extension.getBackgroundPage()
 
   return (
-    <Container  maxWidth="xs" id={"test"}  >
+    <Container  maxWidth="xs" >
       <CssBaseline />
       <img src={money} style={{ marginLeft:"30%"}}/>
       <Typography variant="h5" color={"#0098ad"} style={{ marginLeft:"30%"}}> WEB-СМЕТА</Typography>

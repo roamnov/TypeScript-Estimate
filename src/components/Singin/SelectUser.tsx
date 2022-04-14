@@ -18,16 +18,19 @@ const SelectUser = (props: menuSelect) => {
   const [users, setUserList] = useState([]);
   const [loading, setLoad] = useState(true);
   const [open, setOpen] = useState(false);
-  const [autoComplete, setAutoComplete] = useState("username");
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
   
   function useOutsideAlerter(ref:any) {
     useEffect(() => {
     
-      function handleClickOutside(event: { target: any; }) {
+      function handleClickOutside(event: any) {
         if (ref.current && !ref.current.contains(event.target)) {
-          setOpen(false)
+          if(event.target.id === "iconUser" || event.target.id ==="buttonUser" ||event.target.id === "username"){
+
+          }else{
+            setOpen(false);
+          }
         }
       }
      
@@ -39,8 +42,12 @@ const SelectUser = (props: menuSelect) => {
   }
 
   const PopperMy = function (props:any) {
-    return <Popper {...props}  placement="bottom-start"   />;
- };
+    return <Popper {...props}  placement="bottom-start" onClick={ChangeOpen} ref={wrapperRef} />;
+  };
+
+  const ChangeOpen = ()=>{
+    setOpen(!open)
+  }
 
   const getUser = () => {
     setOpen(!open);
@@ -54,7 +61,6 @@ const SelectUser = (props: menuSelect) => {
 
   const OnKeyEnter=(e:any)=>{
     if(e.keyCode === 13 && open ===false) {
-      setAutoComplete("1");
       props.KeyDown(e);
     }else if(e.keyCode === 40 && open ===false) {
       getUser();
@@ -71,12 +77,11 @@ const SelectUser = (props: menuSelect) => {
   }
  
   return (
-    <Grid item xs>
+    <Grid item xs id="userGrid">
       <Autocomplete
         open={open}
-        
+        PopperComponent={PopperMy}
         disableListWrap={true}
-        clearOnBlur
         selectOnFocus
         freeSolo
         fullWidth
@@ -86,24 +91,23 @@ const SelectUser = (props: menuSelect) => {
         disableClearable
         onChange={(event: any, newValue: string | null) => {
           setValue(newValue);
-          setOpen(false)
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
           props.setBackInfo(newInputValue);
           setInputValue(newInputValue);
         }}
-        
+        id="username"
         options={MenuItems(users)}
         onKeyDown={OnKeyEnter}
         renderInput={(params) => (
-          <TextField {...params}   id="username" autoComplete="username" name="username"   label="Имя пользователя" style={{paddingRight:0}} 
+          <TextField {...params}   autoComplete="username" name="username"   label="Имя пользователя" style={{paddingRight:0}} 
           InputProps={{
             ...params.InputProps,
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={getUser}>
-                    <ArrowDropDownIcon/>
+                <IconButton onClick={getUser} id={"buttonUser"}>
+                    <ArrowDropDownIcon id={"iconUser"}/>
                 </IconButton>
               </InputAdornment>
             )
