@@ -6,6 +6,9 @@ import TextField from "@mui/material/TextField";
 import React, { useEffect, useRef, useState } from "react";
 import { menuSelect } from "../ComponentInterface";
 import  { get_cookie, XMLrequest } from "../Url";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const SelectWorkPlace = (props: menuSelect) => {
   
@@ -23,7 +26,11 @@ const SelectWorkPlace = (props: menuSelect) => {
     
       function handleClickOutside(event: { target: any; }) {
         if (ref.current && !ref.current.contains(event.target)) {
-          setOpen(false)
+          if(event.target.id === "iconWP" || event.target.id ==="buttonWP" ||event.target.id === "WP"){
+
+          }else{
+            setOpen(false);
+          }
         }
       }
      
@@ -35,7 +42,7 @@ const SelectWorkPlace = (props: menuSelect) => {
   }
 
   const PopperMy = function (props:any) {
-    return <Popper {...props}  placement="bottom-start" onClick={ChangeOpen} />;
+    return <Popper {...props}  placement="bottom-start" onClick={ChangeOpen} ref={wrapperRef} />;
   };
 
   const ChangeOpen = ()=>{
@@ -44,13 +51,17 @@ const SelectWorkPlace = (props: menuSelect) => {
 
 
   const getWorkPlaces = () => {
+      setOpen(!open)
       setLoad(true);
-      let params = new Map();
-      params.set('comand','getworkplacelist');
-      params.set('ConfigName',props.drxInfo);
-      params.set('UserName',props.userInfo);
-      setLoad(false)
-      setWorkPlaces(XMLrequest(params));
+      if(!open && props.userInfo !== "" && props.drxInfo !== ""){
+        let params = new Map();
+        params.set('comand','getworkplacelist');
+        params.set('ConfigName',props.drxInfo);
+        params.set('UserName',props.userInfo);
+        setLoad(false)
+        setWorkPlaces(XMLrequest(params));
+      }
+      
         
   };
 
@@ -74,15 +85,10 @@ const SelectWorkPlace = (props: menuSelect) => {
   return (
     <Grid item xs>
       <Autocomplete
- 
-        onOpen={(e:any)=>{
-          setOpen(true);
-        }}
-        onClose={(e:any)=>{
-          setOpen(false);
-        }}
+        open={open}
+        PopperComponent={PopperMy}
         loading={loading}
-        loadingText={props.userInfo=== "" ?"Необходимо выбрать пользователя":<CircularProgress/>}
+        loadingText={props.userInfo=== "" || props.drxInfo === "" ?"Необходимо выбрать пользователя":<CircularProgress/>}
         freeSolo
         fullWidth
         disableClearable
@@ -95,13 +101,21 @@ const SelectWorkPlace = (props: menuSelect) => {
           props.setBackInfo(newInputValue);
           setInputValue(newInputValue);
         }}
-        
+        id="WP"
         options={MenuItems(workplaces)}
         onKeyDown={OnKeyEnter}
-        renderInput={(params) => <TextField onClick={getWorkPlaces}  autoComplete="off"     {...params} label="Рабочее место"   inputProps={{
-          ...params.inputProps,
-          autoComplete: 'tmntmemtemte',
-        }}  />}
+        renderInput={(params) => <TextField autoComplete="off"     {...params} label="Рабочее место"   
+        InputProps={{
+          ...params.InputProps,
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={getWorkPlaces} id={"buttonWP"}>
+                  <ArrowDropDownIcon id={"iconWP"}/>
+              </IconButton>
+            </InputAdornment>
+          )
+        }}
+        />}
       />
       
     </Grid>

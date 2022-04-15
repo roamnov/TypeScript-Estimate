@@ -52,11 +52,13 @@ const SelectUser = (props: menuSelect) => {
   const getUser = () => {
     setOpen(!open);
     setLoad(true);
-    let params = new Map();
-    params.set('comand','getuserlist');
-    params.set('ConfigName',props.drxInfo);
-    setLoad(false)
-    setUserList(XMLrequest(params));
+    if(!open && props.drxInfo !== ""){
+      let params = new Map();
+      params.set('comand','getuserlist');
+      params.set('ConfigName',props.drxInfo);
+      setLoad(false)
+      setUserList(XMLrequest(params));
+    }
   };
 
   const OnKeyEnter=(e:any)=>{

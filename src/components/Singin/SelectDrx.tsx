@@ -6,6 +6,9 @@ import TextField from "@mui/material/TextField";
 import {  menuSelect } from "../ComponentInterface";
 import  { get_cookie,XMLrequest } from "../Url";
 import Popper from "@mui/material/Popper";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const baseURL =
   "http://localhost:1317/mobile~project/getconfiglist?LicGUID=ED16868F4BEF468AC4DF0F8CB0E75D4A&All=0&All=0 HTTP/1.1";
@@ -26,7 +29,11 @@ const SelectDrx = (props: menuSelect) => {
     
       function handleClickOutside(event: { target: any; }) {
         if (ref.current && !ref.current.contains(event.target)) {
-          setOpen(false)
+          if(event.target.id === "iconDRX" || event.target.id ==="buttonDRX" ||event.target.id === "drx"){
+
+          }else{
+            setOpen(false);
+          }
         }
       }
      
@@ -38,7 +45,7 @@ const SelectDrx = (props: menuSelect) => {
   }
 
   const PopperMy = function (props:any) {
-    return <Popper {...props}  placement="bottom-start" onClick={ChangeOpen} />;
+    return <Popper {...props}  placement="bottom-start" onClick={ChangeOpen} ref={wrapperRef}/>;
   };
 
   const ChangeOpen = ()=>{
@@ -47,12 +54,15 @@ const SelectDrx = (props: menuSelect) => {
 
 
   const getDrx = () => {
-      setLoad(true);
-      let params = new Map();
-      params.set('comand','getconfiglist');
       setOpen(!open)
-      setLoad(false)
-      setDrxServer(XMLrequest(params));
+      setLoad(true);
+      if(!open){
+        let params = new Map();
+        params.set('comand','getconfiglist');
+        setDrxServer(XMLrequest(params));
+        setLoad(false)
+      }
+      
       /*
       axios.get(URL(params)).then((response) => {
         setDrxServer(response.data);
@@ -80,16 +90,11 @@ const SelectDrx = (props: menuSelect) => {
   return (
     <Grid item xs>
       <Autocomplete
+        open={open}
         freeSolo
         selectOnFocus
         disableClearable
         PopperComponent={PopperMy}
-        onOpen={(e:any)=>{
-          setOpen(true);
-        }}
-        onClose={(e:any)=>{
-          setOpen(false);
-        }}
         loading={loading}
         loadingText={<CircularProgress/>}
         fullWidth
@@ -105,7 +110,19 @@ const SelectDrx = (props: menuSelect) => {
         id="drx"
         options={MenuItems(drxconnect)}
         onKeyDown={OnKeyEnter}
-        renderInput={(params) => <TextField   onClick={getDrx} {...params} label="Конфигурация" />}
+        renderInput={(params) => <TextField   {...params} label="Конфигурация"
+        InputProps={{
+          ...params.InputProps,
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={getDrx} id={"buttonDRX"}>
+                  <ArrowDropDownIcon id={"iconDRX"}/>
+              </IconButton>
+            </InputAdornment>
+          )
+        }}
+        />}
+        
       />
     </Grid>
   );
