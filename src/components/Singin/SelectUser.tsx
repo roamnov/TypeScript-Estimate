@@ -1,40 +1,68 @@
-import React, {  useEffect, useState } from "react";
-import {
-  Grid,
-  Autocomplete,
-  TextField,
-  CircularProgress,
-} from "@mui/material";
-import { useStyles } from "../Styles";
+import React, {  useEffect, useRef, useState } from "react";
+import Autocomplete from "@mui/material/Autocomplete";
+import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
 import { menuSelect } from "../ComponentInterface";
-import axios from "axios";
-import URL, { get_cookie, XMLrequest } from "../Url";
+import { get_cookie, XMLrequest } from "../Url";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Popper from "@mui/material/Popper";
 
 const SelectUser = (props: menuSelect) => {
 
   let LastUser = get_cookie("LastLogin").split(",");
-  const [value, setValue] = React.useState<string | null>(LastUser === undefined? "": LastUser[1]);
+  const [value, setValue] = React.useState<any>(LastUser === undefined? "": LastUser[1]);
   const [inputValue, setInputValue] = React.useState("");
   const [users, setUserList] = useState([]);
   const [loading, setLoad] = useState(true);
   const [open, setOpen] = useState(false);
-  const [autoComplete, setAutoComplete] = useState("username");
-
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef);
   
+  function useOutsideAlerter(ref:any) {
+    useEffect(() => {
+    
+      function handleClickOutside(event: any) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          if(event.target.id === "iconUser" || event.target.id ==="buttonUser" ||event.target.id === "username"){
+
+          }else{
+            setOpen(false);
+          }
+        }
+      }
+     
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  }
+
+  const PopperMy = function (props:any) {
+    return <Popper {...props}  placement="bottom-start" onClick={ChangeOpen} ref={wrapperRef} />;
+  };
+
+  const ChangeOpen = ()=>{
+    setOpen(!open)
+  }
 
   const getUser = () => {
-      setLoad(true);
+    setOpen(!open);
+    setLoad(true);
+    if(!open && props.drxInfo !== ""){
       let params = new Map();
       params.set('comand','getuserlist');
       params.set('ConfigName',props.drxInfo);
       setLoad(false)
       setUserList(XMLrequest(params));
-      setAutoComplete("username");
+    }
   };
 
   const OnKeyEnter=(e:any)=>{
     if(e.keyCode === 13 && open ===false) {
-      setAutoComplete("1");
       props.KeyDown(e);
     }else if(e.keyCode === 40 && open ===false) {
       getUser();
@@ -51,23 +79,18 @@ const SelectUser = (props: menuSelect) => {
   }
  
   return (
-    <Grid item xs>
+    <Grid item xs id="userGrid">
       <Autocomplete
-        // open={true}
-        onOpen={(e:any)=>{
-          setOpen(true);
-        }}
-        onClose={(e:any)=>{
-          setOpen(false);
-        }}
+        open={open}
+        PopperComponent={PopperMy}
         disableListWrap={true}
-        clearOnBlur
         selectOnFocus
         freeSolo
         fullWidth
         loading={loading}
         loadingText={props.drxInfo === "" ?"Необходимо выбрать конифгурацию":<CircularProgress/>}
         value={value}
+        disableClearable
         onChange={(event: any, newValue: string | null) => {
           setValue(newValue);
         }}
@@ -76,13 +99,25 @@ const SelectUser = (props: menuSelect) => {
           props.setBackInfo(newInputValue);
           setInputValue(newInputValue);
         }}
-        
+        id="username"
         options={MenuItems(users)}
         onKeyDown={OnKeyEnter}
         renderInput={(params) => (
-          <TextField {...params}  autoComplete= {autoComplete} id={autoComplete} name={autoComplete}  onClick={getUser}  label="Имя пользователя" />
+          <TextField {...params}   autoComplete="username" name="username"   label="Имя пользователя" style={{paddingRight:0}} 
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={getUser} id={"buttonUser"}>
+                    <ArrowDropDownIcon id={"iconUser"}/>
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
+          />
         )}
       />
+      {}
     </Grid>
   );
 };

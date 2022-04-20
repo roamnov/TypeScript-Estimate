@@ -1,5 +1,7 @@
 import  React from 'react';
-import {  Backdrop, Grid,  LinearProgress } from "@mui/material"
+import Backdrop from "@mui/material/Backdrop"
+import Grid from "@mui/material/Grid"
+import LinearProgress from "@mui/material/LinearProgress"
 import URL, { XMLrequest } from '../../Url';
 import axios from 'axios';
 import ReactDOM from 'react-dom';

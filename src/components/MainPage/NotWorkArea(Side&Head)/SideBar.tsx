@@ -14,7 +14,7 @@ import { MainBoxBackClick, InfoAboutClick } from "../../ComponentInterface";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { styled } from '@mui/material/styles';
-import { Button, Grid, IconButton, ListItem, Menu, Typography } from "@mui/material";
+import { Button, Grid, IconButton, ListItem, ListItemSecondaryAction, Menu, Typography } from "@mui/material";
 import {SetStateNav} from './HiddenNav'
 import SideBarButton from "./SideBarButton";
 import ReactDOM from "react-dom";
@@ -28,6 +28,11 @@ const StyledList = styled(List)({
   '&& .Mui-selected, && .Mui-selected:hover': {
     backgroundColor: "#3d5b75"
   },
+  "&.MuiListItemSecondaryAction-root":{
+      top: "48%",
+      right: "92%"
+      
+  }
   // hover states
   // '& .MuiListItemButton-root:hover': {
   //   backgroundColor: 'orange',
@@ -55,14 +60,13 @@ export default function SideBar(props: MainBoxBackClick) {
   useEffect(()=>{
     if(selectedButton !== undefined){
       props.setSelected({ id: selectedButton["ID"], clsic: selectedButton["CLSID"], name: selectedButton["Name"] })  
-      console.log(selectedButton) 
     }
   },[selectedButton])
 
 
   useEffect(()=>{
     let selected = get_cookie("CurrentSec").split(",");
-    props.setSelected({ id: selected[0], clsic: selected[1], name: selected[2] })    
+    props.setSelected({ id: selected[0], clsic: selected[1], name: selected[2] })      
   },[])
 
   useEffect(() => {
@@ -195,6 +199,7 @@ export default function SideBar(props: MainBoxBackClick) {
   }
 
  
+  
 
 
   function MenuList(SectionList: any) {
@@ -202,7 +207,7 @@ export default function SideBar(props: MainBoxBackClick) {
     if (data.length !== undefined) {
 
 
-      let Name, ID, currentDeep, openSet, openSetDeep, mainCollapse, deepCollapse, Img, keyS = 0, howDeep = 4, mainCollapseID, openSetID, deepCollapseID
+      let Name, ID, currentDeep, openSet, openSetDeep, mainCollapse, deepCollapse, Img, keyS = 0, howDeep = 4, mainCollapseID, openSetID, deepCollapseID, leftP
       let assemblyLists = []; //сюда записываем все секции а потом отправляем на отрисовку
 
 
@@ -234,17 +239,20 @@ export default function SideBar(props: MainBoxBackClick) {
           openSet = data2.get(ID);
           openSetID = ID;
           assemblyLists.push(
-            <ListItem id={ID}  key={ID} style={{ paddingTop: 0, paddingBottom: 0, paddingLeft: 0 }} sx={{ "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} selected={selected === ID}  secondaryAction={
-              <IconButton id={ID} onClick={handleClick} >
-                {SectionList[keyS] !== undefined && SectionList[keyS]["Deep"] >= 1 ? (openSet ? (<ExpandLess />) : (<ExpandMore />)) : (<></>)}
-              </IconButton>
-            }>
-              <ListItemButton className={classes.colorList} key={ID} component="li" id={ID} onClick={updateSelected}>
-                <ListItemIcon>{Img}</ListItemIcon>
-                <ListItemText primary={Name} style={{ color: "white"  }} />
-                <Typography variant="inherit" noWrap style={{ color: "white"  }}>
-                  {Name}
-                </Typography>
+            <ListItem id={ID} disablePadding  key={ID} style={{ paddingTop: 0, paddingBottom: 0, paddingLeft: 0, paddingRight: 0, display:"inherit" }} sx={{ "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" }, "& .MuiListItemSecondaryAction-root":{ right:"auto", left: "0%" } }} selected={selected === ID} 
+            
+            secondaryAction={
+           
+                <IconButton id={ID} onClick={handleClick} style={{width:25, height:25}}>
+                  {SectionList[keyS] !== undefined && SectionList[keyS]["Deep"] >= 1 ? (openSet ? (<ExpandLess fontSize="small" />) : (<ExpandMore fontSize="small" />)) : (<></>)}
+                </IconButton>
+             
+            }  >
+              
+              <ListItemButton style={{paddingRight:0}} className={classes.colorList} key={ID} component="li" id={ID} onClick={updateSelected}>
+                <ListItemIcon style={{minWidth:"0px", paddingRight:"10px", paddingLeft:10}}>{Img}</ListItemIcon>
+                <ListItemText  style={{ color: "white"  }}  primary={<Typography variant="body1" style={{ fontSize:"0.875rem", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", width: "99.9%" }}>{Name}</Typography>} />
+
               </ListItemButton>
               
             </ListItem>
@@ -258,12 +266,15 @@ export default function SideBar(props: MainBoxBackClick) {
           ) {
             case "1":
               openSet = mainCollapse;
+              howDeep += 2 
+              leftP = 19
               break;
             case "2":
-              howDeep += 5;
+              howDeep +=4;
+              leftP = "12%"
               break;
             case "3":
-              howDeep += 8;
+              howDeep += 6;
               break;
           }
           
@@ -277,16 +288,15 @@ export default function SideBar(props: MainBoxBackClick) {
               <Collapse key={ID} in={openSet && mainCollapse} timeout="auto" unmountOnExit >
                 {(openSet = data2.get(ID))}
                
-                <ListItem key={ID} style={{ paddingTop: 0, paddingBottom: 0, paddingLeft: 0 }} secondaryAction={
-                  <IconButton id={ID} onClick={handleClick} >
-                    {openSet ? (<ExpandLess />) : (<ExpandMore />)}
+                <ListItem key={ID} style={{ paddingTop: 0, paddingBottom: 0, paddingLeft: 0, paddingRight: 0, display:"inherit" }} sx={{"& .MuiListItemSecondaryAction-root":{ right:"auto", left: leftP } }} secondaryAction={
+                  <IconButton id={ID} onClick={handleClick} style={{width:25, height:25}}>
+                    {openSet ? (<ExpandLess fontSize="small"/>) : (<ExpandMore fontSize="small"/>)}
                 </IconButton>
                 }>
-                  <ListItemButton className={classes.colorList} key={ID} sx={{ pl: howDeep, "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} id={ID} selected={selected === ID} >
+                  <ListItemButton style={{paddingRight:0}} className={classes.colorList} key={ID} sx={{ pl: howDeep, "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} id={ID} selected={selected === ID} onClick={updateSelected}>
                     <ListItemIcon>{Img}</ListItemIcon>
-                    <Typography variant="inherit" noWrap style={{ color: "white"  }}>
-                      {Name}
-                    </Typography>
+                    <ListItemText  style={{ color: "white"  }}  primary={<Typography noWrap variant="body1" style={{ fontSize:"0.875rem", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", width: "99.9%" }}>{Name}</Typography>} />
+
                   </ListItemButton>
                   
                 </ListItem>
@@ -307,9 +317,8 @@ export default function SideBar(props: MainBoxBackClick) {
                 <List key={ID} component="div" disablePadding >
                   <ListItemButton className={classes.colorList} key={ID} sx={{ pl: howDeep, "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} selected={selected === ID} id={ID} onClick={updateSelected} >
                     <ListItemIcon>{Img}</ListItemIcon>
-                    <Typography variant="inherit" noWrap style={{ color: "white"  }}>
-                      {Name}
-                    </Typography>
+                    <ListItemText  style={{ color: "white"  }}  primary={<Typography variant="body1"  style={{ fontSize:"0.875rem", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", width: "99.9%" }}>{Name}</Typography>} />
+
                   </ListItemButton>
                 </List>
               </Collapse>
@@ -317,6 +326,8 @@ export default function SideBar(props: MainBoxBackClick) {
           }
         }
       }
+      
+     
       setTimeout(() => {
         ReactDOM.render(<SideBarButton setSelected={setSelectedButton}/>,document.getElementById('HiddenNav'))
       }, 1000);

@@ -1,5 +1,6 @@
-import { Grid, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import Grid from "@mui/material/Grid"
+import Typography from "@mui/material/Typography"
+import { useEffect, useState } from "react";
 import SectionToolsJS from '../Tools/SectionToolsJS';
 
 

@@ -1,24 +1,18 @@
 import * as React from 'react';
-import { Button, Grid, Toolbar } from '@material-ui/core';
-import { IdToTree, InfoAboutClick, TabPanelProps,InfoAboutClickDown } from "../../ComponentInterface";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid"
+import {  InfoAboutClick } from "../../ComponentInterface";
 //import init from "../stimweb/tools"
 //import Init from '../stimategrid/test';
-import SectionTools from '../Tools/SectionTools';
 import {AppTabs} from './DocTabs/DocTabs';
-import ManWhoSoldTheWorld from '../stimategrid/test';
-import DocsReportsMainWindow from './Docs&Reports/Docs&ReportsWindow';
-import NestedMenu from '../Tools/NestedMenu';
 import SectionsDBview from '../Sections/dbview';
 import SectionsReportDocuments from '../Sections/ReportDocuments';
-import { WorkPlaceTools } from '../Tools/WorkPlaceTools';
 import StickyFooter from '../NotWorkArea(Side&Head)/Footer';
 import StillDevelopmentPage from './StillDevelopmentPage';
-import SectionToolsJS from '../Tools/SectionToolsJS';
 import { XMLrequest } from '../../Url';
 import SectionReport from '../Sections/ElementsSections/SectionReports'
 import Tooltip from '@mui/material/Tooltip';
 import FormsMainFile from '../../Forms/FormsMainFile.jsx';
-import {tokenProcessingTest} from '../../TokenProcessing'
 import ReactDOM from 'react-dom';
 import ModalProgress from '../../Containers/ModalProgress';
 export default function FullRightSide(props: InfoAboutClick) {
@@ -29,9 +23,6 @@ export default function FullRightSide(props: InfoAboutClick) {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  const openGrid= ()=>{
-    setOpen(!open)
-  }
   
   React.useEffect(()=>{
     console.log(openReportData)

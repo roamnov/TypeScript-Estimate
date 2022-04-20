@@ -1,17 +1,17 @@
-import * as React from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import  DialogContentText from '@mui/material/DialogContentText';
-import { DialogContainerProps } from '../ComponentInterface';
+import Dialog from "@mui/material/Dialog"
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle"
+import {useState,useEffect} from "react";
+import { DialogContainerProps } from "../ComponentInterface";
 
 
 
-export default function DialogContainer (props:DialogContainerProps){
-    const [open, setOpen] = React.useState(true);
+export default function SignInDialog(props:DialogContainerProps){
+    const [open, setOpen] = useState(true);
 
-    React.useEffect(()=>{
+    useEffect(()=>{
         setOpen(true);
       }, [props.contentText])
 

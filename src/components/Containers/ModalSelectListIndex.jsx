@@ -3,8 +3,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Button, DialogContentText, Grid, List, ListItemButton, ListItemText,  } from '@mui/material';
-import { triggerBase64Download } from 'common-base64-downloader-react';
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid"
+import List from "@mui/material/List"
+import ListItemButton from "@mui/material/ListItemButton"
+import ListItemText from "@mui/material/ListItemText"
 import { XMLrequest } from '../Url';
 import ReactDOM from 'react-dom';
 import { styled } from '@mui/material/styles';

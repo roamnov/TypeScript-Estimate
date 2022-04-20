@@ -1,13 +1,12 @@
-import { Button, Grid, Tab, Tabs } from "@material-ui/core";
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { IdToTree, TabPanelProps } from "../../../ComponentInterface";
 import  {useState,useEffect } from "react";
-import Tree from "./Tree/tree.js";
 import { useStyles } from "../../../Styles";
-
 import ManWhoSoldTheWorld from "../../stimategrid/test";
-import { ReactDOM } from "react";
-import GridStimate from "../../stimategrid/GridTest";
+import Grid from '@mui/material/Grid';
+import Tab from '@mui/material/Tab';
+import Tabs from "@mui/material/Tabs"
+import Button from '@mui/material/Button';
 
 //
 function TabPanel(props: TabPanelProps) {

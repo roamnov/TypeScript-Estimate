@@ -125,6 +125,7 @@ export interface ProjectEnterInfo extends componentProps{
 export interface DialogContainerProps{
     title:string,
     contentText:any,
+    json?:object
 
 }
 

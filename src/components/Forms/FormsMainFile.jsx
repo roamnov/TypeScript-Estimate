@@ -1,13 +1,13 @@
-import { Button, Checkbox, Grid, Paper, Radio , Typography,CircularProgress, Dialog ,DialogActions, RadioGroup, DialogContent, FormControlLabel, FormControl, FormLabel} from "@mui/material";
-import React,{Children, useEffect, useState} from "react";
+// import { Button, Checkbox, Grid, Paper, Radio , Typography,CircularProgress, Dialog ,DialogActions, RadioGroup, DialogContent, FormControlLabel, FormControl, FormLabel} from "@mui/material";
+import React,{ useEffect, useState} from "react";
 import ReactDOM from 'react-dom';
 import { styled } from '@mui/material/styles';
-import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
-import MuiAccordionSummary, { AccordionSummaryProps} from '@mui/material/AccordionSummary';
+import MuiAccordion from '@mui/material/Accordion';
+import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import { XMLrequest } from "../Url";
-import { Tabs, TabItem, TabItemsGroup } from 'smart-webcomponents-react/tabs';
+import { Tabs, TabItem} from 'smart-webcomponents-react/tabs';
 import Link from '@mui/material/Link';
 import  { tokenProcessingTest } from "../TokenProcessing";
 import SectionToolsJS from "../MainPage/Tools/SectionToolsJS";
@@ -15,8 +15,22 @@ import Slide from '@mui/material/Slide'
 import Draggable from 'react-draggable';
 import Editor from "../Editor/Editor";
 import EditStyleJson from "./EditStyleB.json"
-import axios from 'axios';
-import URL from "../Url"
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Paper from "@mui/material/Paper";
+import FormControl from "@mui/material/FormControl";
+import RadioGroup from "@mui/material/RadioGroup";
+import CircularProgress from "@mui/material/CircularProgress";
+import Radio from "@mui/material/Radio";
+import Dialog from "@mui/material/Dialog"
+import DialogContent from "@mui/material/DialogContent"
+import DialogActions from "@mui/material/DialogActions"
+import Checkbox from "@mui/material/Checkbox"
+import FormLabel from "@mui/material/FormLabel"
+import ManWhoSoldTheWorld from "../MainPage/stimategrid/test";
+
 
 
 
@@ -72,8 +86,8 @@ const Accordion = styled((props) => (
   });
 /////////////////////////////////////////////////////////////////////////////////////////////
   export function DialogSlide(props) {
-    const [open, setOpen] = React.useState(true);
-    const [heiWid, setHeiWod] = React.useState({height: "0px", width:"0px"})
+    const [open, setOpen] = useState(true);
+    const [heiWid, setHeiWod] = useState({height: "0px", width:"0px"})
 
   
     useEffect(()=>{
@@ -376,6 +390,12 @@ export default function FormsMainFile(props){
     function sortByIndex(arr) {
         arr.sort((a, b) => a.Index > b.Index ? 1 : -1);
       }
+
+    function GridMaker(Path){
+        setTimeout(() => {
+            return ManWhoSoldTheWorld(props.id, Path)
+        }, 1000);
+    }
     
     function CheckAndReturnComponent(json, SubLabel, keyName){
         let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Corners, BGColor, returnSub=[];
@@ -456,10 +476,32 @@ export default function FormsMainFile(props){
 
             case "TSectionPanel":// WITH SUB
             try{
-                let test = json.Params.Path
-                console.log(test)
+                let Path = json.Params.Path
+                if(Path !== undefined){
+                    let params = new Map
+                    console.log(Path)
+                    params.set('prefix','programs'); 
+                    params.set('comand','GetTableLayout');
+                    params.set ('ObjType',"0");
+                    params.set("Path",Path )
+                    params.set("SectionID", props.id) 
+                    XMLrequest(params)
+                    ReturnComponent.push(
+                        <Grid id={`gridpanel`+props.id} keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability, backgroundColor: BGColor }}>
+                            <Paper  elevation={2}>
+                               {GridMaker(Path)} 
+                            </Paper>
+                        </Grid>
+                    )
+                    break;
+                }
+                
+                
+                
+                // GET /programs~GetTableLayout?LicGUID=72D72A7946ED30AB0808358980788EDA&ObjType=0&Path={7FEC323D-E184-4147-8F44-352DD337B515}&SectionID=482 HTTP/1.0
+                // POST /programs~HandleTable?LicGUID=72D72A7946ED30AB0808358980788EDA&Path={7FEC323D-E184-4147-8F44-352DD337B515}&SectionID=482 HTTP/1.0
             }catch(err){
-                console.log(err)
+                // console.log(err)
             }
                 
                 // console.log(json)

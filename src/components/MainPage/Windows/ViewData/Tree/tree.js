@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import IconButton from '@mui/material/IconButton';
-import { ImgURL, XMLrequest } from '../../../../Url';
+import {  XMLrequest } from '../../../../Url';
 import Switch from '../../../../Switch/Switch';
 import Editor from "../../../../Editor/Editor"
 import Tooltip from '@mui/material/Tooltip';
@@ -9,10 +9,9 @@ import UndoIcon from '@mui/icons-material/Undo';
 import CheckIcon from '@mui/icons-material/Check';
 import CodeMirror from '@uiw/react-codemirror';
 import { sql } from '@codemirror/lang-sql';
-import { Tabs, TabItem, TabItemsGroup } from 'smart-webcomponents-react/tabs';
+import { Tabs, TabItem } from 'smart-webcomponents-react/tabs';
 import Params from "../../../Sections/ElementsSections/Params"
-import { Box } from "@mui/material";
-import Splitter, { SplitterItem } from 'smart-webcomponents-react/splitter';
+
 
 export function clickTab(event) {
   let lbl = event.currentTarget;

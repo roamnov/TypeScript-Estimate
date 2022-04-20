@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, {  useState } from "react";
 
 //Компоненты
 import SignIn from "./Singin/SingIn";
@@ -6,11 +6,10 @@ import MainPage from "./MainPage/MainFile";
 
 //Стили и пропсы
 import {useStyles} from "./Styles";
-import {componentProps} from "./ComponentInterface";
 import WrapperRightSide from "./MainPage/WrapperMainFile";
 
-import { BrowserRouter, HashRouter, Route, Router, Routes } from "react-router-dom"
-import { Container } from "@material-ui/core";
+import { HashRouter, Route, Routes } from "react-router-dom"
+
 
 //<SignIn  dataSelectMenu={'test'} />
 /* 
