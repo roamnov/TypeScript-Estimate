@@ -1,5 +1,7 @@
-import  { createGlobalStyle } from 'styled-components';
-
+import styled, { createGlobalStyle } from 'styled-components';
+import * as React from 'react';
+import ReactDOM from 'react-dom';
+import { GlobalStyles } from '@material-ui/styled-engine';
 
 
 
@@ -25083,7 +25085,7 @@ function StyleSmartWebcomponents()
             margin-left: 5px;
             margin-top: 5px;
             position: relative;
-            width: calc(100% - 10px)
+            width: 100%;
         }
 
         .smart-list-box .smart-list-box-filter-input-container:after {

@@ -13,18 +13,17 @@ import { Calendar } from 'smart-webcomponents-react/calendar';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Popover from '@mui/material/Popover';
-//import ListItem from '@mui/material/ListItem';
+import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import List from '@mui/material/List';
-import CustomScroll from 'react-custom-scroll';
-import { ListBox, ListItem, ListItemsGroup } from 'smart-webcomponents-react/listbox';
+//import { ListBox, ListItem, ListItemsGroup } from 'smart-webcomponents-react/listbox';
 export default function Editor(props) {
 
   const [blur, setBlur] = React.useState();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorElList, setAnchorElList] = React.useState(null);
-  const [List, setList] = React.useState();
+  const [DList, setList] = React.useState();
 
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -99,15 +98,16 @@ export default function Editor(props) {
     lp = "28px"
   else
     lp = "4px"
-  var CheckID = CreateName()
-  var EditID = CreateName()
-  function CreateName() {
+  var CheckID = "State_" + props.SectionID + "_" + props.id
+  var EditID = props.SectionID + "_" + props.id  //CreateName()
+  function CreateName(count) {
     var res, s = "0123456789ABCDEFGHIKLMNOPQRSTVXYZ";
-    for (var n = 0; n <= 31; n++) {
+    if (!count) count = 20
+    for (var n = 0; n <= count; n++) {
       if (n === 0) {
-        res = s[Math.floor(Math.random() * (20 - 1) + 1)];
+        res = s[Math.floor(Math.random() * (count - 1) + 1)];
       } else {
-        res = res + s[Math.floor(Math.random() * (20 - 1) + 1)];
+        res = res + s[Math.floor(Math.random() * (count - 1) + 1)];
       }
     }
     return res
@@ -321,7 +321,38 @@ export default function Editor(props) {
     }
   }
   function CreateList(items, parent) {
+    function CloseList(ev) {
+      let p = ev.currentTarget;
+      let list = document.getElementById("mouse-over-popover-list");
+      const withinBoundaries = ev.composedPath().includes(list);
+      if (!p)
+        p = document.getElementById("mouse-over-popover")
+      if (!withinBoundaries)
+        p.remove()
+    }
+    function ClickItemList(ev) {
+      let p = ev.currentTarget;
+      parent.dataset.value = p.innerText;
+      parent.dataset.objref = p.dataset.index
+      EnterValue(parent)
+      CloseList()
+    }
 
+    function FindItems(ev) {
+      let input = ev.currentTarget;
+      let text = input.value.toUpperCase()
+      let list = input.parentNode.parentNode.nextSibling.childNodes
+      let item, valItem
+      for (let i = 0; i <= list.length - 1; i = i + 1) {
+        item = list[i]
+        valItem = item.dataset.value.toUpperCase();
+        if (valItem.indexOf(text) == -1) {
+          item.style.display = "none"
+        }
+        else
+          item.style.display = ""
+      }
+    }
     let itemList
     let it = [];
     let width = parent.getBoundingClientRect().width
@@ -329,20 +360,58 @@ export default function Editor(props) {
 
     for (let pair of items) {
       let text
-      
+
       text = pair[1]
-      if (val === text) { 
-        indexv = index+3
+      if (typeof text == "string") {
+        if (val === text) {
+          indexv = index
+        }
+        it.push(<ListItem ref={parent} key={index} component="div" disablePadding data-value={text}>
+          <ListItemButton style={{ padding: 0, height: "24px", width: "inherit" }}>
+            <ListItemText
+              disableTypography
+              primary={text}
+              data-parent={parent.id}
+              data-index={pair[0]}
+              style={{ paddingLeft: "10px", fontFamily: "Roboto, Helvetica Neue, sans-serif", fontSize: "14px", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}
+              onClick={(ev) => ClickItemList(ev)}
+            />
+          </ListItemButton>
+        </ListItem>)
       }
-        it.push(<ListItem >{text}</ListItem>)
-        index = index + 1;
+      index = index + 1;
     }
-    itemList = <ListBox style = {{width: width+ "px"}} selectedIndexes={[indexv]} selectionMode="zeroOrOne" filterable filterInputPlaceholder="Поиск ..."  horizontalScrollBarVisibility="hidden">
-      {
-      it.map((item) => { return item })
-      }
-    </ListBox>
-    return itemList
+    let top
+    if (it.length <= 1)
+      top = 5
+    else
+      top = 30
+    itemList = <Box
+      style={{
+        position: "absolute",
+        backgroundColor: "white",
+        border: "2px solid",
+        width: width + "px",
+        left: parent.getBoundingClientRect().left + "px",
+        top: parent.getBoundingClientRect().top + parent.getBoundingClientRect().height + "px"
+      }}
+      id="mouse-over-popover-list">
+      {it.length <= 1 ? <></> : <Box className="smart-list-box">
+        <div className="smart-list-box-filter-input-container vscroll" role="presentation" smart-id="filterInputContainer" style={{
+          position: "fixed", zIndex: 1, width: width - 8 + "px", marginLeft: "2px",
+          paddingLeft: "0px", marginTop: "0px"
+        }}>
+          <input placeholder="Поиск ..." role="searchbox" aria-label="Поиск ..." smart-id="filterInput" onKeyUp={(ev) => FindItems(ev)} /></div></Box>}
+      <List style={{ maxHeight: 200-top + "px", width: width - 2 + "px", top: top + "px" }} >
+        {it.map((item) => { return item })}
+      </List></Box>
+    let background = document.createElement("div")
+    background.id = "mouse-over-popover"
+    background.addEventListener("click", CloseList)
+    background.style = "position: fixed; z-index: 1300; right: 0;bottom: 0;top: 0;left: 0;pointer-events: all;"
+    ReactDOM.render(itemList, background)
+    document.body.appendChild(background)
+    //return itemList
   }
   function onDropDownList(e) {
     let div = e.currentTarget;
@@ -351,8 +420,8 @@ export default function Editor(props) {
     if (props.onDropDownList) {
       list = props.onDropDownList(edit)
       if (list) {
-        setList(CreateList(list, edit))
-        setAnchorElList(edit)
+        CreateList(list, edit)
+        // setAnchorElList(edit)
       }
     }
   }
@@ -361,10 +430,15 @@ export default function Editor(props) {
     list = props.list.split(',')
   }
   function EnterValue(ev) {
-    if (ev.keyCode == 13) {
-      let el = ev.currentTarget;
+    let el = ev.keyCode
+    if (el) {
+      if (ev.keyCode == 13)
+        el = ev.currentTarget
+    }
+    else
+      el = ev;
+    if (el) {
       let val
-      if (!el) el = ev
       val = el.dataset.value;
       let params = new Map();
       if (el.dataType === "ParamItem") {
@@ -505,25 +579,7 @@ export default function Editor(props) {
                   <ArrowDropDownIcon style={{ fill: "black" }} />
 
                 </IconButton>
-                <Popover
-                  id="mouse-over-popover"
-                  sx={{
-                    pointerEvents: 'all'
-                  }}
-                  
-                  open={openList}
-                  anchorEl={anchorElList}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                  }}
-                  onClose={handlePopoverCloseList}>
-                  {List}
-                </Popover>
+
               </>
               :
               <></>}
@@ -551,7 +607,8 @@ export default function Editor(props) {
           aria-haspopup="true"
           onClick={handlePopoverOpen}
         ></IconButton>
-        {ButtonGroupCheck()
+        {
+          ButtonGroupCheck()
         }
       </Box> : <></>}
     </Box>

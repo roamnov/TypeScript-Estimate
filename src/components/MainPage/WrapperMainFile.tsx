@@ -13,7 +13,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { IconButton } from '@material-ui/core';
 import Split from 'react-split'
 import Tooltip from '@mui/material/Tooltip';
-import CustomScroll from 'react-custom-scroll';
 
 export default function WrapperRightSide() {
 
