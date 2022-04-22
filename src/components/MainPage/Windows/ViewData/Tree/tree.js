@@ -332,7 +332,7 @@ export default function Tree(props) {
           ShowTabsData(id);
           break;
         }
-      case "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}":
+      case "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}", "{B357E5B2-137F-4253-BBEF-E5CFD697E362}":
         {
           ShowParams(id)
           break;
