@@ -157,9 +157,9 @@ export function  tokenProcessingTest (json, returnJSXToParent){
                     </Grid>
                 )
 
-                returnJSX.push(
-                    <ModalContainer dlgType={Caption}  content={returnSmth} /> 
-                )
+                // returnJSX.push(
+                //     <ModalContainer dlgType={Caption}  content={returnSmth} /> 
+                // )
                 ReactDOM.render(<ModalContainer dlgType={Caption}  content={returnSmth} /> , document.getElementById('footerProgress'));
                 break;
 
@@ -170,7 +170,6 @@ export function  tokenProcessingTest (json, returnJSXToParent){
                 let sas = true
                 if(sas === true){
                     // return <ModalProgress open={true}  Json={json} path={Path} />
-                    
                     // let test =  ModalProgressContainer( true ,json, Path)
                     // console.log(test)
                 }else{

@@ -15,18 +15,35 @@ import Tooltip from '@mui/material/Tooltip';
 import FormsMainFile from '../../Forms/FormsMainFile.jsx';
 import ReactDOM from 'react-dom';
 import ModalProgress from '../../Containers/ModalProgress';
+import {tokenProcessingTest} from "../../TokenProcessing"
+
 export default function FullRightSide(props: InfoAboutClick) {
 
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
-  const [openReportData, setOpenReportData] = React.useState([]);
+  const [openReportData, setOpenReportData] = React.useState<any>({});
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  
+  let pringReportsDoc:any
+      // pringReportsDoc = document.getElementById('print_reports');
   React.useEffect(()=>{
-    console.log(openReportData)
+    if(!isEmptyObject(openReportData) ){
+      console.log(openReportData);
+      pringReportsDoc = document.getElementById('print_reports')
+      pringReportsDoc.innerHTML = openReportData.Items[0].content;
+    }
   },[openReportData])
+
+  function isEmptyObject(obj:any) {
+    for (var i in obj) {
+        if (obj.hasOwnProperty(i)) {
+            return false;
+        }
+    }
+    return true;
+    
+}
 
  function OpenReport (ev:any)
  {
@@ -51,19 +68,21 @@ export default function FullRightSide(props: InfoAboutClick) {
    params.set('HTML', 1);
    params.set('WSM', 1);
    json = XMLrequest(params)
+   
    switch(json.Token){
-     case "ShowProgressDialog":
+    case "ShowProgressDialog":
       let Path = json.Params.Path;
       let doc = document.getElementById('RenderModal')
       if(doc !== null){
         doc.innerHTML = "";
       }
       ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} setData={setOpenReportData}/> , document.getElementById('RenderModal'));
-      break
+      break;
+    default:
+      tokenProcessingTest(json);
+      break;  
    }
-  //  console.log(openReportData)
-  //  let TokenReturn = tokenProcessingTest();
-  //  console.log(TokenReturn)
+      
 
  }
 
@@ -76,7 +95,7 @@ export default function FullRightSide(props: InfoAboutClick) {
   if (props.id !== undefined && props.clsic =="{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}")
   {
     defaultButton = <Tooltip title="Сформировать отчет" >
-        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)}>
+        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{textTransform:"none"}}>
             Выполнить
         </Button>
     </Tooltip>
@@ -90,11 +109,11 @@ export default function FullRightSide(props: InfoAboutClick) {
   if(props.id !== undefined && props.clsic =="{B357E5B2-137F-4253-BBEF-E5CFD697E362}")
   {
      defaultButton = <Tooltip title="Сформировать отчет" >
-        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)}>
+        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{textTransform:"none"}}>
             Выполнить
         </Button>
     </Tooltip>
-    content = <SectionReport CLSID = {props.clsic} id = {props.id} defaultButton = {defaultButton}/>
+    content = <SectionReport CLSID = {props.clsic} id = {props.id} defaultButton = {defaultButton} SectionToolsJS={true} />
   }
   else
     if (props.id !== undefined) {

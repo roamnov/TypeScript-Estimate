@@ -101,6 +101,7 @@ export interface FooterProps{
     children?: React.ReactNode[] | React.ReactNode;
     value?: number;
     open?:boolean;
+    setData?: (value:any) => void | any;
     ID?:string;
 }
 

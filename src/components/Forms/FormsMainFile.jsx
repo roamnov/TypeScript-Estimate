@@ -228,41 +228,7 @@ export default function FormsMainFile(props){
         }
     }
 
-    function AssignObjectsForMenuBar(){
-        
-        if(isEmptyObject(dataFormsUpd)){
-            let MenuBar = {}
-            MenuBar = Object.assign({}, dataForms )
-            
 
-            return MenuBar
-        }else{
-            let KeysDefaut, KeysSections,MenuBar = {}, SameMenus ={}
-            const test = Object.assign({}, dataForms)
-             
-            MenuBar = Object.assign({}, dataForms)
-            
-            SameMenus  = Object.assign({}, dataForms)  
-            KeysDefaut = Object.keys(MenuBar);
-            KeysSections = Object.keys(dataFormsUpd);
-            for (const  valueDefaut of KeysDefaut) {
-                for (const  valueSection of KeysSections) {
-                    if (valueDefaut === valueSection){
-                        SameMenus[valueDefaut] = Object.assign(SameMenus[valueDefaut],dataFormsUpd[valueDefaut] ,dataForms[valueDefaut])
-                        
-                        
-                    }
-                }
-            }
-           
-            MenuBar = Object.assign(MenuBar,dataFormsUpd)
-            MenuBar = Object.assign(MenuBar,SameMenus)
-           
-
-            return MenuBar
-        }
-         
-    }
 
     function TextFromServerToBrowser(json, keyName){
         let Text, FontStyle, ReferenceLink, FontSize, autoSize, FontColor

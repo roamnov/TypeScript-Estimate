@@ -18,6 +18,8 @@ import {  useNavigate } from "react-router-dom";
 import { Backdrop, CircularProgress, TextField } from "@mui/material";
 import SignInDialog from "../Containers/SignInDialog";
 import ReactDOM from "react-dom";
+import axios from "axios";
+import URL from "../Url";
 // import {TestPlug} from "./core"
 
 const VERSIONS_JSON_URL = 'http://stimate.krista.ru/workspaceex/config.json';
@@ -130,12 +132,22 @@ const SignIn = () => {
   const [workplace, setWorkPlace] = useState("");
   const [password, setPassword] = useState();
   const [open, setOpen] = useState(false);
+  const [secret, setSecret] = useState("");
   
   var CERTS_XML_KEY = "certList";
 
   function executeCertListAsXML() {
-    CertUIDAsXML = uuid();
-    sendRequest(
+    // let params= new Map , url = "http://win-stim.krista.ru:8888/project~secret?LicGUID="
+    
+    // // params.set("comand","secet")
+    
+    CertUIDAsXML = uuid()
+    // axios.get(URL("secret")).then((response)=>{
+    //   console.log(response.data)
+    
+    // });
+    
+      sendRequest(
         {
           type: "workspace-request",
           requestId: CertUIDAsXML, 

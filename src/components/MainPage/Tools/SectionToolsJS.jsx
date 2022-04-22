@@ -29,11 +29,8 @@ const SectionToolsJS = (props) =>{
 
     //const [requestId,setRequestId] = React.useState();
     const [menuBarSection, setMenuBarSection] = React.useState([]);
-    const [inputText, setInputText] = React.useState();
     const [buttonsSection, setButtonsSection] = React.useState([]);
-    const [value, setValue] = React.useState();
-    const [selestedFile, setSelectedFile] = React.useState();
- 
+
 
     const [dataButtonsDefault, setDataButtonsDefault] = React.useState();
     const [open1, setOpen1] = React.useState(false);
@@ -393,7 +390,7 @@ const SectionToolsJS = (props) =>{
     
 
     return(
-        <Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" sx={{pl:2}} >
+        <Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" sx={{pl:1}} >
            <div id="RenderModal">  </div>
            <div id="RenderModalSub"> </div>
            
@@ -412,7 +409,9 @@ const SectionToolsJS = (props) =>{
                     {Rec(AssignObjectsForMenuBar())}                   
                 </Grid>
             </Grid>
-            <Grid id="RenderDefault" > </Grid>
+            <Grid id="RenderDefault" >
+                
+            </Grid>
         </Grid>
     )
 }
