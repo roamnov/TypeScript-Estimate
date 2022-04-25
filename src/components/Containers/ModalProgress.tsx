@@ -221,8 +221,8 @@ export default function ModalProgress(props:ModalProgressProps) {
       }
     }else{
       // console.log(json)
-      if(props.setData !== undefined){
-        props.setData(json);
+      if(props.setReturnValue !== undefined){
+        props.setReturnValue(json);
       }
       // if()
 

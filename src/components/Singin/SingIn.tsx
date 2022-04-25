@@ -20,6 +20,7 @@ import SignInDialog from "../Containers/SignInDialog";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import URL from "../Url";
+import ModalSignIn from "./SignInWithCryptoPRO/ModalSignIn";
 // import {TestPlug} from "./core"
 
 const VERSIONS_JSON_URL = 'http://stimate.krista.ru/workspaceex/config.json';
@@ -50,68 +51,26 @@ window.addEventListener("message", (messageEvent) => {
   if (WORKSPACE_RESPONSE_TYPE == messageEvent.data.type) {
       var response = messageEvent.data;
       var JSX
-      console.log(response)
+      let json
       switch (response.requestId) {
         
-          case PluginVerUID:
-              // var actualExtensionVersion = getActualExtensionVersion();
-              // if (actualExtensionVersion == 0 || parseFloat(response.result) < actualExtensionVersion) {
-              //     markExtensionIsOutOfDate(response.result, actualExtensionVersion);
-              //     showWarning();
-              // } else {
-              //     markExtensionIsRelevant(response.result);
-              // }
-              // onVersionClick();
-              break;
-          case VersionUID:
-              // if (response.result != null) {
-              //     if (workspaceConfig == null || parseFloat(response.result) < workspaceConfig.hostApp.version) {
-              //         markHostAppObsolete(response.result, workspaceConfig == null ? 0 : workspaceConfig.hostApp.version);
-              //         showWarning();
-              //     } else {
-              //         markHostAppRelevant(response.result);
-              //     }
-              //     elem("tabs").style.display = 'block';
-              //     onCheckedCryptoProvider();
-              // } else {
-              //     markHostAppUninstalled();
-              //     showWarning();
-              // }
-              break;
-          case CheckedCryptoUID:
-              // elem("cryptoImage").src = IMG_OK;
-              // if (response.result.indexOf("ошибка при получении криптопровайдера") == -1) {
-              //     elem("cryptoID").innerHTML = "Криптопровайдер установлен.";
-              //     elem("cryptoID").style.color = "green";
-              //     elem("cryptoImage").src = IMG_OK;
-              //     executeCertListAsXML();
-              // } else {
-              //     showWarning();
-              // }
-              // elem("cryptoBlock").style.display = 'block';
-              break;    
           case CertUIDAsXML:// УСПЕХ
               if(response.successful === false){
                 JSX = <SignInDialog title={"Ошибка"} contentText={response.result}/>
               }else{
-                JSX = <SignInDialog title={"Успешно"} contentText={response.result}/>
+                // JSX = <SignInDialog title={"Успешно"} contentText={response.result}/>
+                let params = new Map;
+                let LoginData = {
+                  "Pkcs7Auth-Answer":{
+                    "Answer":response.result
+                  }
+                };
+                params.set("comand", "answer");
+                json =XMLrequest(params, LoginData);
+                JSX = <ModalSignIn data={json} />
               } 
               ReactDOM.render(JSX,document.getElementById('renderSignIn'))
               
-              break;
-          case CmsDettachedUID:
-              // elem("resultCMS").value = elem("resultCMS").value + "Серийный номер сертификата: " + mySerialNumber + "\n";
-              // elem("resultCMS").value = elem("resultCMS").value + "Данные по-умолчанию:" + " SGVsbG8sIHdvcmxkIQ== " + "\n";
-              // elem("resultCMS").value = elem("resultCMS").value + "Подпись в формате Cms: " + response.result + "\n";
-              break;
-          case scanUid:
-              // unmask();
-              // if (response.successful == false) {
-              //     elem("scanImageId").src = "";
-              //     alert("Ошибка: " + response.result);
-              // } else {
-              //     elem("scanImageId").src = "data:image/jpg;base64, " + response.result;
-              // }
               break;
       };
 
@@ -137,23 +96,17 @@ const SignIn = () => {
   var CERTS_XML_KEY = "certList";
 
   function executeCertListAsXML() {
-    // let params= new Map , url = "http://win-stim.krista.ru:8888/project~secret?LicGUID="
-    
-    // // params.set("comand","secet")
-    
-    CertUIDAsXML = uuid()
-    // axios.get(URL("secret")).then((response)=>{
-    //   console.log(response.data)
-    
-    // });
-    
-      sendRequest(
+    let params= new Map, json:any
+    params.set("comand","secret")
+    json = XMLrequest(params);
+    CertUIDAsXML = uuid()    
+    sendRequest(
         {
           type: "workspace-request",
           requestId: CertUIDAsXML, 
           params: {
               command: "sign",
-              data: "ezlDMTM4RUNDLTgzQ0MtNDAyMy1BOEFFLTZDNjI4OTM3OTQ2RH0=",
+              data: json["Pkcs7Auth-Secret"].Secret,
               format:"CMS",
               serialNumber: null,
               type: "detached"

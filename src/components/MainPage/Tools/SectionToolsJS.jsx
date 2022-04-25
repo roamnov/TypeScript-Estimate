@@ -25,7 +25,7 @@ import { DialogSlide } from '../../Forms/FormsMainFile';
 //
 const SectionToolsJS = (props) =>{
     const [Program, setProgram] = React.useState([<></>]);
-    const [data, setData] = React.useState({});
+    const [data, setData] = React.useState();
 
     //const [requestId,setRequestId] = React.useState();
     const [menuBarSection, setMenuBarSection] = React.useState([]);

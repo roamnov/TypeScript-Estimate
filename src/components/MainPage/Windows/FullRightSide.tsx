@@ -30,7 +30,7 @@ export default function FullRightSide(props: InfoAboutClick) {
   React.useEffect(()=>{
     if(!isEmptyObject(openReportData) ){
       console.log(openReportData);
-      pringReportsDoc = document.getElementById('print_reports')
+      pringReportsDoc = document.getElementById(`print_reports${props.id}`)
       pringReportsDoc.innerHTML = openReportData.Items[0].content;
     }
   },[openReportData])
@@ -76,7 +76,8 @@ export default function FullRightSide(props: InfoAboutClick) {
       if(doc !== null){
         doc.innerHTML = "";
       }
-      ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} setData={setOpenReportData}/> , document.getElementById('RenderModal'));
+      tokenProcessingTest(json, setOpenReportData);
+      // ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} setReturnValue={setOpenReportData}/> , document.getElementById('RenderModal'));
       break;
     default:
       tokenProcessingTest(json);
