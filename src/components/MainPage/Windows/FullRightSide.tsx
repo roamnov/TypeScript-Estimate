@@ -28,9 +28,19 @@ export default function FullRightSide(props: InfoAboutClick) {
   let pringReportsDoc:any
       // pringReportsDoc = document.getElementById('print_reports');
   React.useEffect(()=>{
-    if(!isEmptyObject(openReportData) ){
-      console.log(openReportData);
-      pringReportsDoc = document.getElementById(`print_reports${props.id}`)
+    console.log(openReportData);
+    if(!isEmptyObject(openReportData)){
+      pringReportsDoc = document.getElementById(`print_reports${props.id}`);
+      // pringReportsDoc.querySelectorAll('.ActivParams').forEach((n: { classList: { remove: (arg0: string) => void; add: (arg0: string) => void; }; }) => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+      // let arrOfReportId = openReportData.ViewIdent.split("-");
+      // let newReportWindow = document.createElement("div");
+      // arrOfReportId = arrOfReportId[0].split("Report")
+      // newReportWindow.classList.add("Params");
+      // newReportWindow.classList.add("ActivParams");
+      // newReportWindow.id = "print_reports" + props.id + "_" + arrOfReportId[1];
+      // newReportWindow.innerHTML = openReportData.Items[0].content;
+      // pringReportsDoc.appendChild(newReportWindow);
+      // ReactDOM.render(<div id='test1'> </div>,pringReportsDoc)
       pringReportsDoc.innerHTML = openReportData.Items[0].content;
     }
   },[openReportData])
@@ -96,7 +106,7 @@ export default function FullRightSide(props: InfoAboutClick) {
   if (props.id !== undefined && props.clsic =="{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}")
   {
     defaultButton = <Tooltip title="Сформировать отчет" >
-        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{textTransform:"none"}}>
+        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{textTransform:"none", marginLeft:"0.88%"}}>
             Выполнить
         </Button>
     </Tooltip>
@@ -110,7 +120,7 @@ export default function FullRightSide(props: InfoAboutClick) {
   if(props.id !== undefined && props.clsic =="{B357E5B2-137F-4253-BBEF-E5CFD697E362}")
   {
      defaultButton = <Tooltip title="Сформировать отчет" >
-        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{textTransform:"none"}}>
+        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{textTransform:"none", marginLeft:"0.88%"}}>
             Выполнить
         </Button>
     </Tooltip>

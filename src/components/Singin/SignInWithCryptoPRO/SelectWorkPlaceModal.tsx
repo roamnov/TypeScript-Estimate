@@ -12,9 +12,16 @@ const SelectWorkPlaceModal = (props:any) => {
   const [inputValue, setInputValue] = React.useState("");
   const [open, setOpen] = useState(false);  
   const [load, setLoad] = useState(true);
+  const [LastDrx, setLastDrx] = useState("");
 
   useEffect(()=>{
     setLoad(true)
+    if(props.drx === LastDrx){
+
+    }else{
+      setValue("");
+      setLastDrx(props.drx)
+    }
   },[props.drx])
 
   const ClickField=()=>{
@@ -33,10 +40,10 @@ const SelectWorkPlaceModal = (props:any) => {
 //     }
 //   }
 
-  function MenuItems(drxList: any) {
+  function MenuItems(WPList: any) {
     let array = [], name:any;
 
-    for (const [key, value] of Object.entries(drxList)) {
+    for (const [key, value] of Object.entries(WPList)) {
       name = value;
       if(name.Name === props.drx){
         for (const [key, value] of Object.entries(name.Workplace)) {

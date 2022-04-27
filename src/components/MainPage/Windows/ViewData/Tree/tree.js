@@ -279,13 +279,18 @@ export default function Tree(props) {
   }
 
   function ShowParams(id) {
-    let param = document.getElementById("item_params_reports" + props.SectionID)
+    let param = document.getElementById("item_params_reports" + props.SectionID);
+    let reportSection = document.getElementById("print_reports"+props.SectionID);
     if (param) {
       let paramBox = document.getElementById("item_params_reports" + props.SectionID + "_" + id)
+      let reportBox = document.getElementById("item_params_reports" + props.SectionID + "_" + id)
       if (paramBox) {
         param.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
         paramBox.classList.add("ActivParams");
-        paramBox.classList.remove("NoActivParams")
+        paramBox.classList.remove("NoActivParams");
+        // reportSection.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+        // reportBox.classList.add("ActivParams");
+        // reportBox.classList.remove("NoActivParams");
       }
       else {
         let params = new Map();
@@ -294,7 +299,7 @@ export default function Tree(props) {
         params.set('ReportID', id);
         params.set('SectionID', props.SectionID);
         let otv = XMLrequest(params);
-        
+        console.log(id)
         let parametry = document.createElement("div");
         param.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
         parametry.classList.add("Params");

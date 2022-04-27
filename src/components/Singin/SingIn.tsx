@@ -134,8 +134,6 @@ const SignIn = () => {
   //const ThemeContext = React.createContext('light');
 
   const GoToMain =(jsonEnter: any)=>{
-    
-    // console.log(jsonEnter["AppName"])
     const AppName = jsonEnter["AppName"];
     CreateCokies("drx",AppName === undefined? drx:AppName )
     CreateCokies("LastLogin", jsonEnter);
@@ -189,7 +187,7 @@ const SignIn = () => {
       if (IP !="")
       params.set('IP', IP);
       rest = XMLrequest(params,  LoginData);
-      rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain(LoginLast)
+      rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain(rest)
     }
   }
 
@@ -219,7 +217,7 @@ const SignIn = () => {
     if (IP !="")
     params.set('IP', IP);
     rest = XMLrequest(params,  LoginData);
-    rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain(LoginLast)
+    rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain(rest)
     //let res = AxiosRequest(params, "post",LoginData)
     //res.then((responce)=>{console.log(responce)})
     /*

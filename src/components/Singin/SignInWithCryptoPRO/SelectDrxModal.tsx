@@ -25,7 +25,6 @@ const SelectDrxModal = (props:any) => {
 
   function MenuItems(drxList: any) {
     let array = [], name:any;
-
     for (const [key, value] of Object.entries(drxList)) {
       name = value;
       array.push(name["Name"] );

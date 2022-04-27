@@ -137,7 +137,7 @@ export function  tokenProcessingTest (json, func){
                 break;
 
             case "ChangeStatusProgress":
-                ReactDOM.render(<ChangeStatusProgressFooter Json={json} /> , document.getElementById('footerProgress'));
+                ReactDOM.render(<ChangeStatusProgressFooter Json={json} setReturnValue={func} /> , document.getElementById('footerProgress'));
                 break;
 
             case "InputText":

@@ -217,7 +217,7 @@ export default function ModalProgress(props:ModalProgressProps) {
         EmptyRequest(RequestID);
       }
       else{
-        tokenProcessingTest(json);
+        tokenProcessingTest(json, props.setReturnValue);
       }
     }else{
       // console.log(json)
