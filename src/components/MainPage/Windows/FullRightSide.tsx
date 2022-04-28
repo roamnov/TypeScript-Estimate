@@ -9,13 +9,16 @@ import SectionsDBview from '../Sections/dbview';
 import SectionsReportDocuments from '../Sections/ReportDocuments';
 import StickyFooter from '../NotWorkArea(Side&Head)/Footer';
 import StillDevelopmentPage from './StillDevelopmentPage';
-import { XMLrequest } from '../../Url';
+import { ImgURL, XMLrequest, } from '../../Url';
+import URL from '../../Url';
 import SectionReport from '../Sections/ElementsSections/SectionReports'
 import Tooltip from '@mui/material/Tooltip';
 import FormsMainFile from '../../Forms/FormsMainFile.jsx';
 import ReactDOM from 'react-dom';
 import ModalProgress from '../../Containers/ModalProgress';
 import {tokenProcessingTest} from "../../TokenProcessing"
+import IconButton from '@mui/material/IconButton';
+import axios from 'axios';
 
 export default function FullRightSide(props: InfoAboutClick) {
 
@@ -32,18 +35,60 @@ export default function FullRightSide(props: InfoAboutClick) {
     if(!isEmptyObject(openReportData)){
       pringReportsDoc = document.getElementById(`print_reports${props.id}`);
       // pringReportsDoc.querySelectorAll('.ActivParams').forEach((n: { classList: { remove: (arg0: string) => void; add: (arg0: string) => void; }; }) => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
-      // let arrOfReportId = openReportData.ViewIdent.split("-");
+      let arrOfReportId = openReportData.ViewIdent.split("-");
       // let newReportWindow = document.createElement("div");
-      // arrOfReportId = arrOfReportId[0].split("Report")
-      // newReportWindow.classList.add("Params");
+      arrOfReportId = arrOfReportId[0].split("Report")
       // newReportWindow.classList.add("ActivParams");
       // newReportWindow.id = "print_reports" + props.id + "_" + arrOfReportId[1];
       // newReportWindow.innerHTML = openReportData.Items[0].content;
       // pringReportsDoc.appendChild(newReportWindow);
       // ReactDOM.render(<div id='test1'> </div>,pringReportsDoc)
       pringReportsDoc.innerHTML = openReportData.Items[0].content;
+      if(openReportData.Tools !== undefined){
+        let buttonFromReport:any
+        buttonFromReport = document.getElementById(`buttons_for_section`+props.id);
+        buttonFromReport.querySelectorAll('.ActivParams').forEach((n: { classList: { remove: (arg0: string) => void; add: (arg0: string) => void; }; }) => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+        let newReportButton = document.createElement("div");
+        let Button = openReportData.Tools.Buttons[0]
+        let report = Button.ViewIdent.split("-");
+        report = report[0].split("Report");
+        let secid = Button.ViewIdent.split("Section");
+        let ID = Button.ID +"-"+ report[1] +"-"+ secid[1]
+        newReportButton.classList.add("ActivParams");//NoActivButtons
+        newReportButton.id = "button_report_token" + props.id + "_" + arrOfReportId[1];
+        buttonFromReport.appendChild(newReportButton);
+        ReactDOM.render(
+          <Grid item>    
+              <Tooltip  title={Button.Hint} arrow>
+                      <IconButton id={ID}  color='primary'  component="span"   >
+                          {ImgURL(Button.Image)}
+                      </IconButton>
+              </Tooltip>
+          </Grid>
+          ,newReportButton)
+      }
     }
   },[openReportData])
+
+
+  async function reportsHandleToolButton(event:any){//reports~HandleToolButton?LicGUID=B921C12049AC58E14F039A983633FE8E&ID=117&ReportID=453&SectionID=108&ViewIdent=Report453-Section108&WSM=1 
+    let params = new Map;
+    let ID, ReportID, SectionID, ViewIdent
+    let e = event.currentTarget.getAttribute("id").split("-")
+    ID = e[0]
+    ReportID = e[1]
+    SectionID = e[2] 
+    ViewIdent =  `Report${ReportID}-Section${SectionID}`
+    params.set('prefix', 'reports');
+    params.set("comand", "HandleToolButton");
+    params.set("ID", ID);
+    params.set("ReportID", ReportID);
+    params.set("SectionID", SectionID) 
+    params.set("ViewIdent", ViewIdent);
+    params.set("WSM","1")
+    await axios.get(URL(params)).then((res:any)=> {tokenProcessingTest(res.data)})
+  }
+
 
   function isEmptyObject(obj:any) {
     for (var i in obj) {

@@ -403,7 +403,11 @@ const SectionToolsJS = (props) =>{
                     {}
                 </Grid>
             </Grid>
-
+            <Grid item> 
+                <Grid container direction="row"  justifyContent="flex-start" alignItems="center" id= {"buttons_for_section" + props.ID} >
+                                      
+                </Grid>
+            </Grid>
             <Grid item> 
                 <Grid container direction="row"  justifyContent="flex-start" alignItems="center" >
                     {Rec(AssignObjectsForMenuBar())}                   

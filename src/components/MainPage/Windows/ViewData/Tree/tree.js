@@ -281,9 +281,13 @@ export default function Tree(props) {
   function ShowParams(id) {
     let param = document.getElementById("item_params_reports" + props.SectionID);
     let reportSection = document.getElementById("print_reports"+props.SectionID);
+    let reportButton = document.getElementById("buttons_for_section"+props.SectionID);
     if (param) {
       let paramBox = document.getElementById("item_params_reports" + props.SectionID + "_" + id)
-      let reportBox = document.getElementById("item_params_reports" + props.SectionID + "_" + id)
+      let reportBox = document.getElementById("print_reports" + props.SectionID + "_" + id)
+      let reportButtonBox = document.getElementById("button_report_token" + props.SectionID + "_" + id)
+      console.log(paramBox)
+      console.log(reportButtonBox)
       if (paramBox) {
         param.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
         paramBox.classList.add("ActivParams");
@@ -291,6 +295,12 @@ export default function Tree(props) {
         // reportSection.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
         // reportBox.classList.add("ActivParams");
         // reportBox.classList.remove("NoActivParams");
+       
+          reportButton.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+          reportButtonBox.classList.add("ActivParams");
+          reportButtonBox.classList.remove("NoActivParams");
+        
+        
       }
       else {
         let params = new Map();
@@ -299,13 +309,15 @@ export default function Tree(props) {
         params.set('ReportID', id);
         params.set('SectionID', props.SectionID);
         let otv = XMLrequest(params);
-        console.log(id)
         let parametry = document.createElement("div");
         param.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+        // reportSection.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+        reportButton.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
         parametry.classList.add("Params");
         parametry.classList.add("ActivParams");
         parametry.id = "item_params_reports" + props.SectionID + "_" + id
-       
+        
+
         param.appendChild(parametry);
         let paramBox = <Params id= {id} SectionID = {props.SectionID} data = {otv}/>
         

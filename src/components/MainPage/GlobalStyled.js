@@ -56807,6 +56807,14 @@ const GlobalStyleCheckBox = createGlobalStyle`
 {
     display: none;  
 }
+.ActivButton
+{
+    display: block;  
+}
+.NoActivButton
+{
+    display: none;  
+}
 `
 const GlobalStyleResizePanel = createGlobalStyle`
 #watermark

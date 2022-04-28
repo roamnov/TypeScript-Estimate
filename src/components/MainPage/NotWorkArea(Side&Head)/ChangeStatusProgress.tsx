@@ -59,6 +59,7 @@ const ChangeStatusProgressFooter = (Json:any) =>{
                 ChangeProgress(RequestID);
                 
             }else if( Token === "ShellExecute"){
+                ReactDOM.render(<></> , document.getElementById('footerProgress'));
                 tokenProcessingTest(json);
             }
         }else if(isNaN(Progress)){
