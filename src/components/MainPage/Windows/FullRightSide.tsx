@@ -9,24 +9,96 @@ import SectionsDBview from '../Sections/dbview';
 import SectionsReportDocuments from '../Sections/ReportDocuments';
 import StickyFooter from '../NotWorkArea(Side&Head)/Footer';
 import StillDevelopmentPage from './StillDevelopmentPage';
-import { XMLrequest } from '../../Url';
+import { ImgURL, XMLrequest, } from '../../Url';
+import URL from '../../Url';
 import SectionReport from '../Sections/ElementsSections/SectionReports'
 import Tooltip from '@mui/material/Tooltip';
 import FormsMainFile from '../../Forms/FormsMainFile.jsx';
 import ReactDOM from 'react-dom';
 import ModalProgress from '../../Containers/ModalProgress';
+import {tokenProcessingTest} from "../../TokenProcessing"
+import IconButton from '@mui/material/IconButton';
+import axios from 'axios';
+
 export default function FullRightSide(props: InfoAboutClick) {
 
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
-  const [openReportData, setOpenReportData] = React.useState([]);
+  const [openReportData, setOpenReportData] = React.useState<any>({});
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  
+  let pringReportsDoc:any
+      // pringReportsDoc = document.getElementById('print_reports');
   React.useEffect(()=>{
-    console.log(openReportData)
+    console.log(openReportData);
+    if(!isEmptyObject(openReportData)){
+      pringReportsDoc = document.getElementById(`print_reports${props.id}`);
+      // pringReportsDoc.querySelectorAll('.ActivParams').forEach((n: { classList: { remove: (arg0: string) => void; add: (arg0: string) => void; }; }) => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+      let arrOfReportId = openReportData.ViewIdent.split("-");
+      // let newReportWindow = document.createElement("div");
+      arrOfReportId = arrOfReportId[0].split("Report")
+      // newReportWindow.classList.add("ActivParams");
+      // newReportWindow.id = "print_reports" + props.id + "_" + arrOfReportId[1];
+      // newReportWindow.innerHTML = openReportData.Items[0].content;
+      // pringReportsDoc.appendChild(newReportWindow);
+      // ReactDOM.render(<div id='test1'> </div>,pringReportsDoc)
+      pringReportsDoc.innerHTML = openReportData.Items[0].content;
+      if(openReportData.Tools !== undefined){
+        let buttonFromReport:any
+        buttonFromReport = document.getElementById(`buttons_for_section`+props.id);
+        buttonFromReport.querySelectorAll('.ActivParams').forEach((n: { classList: { remove: (arg0: string) => void; add: (arg0: string) => void; }; }) => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+        let newReportButton = document.createElement("div");
+        let Button = openReportData.Tools.Buttons[0]
+        let report = Button.ViewIdent.split("-");
+        report = report[0].split("Report");
+        let secid = Button.ViewIdent.split("Section");
+        let ID = Button.ID +"-"+ report[1] +"-"+ secid[1]
+        newReportButton.classList.add("ActivParams");//NoActivButtons
+        newReportButton.id = "button_report_token" + props.id + "_" + arrOfReportId[1];
+        buttonFromReport.appendChild(newReportButton);
+        ReactDOM.render(
+          <Grid item>    
+              <Tooltip  title={Button.Hint} arrow>
+                      <IconButton id={ID}  color='primary'  component="span"   >
+                          {ImgURL(Button.Image)}
+                      </IconButton>
+              </Tooltip>
+          </Grid>
+          ,newReportButton)
+      }
+    }
   },[openReportData])
+
+
+  async function reportsHandleToolButton(event:any){//reports~HandleToolButton?LicGUID=B921C12049AC58E14F039A983633FE8E&ID=117&ReportID=453&SectionID=108&ViewIdent=Report453-Section108&WSM=1 
+    let params = new Map;
+    let ID, ReportID, SectionID, ViewIdent
+    let e = event.currentTarget.getAttribute("id").split("-")
+    ID = e[0]
+    ReportID = e[1]
+    SectionID = e[2] 
+    ViewIdent =  `Report${ReportID}-Section${SectionID}`
+    params.set('prefix', 'reports');
+    params.set("comand", "HandleToolButton");
+    params.set("ID", ID);
+    params.set("ReportID", ReportID);
+    params.set("SectionID", SectionID) 
+    params.set("ViewIdent", ViewIdent);
+    params.set("WSM","1")
+    await axios.get(URL(params)).then((res:any)=> {tokenProcessingTest(res.data)})
+  }
+
+
+  function isEmptyObject(obj:any) {
+    for (var i in obj) {
+        if (obj.hasOwnProperty(i)) {
+            return false;
+        }
+    }
+    return true;
+    
+}
 
  function OpenReport (ev:any)
  {
@@ -51,19 +123,22 @@ export default function FullRightSide(props: InfoAboutClick) {
    params.set('HTML', 1);
    params.set('WSM', 1);
    json = XMLrequest(params)
+   
    switch(json.Token){
-     case "ShowProgressDialog":
+    case "ShowProgressDialog":
       let Path = json.Params.Path;
       let doc = document.getElementById('RenderModal')
       if(doc !== null){
         doc.innerHTML = "";
       }
-      ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} setData={setOpenReportData}/> , document.getElementById('RenderModal'));
-      break
+      tokenProcessingTest(json, setOpenReportData);
+      // ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} setReturnValue={setOpenReportData}/> , document.getElementById('RenderModal'));
+      break;
+    default:
+      tokenProcessingTest(json);
+      break;  
    }
-  //  console.log(openReportData)
-  //  let TokenReturn = tokenProcessingTest();
-  //  console.log(TokenReturn)
+      
 
  }
 
@@ -76,7 +151,7 @@ export default function FullRightSide(props: InfoAboutClick) {
   if (props.id !== undefined && props.clsic =="{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}")
   {
     defaultButton = <Tooltip title="Сформировать отчет" >
-        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)}>
+        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{textTransform:"none", marginLeft:"0.88%"}}>
             Выполнить
         </Button>
     </Tooltip>
@@ -90,11 +165,11 @@ export default function FullRightSide(props: InfoAboutClick) {
   if(props.id !== undefined && props.clsic =="{B357E5B2-137F-4253-BBEF-E5CFD697E362}")
   {
      defaultButton = <Tooltip title="Сформировать отчет" >
-        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)}>
+        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{textTransform:"none", marginLeft:"0.88%"}}>
             Выполнить
         </Button>
     </Tooltip>
-    content = <SectionReport CLSID = {props.clsic} id = {props.id} defaultButton = {defaultButton}/>
+    content = <SectionReport CLSID = {props.clsic} id = {props.id} defaultButton = {defaultButton} SectionToolsJS={true} />
   }
   else
     if (props.id !== undefined) {

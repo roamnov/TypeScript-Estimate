@@ -100,7 +100,7 @@ function EmptyRequest(RequestID){
 
 
 var selestedFile    
-export function  tokenProcessingTest (json, returnJSXToParent){
+export function  tokenProcessingTest (json, func){
     if(json.Break !== undefined){
         let returnJSX= [], returnSmth = [], Token,Module, RequestID,andResult;
       
@@ -129,15 +129,15 @@ export function  tokenProcessingTest (json, returnJSXToParent){
                     }
                 }
 
-                returnJSX.push(  <ModalContainer dlgType={DlgType} content={Message} buttons={returnSmth} /> )
+                // returnJSX.push(  <ModalContainer dlgType={DlgType} content={Message} buttons={returnSmth} /> )
                 //setProgram(returnJSX);
                 let docs = document.getElementById('footerProgress')
                 docs.innerHTML = "";
-                ReactDOM.render(<ModalContainer dlgType={DlgType} content={Message} buttons={returnSmth} />, document.getElementById('footerProgress'));
+                ReactDOM.render(<ModalContainer dlgType={DlgType} content={Message} buttons={returnSmth}  />, document.getElementById('footerProgress'));
                 break;
 
             case "ChangeStatusProgress":
-                ReactDOM.render(<ChangeStatusProgressFooter Json={json} /> , document.getElementById('footerProgress'));
+                ReactDOM.render(<ChangeStatusProgressFooter Json={json} setReturnValue={func} /> , document.getElementById('footerProgress'));
                 break;
 
             case "InputText":
@@ -157,9 +157,9 @@ export function  tokenProcessingTest (json, returnJSXToParent){
                     </Grid>
                 )
 
-                returnJSX.push(
-                    <ModalContainer dlgType={Caption}  content={returnSmth} /> 
-                )
+                // returnJSX.push(
+                //     <ModalContainer dlgType={Caption}  content={returnSmth} /> 
+                // )
                 ReactDOM.render(<ModalContainer dlgType={Caption}  content={returnSmth} /> , document.getElementById('footerProgress'));
                 break;
 
@@ -170,13 +170,12 @@ export function  tokenProcessingTest (json, returnJSXToParent){
                 let sas = true
                 if(sas === true){
                     // return <ModalProgress open={true}  Json={json} path={Path} />
-                    
                     // let test =  ModalProgressContainer( true ,json, Path)
                     // console.log(test)
                 }else{
                    
                 }
-                 ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} /> , document.getElementById('RenderModal'));
+                 ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} setReturnValue={func} /> , document.getElementById('RenderModal'));
                 break;
 
             case "SetProgressLabel":

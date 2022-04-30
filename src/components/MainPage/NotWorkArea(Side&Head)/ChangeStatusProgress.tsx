@@ -43,7 +43,7 @@ const ChangeStatusProgressFooter = (Json:any) =>{
         if(json.Break !== undefined){
             
             let  Token, RequestID:any;
-        
+            
              
             Token = json.Token;
             RequestID= json.Params.RequestID;
@@ -59,10 +59,17 @@ const ChangeStatusProgressFooter = (Json:any) =>{
                 ChangeProgress(RequestID);
                 
             }else if( Token === "ShellExecute"){
+                ReactDOM.render(<></> , document.getElementById('footerProgress'));
                 tokenProcessingTest(json);
             }
         }else if(isNaN(Progress)){
             ReactDOM.render(<></> , document.getElementById('footerProgress'));
+            if(Json.setReturnValue !== undefined){
+                Json.setReturnValue(json);
+            }
+        }else{
+            // console.log(json)
+           
         }
     }
 

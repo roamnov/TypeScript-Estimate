@@ -13,7 +13,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { IconButton } from '@material-ui/core';
 import Split from 'react-split'
 import Tooltip from '@mui/material/Tooltip';
-
+import CustomScroll from 'react-custom-scroll';
+import { Scrollbars } from 'react-custom-scrollbars-2';
 export default function WrapperRightSide() {
 
   function ClickDocument(ev: any) {
@@ -41,7 +42,6 @@ export default function WrapperRightSide() {
   const [selected, setSelected] = React.useState<InfoAboutClick | undefined>();
   const [drawerOpen, setdrawerOpen] = React.useState(true);
   const [nameOpen, setNameOpen] = React.useState();
-  const [mouseSideBar, setMouseSideBar] = React.useState(false);
 
   document.addEventListener("click", (e) => { ClickDocument(e) })
  
@@ -53,14 +53,7 @@ export default function WrapperRightSide() {
 
   }
   
-  
-  function mouseSideBarTrue(){
-    setMouseSideBar(true)
-  }
-
-  function mouseSideBarFalse(){
-    setMouseSideBar(false);
-  }
+ 
 
   return (
     <div style={{ display: 'flex', height: "100%", overflow: "hidden", position: "absolute", flexDirection: "column", width: "100%" }} >
@@ -87,9 +80,10 @@ export default function WrapperRightSide() {
 
       <div style={{ display: 'flex', height: "100%", overflow: "hidden", flexDirection: "row" }} id="SideBar_FullRightSide">
         <Split className="wrap" sizes={[20, 80]}>
-          <div onMouseEnter={mouseSideBarTrue} onMouseLeave={mouseSideBarFalse} style={drawerOpen ? { width: "calc(20% - 5px)",height: "100%", overflow: "auto", backgroundColor: "#628cb6", scrollbarWidth: mouseSideBar? "thin":"none", paddingRight: mouseSideBar? "0px":"8px", whiteSpace:"nowrap" } : {height: "100%", backgroundColor: "#628cb6", width: "0px"}} id="SideBar" >
-
+          <div style={drawerOpen ? { width: "calc(20% - 5px)",height: "100%", overflow: "auto", backgroundColor: "#628cb6",  whiteSpace:"nowrap" } : {height: "100%", backgroundColor: "#628cb6", width: "0px"}} id="SideBar" >
+          <Scrollbars autoHide>
             <SideBar isLoading={setIsLoading} setSelected={setSelected} />
+          </Scrollbars>
          
             
           </div>

@@ -19,6 +19,7 @@ import URL, {  XMLrequest } from '../Url';
 import axios from 'axios';
 import Draggable from 'react-draggable';
 import ReactDOM from 'react-dom';
+import { tokenProcessingTest } from '../TokenProcessing';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -210,14 +211,21 @@ export default function ModalProgress(props:ModalProgressProps) {
 
       }else if(Token === "HideProgressDialog"){
         setPrevToken(Token);
-        
-        
         setOpen(false);
+        EmptyRequest(RequestID);
+      }else if(Token === "ClearOutPut"){
+        EmptyRequest(RequestID);
+      }
+      else{
+        tokenProcessingTest(json, props.setReturnValue);
       }
     }else{
-      if(props.setData !== undefined){
-        props.setData(json);
+      // console.log(json)
+      if(props.setReturnValue !== undefined){
+        props.setReturnValue(json);
       }
+      // if()
+
     }
   }
 
