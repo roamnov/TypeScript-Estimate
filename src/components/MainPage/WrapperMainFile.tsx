@@ -59,7 +59,7 @@ export default function WrapperRightSide() {
     <div style={{ display: 'flex', height: "100%", overflow: "hidden", position: "absolute", flexDirection: "column", width: "100%" }} >
       <div style={{ display: 'flex', height: "82px", overflow: "hidden" }} id="Header">
         <DashboardNavbar />
-        <div style={{ height: "34px", overflow: "hidden", width: "100%", backgroundColor: "rgb(98, 142, 184)", position: "relative", top: "48px", boxShadow: "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)" }}>
+        <div style={{ height: "34px", overflow: "hidden", width: "100%", backgroundColor: "rgb(98, 142, 184)", position: "fixed", top: "48px", boxShadow: "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)" }}>
           <div id="miniMenu" style={{ display: '-webkit-box', alignItems: "center" }}>
             <div id="HideMenu" >
               <Tooltip title={!drawerOpen ? "Показать панель рабочих мест" : "Скрыть панель рабочих мест"} >
@@ -71,7 +71,7 @@ export default function WrapperRightSide() {
             <div id="HiddenNav" style= {drawerOpen ? {display: 'none'}: {display: 'flex'}} >
               <HiddenNavButton />
             </div>
-            <div id="NameSection" style={{ color: "azure", paddingTop: "5px", fontFamily: "Roboto,Helvetica,Arial, sans-serif", fontWeight: "500", fontSize: "0.8125rem" }}>
+            <div id="NameSection" style={{ color: "azure", paddingTop: "6px", fontFamily: "Roboto,Helvetica,Arial, sans-serif", fontWeight: "500", fontSize: "1rem" }}>
             </div>
           </div>
         </div>

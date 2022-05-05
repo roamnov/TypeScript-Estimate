@@ -40,11 +40,7 @@ export default function SideBarButton(props){
       CLSID = event.currentTarget.getAttribute("clsid");
       // console.log(Name, ID, CLSID)
       setAnchorEl(null);
-      props.setSelected({
-        "Name": Name,
-        "ID": ID,
-        "CLSID": CLSID
-      })
+      props.setSelected(event)
     }
 
   
@@ -148,7 +144,7 @@ export default function SideBarButton(props){
 
       return(
           <Grid >
-          <Button size="small" onClick={handleClick} variant="text" style={{textTransform:"none", color:"white"}}>
+          <Button size="small" onClick={handleClick} variant="text" style={{textTransform:"none", color:"white",paddingTop: "6px"}}>
               Выбрать
             </Button>
             <Menu open={open} onClose={handleClose} anchorEl={anchorEl}>

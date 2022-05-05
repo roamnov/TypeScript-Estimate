@@ -58,8 +58,16 @@ export default function SideBar(props: MainBoxBackClick) {
   let e = 0;//event 
 
   useEffect(()=>{
+   /* let state = { 
+      state: 
+       {
+        id: selectedButton ? selectedButton["ID"] : "", 
+        clsic: selectedButton ? selectedButton["CLSID"] :"", 
+        name: selectedButton ? selectedButton["Name"] : ""
+       }
+    }*/
     if(selectedButton !== undefined){
-      props.setSelected({ id: selectedButton["ID"], clsic: selectedButton["CLSID"], name: selectedButton["Name"] })  
+      updateSelected(selectedButton)  
     }
   },[selectedButton])
 
@@ -112,17 +120,21 @@ export default function SideBar(props: MainBoxBackClick) {
 
   const updateSelected = (event: any) => {
     let ID, CLSID, Name, Patch, img
+   
     if (event.title){
       ID = event.id;
       CLSID = event.CLSID
       Name = event.title
       Patch = event.Patch
     }else if (!event.state) {
-      ID = event.currentTarget.getAttribute("id");
+      let el = event.currentTarget;
+      if (!el)
+      el = event.target.parentNode
+      ID = el.getAttribute("id");
       CLSID = GetElementAttributeByID(ID, data, "CLSID")
-      Name = event.currentTarget["innerText"]
-      Patch = event.currentTarget["title"]? event.currentTarget["title"]+'/'+ Name:Name
-      img = event.currentTarget.querySelector("img").src
+      Name = el["innerText"]
+      Patch = el["title"]? el["title"]+'/'+ Name:Name
+      img = el.querySelector("img").src
       let dataState = {
         id: ID,
         title: Name,
@@ -137,7 +149,13 @@ export default function SideBar(props: MainBoxBackClick) {
     else {
       ID = event.state.id;
       CLSID = event.state.CLSID
+      if (event.state.title)
       Name = event.state.title
+      else
+      {Name = event.state.name
+        
+      }
+
     }
 
     setSelected(ID);
