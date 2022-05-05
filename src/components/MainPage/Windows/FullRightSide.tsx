@@ -34,16 +34,17 @@ export default function FullRightSide(props: InfoAboutClick) {
     console.log(openReportData);
     if(!isEmptyObject(openReportData)){
       pringReportsDoc = document.getElementById(`print_reports${props.id}`);
-      // pringReportsDoc.querySelectorAll('.ActivParams').forEach((n: { classList: { remove: (arg0: string) => void; add: (arg0: string) => void; }; }) => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+      pringReportsDoc.querySelectorAll('.ActivParams').forEach((n: { classList: { remove: (arg0: string) => void; add: (arg0: string) => void; }; }) => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
       let arrOfReportId = openReportData.ViewIdent.split("-");
-      // let newReportWindow = document.createElement("div");
+      let newReportWindow = document.createElement("div");
       arrOfReportId = arrOfReportId[0].split("Report")
-      // newReportWindow.classList.add("ActivParams");
-      // newReportWindow.id = "print_reports" + props.id + "_" + arrOfReportId[1];
-      // newReportWindow.innerHTML = openReportData.Items[0].content;
-      // pringReportsDoc.appendChild(newReportWindow);
+      newReportWindow.classList.add("Params");
+      newReportWindow.classList.add("ActivParams");
+      newReportWindow.id = "print_reports" + props.id + "_" + arrOfReportId[1];
+      newReportWindow.innerHTML = openReportData.Items[0].content;
+      pringReportsDoc.appendChild(newReportWindow);
       // ReactDOM.render(<div id='test1'> </div>,pringReportsDoc)
-      pringReportsDoc.innerHTML = openReportData.Items[0].content;
+      // pringReportsDoc.innerHTML = openReportData.Items[0].content;
       if(openReportData.Tools !== undefined){
         let buttonFromReport:any
         buttonFromReport = document.getElementById(`buttons_for_section`+props.id);
@@ -59,7 +60,7 @@ export default function FullRightSide(props: InfoAboutClick) {
         buttonFromReport.appendChild(newReportButton);
         ReactDOM.render(
           <Grid item>    
-              <Tooltip  title={Button.Hint} arrow>
+              <Tooltip  title={Button.Hint + Button.ID +"-"+ report[1] +"-"+ secid[1]} arrow>
                       <IconButton id={ID}  color='primary'  component="span"   >
                           {ImgURL(Button.Image)}
                       </IconButton>
