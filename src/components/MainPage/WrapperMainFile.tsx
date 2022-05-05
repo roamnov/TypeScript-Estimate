@@ -68,11 +68,10 @@ export default function WrapperRightSide() {
                 </IconButton>
               </Tooltip>
             </div>
-            <div id="HiddenNav" style= {drawerOpen ? {display: 'none'}: {display: ''}} >
+            <div id="HiddenNav" style= {drawerOpen ? {display: 'none'}: {display: 'flex'}} >
               <HiddenNavButton />
             </div>
-            <div id="NameSection" style={{ color: "azure" }}>
-
+            <div id="NameSection" style={{ color: "azure", paddingTop: "5px", fontFamily: "Roboto,Helvetica,Arial, sans-serif", fontWeight: "500", fontSize: "0.8125rem" }}>
             </div>
           </div>
         </div>

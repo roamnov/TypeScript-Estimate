@@ -111,11 +111,7 @@ export default function SideBar(props: MainBoxBackClick) {
   };
 
   const updateSelected = (event: any) => {
-    let ID
-    let CLSID
-    let Name
-    let Patch
-    let img
+    let ID, CLSID, Name, Patch, img
     if (event.title){
       ID = event.id;
       CLSID = event.CLSID
