@@ -229,6 +229,9 @@ export function  tokenProcessingTest (json, func){
             case "GetDirectory":
                 EmptyRequest(RequestID);
                 break;
+            case "OutPutText":
+                
+                break;
                 
         }
 

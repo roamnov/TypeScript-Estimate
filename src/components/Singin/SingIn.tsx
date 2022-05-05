@@ -1,4 +1,4 @@
-import  {  useState } from "react";
+import  {  useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
@@ -21,61 +21,23 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 import URL from "../Url";
 import ModalSignIn from "./SignInWithCryptoPRO/ModalSignIn";
+import { isEmptyObject } from "../MainPage/Tools/Tools";
 // import {TestPlug} from "./core"
 
-const VERSIONS_JSON_URL = 'http://stimate.krista.ru/workspaceex/config.json';
-const WORKSPACE_REQUEST_TYPE = "workspace-request";
+
 const WORKSPACE_RESPONSE_TYPE = "workspace-response";
-const IMG_OK = "images/ok.png";
-const IMG_WARNING = "images/warning.png";
-const IMG_ERROR = "images/error.png";
 
-
-
-var CmsDettachedUID:any;
-var CheckedCryptoUID:any;
-var VersionUID:any;
-var PluginVerUID:any;
-var CertUID:any;
 var CertUIDAsXML:any;
-var scanUid:any;
-var mySerialNumber:any;
+var Secret:any
 
 
 
 var workspaceConfig:any;
 workspaceConfig = null
 
+  
 
-window.addEventListener("message", (messageEvent) => {
-  if (WORKSPACE_RESPONSE_TYPE == messageEvent.data.type) {
-      var response = messageEvent.data;
-      var JSX
-      let json
-      switch (response.requestId) {
-        
-          case CertUIDAsXML:// УСПЕХ
-              if(response.successful === false){
-                JSX = <SignInDialog title={"Ошибка"} contentText={response.result}/>
-              }else{
-                // JSX = <SignInDialog title={"Успешно"} contentText={response.result}/>
-                let params = new Map;
-                let LoginData = {
-                  "Pkcs7Auth-Answer":{
-                    "Answer":response.result
-                  }
-                };
-                params.set("comand", "answer");
-                json =XMLrequest(params, LoginData);
-                JSX = <ModalSignIn data={json} />
-              } 
-              ReactDOM.render(JSX,document.getElementById('renderSignIn'))
-              
-              break;
-      };
 
-  }
-}, false);
 
 
 
@@ -91,14 +53,57 @@ const SignIn = () => {
   const [workplace, setWorkPlace] = useState("");
   const [password, setPassword] = useState();
   const [open, setOpen] = useState(false);
-  const [secret, setSecret] = useState("");
+  const [secret, setSecret] = useState<any>({});
   
   var CERTS_XML_KEY = "certList";
+
+  useEffect(()=>{
+    if( isEmptyObject(secret) ===false){
+      const AppName = secret["AppName"];
+      CreateCokies("drx",AppName === undefined? drx:AppName )
+      navigate("main");
+    }
+    
+  },[secret])
+
+  useEffect(()=>{
+    window.addEventListener("message", (messageEvent) => {
+      if (WORKSPACE_RESPONSE_TYPE == messageEvent.data.type) {
+          var response = messageEvent.data;
+          var JSX
+          let json
+          switch (response.requestId) {
+            
+              case CertUIDAsXML:// УСПЕХ
+                  if(response.successful === false){
+                    JSX = <SignInDialog title={"Ошибка"} contentText={response.result}/>
+                  }else{
+                    // JSX = <SignInDialog title={"Успешно"} contentText={response.result}/>
+                    let params = new Map;
+                    let LoginData = {
+                      "Pkcs7Auth-Answer":{
+                        "Answer":response.result
+                      }
+                    };
+                    params.set("comand", "answer");
+                    json =XMLrequest(params, LoginData);
+                    JSX = <ModalSignIn data={json} secret={Secret} keyFromSelect={response.result}  setSecret={setSecret}/>
+                  } 
+                  ReactDOM.render(JSX,document.getElementById('renderSignIn'))
+                  
+                  break;
+          };
+    
+      }
+    }, false);
+    
+  },[])
 
   function executeCertListAsXML() {
     let params= new Map, json:any
     params.set("comand","secret")
     json = XMLrequest(params);
+    Secret = json["Pkcs7Auth-Secret"].Secret;
     CertUIDAsXML = uuid()    
     sendRequest(
         {
@@ -114,6 +119,7 @@ const SignIn = () => {
         });
     
   }
+
 
  
 
@@ -133,10 +139,10 @@ const SignIn = () => {
 
   //const ThemeContext = React.createContext('light');
 
-  const GoToMain =(jsonEnter: any)=>{
+  const GoToMain =(jsonEnter: any, LL?:any)=>{
     const AppName = jsonEnter["AppName"];
     CreateCokies("drx",AppName === undefined? drx:AppName )
-    CreateCokies("LastLogin", jsonEnter);
+    CreateCokies("LastLogin", LL)
     navigate("main");
   }
 
@@ -187,7 +193,7 @@ const SignIn = () => {
       if (IP !="")
       params.set('IP', IP);
       rest = XMLrequest(params,  LoginData);
-      rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain(rest)
+      rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain(rest,LoginLast)
     }
   }
 
@@ -217,7 +223,7 @@ const SignIn = () => {
     if (IP !="")
     params.set('IP', IP);
     rest = XMLrequest(params,  LoginData);
-    rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain(rest)
+    rest["error"]!== undefined? CheckAnswerFromServer(rest["error"]["Item"]): GoToMain(rest, LoginLast)
     //let res = AxiosRequest(params, "post",LoginData)
     //res.then((responce)=>{console.log(responce)})
     /*
