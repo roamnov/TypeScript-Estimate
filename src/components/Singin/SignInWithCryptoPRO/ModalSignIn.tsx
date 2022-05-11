@@ -16,6 +16,9 @@ import Draggable from 'react-draggable';
 import Paper from "@mui/material/Paper"
 import  Typography  from '@mui/material/Typography';
 import { isEmptyObject } from '../../MainPage/Tools/Tools';
+import { CreateCokies, XMLrequest } from '../../Url';
+import DialogContainer from '../../Containers/DialogContainer';
+import ReactDOM from 'react-dom';
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -35,11 +38,49 @@ const Transition = React.forwardRef(function Transition(
   }
 
 export default function ModalSignIn(props:any){
+    
     const [open, setOpen] = useState(true);
     const [data, setData] = useState<any>(props.data);
     const [drx, setDrx] = useState();
     const [workplace, setWorkPlace] = useState();
+    const [error, setError] = useState<string | null>("");
 
+    function CheckAnswerFromServer(answer?: Object) {
+      let errorInside: string;
+      let element = document.getElementById('renderSignIn')
+      setOpen(false)
+      switch (answer) {
+        case "ConfigName":
+          ReactDOM.render(<DialogContainer title={"Ошибка"} contentText={`Файл подключения ${drx} не найден.`}/>,element );
+          break;
+        case "UserName":
+          ReactDOM.render(<DialogContainer title={"Ошибка"} contentText={`Пользователь в системе не зарегистрирован.`}/>,element );
+          break;
+        case "Password":
+          ReactDOM.render(<DialogContainer title={"Ошибка"} contentText={`Пароль неверный.`}/>,element );
+          break;
+      }
+
+    }
+
+    const Navigate =(jsonEnter: any)=>{
+      props.setSecret(jsonEnter);
+      setOpen(false);
+    }
+
+    function handleEnter(){
+      let params = new Map;
+      let json,postData;
+      params.set("comand", "enter")
+      postData={
+        ConfigName:drx,
+        Workplace:workplace,
+        Username:props.secret,
+        Password:props.keyFromSelect
+      }
+      json = XMLrequest(params,postData )
+      json["error"]!== undefined? CheckAnswerFromServer(json["error"]["Item"]):Navigate(json) 
+    }
 
     function isEmptyReturn(){
       if(isEmptyObject(props.data["Pkcs7Auth-Result"])){
@@ -73,8 +114,8 @@ export default function ModalSignIn(props:any){
                   </Grid>
               </DialogContent>
               <DialogActions>
-                  <Button size="small" variant="outlined" style={{textTransform:"none"}} onClick={handleClose}>Войти</Button>
                   <Button size="small" variant="outlined" style={{textTransform:"none"}} onClick={handleClose} >Отмена</Button>
+                  <Button size="small" variant="outlined" style={{textTransform:"none"}} onClick={handleEnter}>Войти</Button>
               </DialogActions>
             </>
         )

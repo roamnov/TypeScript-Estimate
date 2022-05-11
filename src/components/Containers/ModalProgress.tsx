@@ -96,7 +96,7 @@ function ChildModal(Path:any, bool:boolean) {
 
 
 
-export default function ModalProgress(props:ModalProgressProps) {
+export default function   ModalProgress(props:ModalProgressProps) {
   const [open, setOpen] = React.useState(true);
   const [activeStep, setActiveStep] = React.useState(0);
   const [count, setCount] = React.useState<number>(0);
@@ -215,8 +215,9 @@ export default function ModalProgress(props:ModalProgressProps) {
         EmptyRequest(RequestID);
       }else if(Token === "ClearOutPut"){
         EmptyRequest(RequestID);
-      }
-      else{
+      }else if(Token === "OutPutText"){
+        EmptyRequest(RequestID);
+      }else{
         tokenProcessingTest(json, props.setReturnValue);
       }
     }else{

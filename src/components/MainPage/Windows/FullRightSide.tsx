@@ -61,7 +61,7 @@ export default function FullRightSide(props: InfoAboutClick) {
         ReactDOM.render(
           <Grid item>    
               <Tooltip  title={Button.Hint + Button.ID +"-"+ report[1] +"-"+ secid[1]} arrow>
-                      <IconButton id={ID}  color='primary'  component="span"   >
+                      <IconButton id={ID}  color='primary'  component="span" onClick={reportsHandleToolButton}   >
                           {ImgURL(Button.Image)}
                       </IconButton>
               </Tooltip>

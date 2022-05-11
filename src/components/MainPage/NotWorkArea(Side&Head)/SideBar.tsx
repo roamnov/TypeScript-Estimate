@@ -18,6 +18,8 @@ import { Button, Grid, IconButton, ListItem, ListItemSecondaryAction, Menu, Typo
 import {SetStateNav} from './HiddenNav'
 import SideBarButton from "./SideBarButton";
 import ReactDOM from "react-dom";
+import { isEmptyObject } from "../Tools/Tools";
+import { useNavigate } from "react-router-dom";
 const defaultDrawerWidth = window.innerWidth / 100 * 16.791045;
 const minDrawerWidth = 1;
 const maxDrawerWidth = 400;
@@ -45,6 +47,7 @@ const StyledList = styled(List)({
 
 export default function SideBar(props: MainBoxBackClick) {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [drawerOpen, setdrawerOpen] = useState(true)
   const [data, setData] = useState([]);
@@ -180,9 +183,15 @@ export default function SideBar(props: MainBoxBackClick) {
     params.set('full', '1');
     params.set(`png`, `1`);
     json = XMLrequest(params)
-    setData(json["Sections"]);
-    ListItems(json["Sections"]);
-    props.isLoading(false);
+    if(isEmptyObject(json)){
+      CreateCokies("LicG", "");
+      navigate("/")
+    }else{
+      setData(json["Sections"]);
+      ListItems(json["Sections"]);
+      props.isLoading(false);
+    }
+    
 
 
   }
