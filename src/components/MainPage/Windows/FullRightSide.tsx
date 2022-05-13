@@ -74,28 +74,36 @@ export default function FullRightSide(props: InfoAboutClick) {
         ReactDOM.render(
               <Grid item>    
                   <Tabs scrollMode="paging" id={id+"tabs"} closeButtons tabPosition="bottom" className="Tabs" selectedIndex={0} style={{ height: "calc(100% - 37px)", width: "100%" }} >
-                  <Grid item style={{textTransform:"none",display:"inline-block", height: currentHeight}}>
+                    <Grid id={"upper"+props.id} item style={{textTransform:"none",display:"inline-block", height: "inherit", width: "100%"}}>
                       <TabItem id={id+"item"} style={{textTransform:"none",display:"inline-block", height: currentHeight}} label={openReportData.Items[0].Title} content={openReportData.Items[0].content} >
-                        <Grid item style={{textTransform:"none",display:"inline-block", height: currentHeight}}>
-                          
                         
-                        </Grid>
+                        
                       </TabItem>
-                      </Grid> 
+                    </Grid> 
                   </Tabs>
               </Grid>
               ,newReportWindow);
-              
+    
+        setTimeout(() => {
+          let tab:any
+          tab = document.getElementById(id+"item");
+          tab.style.height= `${currentHeight}px`        
+        }, 100);
+        
+            
       }else{
         if(!isEmptyObject(tabItems)){
-          for (const [key, value] of Object.entries(tabItems[id])) {
+          
+          let tabs:any, valueAny:any
+          tabs = document.getElementById(id+"tabs");
+          tabs.insert(1, { label: openReportData.Items[0].Title, content:openReportData.Items[0].content });
+          let tabsItems = tabs.getTabs();
+          for (const [key, value] of Object.entries(tabsItems)) {
+            valueAny= value;
+            valueAny.style.display = "inline-block"
+            valueAny.style.height= `${currentHeight}px`  ;
             console.log(value)
           }
-          let tabs:any
-          tabs = document.getElementById(id+"tabs");
-          tabs.insert(1, { label: openReportData.Items[0].Title, content: openReportData.Items[0].content , id: "tesstas" });
-          let test = tabs.getTabs();
-          console.log(test)
         }
       }
       
@@ -127,19 +135,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     }
   },[openReportData])
 
-  function ReturnTabs(id:string){
-    if(!isEmptyObject(tabItems)){
-      let returnTabs= [], valueFor:any
-      for (const [key, value] of Object.entries(tabItems[id])) {
-        returnTabs.push(
-          <TabItem id={id+key} style={{textTransform:"none"}} label={<>{valueFor.label}</>}>
-
-          </TabItem>
-        )
-      }
-      return returnTabs
-    }
-  }
+  
 
 
   async function reportsHandleToolButton(event:any){//reports~HandleToolButton?LicGUID=B921C12049AC58E14F039A983633FE8E&ID=117&ReportID=453&SectionID=108&ViewIdent=Report453-Section108&WSM=1 
