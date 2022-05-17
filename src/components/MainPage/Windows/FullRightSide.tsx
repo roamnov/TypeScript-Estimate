@@ -54,8 +54,8 @@ export default function FullRightSide(props: InfoAboutClick) {
       let arrOfReportId = openReportData.ViewIdent.split("-");
       arrOfReportId = arrOfReportId[0].split("Report")
       const id = "print_reports" + props.id + "_" + arrOfReportId[1]
-      console.log(document.getElementById(id));
-      console.log(tabItems)
+      // console.log(document.getElementById(id));
+      // console.log(tabItems)
       if(document.getElementById(id) === null){
         let newReportWindow = document.createElement("div");
         pringReportsDoc = document.getElementById(`print_reports${props.id}`);
@@ -85,24 +85,32 @@ export default function FullRightSide(props: InfoAboutClick) {
               ,newReportWindow);
     
         setTimeout(() => {
-          let tab:any
+          let tab:any, tabs:any;
           tab = document.getElementById(id+"item");
-          tab.style.height= `${currentHeight}px`        
+          tab.style.height= `${currentHeight}px`;
+          tabs = document.getElementById(id+"tabs");
+          console.log(tabs)
         }, 100);
         
             
       }else{
         if(!isEmptyObject(tabItems)){
           
-          let tabs:any, valueAny:any
+          let tabs:any, valueAny:any, tabsTabs:any, valueAnyTabs:any
           tabs = document.getElementById(id+"tabs");
           tabs.insert(1, { label: openReportData.Items[0].Title, content:openReportData.Items[0].content });
           let tabsItems = tabs.getTabs();
+          tabsTabs = document.getElementById(id+"tabs")
+          console.log(tabsTabs["_reorderItems"])
+          for (const [key, value] of Object.entries(tabsTabs["_reorderItems"])) {
+            valueAnyTabs = value;
+            console.log(value)
+          }
           for (const [key, value] of Object.entries(tabsItems)) {
             valueAny= value;
             valueAny.style.display = "inline-block"
             valueAny.style.height= `${currentHeight}px`  ;
-            console.log(value)
+            // console.log(value)
           }
         }
       }
