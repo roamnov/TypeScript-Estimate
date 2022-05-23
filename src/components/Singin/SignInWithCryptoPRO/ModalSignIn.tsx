@@ -40,10 +40,10 @@ const Transition = React.forwardRef(function Transition(
 export default function ModalSignIn(props:any){
     
     const [open, setOpen] = useState(true);
-    const [data, setData] = useState<any>(props.data);
     const [drx, setDrx] = useState();
     const [workplace, setWorkPlace] = useState();
     const [error, setError] = useState<string | null>("");
+    const [IP, setIP] = useState<string>("");
 
     function CheckAnswerFromServer(answer?: Object) {
       let errorInside: string;
@@ -59,31 +59,37 @@ export default function ModalSignIn(props:any){
         case "Password":
           ReactDOM.render(<DialogContainer title={"Ошибка"} contentText={`Пароль неверный.`}/>,element );
           break;
+        }
+
       }
 
-    }
 
     const Navigate =(jsonEnter: any)=>{
       props.setSecret(jsonEnter);
       setOpen(false);
     }
+    console.log(props.data["Pkcs7Auth-Result"])
 
     function handleEnter(){
       let params = new Map;
       let json,postData;
-      params.set("comand", "enter")
+      params.set("comand", "enter");
+      if(IP!== undefined && IP !== "" ){
+        params.set("IP", IP);
+      }
       postData={
         ConfigName:drx,
         Workplace:workplace,
         Username:props.secret,
-        Password:props.keyFromSelect
+        Password:props.keyFromSelect,
+        Ticket: props.data["Pkcs7Auth-Result"].Ticket
       }
       json = XMLrequest(params,postData )
       json["error"]!== undefined? CheckAnswerFromServer(json["error"]["Item"]):Navigate(json) 
     }
 
     function isEmptyReturn(){
-      if(isEmptyObject(props.data["Pkcs7Auth-Result"])){
+      if(props.data["Pkcs7Auth-Result"].Result.length === 0 ){
         return(<>
           <DialogTitle id="alert-dialog-title">
                   Параметры подключения
@@ -110,7 +116,7 @@ export default function ModalSignIn(props:any){
               <DialogContent style={{paddingTop:"10px"}}>
                   <Grid  container  direction="column" justifyContent="space-around"    alignItems="stretch" spacing={3} sx={{pt:0}}>  
                       <SelectDrxModal json={props.data["Pkcs7Auth-Result"].Result} setBackInfo={setDrx}/>
-                      <SelectWorkPlaceModal json={props.data["Pkcs7Auth-Result"].Result} drx={drx} setBackInfo={setWorkPlace} /> 
+                      <SelectWorkPlaceModal json={props.data["Pkcs7Auth-Result"].Result} drx={drx} setBackInfo={setWorkPlace}  setServer={setIP} /> 
                   </Grid>
               </DialogContent>
               <DialogActions>

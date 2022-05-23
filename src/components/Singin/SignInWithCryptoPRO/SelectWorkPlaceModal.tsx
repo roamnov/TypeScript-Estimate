@@ -46,6 +46,7 @@ const SelectWorkPlaceModal = (props:any) => {
     for (const [key, value] of Object.entries(WPList)) {
       name = value;
       if(name.Name === props.drx){
+        props.setServer(name.Server)
         for (const [key, value] of Object.entries(name.Workplace)) {
             array.push(value)
         }

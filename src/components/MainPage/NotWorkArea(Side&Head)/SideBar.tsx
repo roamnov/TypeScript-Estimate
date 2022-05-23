@@ -359,7 +359,6 @@ export default function SideBar(props: MainBoxBackClick) {
       
     }
   }
-  let buttonDragger = (<div className={classes.buttonDragger} >{drawerOpen ? (<ArrowLeftIcon style={{ fontSize: "1rem" }} id={"01001"} onClick={drawerClick} />) : (<ArrowRightIcon style={{ fontSize: "1rem" }} id={"01001"} onClick={drawerClick} />)} </div>)
   window.onpopstate = updateSelected;
   return (
     <>

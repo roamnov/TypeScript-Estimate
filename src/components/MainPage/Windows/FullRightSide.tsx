@@ -46,16 +46,10 @@ export default function FullRightSide(props: InfoAboutClick) {
   let pringReportsDoc:any
 
   React.useEffect(()=>{
-    console.log(openReportData);
-    
     if(!isEmptyObject(openReportData)){
-      
-      
       let arrOfReportId = openReportData.ViewIdent.split("-");
       arrOfReportId = arrOfReportId[0].split("Report")
       const id = "print_reports" + props.id + "_" + arrOfReportId[1]
-      // console.log(document.getElementById(id));
-      // console.log(tabItems)
       if(document.getElementById(id) === null){
         let newReportWindow = document.createElement("div");
         pringReportsDoc = document.getElementById(`print_reports${props.id}`);
@@ -72,8 +66,8 @@ export default function FullRightSide(props: InfoAboutClick) {
         })
         
         ReactDOM.render(
-              <Grid item>    
-                  <Tabs scrollMode="paging" id={id+"tabs"} closeButtons tabPosition="bottom" className="Tabs" selectedIndex={0} style={{ height: "calc(100% - 37px)", width: "100%" }} >
+              <Grid item >    
+                  <Tabs selectionMode="dblclick" scrollMode="paging" id={id+"tabs"} closeButtons tabPosition="bottom" className="Tabs" selectedIndex={0} style={{ height: "calc(100% - 37px)", width: "100%" }} >
                     <Grid id={"upper"+props.id} item style={{textTransform:"none",display:"inline-block", height: "inherit", width: "100%"}}>
                       <TabItem id={id+"item"} style={{textTransform:"none",display:"inline-block", height: currentHeight}} label={openReportData.Items[0].Title} content={openReportData.Items[0].content} >
                         
@@ -85,26 +79,59 @@ export default function FullRightSide(props: InfoAboutClick) {
               ,newReportWindow);
     
         setTimeout(() => {
-          let tab:any, tabs:any;
+          let tab:any, tabs:any, tabsTabs:any;
           tab = document.getElementById(id+"item");
           tab.style.height= `${currentHeight}px`;
           tabs = document.getElementById(id+"tabs");
-          console.log(tabs)
+          tabsTabs = document.getElementById(id+"tabs");
+          
+          let passT =tabsTabs["_reorderItems"]
+          let PinButtonContainer = document.createElement("div");
+          PinButtonContainer.style.height ="10px"
+          PinButtonContainer.style.width = "10px"
+          PinButtonContainer.style.position = "absolute"
+          PinButtonContainer.style.left = "2%"
+          PinButtonContainer.style.top="29%"
+          PinButtonContainer.id = id+"Button";
+          passT[0].firstChild.appendChild(PinButtonContainer);
+          ReactDOM.render(
+            <IconButton id={"0"} style={{width: 10, height:10, fontSize:"small"}} onClick={()=>{Pinned(id)}}>
+              NP
+            </IconButton>
+          ,PinButtonContainer);
         }, 100);
-        
-            
+
       }else{
         if(!isEmptyObject(tabItems)){
           
-          let tabs:any, valueAny:any, tabsTabs:any, valueAnyTabs:any
+          let tabs:any, valueAny:any, tabsTabs:any, valueAnyTabs:any, tabItemsNew:any;
           tabs = document.getElementById(id+"tabs");
-          tabs.insert(1, { label: openReportData.Items[0].Title, content:openReportData.Items[0].content });
           let tabsItems = tabs.getTabs();
-          tabsTabs = document.getElementById(id+"tabs")
-          console.log(tabsTabs["_reorderItems"])
+          tabItemsNew = tabItems[id];
+          tabs.insert(1, { label: openReportData.Items[0].Title, content:openReportData.Items[0].content });
+          tabsTabs = document.getElementById(id+"tabs");
+          // console.log(tabsItems)
+          
           for (const [key, value] of Object.entries(tabsTabs["_reorderItems"])) {
             valueAnyTabs = value;
-            console.log(value)
+            // console.log(valueAnyTabs.firstChild.children["2"])
+            if(valueAnyTabs.firstChild.children["2"] === undefined){
+              let PinButtonContainer = document.createElement("div");
+              PinButtonContainer.style.height ="10px"
+              PinButtonContainer.style.width = "10px"
+              PinButtonContainer.style.position = "absolute"
+              PinButtonContainer.style.left = "2%"
+              PinButtonContainer.style.top="29%"
+              PinButtonContainer.id = id+"Button";
+              valueAnyTabs.firstChild.appendChild(PinButtonContainer);
+              // console.log(tabItems[id][key]["pinned"] , key)
+              ReactDOM.render(
+                <IconButton style={{width: 10, height:10, fontSize:"small"}}>
+                  NP
+                </IconButton>
+              ,PinButtonContainer);
+          }
+
           }
           for (const [key, value] of Object.entries(tabsItems)) {
             valueAny= value;
@@ -144,6 +171,17 @@ export default function FullRightSide(props: InfoAboutClick) {
   },[openReportData])
 
   
+  function Pinned(id:any){
+    let AllTabs:any
+    AllTabs = document.getElementById(id+"tabs");
+    console.log(AllTabs["_tabs"])
+    for (const [key, value] of Object.entries(AllTabs["_tabs"])) {
+      if(tabItems[key].pinned === false){
+        console.log(key)
+      }
+    }
+    
+  }
 
 
   async function reportsHandleToolButton(event:any){//reports~HandleToolButton?LicGUID=B921C12049AC58E14F039A983633FE8E&ID=117&ReportID=453&SectionID=108&ViewIdent=Report453-Section108&WSM=1 
