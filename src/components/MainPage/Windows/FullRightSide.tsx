@@ -24,10 +24,11 @@ import Scrollbars from 'react-custom-scrollbars-2';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
-
+  var PinItems:any
   const [value, setValue] = React.useState(0);
   const [openReportData, setOpenReportData] = React.useState<any>({});
   const [tabItems, SetTabItems] = React.useState<any>({})
+  const [firsPin,setFirstPin] = React.useState(false);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -64,7 +65,12 @@ export default function FullRightSide(props: InfoAboutClick) {
           "pinned":false
           }]
         })
-        
+        PinItems = {[id]:[{
+          "label":openReportData.Items[0].Title,
+          "pinned":false,
+          "i":"0"
+          }]
+        }
         ReactDOM.render(
               <Grid item >    
                   <Tabs selectionMode="dblclick" scrollMode="paging" id={id+"tabs"} closeButtons tabPosition="bottom" className="Tabs" selectedIndex={0} style={{ height: "calc(100% - 37px)", width: "100%" }} >
@@ -84,7 +90,7 @@ export default function FullRightSide(props: InfoAboutClick) {
           tab.style.height= `${currentHeight}px`;
           tabs = document.getElementById(id+"tabs");
           tabsTabs = document.getElementById(id+"tabs");
-          
+          let idEl = "0"
           let passT =tabsTabs["_reorderItems"]
           let PinButtonContainer = document.createElement("div");
           PinButtonContainer.style.height ="10px"
@@ -94,9 +100,10 @@ export default function FullRightSide(props: InfoAboutClick) {
           PinButtonContainer.style.top="29%"
           PinButtonContainer.id = id+"Button";
           passT[0].firstChild.appendChild(PinButtonContainer);
+          console.log(PinItems[id][idEl].pinned)
           ReactDOM.render(
-            <IconButton id={"0"} style={{width: 10, height:10, fontSize:"small"}} onClick={()=>{Pinned(id)}}>
-              NP
+            <IconButton id={idEl+ ","+ id} style={{width: 10, height:10, fontSize:"small"}} onClick={PinnedFirst}>
+              {PinItems[id][idEl].pinned === true?<>P</>:<>N</>}
             </IconButton>
           ,PinButtonContainer);
         }, 100);
@@ -171,16 +178,44 @@ export default function FullRightSide(props: InfoAboutClick) {
   },[openReportData])
 
   
-  function Pinned(id:any){
+  function PinnedFirst(event:any){
     let AllTabs:any
-    AllTabs = document.getElementById(id+"tabs");
-    console.log(AllTabs["_tabs"])
+    let NewTabs:any
+    let arrEvent = event.currentTarget.getAttribute("id").split(",");
+    let id = arrEvent[0]
+    let sectionKey = arrEvent[1]
+    AllTabs = document.getElementById(sectionKey+"tabs");
+    // console.log(PinItems)
+    // console.log(PinItems[id])
+    NewTabs = {[sectionKey]:[
+
+    ]}
     for (const [key, value] of Object.entries(AllTabs["_tabs"])) {
-      if(tabItems[key].pinned === false){
-        console.log(key)
+      if(key === id){
+        NewTabs[sectionKey].push(
+          {
+            "label":PinItems[sectionKey][key].label,
+            "pinned": !PinItems[sectionKey][key].pinned,
+            "i":id
+          }
+        )
+      }else{
+        NewTabs[sectionKey].push(
+          {
+            "label":PinItems[sectionKey][key].label,
+            "pinned": PinItems[sectionKey][key].pinned,
+            "i":id
+          }
+        )
       }
     }
-    
+    console.log(event.target.parentElement)
+    PinItems = NewTabs;
+    ReactDOM.render(
+      <IconButton id={arrEvent} style={{width: 10, height:10, fontSize:"small"}} onClick={PinnedFirst}>
+        {PinItems[sectionKey][id].pinned === true?<>P</>:<>N</>}
+      </IconButton>
+    ,event.target.parentElement);
   }
 
 
