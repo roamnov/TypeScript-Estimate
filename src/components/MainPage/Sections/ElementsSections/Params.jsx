@@ -67,7 +67,10 @@ export default function Params(props) {
         }
         XMLrequest(params)
     }
-    function onDropDownList (el) {
+    function SendValueParam() {
+
+    }
+    function onDropDownList(el) {
         let res = new Map();
         let params = new Map();
         params.set('prefix', 'programs');
@@ -75,24 +78,22 @@ export default function Params(props) {
         params.set('ID', el.dataId);
         params.set('Path', props.data.Path);
         let otv = XMLrequest(params).Items
-        for (let i = 0; i<=otv.length - 1; i = i + 1)
-        {
+        for (let i = 0; i <= otv.length - 1; i = i + 1) {
             let item = otv[i];
-            if (item.id)
-            {
-                res.set(otv[i].id, otv[i].text) 
+            if (item.id) {
+                res.set(otv[i].id, otv[i].text)
             }
             else
-            res.set(i, otv[i]) 
+                res.set(i, otv[i])
         }
-      /*  for (var key in otv) {
-            //if (otv.hasOwnProperty(key)) {
-              if (otv[key].id)
-              res.set(otv[key].id, otv[key].text)
-              else
-              res.set(0, otv[key])
-            
-          }*/
+        /*  for (var key in otv) {
+              //if (otv.hasOwnProperty(key)) {
+                if (otv[key].id)
+                res.set(otv[key].id, otv[key].text)
+                else
+                res.set(0, otv[key])
+              
+            }*/
         return res
     }
     function CreateNameParams() {
@@ -142,6 +143,52 @@ export default function Params(props) {
         let p = <>{display.map((i) => { return i })}</>
         return p
     }
+    function onEdit(ev, TextChanged) {
+        let el
+        if (ev.type == "change") {
+            el = ev.currentTarget
+        }
+        else {
+            el = ev;
+            TextChanged = 0
+        }
+        if (el) {
+            let val
+            val = el.dataset.value;
+            let params = new Map();
+            params.set('prefix', 'programs');
+            params.set('comand', 'SetParamProperty');
+            params.set('ID', el.dataId);
+            params.set('Path', el.dataPath);
+            if (TextChanged)
+                params.set('TextChanged', "1")
+            else
+                params.set('TextChanged', "0")
+            params.set('WSM', "1");
+            params.set('Value', val);
+            if (el.dataset.checkstate)
+                params.set('CheckState', el.dataset.checkstate)
+            if (el.dataset.objref)
+                params.set('ObjRef', el.dataset.objref);
+            let otv = XMLrequest(params);
+            if (otv) {
+                el.value = otv.Values[0].Value;
+                el.setAttribute("data-objref", otv.Values[0].ObjRef)
+                el.setAttribute("data-id", otv.Values[0].ID)
+                el.setAttribute("data-editval", otv.Values[0].EditVal)
+                let params = new Map();
+                params.set('prefix', 'reports');
+                params.set('comand', 'GetReportParams');
+                params.set('ReportID', props.id);
+                params.set('SectionID', props.SectionID);
+                params.set('NeedRefresh', 1);
+                let data = XMLrequest(params);
+                SetData(data.Items)
+
+            }
+
+        }
+    }
     return (
         <Split className="wrap" sizes={[50, 50]}>
             <Box>{CreateNameParams()}</Box>
@@ -159,17 +206,16 @@ export default function Params(props) {
                             EditVal={item.EditVal}
                             SectionID={props.SectionID}
                             setdata={SetData}
-                            onDropDownList = {onDropDownList}
+                            onDropDownList={onDropDownList}
+                            onEdit={onEdit}
                             ReportID={props.id}
-                            CheckState = {item.CheckState}
-                            MultiCheckSet = {item.MultiCheckSet}
-                            Type = "ParamItem"
+                            CheckState={item.CheckState}
+                            MultiCheckSet={item.MultiCheckSet}
+                            Type="ParamItem"
                         />
                     </Box>
                 })}
-
             </Box>
         </Split>
-
     )
 }

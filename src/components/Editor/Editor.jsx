@@ -115,8 +115,15 @@ export default function Editor(props) {
   function SelectCheckState(e) {
     let btn = e.currentTarget;
     let CheckState = btn.dataset.checkstate;
+    let parent = document.getElementById(btn.getAttribute("for"))
     let Check = document.getElementById(btn.dataset.checkid)
-    Check.style.backgroundImage = SelectBackgroundCheck(CheckState)
+    let selectCheckState = SelectBackgroundCheck(CheckState)
+    Check.style.backgroundImage = selectCheckState
+    if (parent)
+    {
+      parent.setAttribute("data-checkState", CheckState)
+    }
+    EnterValue(parent)
     handlePopoverClose()
   }
 
@@ -322,12 +329,13 @@ export default function Editor(props) {
   }
   function CreateList(items, parent) {
     function CloseList(ev) {
-      let p = ev.currentTarget;
-      let list = document.getElementById("mouse-over-popover-list");
-      const withinBoundaries = ev.composedPath().includes(list);
+      let p
+      if (ev) p = ev.currentTarget;
+     // let list = document.getElementById("mouse-over-popover-list");
+     // const withinBoundaries = ev.composedPath().includes(list);
       if (!p)
         p = document.getElementById("mouse-over-popover")
-      if (!withinBoundaries)
+      if (p)
         p.remove()
     }
     function ClickItemList(ev) {
@@ -402,7 +410,7 @@ export default function Editor(props) {
           paddingLeft: "0px", marginTop: "0px"
         }}>
           <input placeholder="Поиск ..." role="searchbox" aria-label="Поиск ..." smart-id="filterInput" onKeyUp={(ev) => FindItems(ev)} /></div></Box>}
-      <List style={{ maxHeight: 200-top + "px", width: width - 2 + "px", top: top + "px" }} >
+      <List style={{ maxHeight: 200 - top + "px", width: width - 2 + "px", top: top + "px" }} >
         {it.map((item) => { return item })}
       </List></Box>
     let background = document.createElement("div")
@@ -429,47 +437,8 @@ export default function Editor(props) {
   if (props.list) {
     list = props.list.split(',')
   }
-  function EnterValue(ev) {
-    let el = ev.keyCode
-    if (el) {
-      if (ev.keyCode == 13)
-        el = ev.currentTarget
-    }
-    else
-      el = ev;
-    if (el) {
-      let val
-      val = el.dataset.value;
-      let params = new Map();
-      if (el.dataType === "ParamItem") {
-        params.set('prefix', 'programs');
-        params.set('comand', 'SetParamProperty');
-        params.set('ID', el.dataId);
-        params.set('Path', el.dataPath);
-        params.set('TextChanged', "1");
-        params.set('WSM', "1");
-        params.set('Value', val);
-        params.set('CheckState', 0);
-        params.set('ObjRef', el.dataObjref);
-        let otv = XMLrequest(params);
-        if (otv) {
-          el.value = otv.Values[0].Value;
-          el.setAttribute("data-objref", otv.Values[0].ObjRef)
-          el.setAttribute("data-id", otv.Values[0].ID)
-          el.setAttribute("data-editval", otv.Values[0].EditVal)
-          let params = new Map();
-          params.set('prefix', 'reports');
-          params.set('comand', 'GetReportParams');
-          params.set('ReportID', props.ReportID);
-          params.set('SectionID', props.SectionID);
-          params.set('NeedRefresh', 1);
-          let data = XMLrequest(params);
-          if (props.setdata) {
-            props.setdata(data.Items)
-          }
-        }
-      }
-    }
+  function EnterValue(ev, TextChanged) {
+    props.onEdit(ev, TextChanged)
   }
   function EditFocus(e) {
     let el = e.currentTarget;
@@ -531,7 +500,8 @@ export default function Editor(props) {
   }
   DropList = props.EditStyle & EditStyle_Calendar ? <Box data-id={props.id} style={{ position: "relative", width: "100%", ...props.style }}>
     <Input style={{ width: "100%", height: "100%", borderRadius: "0px", borderRightWidth: "0px", borderTopWidth: "0px", borderLeftWidth: "0px", borderColor: "black" }} type="date" value={props.value}
-      onKeyDown={(ev) => EnterValue(ev)}
+      onChange={(ev) => props.onEdit(ev)}
+
       id={EditID}
       data-id={props.id}
       data-path={props.Path}
@@ -543,7 +513,7 @@ export default function Editor(props) {
     <Box className='basic-single css-b62m3t-container' data-id={props.id} data-sectionid={props.sectionid} style={{ position: "relative", width: "100%", ...props.style }} >
       <Box>
         {props.mask ?
-          <MaskedTextBox id={EditID} data-id={props.id} onKeyDown={(ev) => EnterValue(ev)} style={{ height: props.style.height, padding: "0px", width: "100%", paddingRight: p, paddingLeft: lp, borderRadius: "0px", borderRightWidth: "0px", borderTopWidth: "0px", borderLeftWidth: "0px", borderColor: "black" }} value={props.caption ? props.caption : props.value ? props.value : ""} mask={props.mask} /> :
+          <MaskedTextBox id={EditID} data-id={props.id} onChange={(ev) => props.onEdit(ev)} style={{ height: props.style.height, padding: "0px", width: "100%", paddingRight: p, paddingLeft: lp, borderRadius: "0px", borderRightWidth: "0px", borderTopWidth: "0px", borderLeftWidth: "0px", borderColor: "black" }} value={props.caption ? props.caption : props.value ? props.value : ""} mask={props.mask} /> :
           <Input data-path={props.Path}
             id={EditID}
             data-id={props.id}
@@ -551,9 +521,10 @@ export default function Editor(props) {
             data-editval={props.EditVal}
             data-sectionid={props.SectionID}
             data-checkstate={props.CheckState}
-            onKeyDown={(ev) => EnterValue(ev)}
+            //  onKeyDown={(ev) => EnterValue(ev)}
             data-type={props.Type}
             onClick={(e) => EditFocus(e)}
+            onChange={(ev) => props.onEdit(ev, 1)}
             onBlur={(e) => SetValueEdit(e)}
             value={props.caption ? props.caption : props.value ? props.value : ""}
             data-value={props.caption ? props.caption : props.value ? props.value : ""}
