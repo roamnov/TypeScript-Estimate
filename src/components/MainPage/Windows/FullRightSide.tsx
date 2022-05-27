@@ -106,7 +106,7 @@ function RunTabsReports(){
           PinButtonContainer.style.height ="10px"
           PinButtonContainer.style.width = "10px"
           PinButtonContainer.style.position = "absolute"
-          PinButtonContainer.style.left = "2%"
+          PinButtonContainer.style.left = "1%"
           PinButtonContainer.style.top="22%"
           PinButtonContainer.id = id+"Button0";
           passT[0].firstChild.appendChild(PinButtonContainer);
@@ -140,15 +140,15 @@ function RunTabsReports(){
               }
               
               tabs.insert(tabsItems.length + 1, { label: openReportData.Items[0].Title, content:openReportData.Items[0].content });// встроеный метод добавления вкладки
-              
-              for (const [key, value] of Object.entries(tabsTabs["_tabLabelContainers"])) {
+              tabs.select(tabsItems.length + 1)
+              for (const [key, value] of Object.entries(tabs["_tabLabelContainers"])) {
                 valueAnyTabs = value;
                 if(valueAnyTabs.firstChild.children["2"] === undefined){// Есть ли кнопка для пина? Нет - добавляем. 
                   let PinButtonContainer = document.createElement("div");
                   PinButtonContainer.style.height ="10px"
                   PinButtonContainer.style.width = "10px"
                   PinButtonContainer.style.position = "absolute"
-                  PinButtonContainer.style.left = "2%"
+                  PinButtonContainer.style.left = "1%"
                   PinButtonContainer.style.top="22%"
                   PinButtonContainer.id = id+"Button";
                   valueAnyTabs.firstChild.appendChild(PinButtonContainer);
@@ -159,19 +159,23 @@ function RunTabsReports(){
                   ,PinButtonContainer);
                 
               }
-  
+              let keyAny:any
               for (const [key, value] of Object.entries(tabsItems)) {// стили для содержимого вкладки, ибо высота не правильно определяется
                 valueAny= value;
+                keyAny = key
                 valueAny.style.display = "inline-block"
-                valueAny.style.height= `${currentHeight}px`  ;
+                console.log(typeof(key))
+                if(keyAny !== "0") valueAny.style.height= `${currentHeight-17}px`;
+                
                 }
               }
             }else{// если нужно обновить вкладку 
               let IdButton:any, indexWhereUpdate:any
-              for (const [key, value] of Object.entries(tabsTabs["_tabLabelContainers"])) {
+              for (const [key, value] of Object.entries(tabs["_tabLabelContainers"])) {
                 valueAnyTabs = value;
                 IdButton =valueAnyTabs.firstChild.children["2"].children["0"].id.split(",") // ID кнопки во вкладке, будет проверять в какую вкладку вставить новый отчёт.
-                if(!IdButton[2]){
+                IdButton = IdButton[2] ==="true"? true:false
+                if(!IdButton){
                   indexWhereUpdate = key
                 }
               }
@@ -221,7 +225,6 @@ function RunTabsReports(){
         if(buttonValue){
           counter +=1;
         }
-        console.log(buttonValue, counter,"=" ,length)
       }
       return length === counter?true:false; 
     }
@@ -343,12 +346,11 @@ function RunTabsReports(){
 
   let content
   let defaultButton
-  if (props.id !== undefined && props.clsic == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}") {
+  if (props.id !== undefined && props.clsic == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}") {// Просмотр данных
 
     content = <SectionsDBview  CLSID = {props.clsic} id = {props.id}/>
   } else
-  if (props.id !== undefined && props.clsic =="{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}")
-  {
+  if (props.id !== undefined && props.clsic =="{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}"){//Секция Документов/отчётов
     defaultButton = <Tooltip title="Сформировать отчет" >
         <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{textTransform:"none", marginLeft:"0.88%"}}>
             Выполнить
@@ -361,8 +363,7 @@ function RunTabsReports(){
     content = <FormsMainFile id = {props.id}/>
 
   } else
-  if(props.id !== undefined && props.clsic =="{B357E5B2-137F-4253-BBEF-E5CFD697E362}")
-  {
+  if(props.id !== undefined && props.clsic =="{B357E5B2-137F-4253-BBEF-E5CFD697E362}"){// Секция отчётов
      defaultButton = <Tooltip title="Сформировать отчет" >
         <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{textTransform:"none", marginLeft:"0.88%"}}>
             Выполнить
@@ -370,8 +371,7 @@ function RunTabsReports(){
     </Tooltip>
     content = <SectionReport CLSID = {props.clsic} id = {props.id} defaultButton = {defaultButton} SectionToolsJS={true} />
   }
-  else
-    if (props.id !== undefined) {
+  else if (props.id !== undefined) {
       content = <StillDevelopmentPage  id = {props.id}/>
     }
 
