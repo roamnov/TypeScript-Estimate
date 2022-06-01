@@ -10,6 +10,7 @@ import SectionsDBview from '../Sections/dbview';
 import SectionsReportDocuments from '../Sections/ReportDocuments';
 import StickyFooter from '../NotWorkArea(Side&Head)/Footer';
 import StillDevelopmentPage from './StillDevelopmentPage';
+import MultiPageSection from '../Sections/MultiPageSection/MultiPageSection'
 import { ImgURL, XMLrequest, } from '../../Url';
 import URL from '../../Url';
 import SectionReport from '../Sections/ElementsSections/SectionReports'
@@ -370,6 +371,10 @@ function RunTabsReports(){
         </Button>
     </Tooltip>
     content = <SectionReport CLSID = {props.clsic} id = {props.id} defaultButton = {defaultButton} SectionToolsJS={true} />
+  }
+  if(props.id !== undefined && props.clsic =="{353FD9D7-651E-4840-9319-A8578806C496}")
+  {
+    content = <MultiPageSection id = {props.id}/>
   }
   else if (props.id !== undefined) {
       content = <StillDevelopmentPage  id = {props.id}/>
