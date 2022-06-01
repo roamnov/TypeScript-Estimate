@@ -37604,8 +37604,7 @@ function StyleSmartWebcomponents()
             margin-right: 5px;
             margin-right: var(--smart-tab-item-offset);
             position: relative;
-            text-transform: uppercase;
-            text-transform: var(--smart-tab-item-text-transform)
+
         }
 
         .smart-tabs .smart-tab-label-container[selected],

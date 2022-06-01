@@ -22,18 +22,19 @@ import {tokenProcessingTest} from "../../TokenProcessing"
 import IconButton from '@mui/material/IconButton';
 import axios from 'axios';
 import Scrollbars from 'react-custom-scrollbars-2';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LockIcon from '@mui/icons-material/Lock';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
 
   const [value, setValue] = React.useState(0);
   const [openReportData, setOpenReportData] = React.useState<any>({});
-  const [tabItems, SetTabItems] = React.useState<any>({})
-  const [currentTabIndex,setCurrentTabIndex] = React.useState<any>(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
-  var PinItems:any
+  var GlobalId:any
+  var ViewIdentObj:any
   
   const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight - 295);
     
@@ -46,23 +47,40 @@ export default function FullRightSide(props: InfoAboutClick) {
   }, []);
 
   let pringReportsDoc:any
-function RunTabsReports(){
-      if(!isEmptyObject(openReportData)){// проверка на пустой ли объект
+
+  function RenderReports(){
+    if(!isEmptyObject(openReportData)){// проверка на пустой ли объект
       let arrOfReportId = openReportData.ViewIdent.split("-");// переменная для того что бы получить id отчёта
       arrOfReportId = arrOfReportId[0].split("Report")
       const id = "print_reports" + props.id + "_" + arrOfReportId[1]//создаем id для последующего его использования. id = выбранный отчёт в tree
       let idTabs:any =document.getElementById(id+"tabs")//получаем основной блок табов, мб мы его уже рисовали
       let tabsLength = idTabs === null? 1: idTabs["_tabs"].length// определяем длинну
-      
-      if(document.getElementById(id) === null || tabsLength === 0){// если длинна равна 0(уже создавали табы) или мы не создавали еще контейнер для вкладок который потом будет скрывать
+      let ViewIdentForButton:any ={ViewIdent:openReportData.ViewIdent+".", items:[]} 
+      let JSXTabItems=[]
+      GlobalId = id;
+      if(openReportData.Items){
+        let ValueAny:any
+        for(const[key,value] of Object.entries(openReportData.Items)){
+          ValueAny = value;
+          ViewIdentForButton.items.push(ValueAny.ViewIdent)
+          JSXTabItems.push(
+            <TabItem id={ViewIdentForButton.ViewIdent+ViewIdentForButton.items[key]} style={{textTransform:"none",display:"inline-block", height: currentHeight}} 
+              label={ValueAny.Title} content={ValueAny.content?ValueAny.content:"<div></div>"}>
+                 
+            </TabItem>
+          )
+        }
+      }
+      ViewIdentObj = ViewIdentForButton
+
+      if(document.getElementById(id) === null || tabsLength === 0 || openReportData.Items){// если длинна равна 0(уже создавали табы) или мы не создавали еще контейнер для вкладок который потом будет скрывать
         let newReportWindow:any// в ней у нас хранится блок для секции дерева
+        let TabIndex = openReportData.TabIndex;
         pringReportsDoc = document.getElementById(`print_reports${props.id}`);//ищем блок СЕКЦИИ
+        TabIndex = TabIndex===undefined?0:Number(TabIndex)
+        newReportWindow = document.getElementById(id);// получаем блок
 
-
-        if(tabsLength === 0){// если уже создавали вкладку
-          newReportWindow = document.getElementById(id);// получаем блок
-          idTabs.insert(0, { label: openReportData.Items[0].Title, content:openReportData.Items[0].content });// встроеный метод добавления вкладки
-        }else{// первая раз
+        if(newReportWindow === null){// если уже создавали вкладку
           pringReportsDoc.querySelectorAll('.ActivParams').forEach((n: { classList:{ 
             remove: (arg0: string) => void; add: (arg0: string) => void; }; 
           }) => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
@@ -71,207 +89,169 @@ function RunTabsReports(){
           newReportWindow.classList.add("ActivParams");
           newReportWindow.id = id;
           pringReportsDoc.appendChild(newReportWindow);
-          SetTabItems({[id]:[{
-            "label":openReportData.Items[0].Title,
-            "pinned":false,
-            "i":"0"
-            }]
-          })
-  
-          ReactDOM.render(
-            <Grid item  id={id+"tabsContainer"}>    
-                <Tabs selectionMode="dblclick" scrollMode="paging" id={id+"tabs"} closeButtons tabPosition="bottom" className="Tabs" selectedIndex={0} style={{ height: "calc(100% - 37px)", width: "100%" }} onChange={OnIndexChange}>
-                  <Grid id={"upper"+props.id} item style={{textTransform:"none",display:"inline-block", height: "inherit", width: "100%"}}>
-                    <TabItem id={id+"item"} style={{textTransform:"none",display:"inline-block", height: currentHeight}} label={openReportData.Items[0].Title} content={openReportData.Items[0].content} >
-                      
-                      
-                    </TabItem>
-                  </Grid> 
-                </Tabs>
-            </Grid>
-            ,newReportWindow);
         }
-        
-        
-    
-        setTimeout(() => {// с задержкой, что бы установить стили и кнопку поставить
-          let tab:any, tabs:any, tabsTabs:any;
-          tabsTabs = document.getElementById(id+"tabs");// получаем блок вкладок
-          tab = tabsTabs.getTabs()["0"];// мы знаем что у нас только одна вкладка её и берем из array 
-          tab.style.height= `${currentHeight}px`;// даём высоту 
-          tab.style.textTransform = "none"
-          tab.style.display="inline-block"
-          let idEl = "0"
-          let passT =tabsTabs["_tabLabelContainers"]
-          let PinButtonContainer = document.createElement("div");// создаем контейнер для кнопки
-          PinButtonContainer.style.height ="10px"
-          PinButtonContainer.style.width = "10px"
-          PinButtonContainer.style.position = "absolute"
-          PinButtonContainer.style.left = "1%"
-          PinButtonContainer.style.top="22%"
-          PinButtonContainer.id = id+"Button0";
-          passT[0].firstChild.appendChild(PinButtonContainer);
-          ReactDOM.render(
-            <IconButton id={idEl+ ","+ id + ",false,first"} style={{width: 10, height:10, fontSize:"small"}}  onClick={PinnedFirst}>
-                n
-            </IconButton>
-          ,PinButtonContainer);
-        }, 100);
-  
-      }else{
-
-        if(!isEmptyObject(tabItems)){
-          // При переключении удаляются все элементы, они должны быть хидден но они удаляются исправь
-          let tabs:any, valueAny:any, tabsTabs:any, valueAnyTabs:any, tabItemsNew:any, newPinItems:any, idEL:any;
-          tabs = document.getElementById(id+"tabs");// получаем главый блок с вкладками, через него потом найдет контейнер Label 
-          let tabsItems = tabs.getTabs();// через встроенный метод получаем все вкладки, для получения их количества через .length т.к. это Array 
-          let FirstButtonParent:any = document.getElementById(id+"Button0");// это для того что бы перерендерить первую кнопку.
-          const DidFirstButtonExisting = FirstButtonParent.firstChild.id.split(",")// переменная для будущей проверки
-          ShouldAddNewTab(tabs["_tabLabelContainers"]).then((res)=>{//проверка на можно ли добавить новую вкладку вернет true/false 
-            console.log(res)
-            if(res){// если новую всё таки можно добавить 
-              idEL = tabsItems.length + 1;
-              
-              if(DidFirstButtonExisting[3]=== "first"){//нади ли перерендерить кнопку?
-                  ReactDOM.render(
-                  <IconButton id={"0,"+id +",true"} style={{width: 10, height:10, fontSize:"small"}} onClick={Pinned}>
-                    p
-                  </IconButton>
-                ,FirstButtonParent);
+        if(tabsLength===0){
+          idTabs.insert(0, { label: openReportData.Items[0].Title, content:openReportData.Items[0].content });
+        }else{
+          newReportWindow = document.getElementById(id);
+          if(openReportData.Items && idTabs !== null){
+            let ValueAny:any
+            for(const[key,value] of Object.entries(openReportData.Items)){
+              ValueAny = value;
+              if(idTabs["_tabs"][key] === undefined){
+                idTabs.insert(Number(key), { label: ValueAny.Title, content:ValueAny.content?ValueAny.content:"<div></div>" });
+              }else{
+                idTabs.update(Number(key), ValueAny.Title, ValueAny.content?ValueAny.content:"<div></div>")
               }
-              
-              tabs.insert(tabsItems.length + 1, { label: openReportData.Items[0].Title, content:openReportData.Items[0].content });// встроеный метод добавления вкладки
-              tabs.select(tabsItems.length + 1)
-              for (const [key, value] of Object.entries(tabs["_tabLabelContainers"])) {
-                valueAnyTabs = value;
-                if(valueAnyTabs.firstChild.children["2"] === undefined){// Есть ли кнопка для пина? Нет - добавляем. 
-                  let PinButtonContainer = document.createElement("div");
-                  PinButtonContainer.style.height ="10px"
-                  PinButtonContainer.style.width = "10px"
-                  PinButtonContainer.style.position = "absolute"
-                  PinButtonContainer.style.left = "1%"
-                  PinButtonContainer.style.top="22%"
-                  PinButtonContainer.id = id+"Button";
-                  valueAnyTabs.firstChild.appendChild(PinButtonContainer);
-                  ReactDOM.render(
-                    <IconButton id={`${key},`+id+",false"} style={{width: 10, height:10, fontSize:"small"}} onClick={Pinned}>
-                      n
-                    </IconButton>
-                  ,PinButtonContainer);
-                
-              }
-              let keyAny:any
-              for (const [key, value] of Object.entries(tabsItems)) {// стили для содержимого вкладки, ибо высота не правильно определяется
-                valueAny= value;
-                keyAny = key
-                valueAny.style.display = "inline-block"
-                console.log(typeof(key))
-                if(keyAny !== "0") valueAny.style.height= `${currentHeight-17}px`;
-                
-                }
-              }
-            }else{// если нужно обновить вкладку 
-              let IdButton:any, indexWhereUpdate:any
-              for (const [key, value] of Object.entries(tabs["_tabLabelContainers"])) {
-                valueAnyTabs = value;
-                IdButton =valueAnyTabs.firstChild.children["2"].children["0"].id.split(",") // ID кнопки во вкладке, будет проверять в какую вкладку вставить новый отчёт.
-                IdButton = IdButton[2] ==="true"? true:false
-                if(!IdButton){
-                  indexWhereUpdate = key
-                }
-              }
-              tabs.update(indexWhereUpdate, openReportData.Items[0].Title, openReportData.Items[0].content );// встроенный метод обновления вкладки по индкесу
+              idTabs.select(TabIndex)
             }
-          })
-
-          
+          }else{
+            ReactDOM.render(
+              <Grid item  id={id+"tabsContainer"}>    
+                  <Tabs  selectionMode="dblclick" scrollMode="paging" id={id+"tabs"} 
+                    closeButtons tabPosition="bottom" className="Tabs"  selectedIndex={TabIndex}
+                    style={{ height: "400px", width: "100%" }} onChange={OnIndexChange} onClosing={handleClosing} onClose={onCloseTab}>
+    
+                      {JSXTabItems}
+              
+                  </Tabs>
+              </Grid>
+            ,newReportWindow);
+          }
         }
-      }
-      
-      // ReactDOM.render(<div id='test1'> </div>,pringReportsDoc)
-      // pringReportsDoc.innerHTML = openReportData.Items[0].content;
-      if(openReportData.Tools !== undefined){
-        let buttonFromReport:any
-        buttonFromReport = document.getElementById(`buttons_for_section`+props.id);
-        buttonFromReport.querySelectorAll('.ActivParams').forEach((n: { classList: { remove: (arg0: string) => void; add: (arg0: string) => void; }; }) => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
-        let newReportButton = document.createElement("div");
-        let Button = openReportData.Tools.Buttons[0]
-        let report = Button.ViewIdent.split("-");
-        report = report[0].split("Report");
-        let secid = Button.ViewIdent.split("Section");
-        let ID = Button.ID +"-"+ report[1] +"-"+ secid[1]
-        newReportButton.classList.add("ActivParams");//NoActivButtons
-        newReportButton.id = "button_report_token" + props.id + "_" + arrOfReportId[1];
-        buttonFromReport.appendChild(newReportButton);
-        ReactDOM.render(
-          <Grid item>    
-              <Tooltip  title={Button.Hint + Button.ID +"-"+ report[1] +"-"+ secid[1]} arrow>
-                      <IconButton id={ID}  color='primary'  component="span" onClick={reportsHandleToolButton}   >
-                          {ImgURL(Button.Image)}
-                      </IconButton>
-              </Tooltip>
-          </Grid>
-          ,newReportButton)
-      }
-    }
-    }
+        
 
-    async function ShouldAddNewTab(tabsLabels:any){
-      let length= tabsLabels.length;
-      let counter= 0, valueAny:any, buttonValue;
-      for(const [key,value] of Object.entries(tabsLabels)){
-        valueAny= value;
-        buttonValue = valueAny.firstChild.children["2"].firstChild.id.split(",")
-        buttonValue = buttonValue[2] ==="true"? true:false
-        if(buttonValue){
-          counter +=1;
-        }
+        setTimeout(() => {// с задержкой, что бы установить стили и кнопку поставить
+          let tab:any, tabs:any, valueStylingLabels:any, tabItems:any,valueAnyLabel:any, Fixed:any ;          
+          tabs = document.getElementById(id+"tabs");
+          if(tabs){ tabItems = tabs.getTabs();
+            for (const [key, value] of Object.entries(tabs["_tabLabelContainers"])) {
+              valueAnyLabel = value;
+              Fixed = openReportData.Items[key].Fixed;
+              Fixed = Fixed === "1"?true: false;
+              valueAnyLabel.firstChild.children["0"].style.marginLeft="17px" 
+              if(valueAnyLabel.firstChild.children["2"] === undefined){
+                let PinButtonContainer = document.createElement("div");// создаем контейнер для кнопки
+                PinButtonContainer.style.height ="10px";
+                PinButtonContainer.style.width = "10px";
+                PinButtonContainer.style.position = "absolute";
+                PinButtonContainer.style.left = "3.2%";
+                PinButtonContainer.style.top="22%";
+                PinButtonContainer.id = id+",ButtonFixUp"+key;
+                valueAnyLabel.firstChild.appendChild(PinButtonContainer);
+                let idForBttn= ViewIdentForButton.ViewIdent +ViewIdentForButton.items[key];
+                ReactDOM.render(
+                  <IconButton id={idForBttn+","+Fixed+","+ key} style={{width: 10, height:10, fontSize:"small"}}  onClick={FixUpTabPage}>
+                      {Fixed === true?<LockIcon fontSize='small'/>:<LockOpenIcon fontSize='small'/>}
+                  </IconButton>
+                ,PinButtonContainer);
+              }
+            }
+            for(const[key,value] of Object.entries(tabItems)){
+              tab = value
+              tab.style.height= `${currentHeight}px`;// даём высоту 
+              tab.style.display="inline-block"
+            }
+           }
+          }, 50);
+  
       }
-      return length === counter?true:false; 
     }
+  }
 
-  function OnIndexChange(event:any){
-    setCurrentTabIndex(event.detail.index);
+
+
+  function FixUpTabPage(event:any){//GET /reptabs~FixupTabPage?LicGUID=31CDFD96401AD8BDBB6C2BB22C8E8150&Fixed=1&ViewIdent=Report453-Section108.{E31774C7-0524-4A9C-9BF7-708D4FDC05AB}
+    let params = new Map
+    let arrEvent = event.currentTarget.getAttribute("id").split(",")
+    let TrueOrFalse =arrEvent[1] ==="true"? true:false
+    let ViewIdent =arrEvent[0]
+    const key = arrEvent[2]
+    TrueOrFalse = !TrueOrFalse;
+    params.set('prefix', 'reptabs');
+    params.set("comand", "FixupTabPage");
+    params.set("Fixed",TrueOrFalse?"1":"0");
+    params.set("ViewIdent",ViewIdent);
+    XMLrequest(params);
+    ReactDOM.render(
+      <IconButton id={ViewIdent+","+`${TrueOrFalse}`+","+ key} style={{width: 10, height:10, fontSize:"small"}} onClick={FixUpTabPage}>
+        {TrueOrFalse === true?<LockIcon fontSize='small'/>:<LockOpenIcon fontSize='small'/>}
+      </IconButton>
+    ,document.getElementById(GlobalId+",ButtonFixUp"+key));
+    
+  }
+
+  function OnIndexChange(event:any){//GET /reptabs~GetPageContent?LicGUID=dsds&ViewIdent=Report453-Section108.{1013B2D8-A827-412C-8D67-A0FC930D5F26}&HTML=0
+    let Tabs:any, EventTabContent:string,EventTabLabel:any, ViewIdent:any, json:any= {}, params:any = new Map
+    const index = event.detail.index
+    Tabs = document.getElementById(GlobalId+"tabs");
+    EventTabContent = Tabs.getTabContent(index);
+    ViewIdent = ViewIdentObj.ViewIdent + ViewIdentObj.items[index]
+    if(EventTabContent ==="<div></div>"){
+      let paramsGetPageContent = new Map;
+      EventTabLabel = Tabs.getTabLabel(index);
+      paramsGetPageContent.set('prefix', 'reptabs');
+      paramsGetPageContent.set("comand", "GetPageContent");
+      paramsGetPageContent.set("ViewIdent",ViewIdent);
+      paramsGetPageContent.set("HTML","1");
+      json = XMLrequest(paramsGetPageContent)
+      Tabs.update(index, EventTabLabel, json.content)
+    }else{
+      params.set('prefix', 'reptabs');
+      params.set("comand", "PageChanged");
+      params.set("ViewIdent",ViewIdent);
+      XMLrequest(params);
+    }
+  }
+
+  function onCloseTab(event:any){
+    const index = event.detail.index
+    let tabs:any, tabContent:any, tabLabel:any, params = new Map, json:any
+    tabs = document.getElementById(GlobalId+"tabs");// получаем блок вкладок
+    if(index>0){
+      tabContent = tabs.getTabContent(index-1);
+      const ViewIdent =ViewIdentObj.ViewIdent + ViewIdentObj.items[index-1]  //arrTabs[index].id
+      if(tabContent === "<div></div>"){
+        params.set('prefix', 'reptabs');
+        params.set("comand", "GetPageContent");
+        params.set("ViewIdent",ViewIdent);
+        params.set("HTML","1");
+        tabLabel = tabs.getTabLabel(index-1);
+        json = XMLrequest(params);
+        tabs.update(index-1, tabLabel, json.content)
+      }
+    }
+  }
+
+  function handleClosing(event:any) {
+    
+    let params = new Map
+    const detail = event.detail,
+    index = detail.index;
+    const ViewIdent =ViewIdentObj.ViewIdent + ViewIdentObj.items[index]  //arrTabs[index].id    
+    ViewIdentObj.items.splice(index);
+    params.set('prefix', 'reptabs');
+    params.set("comand", "CloseTabPage");
+    params.set("ViewIdent",ViewIdent);
+    XMLrequest(params);
   }
 
   React.useEffect(()=>{
     
-    RunTabsReports();
+    // RunTabsReports();
+    try{
+        RenderReports();
+    }catch(err){
+      console.log(err)
+    }
+    
 
     
   },[openReportData])
 
   
 
-  function PinnedFirst(event:any){
-    console.log("Pinned1")
-    let arrEvent = event.currentTarget.getAttribute("id").split(",");
-    let id = arrEvent[0]
-    let sectionKey =  arrEvent[1]
-    let TrueOrFalse = arrEvent[2] ==="true"? true:false
-    TrueOrFalse = !TrueOrFalse;
-    
-    ReactDOM.render(
-      <IconButton id={`${id},`+ sectionKey+`,${TrueOrFalse}`} style={{width: 10, height:10, fontSize:"small"}} onClick={PinnedFirst}>
-        {TrueOrFalse === true?<>p</>:<>n</>}
-      </IconButton>
-    ,event.target.parentElement);
-  }
-
-  function Pinned(event:any){
-    console.log("Pinned2")
-    let arrEvent = event.currentTarget.getAttribute("id").split(",");
-    let id = arrEvent[0]
-    let sectionKey = arrEvent[1]
-    let TrueOrFalse =arrEvent[2] ==="true"? true:false
-    TrueOrFalse = !TrueOrFalse;    
-    ReactDOM.render(
-      <IconButton id={`${id},`+ sectionKey+`,${TrueOrFalse}`} style={{width: 10, height:10, fontSize:"small"}} onClick={Pinned}>
-        {TrueOrFalse === true?<>p</>:<>n</>}
-      </IconButton>
-    ,event.target.parentElement);
-  }
-
+ 
   
 
   async function reportsHandleToolButton(event:any){//reports~HandleToolButton?LicGUID=B921C12049AC58E14F039A983633FE8E&ID=117&ReportID=453&SectionID=108&ViewIdent=Report453-Section108&WSM=1 
@@ -357,7 +337,7 @@ function RunTabsReports(){
             Выполнить
         </Button>
     </Tooltip>
-    content = <SectionsReportDocuments  CLSID = {props.clsic} id = {props.id} defaultButton = {defaultButton}/>
+    content = <SectionsReportDocuments  CLSID = {props.clsic} id = {props.id} defaultButton = {defaultButton} />
   }
   else
   if(props.id !== undefined && props.clsic ==="{C0CED968-8834-405D-8801-A3838BF536F3}"){//Формы
@@ -371,9 +351,7 @@ function RunTabsReports(){
         </Button>
     </Tooltip>
     content = <SectionReport CLSID = {props.clsic} id = {props.id} defaultButton = {defaultButton} SectionToolsJS={true} />
-  }
-  if(props.id !== undefined && props.clsic =="{353FD9D7-651E-4840-9319-A8578806C496}")
-  {
+  }else if(props.id !== undefined && props.clsic =="{353FD9D7-651E-4840-9319-A8578806C496}"){
     content = <MultiPageSection id = {props.id}/>
   }
   else if (props.id !== undefined) {
