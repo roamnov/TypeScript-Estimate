@@ -124,12 +124,14 @@ export default function FullRightSide(props: InfoAboutClick) {
         setTimeout(() => {// с задержкой, что бы установить стили и кнопку поставить
           let tab:any, tabs:any, valueStylingLabels:any, tabItems:any,valueAnyLabel:any, Fixed:any ;          
           tabs = document.getElementById(id+"tabs");
-          if(tabs){ tabItems = tabs.getTabs();
+          if(tabs){ 
+            tabItems = tabs.getTabs();
             for (const [key, value] of Object.entries(tabs["_tabLabelContainers"])) {
               valueAnyLabel = value;
               Fixed = openReportData.Items[key].Fixed;
               Fixed = Fixed === "1"?true: false;
               valueAnyLabel.firstChild.children["0"].style.marginLeft="17px" 
+              valueAnyLabel.firstChild.id=openReportData.ViewIdent+"." + openReportData.Items[key].ViewIdent
               if(valueAnyLabel.firstChild.children["2"] === undefined){
                 let PinButtonContainer = document.createElement("div");// создаем контейнер для кнопки
                 PinButtonContainer.style.height ="10px";
@@ -182,11 +184,14 @@ export default function FullRightSide(props: InfoAboutClick) {
   }
 
   function OnIndexChange(event:any){//GET /reptabs~GetPageContent?LicGUID=dsds&ViewIdent=Report453-Section108.{1013B2D8-A827-412C-8D67-A0FC930D5F26}&HTML=0
-    let Tabs:any, EventTabContent:string,EventTabLabel:any, ViewIdent:any, json:any= {}, params:any = new Map
+    let Tabs:any, EventTabContent:string,EventTabLabel:any, ViewIdent:any, json:any= {}, params:any = new Map, tabsItem:any
     const index = event.detail.index
     Tabs = document.getElementById(GlobalId+"tabs");
     EventTabContent = Tabs.getTabContent(index);
-    ViewIdent = ViewIdentObj.ViewIdent + ViewIdentObj.items[index]
+    console.log(event)
+    tabsItem = Tabs.getTabs(); 
+    ViewIdent = document.getElementById(GlobalId+`,ButtonFixUp${index}`)
+    if(ViewIdent)ViewIdent = ViewIdent.children[0].id.split(",")[0]
     if(EventTabContent ==="<div></div>"){
       let paramsGetPageContent = new Map;
       EventTabLabel = Tabs.getTabLabel(index);
@@ -197,20 +202,23 @@ export default function FullRightSide(props: InfoAboutClick) {
       json = XMLrequest(paramsGetPageContent)
       Tabs.update(index, EventTabLabel, json.content)
     }else{
-      params.set('prefix', 'reptabs');
-      params.set("comand", "PageChanged");
-      params.set("ViewIdent",ViewIdent);
-      XMLrequest(params);
+      if(ViewIdent){
+        params.set('prefix', 'reptabs');
+        params.set("comand", "PageChanged");
+        params.set("ViewIdent",ViewIdent);
+        XMLrequest(params);
+      }
     }
   }
 
   function onCloseTab(event:any){
     const index = event.detail.index
-    let tabs:any, tabContent:any, tabLabel:any, params = new Map, json:any
+    let tabs:any, tabContent:any, tabLabel:any, params = new Map, json:any, ViewIdent:any
     tabs = document.getElementById(GlobalId+"tabs");// получаем блок вкладок
-    if(index>0){
+    if(index>0){// print_reports108_453,ButtonFixUp2
+      ViewIdent = document.getElementById(GlobalId+`,ButtonFixUp${index-1}`)
+      ViewIdent = ViewIdent.children[0].id.split(",")[0]
       tabContent = tabs.getTabContent(index-1);
-      const ViewIdent =ViewIdentObj.ViewIdent + ViewIdentObj.items[index-1]  //arrTabs[index].id
       if(tabContent === "<div></div>"){
         params.set('prefix', 'reptabs');
         params.set("comand", "GetPageContent");
@@ -224,32 +232,38 @@ export default function FullRightSide(props: InfoAboutClick) {
   }
 
   function handleClosing(event:any) {
-    
-    let params = new Map
+    let params = new Map, tabs:any, tabsItem:any, ViewIdent:any;
     const detail = event.detail,
     index = detail.index;
-    const ViewIdent =ViewIdentObj.ViewIdent + ViewIdentObj.items[index]  //arrTabs[index].id    
-    ViewIdentObj.items.splice(index);
+    tabs = document.getElementById(GlobalId+"tabs");// получаем блок вкладок
+    tabsItem = tabs.getTabs(); 
+    ViewIdent = event.explicitOriginalTarget.parentElement.id
     params.set('prefix', 'reptabs');
     params.set("comand", "CloseTabPage");
     params.set("ViewIdent",ViewIdent);
     XMLrequest(params);
   }
 
+  function onHeightChange(element:any){
+    console.log(element)
+  }
+
   React.useEffect(()=>{
-    
+
     // RunTabsReports();
     try{
         RenderReports();
     }catch(err){
       console.log(err)
     }
-    
-
-    
   },[openReportData])
 
-  
+  // React.useEffect(()=>{
+  //   let tabs:any = document.getElementById(GlobalId+"tabs");
+  //   if(tabs){
+  //     onHeightChange(tabs);
+  //   }
+  // },[currentHeight])
 
  
   
