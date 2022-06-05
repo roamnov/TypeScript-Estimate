@@ -30,6 +30,7 @@ export default function FullRightSide(props: InfoAboutClick) {
 
   const [value, setValue] = React.useState(0);
   const [openReportData, setOpenReportData] = React.useState<any>({});
+  const [globalIdHook,setGlobalIdHook] = React.useState<any>();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -245,7 +246,15 @@ export default function FullRightSide(props: InfoAboutClick) {
   }
 
   function onHeightChange(element:any){
-    console.log(element)
+    
+    let items:any = element.getTabs(), tab:any;
+    console.log(items)
+    let container:any = document.getElementById(`print_reports${props.id}`);//ищем блок СЕКЦИИ
+    for(const[key,value] of Object.entries(items)){
+      tab = value
+      tab.style.height= `${currentHeight}px`;// даём высоту 
+      tab.style.display="inline-block"
+    }
   }
 
   React.useEffect(()=>{
@@ -258,12 +267,19 @@ export default function FullRightSide(props: InfoAboutClick) {
     }
   },[openReportData])
 
-  // React.useEffect(()=>{
-  //   let tabs:any = document.getElementById(GlobalId+"tabs");
-  //   if(tabs){
-  //     onHeightChange(tabs);
-  //   }
-  // },[currentHeight])
+  React.useEffect(()=>{
+    let tabs:any = document.getElementById(GlobalId+"tabs");
+    if(!isEmptyObject(openReportData)){
+      let arrOfReportId = openReportData.ViewIdent.split("-");// переменная для того что бы получить id отчёта
+      arrOfReportId = arrOfReportId[0].split("Report")
+      const id = "print_reports" + props.id + "_" + arrOfReportId[1]//создаем id для последующего его использования. id = выбранный отчёт в tree
+      tabs = document.getElementById(id+"tabs");
+      if(tabs){
+        onHeightChange(tabs);
+      }
+    }
+    
+  },[currentHeight])
 
  
   

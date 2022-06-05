@@ -3,11 +3,13 @@ import SectionToolsJS from '../../Tools/SectionToolsJS';
 import Tree from '../../Windows/ViewData/Tree/tree';
 import Params from './Params'
 import { Scrollbars } from 'react-custom-scrollbars-2';
+import Grid from "@mui/material/Grid"
+
 export default function SectionReports(props) {
     return  <>
     {props.SectionToolsJS ? <SectionToolsJS ID={props.id} />: <></>}
     {props.defaultButton}
-    <Splitter style={{ height: "100%", width: "100%" }} id = {"ParamsFor_"+props.id}>
+    <Splitter style={{ height: "100%", width: "100%" }} id = {"ParamsFor_"+props.id} liveResize>
         <SplitterItem size="20%" collapsible id={"item_tree_params_reports_" + props.id} >
             <Splitter style={{ width: "100%" }} orientation="horizontal">
                 <SplitterItem size="30%" collapsible id={"item_tree_reports_" + props.id} style={{overflow: "hidden"}}>
@@ -20,9 +22,9 @@ export default function SectionReports(props) {
                 </SplitterItem>
             </Splitter>
         </SplitterItem>
-        <SplitterItem size="80%" collapsible id={"item_print_reports" + props.id} style={{width:"100%"}}>
+        <SplitterItem size="80%" collapsible id={"item_print_reports" + props.id} >
             <Scrollbars>
-                <div style={{width:"100%"}} id= {`print_reports${props.id}`}></div>
+                <Grid  id= {`print_reports${props.id}`}></Grid>
             </Scrollbars>
         </SplitterItem>
     </Splitter>
