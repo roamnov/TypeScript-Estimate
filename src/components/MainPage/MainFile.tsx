@@ -1,5 +1,5 @@
 import React from "react";
-import { LoginIn } from "../Wrapper";
+import { Theme } from "../Wrapper";
 import WrapperRightSide from "./WrapperMainFile";
 import { useNavigate, Navigate } from "react-router-dom";
 
@@ -23,7 +23,7 @@ const MainPage = () => {
             
         }
     }
-    const Value = React.useContext(LoginIn);
+    const Value = React.useContext(Theme);
     console.log("ЗАЙДИ И ПОСМОТРИ")
     document.addEventListener("click", (e) => {ClickDocument(e) })
     return (

@@ -78,6 +78,7 @@ const Accordion = styled((props) => (
   const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
     padding: theme.spacing(2),
     borderTop: '1px solid rgba(0, 0, 0, .125)',
+    backgroundColor:"#ffffff"
   }));
 
 
@@ -376,24 +377,54 @@ export default function FormsMainFile(props){
         BGColor = BackColor(GetParams(json, "Back-color"));
         switch(json.Type){
             case "TImage":
+
                 RCDATA = GetParams(json,"RCDATA");
-                ReturnComponent.push(
+                if(SubLabel === "TCategoryPanel"){
+                    ReturnComponent.push(
+                    <Grid keyName={keyName} style={{ position:"absolute" ,left:`${Left}px`, top:`${Number(Top) + 38}px`, visibility:Visability }}>
+                        <img style={{width: `${Width}px`,height:`${Height}px`}} src={`data:image/png;base64,${RCDATA}`} />
+                    </Grid>
+                    ) 
+                }else{
+                  ReturnComponent.push(
                     <Grid keyName={keyName} style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, visibility:Visability }}>
                         <img style={{width: `${Width}px`,height:`${Height}px`}} src={`data:image/png;base64,${RCDATA}`} />
                     </Grid>
-                )
+                    )  
+                }
+                
                 break;
 
             case "TButton":
                 Text = GetParams(json,"Text");
+                if(SubLabel === "TCategoryPanel"){
+                    ReturnComponent.push(
+                        <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
+                        style={{
+                        color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
+                        minWidth: "1px", width: `${Width}px`,height:`${Height}px`,position:"absolute", left:`${Left}px`, top:`${Number(Top) + 40}px`, 
+                        textTransform:"none" , visibility:Visability
+                        }}>
+                            
+                            {TextFromServerToBrowser(json)}  
+                            {SubDataProcessing(json)}  
+                        </Button>
+                    )
+                }else{
+                    ReturnComponent.push(
+                        <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
+                        style={{
+                        color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
+                        minWidth: "1px", width: `${Width}px`,height:`${Height}px`, position:"absolute", left:`${Left}px`, top:`${Top}px`, 
+                        textTransform:"none" , visibility:Visability
+                        }}>
+                            
+                            {TextFromServerToBrowser(json)}  
+                            {SubDataProcessing(json)}  
+                        </Button>
+                    )
+                }
                 
-                ReturnComponent.push(
-                    <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" style={{color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]) ,position:"absolute", minWidth: "1px", width: `${Width}px`,height:`${Height}px`,left:`${Left}px`, top:`${Top}px`, textTransform:"none" , visibility:Visability}}>
-                        
-                        {TextFromServerToBrowser(json)}  
-                        {SubDataProcessing(json)}  
-                    </Button>
-                )
                 
                 break;
 
@@ -484,7 +515,7 @@ export default function FormsMainFile(props){
                 let FixedWidth = roughScale(Width, 10) + 8
                 if(SubLabel === "TCategoryPanel"){
                     ReturnComponent.push(
-                        <Grid keyName={keyName} style={{paddingLeft:`${Left}px` , visibility:Visability } }>
+                        <Grid keyName={keyName} style={{ visibility:Visability, width: `${FixedWidth}px`,height:`${Height}px`,position:"absolute" ,left:`${Left}px`, top:`${Number(Top) + 40}px`, } }>
                             {TextFromServerToBrowser(json, keyName)}                             
                         </Grid>
                     )  
@@ -508,14 +539,21 @@ export default function FormsMainFile(props){
                 break;
 
             case "TCategoryPanel"://WITH SUB
-                let Caption = GetParams(json,"caption");
+                let Caption
+                if(json.Caption){
+                    Caption= json.Caption
+                }else{
+                    Caption = GetParams(json,"Сaption"); 
+                }
+                
                 let BoolOpen = expandedMap.get(Caption);
+                let TestVisability  = BoolOpen? "inline-block":"none" 
                 ReturnComponent.push(
-                    <Accordion expanded={BoolOpen} onChange={handleChangeAccordion(Caption)} keyName={keyName}>
-                        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+                    <Accordion expanded={BoolOpen} onChange={handleChangeAccordion(Caption)} keyName={keyName} >
+                        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" style={{backgroundColor:"#edeae2"}}>
                             <Typography>{Caption}</Typography>
                         </AccordionSummary>
-                        <AccordionDetails  style={{ width: `${Width}px`,height:`${Height}px`, display:Visability}}>
+                        <AccordionDetails  style={{ width: `${Width}px`,height:`${Height}px`, display:TestVisability, backgroundColor:"#ffffff"}}>
                             {SubDataProcessing(json,"TCategoryPanel")} 
                         </AccordionDetails>
                     </Accordion> 
@@ -569,7 +607,7 @@ export default function FormsMainFile(props){
                 PickList = GetParams(json, "PickList").split("\r\n");
                 Text = GetParams(json, "PickList").split("\r\n");
                 Columns = GetParams(json,"Columns");
-                
+                console.log(PickList)
                 for(let key of PickList){
                     if(key !== ""){
                         returnSub.push(
@@ -592,6 +630,14 @@ export default function FormsMainFile(props){
                     </FormControl>
                 )
 
+                break;
+
+            case "TRadioButton":
+                Text = GetParams(json, "Text")
+                console.log(json)
+                ReturnComponent.push(
+                    <FormControlLabel value={Text} control={<Radio />} label={Text} />
+                )
                 break;
 
             case "TListBox":

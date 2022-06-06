@@ -17,7 +17,7 @@ import URL, { CreateCokies, get_cookie, XMLrequest } from "../../Url";
 import useLocalStorage from '../../Hooks/useLocalStorage';
 import { useStyles } from "../../Styles"
 import { Tooltip, Typography } from '@mui/material';
-import { DrxContext } from '../../Wrapper';
+import { Theme } from '../../Wrapper';
 import { HiddenNavButton } from './HiddenNav'
 
 const DashboardNavbar = (props: any) => {

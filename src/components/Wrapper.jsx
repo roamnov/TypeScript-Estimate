@@ -18,30 +18,27 @@ export const LoginIn = React.createContext({
     setAuth: () => {}
 });
 */
-export const LoginIn = React.createContext(false)
 
-export const DrxContext = React.createContext("");
+export const Theme = React.createContext("");
 
 const Wrapper = () =>{
     //const [auth, setAuth] = useState('false');
     //const value = useMemo(() => ({ auth, setAuth }), [auth]);
-    const [drx, setDrx] = useState("");
+    const [theme, setTheme] = useState("");
     //const value = useMemo(() => ({ drx, setDrx }), [drx]);
     const styles = useStyles();
     
     return(
         <main >
             
-            <DrxContext.Provider value={drx}>
+            <Theme.Provider value={(theme,setTheme)}>
                 <HashRouter>
                     <Routes>
                         <Route  path='/' element={<SignIn  />}/>
-                        <Route path='/main' element={<WrapperRightSide/>}>
-                          
-                        </Route>                    
+                        <Route path='/main' element={<WrapperRightSide/>}/>
                     </Routes>
                 </HashRouter>
-            </DrxContext.Provider>
+            </Theme.Provider>
            
         </main>
     )
