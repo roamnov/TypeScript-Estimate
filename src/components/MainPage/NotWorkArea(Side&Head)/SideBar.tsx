@@ -11,8 +11,6 @@ import { ImgURL } from "../../Url";
 import { Box, Drawer, Slide, Toolbar } from "@material-ui/core";
 import { useStyles } from "../../Styles";
 import { MainBoxBackClick, InfoAboutClick } from "../../ComponentInterface";
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { styled } from '@mui/material/styles';
 import { Button, Grid, IconButton, ListItem, ListItemSecondaryAction, Menu, Typography } from "@mui/material";
 import {SetStateNav} from './HiddenNav'
@@ -20,29 +18,16 @@ import SideBarButton from "./SideBarButton";
 import ReactDOM from "react-dom";
 import { isEmptyObject } from "../Tools/Tools";
 import { useNavigate } from "react-router-dom";
+import cn from "classnames"
+import useTheme from "../../Hooks/useTheme";
 const defaultDrawerWidth = window.innerWidth / 100 * 16.791045;
 const minDrawerWidth = 1;
 const maxDrawerWidth = 400;
 //alert( window.innerWidth ); 
 
-const StyledList = styled(List)({
-  // selected and (selected + hover) states
-  '&& .Mui-selected, && .Mui-selected:hover': {
-    backgroundColor: "#3d5b75"
-  },
-  "&.MuiListItemSecondaryAction-root":{
-      top: "48%",
-      right: "92%"
-      
-  }
-  // hover states
-  // '& .MuiListItemButton-root:hover': {
-  //   backgroundColor: 'orange',
-  //   '&, & .MuiListItemIcon-root': {
-  //     color: 'yellow',
-  //   },
-  // },
-});
+
+
+
 
 
 export default function SideBar(props: MainBoxBackClick) {
@@ -59,16 +44,26 @@ export default function SideBar(props: MainBoxBackClick) {
   const [anchorElAss, setAnchorElAss] = useState(new Map());
   const [openButton, setOpenButton] = useState(false);
   let e = 0;//event 
+  const theme:any = useTheme(); 
+  const bgcolorthemeSelect = theme ==="light"? "#dcd8cc": "#3d5b75"
+  const bgcolortheme = theme ==="light"? "#faf9f5": "#628cb6"
+// #dcd8cc
+
+  const StyledList = styled(List)({
+    // selected and (selected + hover) states
+    '&& .Mui-selected, && .Mui-selected:hover': {
+      backgroundColor: bgcolorthemeSelect
+    },
+    "&.MuiListItemSecondaryAction-root":{
+        top: "48%",
+        right: "92%"
+        
+    }
+  
+  });
+
 
   useEffect(()=>{
-   /* let state = { 
-      state: 
-       {
-        id: selectedButton ? selectedButton["ID"] : "", 
-        clsic: selectedButton ? selectedButton["CLSID"] :"", 
-        name: selectedButton ? selectedButton["Name"] : ""
-       }
-    }*/
     if(selectedButton !== undefined){
       updateSelected(selectedButton)  
     }
@@ -274,7 +269,7 @@ export default function SideBar(props: MainBoxBackClick) {
               
               <ListItemButton style={{paddingRight:0}} className={classes.colorList} key={ID} component="li" id={ID} onClick={updateSelected}>
                 <ListItemIcon style={{minWidth:"0px", paddingRight:"10px", paddingLeft:10}}>{Img}</ListItemIcon>
-                <ListItemText  style={{ color: "white"  }}  primary={<Typography variant="body1" style={{ fontSize:"0.875rem", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", width: "99.9%" }}>{Name}</Typography>} />
+                <ListItemText  className={ cn("fontColorStimate",{light: theme === "light"}) }   primary={<Typography variant="body1" style={{ fontSize:"0.875rem", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", width: "99.9%" }}>{Name}</Typography>} />
 
               </ListItemButton>
               
@@ -318,7 +313,7 @@ export default function SideBar(props: MainBoxBackClick) {
                 }>
                   <ListItemButton style={{paddingRight:0}} className={classes.colorList} key={ID} sx={{ pl: howDeep, "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} id={ID} selected={selected === ID} onClick={updateSelected}>
                     <ListItemIcon>{Img}</ListItemIcon>
-                    <ListItemText  style={{ color: "white"  }}  primary={<Typography noWrap variant="body1" style={{ fontSize:"0.875rem", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", width: "99.9%" }}>{Name}</Typography>} />
+                    <ListItemText  className={ cn("fontColorStimate",{light: theme === "light"}) }   primary={<Typography noWrap variant="body1" style={{ fontSize:"0.875rem", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", width: "99.9%" }}>{Name}</Typography>} />
 
                   </ListItemButton>
                   
@@ -340,7 +335,7 @@ export default function SideBar(props: MainBoxBackClick) {
                 <List key={ID} component="div" disablePadding >
                   <ListItemButton className={classes.colorList} key={ID} sx={{ pl: howDeep, "& .Mui-selected": { backgroundColor: "rgb(35, 114, 191)" } }} selected={selected === ID} id={ID} onClick={updateSelected} >
                     <ListItemIcon>{Img}</ListItemIcon>
-                    <ListItemText  style={{ color: "white"  }}  primary={<Typography variant="body1"  style={{ fontSize:"0.875rem", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", width: "99.9%" }}>{Name}</Typography>} />
+                    <ListItemText  className={ cn("fontColorStimate",{light: theme === "light"}) }   primary={<Typography variant="body1"  style={{ fontSize:"0.875rem", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", width: "99.9%" }}>{Name}</Typography>} />
 
                   </ListItemButton>
                 </List>
@@ -368,7 +363,7 @@ export default function SideBar(props: MainBoxBackClick) {
           <StyledList
             sx={{
               width: "100%",
-              bgcolor: '#628cb6',
+              bgcolor: bgcolortheme,
               marginTop: 1,
             }}
             style={{ scrollbarWidth: "none" }}

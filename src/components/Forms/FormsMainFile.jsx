@@ -6,7 +6,7 @@ import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
-import { XMLrequest } from "../Url";
+import { XMLrequest, get_cookie } from "../Url";
 import { Tabs, TabItem} from 'smart-webcomponents-react/tabs';
 import Link from '@mui/material/Link';
 import  { tokenProcessingTest } from "../TokenProcessing";
@@ -141,6 +141,7 @@ const Accordion = styled((props) => (
 //////////////////////////////////////////////////////////////////////////////////////
 
 export default function FormsMainFile(props){
+    let LastDrx = get_cookie("LastLogin").split(",");
     const [dataForms, setDataForms] = useState();
     const [dataFormsUpd, setdataFormsUpd] = useState();
     const [expanded, setExpanded] = React.useState('panel1');
@@ -148,9 +149,9 @@ export default function FormsMainFile(props){
     const [load, setLoad] = React.useState(true)
     const [currentHeight, setCurrentHeight] = useState(window.innerHeight - 189);
     const [subForms, setSubForms] = useState(undefined);
-    const [mainBGColor,setMainBGColor] = useState();
+    const [currentDrx, setCurrentDrx] = useState(LastDrx === undefined? "": LastDrx[0]);
     const [cursor,setCursor] = useState("auto");
-    
+    console.log(currentDrx)
 
     const handleResize = () => {
         setCurrentHeight(window.innerHeight - 189);
@@ -232,16 +233,18 @@ export default function FormsMainFile(props){
 
 
     function TextFromServerToBrowser(json, keyName){
-        let Text, FontStyle, ReferenceLink, FontSize, autoSize, FontColor
+        let Text, FontStyle, ReferenceLink, FontSize, autoSize, FontColor, Alignment
         autoSize = GetParams(json,"AutoSize") === "0"? "hidden": "unset"
         FontSize =  GetParams(json,"Font-size");
         Text = GetParams(json,"Text");
         ReferenceLink = GetParams(json,"Reference");
         FontStyle = BackFontweight(GetParams(json,"Font-style"));
         FontColor = BackColor(GetParams(json,"Font-color"))
+        Alignment = ConvertAlignment (GetParams(json, "Alignment"));
+        // parseInt(FontSize, 10)*0,13}px`,
         if( ReferenceLink === "1"){
             return(
-                    <Typography style={{fontSize: `${parseInt(FontSize, 10)*0,13}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor }}> 
+                    <Typography style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor , textAlign: Alignment}}> 
                         <Link keyName={keyName}  component="button" variant="body2" underline="hover" onClick={ClickFormElement}>
                             {Text}
                         </Link>
@@ -249,7 +252,7 @@ export default function FormsMainFile(props){
                 )
         }else{
             return(
-                    <Typography onClick={ClickFormElement} keyName={keyName} style={{fontSize: `${parseInt(FontSize, 10)*0,13}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor }}> 
+                    <Typography onClick={ClickFormElement} keyName={keyName} style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor, textAlign: Alignment}}> 
                         {Text}
                     </Typography>
                 )
@@ -363,7 +366,42 @@ export default function FormsMainFile(props){
             return ManWhoSoldTheWorld(props.id, Path)
         }, 1000);
     }
+
+    function ConvertAlignment(item){
+        switch(item){
+            case"центр":
+                return "center"
+            case"влево":
+                return "left"
+            case"вправо":
+                return "right"
+        }
+    }
     
+    function ConvertBorder(borderInfo , BevelWidth){
+        if(borderInfo){
+            let borderInfoArr= borderInfo.split(",");
+            console.log(borderInfoArr)
+            for(const [key, value] in borderInfoArr){
+                console.log(value)
+                switch(value){
+                    case "лево":
+                        break;
+                    case "право":
+                        break;
+                    case "верх":
+                        break;
+                    case "низ":
+                        break;
+                }
+            } 
+        }
+        
+    }
+// bgcolor(main) - #faf9f5
+// splitter color - #dcd8cc
+//  selected section - #dcd8cc
+
     function CheckAndReturnComponent(json, SubLabel, keyName){
         let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Corners, BGColor, returnSub=[];
         Left = GetParams(json, "Left");
@@ -587,8 +625,12 @@ export default function FormsMainFile(props){
                 break;
 
             case "TGradientPanel"://WITH SUB
+                let BorderRadius = json.BevelEdges
+                
+                // ConvertBorder(BorderRadius, GetParams(json,"BevelWidth"))
+                let Border = json.Radius
                 ReturnComponent.push(
-                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor }}>
+                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor, borderRadius:`${Border}px` }}>
                         {SubDataProcessing(json)}
                     </Grid>
                 )
@@ -643,6 +685,13 @@ export default function FormsMainFile(props){
             case "TListBox":
 
                 break
+            case "TMarkingPanel":
+                ReturnComponent.push(
+                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", visibility:Visability, backgroundColor: BGColor }}>
+                        {SubDataProcessing(json)}
+                    </Grid>
+                )
+                break;
             
         }
         return ReturnComponent;

@@ -9,6 +9,18 @@ function StyleSmartWebcomponents()
 {
    return <style>{`
         :root {
+            --accent-blue: rgb(98, 142, 184);
+            --bg-blue:#ffffff;
+            --accent-light:#faf9f5;
+            --font-color-blue:#ffffff;
+            --bg-light:#faf9f5;
+            --selected-light:#dcd8cc;
+            --font-color-light:#616161;
+            --accordion-light: #dcd8cc;
+            --header-light: #dcd8cc;
+            
+
+
             --smart-primary-rgb: 99,159,230;
             --smart-primary: rgb(var(--smart-primary-rgb));
             --smart-primary-color: #fff;
@@ -115,8 +127,8 @@ function StyleSmartWebcomponents()
             --smart-icon-align-center: "\\e808";
             --smart-icon-align-justify: "\\e813";
             --smart-icon-reload: "\\e809";
-            --smart-icon-cancel: "\\1F5D9";
-            --smart-icon-close: "\\1F5D9";
+            --smart-icon-cancel: "\\e80d";
+            --smart-icon-close: "\\e80d";
             --smart-icon-cancel-circled: "\\e80e";
             --smart-icon-plus-circled: "\\e810";
             --smart-icon-power: "\\e811";
@@ -151,8 +163,8 @@ function StyleSmartWebcomponents()
             --smart-icon-up: "\\e83f";
             --smart-icon-first-page: "\\e900";
             --smart-icon-arrow-down: "\\2BC6";
-            --smart-icon-arrow-left: "\\27EA";
-            --smart-icon-arrow-right: "\\27EB";
+            --smart-icon-arrow-left: "\\e902";
+            --smart-icon-arrow-right: "\\e903";
             --smart-icon-arrow-up: "\\2BC5";
             --smart-icon-arrow-down-filled: "\\e812";
             --smart-icon-arrow-left-filled: "\\e816";
@@ -2081,7 +2093,7 @@ function StyleSmartWebcomponents()
         }
 
         smart-breadcrumb .smart-template-container .smart-breadcrumb-items .smart-breadcrumb-item>.smart-close-button:after {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close)
         }
 
@@ -5055,7 +5067,7 @@ function StyleSmartWebcomponents()
             background-color: var(--smart-ui-state-hover);
             color: #333;
             color: var(--smart-ui-state-color-hover);
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             display: flex;
             font-family: smart-icons;
@@ -6221,7 +6233,7 @@ function StyleSmartWebcomponents()
 
         .smart-chip .smart-close-button:after {
             color: inherit;
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             font-family: smart-icons;
             font-family: var(--smart-font-family-icon);
@@ -12481,7 +12493,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-editor .smart-editor-content-container .smart-editor-search-bar .smart-search-button.close button:after {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close)
         }
 
@@ -14084,7 +14096,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-selected-files .smart-item-pause-button:after {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             font-family: smart-icons;
             font-family: var(--smart-font-family-icon);
@@ -14106,7 +14118,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-selected-files .smart-item-cancel-button:after {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             font-family: smart-icons;
             font-family: var(--smart-font-family-icon);
@@ -14818,7 +14830,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-filter-panel-list-drop-down-menu.smart-input-drop-down-menu ul li span.smart-icon.smart-icon-not-empty:before {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             font-size: 10px;
             left: calc(50% - 4px);
@@ -16768,7 +16780,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-window.smart-gantt-chart-popup-window .smart-popup-window-button.cancel .smart-icon:after {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-cancel)
         }
 
@@ -17627,7 +17639,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-grid-icon.smart-icon-cancel:before {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-cancel)
         }
 
@@ -17657,7 +17669,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-grid-icon.smart-icon-close:before {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close)
         }
 
@@ -18531,7 +18543,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-grid-image-dialog .preview .list .item:after {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             cursor: pointer;
             font-family: smart-icons;
@@ -19068,7 +19080,7 @@ function StyleSmartWebcomponents()
 
         .smart-window.smart-grid-dialog.smart-grid-dialog-expand-row .smart-grid-edit-dialog-layout .smart-grid-edit-dialog-activity-container .comments-layout .comment .remove-button:after {
             align-items: center;
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             cursor: pointer;
             display: flex;
@@ -22348,7 +22360,7 @@ function StyleSmartWebcomponents()
         .smart-group-panel .smart-grid-panel-item-close-button:after,
         .smart-multi-column-filter-panel .smart-grid-panel-item-close-button:after,
         .smart-sort-panel .smart-grid-panel-item-close-button:after {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             font-family: smart-icons;
             font-family: var(--smart-font-family-icon)
@@ -22693,7 +22705,7 @@ function StyleSmartWebcomponents()
 
         .smart-column-panel .smart-column-panel-find-container .clear-button:after {
             align-items: center;
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-cancel);
             display: flex;
             font-family: smart-icons;
@@ -23396,7 +23408,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-data-view-search-close:after {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close)
         }
 
@@ -23657,7 +23669,7 @@ function StyleSmartWebcomponents()
 
         .smart-formatting-panel-item>.close-button:after {
             align-items: center;
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             cursor: pointer;
             display: flex;
@@ -32259,7 +32271,7 @@ function StyleSmartWebcomponents()
 
         .smart-query-builder .smart-filter-delete-btn:after {
             align-items: center;
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             cursor: pointer;
             display: flex;
@@ -37669,7 +37681,7 @@ function StyleSmartWebcomponents()
 
         .smart-tabs .smart-tab-close-button:after {
             align-items: center;
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             display: flex;
             height: 100%;
@@ -40681,7 +40693,7 @@ function StyleSmartWebcomponents()
             background: rgba(0, 92, 153, .2);
             background: rgba(var(--smart-primary-rgb), .2);
             border-radius: 50%;
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             display: flex;
             font-family: smart-icons;
@@ -40763,7 +40775,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-multi-combo-input-drop-down-menu .close-button:after {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             font-family: smart-icons;
             font-family: var(--smart-font-family-icon);
@@ -41405,7 +41417,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-date-range-input-drop-down-menu .smart-icon-clear:before {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-cancel)
         }
 
@@ -43984,7 +43996,7 @@ function StyleSmartWebcomponents()
 
         .smart-toast-item[show-close-button] .smart-toast-item-header .smart-toast-item-close-button:after {
             color: inherit;
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             cursor: pointer;
             display: block;
@@ -45870,7 +45882,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-window .smart-header-section .smart-close-button:after {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close)
         }
 
@@ -49921,7 +49933,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-kanban-task-subtasks .smart-kanban-sub-task:hover .remove-subtask:after {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             cursor: pointer;
             font-family: smart-icons;
@@ -50476,7 +50488,7 @@ function StyleSmartWebcomponents()
 
         .smart-window.smart-kanban-window .comments .comment .remove-button:after {
             align-items: center;
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             cursor: pointer;
             display: flex;
@@ -50717,7 +50729,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-window.smart-kanban-window .checklist-editor .remove-subtask:after {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             cursor: pointer;
             font-family: smart-icons;
@@ -51349,7 +51361,7 @@ function StyleSmartWebcomponents()
 
         .smart-layout-tab.selected .smart-close-button:after {
             align-items: center;
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             cursor: pointer;
             display: flex;
@@ -54139,7 +54151,7 @@ function StyleSmartWebcomponents()
         }
 
         .smart-scheduler-window .smart-scheduler-window-button.cancel .smart-icon:after {
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-cancel)
         }
 
@@ -54997,7 +55009,7 @@ function StyleSmartWebcomponents()
 
         .smart-notification-panel .smart-notification-item .smart-button[delete]:after {
             align-items: center;
-            content: "\\1F5D9";
+            content: "\\e80d";
             content: var(--smart-icon-close);
             cursor: pointer;
             display: flex;
@@ -55734,6 +55746,39 @@ function StyleSmartWebcomponents()
 }
 
 const GlobalStyleTree = createGlobalStyle`
+
+.headerStimate{
+    background-color:var(--accent-blue)
+}
+
+.sidebarStimate{
+    background-color:var(--accent-blue)
+}
+
+.fontColorStimate{
+    color:var(--font-color-blue)
+}
+
+.backgroundColorStimate{
+    background-color:var(--bg-blue)
+}
+
+.fontColorStimate.light{
+    color:var(--font-color-light)
+}
+
+.headerStimate.light{
+    background-color:var(--header-light)
+}
+
+.sidebarStimate.light{
+    background-color:var(--bg-light)
+}
+
+.backgroundColorStimate.light{
+    background-color:var(--bg-light)
+}
+
 
 .hiddenBlock
 {
