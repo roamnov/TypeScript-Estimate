@@ -24,6 +24,7 @@ import axios from 'axios';
 import Scrollbars from 'react-custom-scrollbars-2';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
+import Frame from 'react-frame-component';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
@@ -49,6 +50,9 @@ export default function FullRightSide(props: InfoAboutClick) {
 
   let pringReportsDoc:any
 
+  function createMarkup(code:any) {
+    return {__html: code};
+  }
   function RenderReports(){
     if(!isEmptyObject(openReportData)){// проверка на пустой ли объект
       let arrOfReportId = openReportData.ViewIdent.split("-");// переменная для того что бы получить id отчёта
@@ -61,13 +65,25 @@ export default function FullRightSide(props: InfoAboutClick) {
       GlobalId = id;
       if(openReportData.Items){
         let ValueAny:any
+        let reportContent: any
+        var frame: any
+
         for(const[key,value] of Object.entries(openReportData.Items)){
           ValueAny = value;
           ViewIdentForButton.items.push(ValueAny.ViewIdent)
+          frame = document.createElement("iframe")
+          frame.id = "Frame123"
+          reportContent = String(ValueAny.content).replaceAll(/[\n]+/g, "");
+          reportContent = String(reportContent).replaceAll(/[\r]+/g, "");
+          frame.innerHTML = reportContent
+          //reportContent = "<iframe>"+reportContent+"</iframe>"
           JSXTabItems.push(
             <TabItem id={ViewIdentForButton.ViewIdent+ViewIdentForButton.items[key]} style={{textTransform:"none",display:"inline-block", height: currentHeight}} 
-              label={ValueAny.Title} content={ValueAny.content?ValueAny.content:"<div></div>"}>
-                 
+              label={ValueAny.Title} >
+               <Frame 
+               initialContent = {reportContent} 
+               style ={{width:"100%", height: "100%"}}>
+              </Frame> 
             </TabItem>
           )
         }
