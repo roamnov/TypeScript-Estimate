@@ -66,7 +66,7 @@ const Accordion = styled((props) => (
       theme.palette.mode === 'dark'
         ? 'rgba(255, 255, 255, .05)'
         : 'rgba(0, 0, 0, .03)',
-    flexDirection: 'row-reverse',
+    // flexDirection: 'row-reverse',
     '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
       transform: 'rotate(90deg)',
     },
@@ -233,7 +233,7 @@ export default function FormsMainFile(props){
 
 
     function TextFromServerToBrowser(json, keyName){
-        let Text, FontStyle, ReferenceLink, FontSize, autoSize, FontColor, Alignment
+        let Text, FontStyle, ReferenceLink, FontSize, autoSize, FontColor, Alignment, BorderWidth
         autoSize = GetParams(json,"AutoSize") === "0"? "hidden": "unset"
         FontSize =  GetParams(json,"Font-size");
         Text = GetParams(json,"Text");
@@ -241,10 +241,13 @@ export default function FormsMainFile(props){
         FontStyle = BackFontweight(GetParams(json,"Font-style"));
         FontColor = BackColor(GetParams(json,"Font-color"))
         Alignment = ConvertAlignment (GetParams(json, "Alignment"));
+        BorderWidth =GetParams(json,"BorderWidth");
+        BorderWidth = BorderWidth === undefined? undefined:`${Number(BorderWidth)/100*50}px`
+        console.log(BorderWidth)
         // parseInt(FontSize, 10)*0,13}px`,
         if( ReferenceLink === "1"){
             return(
-                    <Typography style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor , textAlign: Alignment}}> 
+                    <Typography style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor , textAlign: Alignment, padding:BorderWidth, overflow: "hidden" }}> 
                         <Link keyName={keyName}  component="button" variant="body2" underline="hover" onClick={ClickFormElement}>
                             {Text}
                         </Link>
@@ -252,7 +255,7 @@ export default function FormsMainFile(props){
                 )
         }else{
             return(
-                    <Typography onClick={ClickFormElement} keyName={keyName} style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor, textAlign: Alignment}}> 
+                    <Typography onClick={ClickFormElement} keyName={keyName} style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor, textAlign: Alignment, padding:BorderWidth , overflow: "hidden"}}> 
                         {Text}
                     </Typography>
                 )
@@ -629,9 +632,11 @@ export default function FormsMainFile(props){
                 
                 // ConvertBorder(BorderRadius, GetParams(json,"BevelWidth"))
                 let Border = json.Radius
+                Text = GetParams(json,"Text");
                 ReturnComponent.push(
-                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor, borderRadius:`${Border}px` }}>
+                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor, borderRadius:`${Border}px`, overflow:"hidden" }}>
                         {SubDataProcessing(json)}
+                        {TextFromServerToBrowser(json, keyName)}
                     </Grid>
                 )
                 break;
