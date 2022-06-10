@@ -28,7 +28,6 @@ const DashboardNavbar = (props: any) => {
   let navigate = useNavigate();
   const classes = useStyles();
   const drx = get_cookie("drx");
-  console.log(theme)
   const HandleSingOut = (event: any) => {
     let params = new Map();
     params.set('comand', 'leave');
@@ -57,7 +56,11 @@ const DashboardNavbar = (props: any) => {
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <IconButton color="inherit" size="large">
+        <IconButton  size="large"
+          className={
+            cn("iconButtonStimete",{light: theme === "light"})
+          } 
+        >
           <Badge
             badgeContent={notifications.length}
             color="primary"
@@ -68,7 +71,11 @@ const DashboardNavbar = (props: any) => {
         </IconButton>
         <Tooltip title={"Выход"}>
           <Link to={'/'} >
-            <IconButton color="inherit" size="large" onClick={HandleSingOut}>
+            <IconButton size="large" onClick={HandleSingOut}
+              className={
+                cn("iconButtonStimete",{light: theme === "light"})
+              } 
+            >
               <InputIcon />
 
             </IconButton>

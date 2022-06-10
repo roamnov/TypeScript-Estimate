@@ -37,7 +37,13 @@ export default function WrapperRightSide() {
     }
   }
 
-  console.log(theme, "1")
+  React.useEffect(()=>{
+    let SplitterBlock:any = document.getElementById("SideBar_FullRightSide")
+    // console.log(SplitterBlock?.firstChild.children[1])
+    let Splitter = SplitterBlock?.firstChild.children[1]
+    const color = theme ==="light"?"#dcd8cc":"#85bee5"
+    Splitter.style.background= color
+  },[theme])
 
   const [id, setID] = React.useState();
   const [clsid, setCLSID] = React.useState();
@@ -68,7 +74,11 @@ export default function WrapperRightSide() {
             }  style={{ height: "34px", overflow: "hidden", width: "100%", position: "fixed", top: "48px", boxShadow: "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)" }}>
           <div id="miniMenu" style={{ display: '-webkit-box', alignItems: "center" }}>
             <div id="HideMenu" >
-              <Tooltip title={!drawerOpen ? "Показать панель рабочих мест" : "Скрыть панель рабочих мест"} >
+              <Tooltip title={!drawerOpen ? "Показать панель рабочих мест" : "Скрыть панель рабочих мест"}
+                className={
+                  cn("iconButtonStimete",{light: theme === "light"})
+                } 
+              >
                 <IconButton aria-label="CancelEdit" size="small" onClick={ShowMenu}>
                   <MenuIcon />
                 </IconButton>
@@ -86,7 +96,7 @@ export default function WrapperRightSide() {
       </div>
 
       <div style={{ display: 'flex', height: "100%", overflow: "hidden", flexDirection: "row" }} id="SideBar_FullRightSide">
-        <Split className="wrap" sizes={[20, 80]} >
+        <Split className="wrap" sizes={[20, 80]}  >
           <div 
           className={
             cn("sidebarStimate",{light: theme === "light"})
