@@ -7,9 +7,13 @@ import Typography from "@mui/material/Typography"
 import MenuItem from "@mui/material/MenuItem"
 import { ImgURL, get_cookie } from "../../Url";
 import { XMLrequest } from "../../Url";
+import cn from "classnames"
+import useTheme from "../../Hooks/useTheme";
 
 export default function SideBarButton(props){
     // const [open, setOpen] = useState(false);
+    const theme = useTheme();
+    const colorTextButton = theme === "light"? "#535353": "white"
     const [drawerOpen, setdrawerOpen] = useState(true)
     const [data, setData] = useState(undefined);
     const [selected, setSelected] = useState(get_cookie("CurrentSecID"));
@@ -144,7 +148,9 @@ export default function SideBarButton(props){
 
       return(
           <Grid >
-          <Button size="small" onClick={handleClick} variant="text" style={{textTransform:"none", color:"white",paddingTop: "6px"}}>
+          <Button size="small" onClick={handleClick} variant="text" style={{textTransform:"none",paddingTop: "6px", color:colorTextButton}}
+            
+          >
               Выбрать
             </Button>
             <Menu open={open} onClose={handleClose} anchorEl={anchorEl}>

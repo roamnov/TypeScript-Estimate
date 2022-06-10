@@ -12,7 +12,7 @@ export const ThemeContext = createContext({type: "light"})
 
 export const ThemeProvider =({children}) =>{
     
-    const [theme, setTheme] = useState("blue");
+    const [theme, setTheme] = useState("light");
 
     return(
         <ThemeContext.Provider value={theme}>

@@ -18,6 +18,9 @@ function StyleSmartWebcomponents()
             --font-color-light:#616161;
             --accordion-light: #dcd8cc;
             --header-light: #dcd8cc;
+            --iconButtonColor: #ffffff;
+            --iconButtonColor-light:#9d9b93;
+            
             
 
 
@@ -55763,6 +55766,10 @@ const GlobalStyleTree = createGlobalStyle`
     background-color:var(--bg-blue)
 }
 
+.iconButtonStimete{
+    color:var(--iconButtonColor)
+}
+
 .fontColorStimate.light{
     color:var(--font-color-light)
 }
@@ -55777,6 +55784,10 @@ const GlobalStyleTree = createGlobalStyle`
 
 .backgroundColorStimate.light{
     background-color:var(--bg-light)
+}
+
+.iconButtonStimete.light{
+    color:var(--iconButtonColor-light)
 }
 
 

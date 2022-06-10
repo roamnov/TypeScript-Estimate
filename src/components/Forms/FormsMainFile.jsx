@@ -151,7 +151,6 @@ export default function FormsMainFile(props){
     const [subForms, setSubForms] = useState(undefined);
     const [currentDrx, setCurrentDrx] = useState(LastDrx === undefined? "": LastDrx[0]);
     const [cursor,setCursor] = useState("auto");
-    console.log(currentDrx)
 
     const handleResize = () => {
         setCurrentHeight(window.innerHeight - 189);
@@ -243,7 +242,6 @@ export default function FormsMainFile(props){
         Alignment = ConvertAlignment (GetParams(json, "Alignment"));
         BorderWidth =GetParams(json,"BorderWidth");
         BorderWidth = BorderWidth === undefined? undefined:`${Number(BorderWidth)/100*50}px`
-        console.log(BorderWidth)
         // parseInt(FontSize, 10)*0,13}px`,
         if( ReferenceLink === "1"){
             return(
@@ -384,9 +382,7 @@ export default function FormsMainFile(props){
     function ConvertBorder(borderInfo , BevelWidth){
         if(borderInfo){
             let borderInfoArr= borderInfo.split(",");
-            console.log(borderInfoArr)
             for(const [key, value] in borderInfoArr){
-                console.log(value)
                 switch(value){
                     case "лево":
                         break;
@@ -517,7 +513,6 @@ export default function FormsMainFile(props){
                 let Path = json.Params.Path
                 if(Path !== undefined){
                     let params = new Map
-                    console.log(Path)
                     params.set('prefix','programs'); 
                     params.set('comand','GetTableLayout');
                     params.set ('ObjType',"0");
@@ -534,7 +529,7 @@ export default function FormsMainFile(props){
                     break;
                 }
                 
-                
+
                 
                 // GET /programs~GetTableLayout?LicGUID=72D72A7946ED30AB0808358980788EDA&ObjType=0&Path={7FEC323D-E184-4147-8F44-352DD337B515}&SectionID=482 HTTP/1.0
                 // POST /programs~HandleTable?LicGUID=72D72A7946ED30AB0808358980788EDA&Path={7FEC323D-E184-4147-8F44-352DD337B515}&SectionID=482 HTTP/1.0
@@ -562,7 +557,7 @@ export default function FormsMainFile(props){
                     )  
                 }else{
                     ReturnComponent.push(
-                        <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${FixedWidth}px`,height:`${Height}px`, whiteSpace: "nowrap", visibility:Visability }}>
+                        <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${FixedWidth}px`,height:`${Height}px`,  visibility:Visability }}>
                             {TextFromServerToBrowser(json, keyName)}
                         </Grid>
                     )   
@@ -631,20 +626,29 @@ export default function FormsMainFile(props){
                 let BorderRadius = json.BevelEdges
                 
                 // ConvertBorder(BorderRadius, GetParams(json,"BevelWidth"))
-                let Border = json.Radius
+                let Radius = json.Radius
                 Text = GetParams(json,"Text");
+                Text = Text.substr(0, 8)
+                let BevelWidth= GetParams(json,"BevelWidth");
+                BevelWidth = BevelWidth=== undefined?0:Number(BevelWidth)
                 ReturnComponent.push(
-                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor, borderRadius:`${Border}px`, overflow:"hidden" }}>
+                    <Grid keyName={keyName} 
+                        style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, 
+                        overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor, borderRadius:`${Radius}px`, 
+                        overflow:"hidden", borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px` }}>
                         {SubDataProcessing(json)}
-                        {TextFromServerToBrowser(json, keyName)}
+                        {Text === "Gradient"?<></>:TextFromServerToBrowser(json, keyName)}
                     </Grid>
                 )
                 break;
 
             case "TBevel"://WITH SUB
+                    
                 ReturnComponent.push(
                     <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor }}>
-                        {SubDataProcessing(json)}
+                        <div style={{height:"2px", backgroundColor: "#cbcbca", borderRadius:"1px", marginTop:`${Number(Height*0.5)}px`}}>
+                            {/* {SubDataProcessing(json)} */}
+                        </div>
                     </Grid>
                 )
                 break;
@@ -654,7 +658,6 @@ export default function FormsMainFile(props){
                 PickList = GetParams(json, "PickList").split("\r\n");
                 Text = GetParams(json, "PickList").split("\r\n");
                 Columns = GetParams(json,"Columns");
-                console.log(PickList)
                 for(let key of PickList){
                     if(key !== ""){
                         returnSub.push(
@@ -681,7 +684,6 @@ export default function FormsMainFile(props){
 
             case "TRadioButton":
                 Text = GetParams(json, "Text")
-                console.log(json)
                 ReturnComponent.push(
                     <FormControlLabel value={Text} control={<Radio />} label={Text} />
                 )
@@ -691,6 +693,7 @@ export default function FormsMainFile(props){
 
                 break
             case "TMarkingPanel":
+
                 ReturnComponent.push(
                     <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", visibility:Visability, backgroundColor: BGColor }}>
                         {SubDataProcessing(json)}
@@ -706,7 +709,6 @@ function FormDataProcessing(json) {
         if(dataForms !== undefined){
             let val, returnAll=[]
             json = json.Form;
-            // console.log(json.hasOwnProperty("пДействия"))
             for(const [key, value] of Object.entries(json)) {
                 val = value
                 if(val.Type !==undefined ){
