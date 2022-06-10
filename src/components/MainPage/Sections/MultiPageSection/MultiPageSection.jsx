@@ -1,5 +1,5 @@
 import Grid from "@mui/material/Grid"
-import Typography from "@mui/material/Typography"
+import Typography from "@mui/material/Typography";
 import React,{ useEffect, useState } from "react";
 import SectionToolsJS from '../../Tools/SectionToolsJS';
 import { ImgURL, XMLrequest, } from '../../../Url';
@@ -12,6 +12,8 @@ import {tokenProcessingTest} from "../../../TokenProcessing"
 import SectionsDBview from '../dbview';
 import SectionsReportDocuments from '../ReportDocuments';
 import FormsMainFile from '../../../Forms/FormsMainFile.jsx';
+import Params from '../ElementsSections/Params';
+
 
 const MultiPageSection = (props) => {
    const [currentHeight, setCurrentHeight] = useState(window.innerHeight - 189);
@@ -79,6 +81,17 @@ const MultiPageSection = (props) => {
 
  }
 
+ function loadObjects(path){
+  let params = new Map();
+  params.set('prefix', 'programs');
+  params.set('comand', 'GetParamDialog');
+  params.set('GroupID', '0');
+  params.set('Path', path);
+  let otv = XMLrequest(params);
+  //let parametry = document.createElement("div");
+  return otv;
+ }
+
     let content
     let defaultButton
     return (
@@ -105,14 +118,15 @@ const MultiPageSection = (props) => {
                     content = <SectionsReportDocuments  CLSID = {Page.CLSID} id = {props.id} defaultButton = {defaultButton} />
                   }else
                   if(Page.CLSID !== undefined && Page.CLSID ==="{C0CED968-8834-405D-8801-A3838BF536F3}"){//Формы
-                    content = <FormsMainFile id = {props.id}/>
-                    
+                    content = <FormsMainFile id = {props.id}/> 
+                  } else if (Page.CLSID !== undefined && Page.CLSID === "{D8402CE6-6582-4F0D-A82D-C2D9CA73F79E}"){
+                             content = <Params id= {"item_params_reports"+props.id} SectionID = {props.id} data = {loadObjects(Page.Params.Path)} />
                   } else  {
                  content =  <Grid container direction="row" justifyContent="center" alignItems="center" style={{ height: `${currentHeight}px` }}>
                  <Grid item>
                      <div>
                          <Typography variant="h4">
-                             Функционал находится в разработке.
+                             Функционал находится в разработке. {Page.CLSID}
                          </Typography>
                      </div>
                  </Grid>

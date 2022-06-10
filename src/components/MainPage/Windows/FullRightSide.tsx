@@ -10,7 +10,6 @@ import SectionsDBview from '../Sections/dbview';
 import SectionsReportDocuments from '../Sections/ReportDocuments';
 import StickyFooter from '../NotWorkArea(Side&Head)/Footer';
 import StillDevelopmentPage from './StillDevelopmentPage';
-import MultiPageSection from '../Sections/MultiPageSection/MultiPageSection'
 import { ImgURL, XMLrequest, } from '../../Url';
 import URL from '../../Url';
 import SectionReport from '../Sections/ElementsSections/SectionReports'
@@ -25,6 +24,8 @@ import Scrollbars from 'react-custom-scrollbars-2';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import Frame from 'react-frame-component';
+import Params from '../Sections/ElementsSections/Params';
+import SectionToolsJS from '../Tools/SectionToolsJS';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
@@ -371,8 +372,72 @@ export default function FullRightSide(props: InfoAboutClick) {
 
  }
 
+ function loadMultipage(){
+  let params = new Map, json;
+  params.set('prefix', 'pages');
+  params.set("comand", "GetMembers");
+  params.set("SectionID", props.id);
+  return XMLrequest(params);
+ }
+ 
+ function loadObjects(path: any){
+  let params = new Map();
+  params.set('prefix', 'programs');
+  params.set('comand', 'GetParamDialog');
+  params.set('GroupID', '0');
+  params.set('Path', path);
+  let otv = XMLrequest(params);
+  //let parametry = document.createElement("div");
+  return otv;
+ }
+
   let content
   let defaultButton
+  let multipage
+
+  if(props.id !== undefined && props.clsic =="{353FD9D7-651E-4840-9319-A8578806C496}"){
+
+    multipage = loadMultipage();
+    content =    
+    <><SectionToolsJS  ID={props.id} />
+                <Tabs   style={{ position:"absolute", height: "85%", width:"80%", backgroundColor:"s"}}>
+                {multipage && multipage.Pages.map((Page: any)=>{
+                  if (Page.CLSID !== undefined && Page.CLSID == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}") {// Просмотр данных
+                    content = <SectionsDBview  CLSID = {Page.CLSID} id = {props.id}/>
+                  } else
+                  if(Page.CLSID !== undefined && Page.CLSID =="{B357E5B2-137F-4253-BBEF-E5CFD697E362}") {
+                    defaultButton = <Tooltip title="Сформировать отчет" >
+                       <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{textTransform:"none", marginLeft:"0.88%"}}>
+                           Выполнить
+                       </Button>
+                   </Tooltip>
+                   content = <SectionReport CLSID = {Page.CLSID} id = {props.id} defaultButton = {defaultButton} SectionToolsJS={false} />
+                  } else 
+                  if (Page.CLSID !== undefined && Page.CLSID =="{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}"){//Секция Документов/отчётов
+                    defaultButton = <Tooltip title="Сформировать отчет" >
+                        <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{textTransform:"none", marginLeft:"0.88%"}}>
+                            Выполнить
+                        </Button>
+                    </Tooltip>
+                    content = <SectionsReportDocuments  CLSID = {Page.CLSID} id = {props.id} defaultButton = {defaultButton} />
+                  }else
+                  if(Page.CLSID !== undefined && Page.CLSID ==="{C0CED968-8834-405D-8801-A3838BF536F3}"){//Формы
+                    content = <FormsMainFile id = {props.id}/> 
+                  } else if (Page.CLSID !== undefined && Page.CLSID === "{D8402CE6-6582-4F0D-A82D-C2D9CA73F79E}"){
+                             content = <Params id= {"item_params_reports"+props.id} SectionID = {props.id} data = {loadObjects(Page.Params.Path)} />
+                  } else  {
+                    content = <StillDevelopmentPage  id = {props.id} SectionToolsJS={false}/>
+               }
+
+                 return(
+                   <TabItem label={Page.Name} > 
+                     {content}
+                   </TabItem>
+                  )
+                 })}
+               </Tabs>
+          </>
+  }  else
   if (props.id !== undefined && props.clsic == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}") {// Просмотр данных
 
     content = <SectionsDBview  CLSID = {props.clsic} id = {props.id}/>
@@ -397,11 +462,9 @@ export default function FullRightSide(props: InfoAboutClick) {
         </Button>
     </Tooltip>
     content = <SectionReport CLSID = {props.clsic} id = {props.id} defaultButton = {defaultButton} SectionToolsJS={true} />
-  }else if(props.id !== undefined && props.clsic =="{353FD9D7-651E-4840-9319-A8578806C496}"){
-    content = <MultiPageSection id = {props.id}/>
-  }
-  else if (props.id !== undefined) {
-      content = <StillDevelopmentPage  id = {props.id}/>
+  }else  
+  if (props.id !== undefined) {
+      content = <StillDevelopmentPage  id = {props.id} SectionToolsJS={true}/>
     }
 
   
