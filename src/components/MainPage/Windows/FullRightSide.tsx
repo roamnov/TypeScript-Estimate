@@ -401,7 +401,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     content =    
     <><SectionToolsJS  ID={props.id} />
                 <Tabs   style={{ position:"absolute", height: "85%", width:"80%", backgroundColor:"s"}}>
-                {multipage && multipage.Pages.map((Page: any)=>{
+                {multipage && multipage.Pages !==undefined && multipage.Pages.map((Page: any)=>{
                   if (Page.CLSID !== undefined && Page.CLSID == "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}") {// Просмотр данных
                     content = <SectionsDBview  CLSID = {Page.CLSID} id = {props.id}/>
                   } else
