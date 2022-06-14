@@ -6,7 +6,8 @@ import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
-import { XMLrequest, get_cookie } from "../Url";
+import { XMLrequest, get_cookie, ImgBASE64 } from "../Url";
+import Box  from "@mui/material/Box";
 import { Tabs, TabItem} from 'smart-webcomponents-react/tabs';
 import Link from '@mui/material/Link';
 import  { tokenProcessingTest } from "../TokenProcessing";
@@ -30,6 +31,7 @@ import DialogActions from "@mui/material/DialogActions"
 import Checkbox from "@mui/material/Checkbox"
 import FormLabel from "@mui/material/FormLabel"
 import ManWhoSoldTheWorld from "../MainPage/stimategrid/test";
+import AccorionDownIcon from "../../static/images/down.png";
 
 
 
@@ -68,7 +70,7 @@ const Accordion = styled((props) => (
         : 'rgba(0, 0, 0, .03)',
     // flexDirection: 'row-reverse',
     '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
-      transform: 'rotate(90deg)',
+      transform: 'rotate(180deg)',
     },
     '& .MuiAccordionSummary-content': {
       marginLeft: theme.spacing(1),
@@ -401,7 +403,7 @@ export default function FormsMainFile(props){
 // splitter color - #dcd8cc
 //  selected section - #dcd8cc
 
-    function CheckAndReturnComponent(json, SubLabel, keyName){
+    function CheckAndReturnComponent(json, SubLabel, keyName, RCDATAFormParent){
         let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Corners, BGColor, returnSub=[];
         Left = GetParams(json, "Left");
         Top = GetParams(json, "Top");
@@ -417,8 +419,9 @@ export default function FormsMainFile(props){
 
                 RCDATA = GetParams(json,"RCDATA");
                 if(SubLabel === "TCategoryPanel"){
+                    let LocalTop = RCDATAFormParent?Number(Top) + 56:Top
                     ReturnComponent.push(
-                    <Grid keyName={keyName} style={{ position:"absolute" ,left:`${Left}px`, top:`${Number(Top) + 38}px`, visibility:Visability }}>
+                    <Grid keyName={keyName} style={{ position:"absolute" ,left:`${Left}px`, top:`${LocalTop}px`, visibility:Visability }}>
                         <img style={{width: `${Width}px`,height:`${Height}px`}} src={`data:image/png;base64,${RCDATA}`} />
                     </Grid>
                     ) 
@@ -435,11 +438,12 @@ export default function FormsMainFile(props){
             case "TButton":
                 Text = GetParams(json,"Text");
                 if(SubLabel === "TCategoryPanel"){
+                    let LocalTop = RCDATAFormParent?Number(Top) + 52:Top
                     ReturnComponent.push(
                         <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
                         style={{
                         color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
-                        minWidth: "1px", width: `${Width}px`,height:`${Height}px`,position:"absolute", left:`${Left}px`, top:`${Number(Top) + 40}px`, 
+                        minWidth: "1px", width: `${Width}px`,height:`${Height}px`,position:"absolute", left:`${Left}px`, top:`${LocalTop}px`, 
                         textTransform:"none" , visibility:Visability
                         }}>
                             
@@ -549,9 +553,11 @@ export default function FormsMainFile(props){
 
             case "TLabel":
                 let FixedWidth = roughScale(Width, 10) + 8
+               
                 if(SubLabel === "TCategoryPanel"){
+                    let LocalTop = RCDATAFormParent?Number(Top) + 57:Top
                     ReturnComponent.push(
-                        <Grid keyName={keyName} style={{ visibility:Visability, width: `${FixedWidth}px`,height:`${Height}px`,position:"absolute" ,left:`${Left}px`, top:`${Number(Top) + 40}px`, } }>
+                        <Grid keyName={keyName} style={{ visibility:Visability, width: `${FixedWidth}px`,height:`${Height}px`,position:"absolute" ,left:`${Left}px`, top:`${LocalTop}px`, } }>
                             {TextFromServerToBrowser(json, keyName)}                             
                         </Grid>
                     )  
@@ -566,10 +572,12 @@ export default function FormsMainFile(props){
                 break;
 
             case "TCategoryPanelGroup"://WITH SUB
-
+                RCDATA = GetParams(json,"RCDATA"); 
                 ReturnComponent.push(
                     <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", visibility:Visability, backgroundColor: BGColor }}>
-                        {SubDataProcessing(json)}
+
+                        {SubDataProcessing(json,null, RCDATA)}
+                        
                     </Grid>
                 )
                 break;
@@ -584,13 +592,25 @@ export default function FormsMainFile(props){
                 
                 let BoolOpen = expandedMap.get(Caption);
                 let TestVisability  = BoolOpen? "inline-block":"none" 
+                console.log(typeof(RCDATAFormParent))
+                let HadImg = RCDATAFormParent?true:false
                 ReturnComponent.push(
                     <Accordion expanded={BoolOpen} onChange={handleChangeAccordion(Caption)} keyName={keyName} >
-                        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" style={{backgroundColor:"#edeae2"}}>
-                            <Typography>{Caption}</Typography>
+                        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" style={{backgroundColor:"#edeae2"}} expandIcon={<img src={AccorionDownIcon}/> }>
+                            <Grid container direction="row" justifyContent="flex-start" alignItems="center">
+                                <Grid item style={{position:"relative", left:"-16px"}}>
+                                    <img  src={`data:image/png;base64,${RCDATAFormParent}`} />
+                                </Grid>
+                                <Grid item>
+                                    <Typography>{Caption}</Typography>
+                                </Grid>
+                            </Grid>
+                            
+                            
+                            
                         </AccordionSummary>
                         <AccordionDetails  style={{ width: `${Width}px`,height:`${Height}px`, display:TestVisability, backgroundColor:"#ffffff"}}>
-                            {SubDataProcessing(json,"TCategoryPanel")} 
+                            {SubDataProcessing(json,"TCategoryPanel",HadImg)} 
                         </AccordionDetails>
                     </Accordion> 
                 )
@@ -721,14 +741,14 @@ function FormDataProcessing(json) {
         
     }
 
-    function SubDataProcessing(json, subElement){
+    function SubDataProcessing(json, subElement, RCDATA){
         if(dataForms !== undefined){
             let val, returnAll=[]
             //json = json.Form;
             for(const [key, value] of Object.entries(json)) {
                 val = value
                 if(val.Type !==undefined ){
-                    returnAll.push( CheckAndReturnComponent(value, subElement, key)) 
+                    returnAll.push( CheckAndReturnComponent(value, subElement, key, RCDATA)) 
                 }
             } 
             return returnAll 
@@ -749,15 +769,15 @@ function FormDataProcessing(json) {
         ) 
     }else{
         return(
-        <Grid >
+        <>
             <SectionToolsJS ID={props.id} SetBackValue={setSubForms}  buildForms ={FormDataProcessing}/>
-            <Grid id="mainForms" style={{position:"absolute", height: "100%", width:"100%", backgroundColor:"s", cursor: cursor}}>
+            <Grid id="mainForms" style={{position:"relative", height: "100%", width:"100%", backgroundColor:"s", cursor: cursor}}>
                 {FormDataProcessing(dataForms)}
             </Grid>
             <Grid id="RenderFormsModal">
 
             </Grid>
-        </Grid>
+        </>
             
         )  
     }
