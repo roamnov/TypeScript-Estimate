@@ -145,13 +145,11 @@ const Accordion = styled((props) => (
 export default function FormsMainFile(props){
     let LastDrx = get_cookie("LastLogin").split(",");
     const [dataForms, setDataForms] = useState();
-    const [dataFormsUpd, setdataFormsUpd] = useState();
     const [expanded, setExpanded] = React.useState('panel1');
     const [expandedMap, setExpandedMap] = React.useState(new Map);
     const [load, setLoad] = React.useState(true)
     const [currentHeight, setCurrentHeight] = useState(window.innerHeight - 189);
     const [subForms, setSubForms] = useState(undefined);
-    const [currentDrx, setCurrentDrx] = useState(LastDrx === undefined? "": LastDrx[0]);
     const [cursor,setCursor] = useState("auto");
 
     const handleResize = () => {
@@ -441,11 +439,11 @@ export default function FormsMainFile(props){
                     let LocalTop = RCDATAFormParent?Number(Top) + 52:Top
                     ReturnComponent.push(
                         <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
-                        style={{
-                        color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
-                        minWidth: "1px", width: `${Width}px`,height:`${Height}px`,position:"absolute", left:`${Left}px`, top:`${LocalTop}px`, 
-                        textTransform:"none" , visibility:Visability
-                        }}>
+                            style={{
+                            color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
+                            minWidth: "1px", width: `${Width}px`,height:`${Height}px`,position:"absolute", left:`${Left}px`, top:`${LocalTop}px`, 
+                            textTransform:"none" , visibility:Visability
+                            }}>
                             
                             {TextFromServerToBrowser(json)}  
                             {SubDataProcessing(json)}  
@@ -454,11 +452,11 @@ export default function FormsMainFile(props){
                 }else{
                     ReturnComponent.push(
                         <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
-                        style={{
-                        color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
-                        minWidth: "1px", width: `${Width}px`,height:`${Height}px`, position:"absolute", left:`${Left}px`, top:`${Top}px`, 
-                        textTransform:"none" , visibility:Visability
-                        }}>
+                            style={{
+                            color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
+                            minWidth: "1px", width: `${Width}px`,height:`${Height}px`, position:"absolute", left:`${Left}px`, top:`${Top}px`, 
+                            textTransform:"none" , visibility:Visability
+                            }}>
                             
                             {TextFromServerToBrowser(json)}  
                             {SubDataProcessing(json)}  
@@ -592,7 +590,6 @@ export default function FormsMainFile(props){
                 
                 let BoolOpen = expandedMap.get(Caption);
                 let TestVisability  = BoolOpen? "inline-block":"none" 
-                console.log(typeof(RCDATAFormParent))
                 let HadImg = RCDATAFormParent?true:false
                 ReturnComponent.push(
                     <Accordion expanded={BoolOpen} onChange={handleChangeAccordion(Caption)} keyName={keyName} >
@@ -605,9 +602,6 @@ export default function FormsMainFile(props){
                                     <Typography>{Caption}</Typography>
                                 </Grid>
                             </Grid>
-                            
-                            
-                            
                         </AccordionSummary>
                         <AccordionDetails  style={{ width: `${Width}px`,height:`${Height}px`, display:TestVisability, backgroundColor:"#ffffff"}}>
                             {SubDataProcessing(json,"TCategoryPanel",HadImg)} 

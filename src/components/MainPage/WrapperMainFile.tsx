@@ -67,11 +67,11 @@ export default function WrapperRightSide() {
   return ( 
   // <ThemeProvider>
     <div style={{ display: 'flex', height: "100%", overflow: "hidden", position: "absolute", flexDirection: "column", width: "100%" }} >
-      <div style={{ display: 'flex', height: "82px", overflow: "hidden" }} id="Header">
+      <div style={{ display: 'flex', height: "94px", overflow: "hidden" }} id="Header">
         <DashboardNavbar />
         <div className={
               cn("headerStimate",{light: theme === "light"})
-            }  style={{ height: "34px", overflow: "hidden", width: "100%", position: "fixed", top: "48px", boxShadow: "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)" }}>
+            }  style={{ height: "34px", overflow: "hidden", width: "100%", position: "fixed", top: "48px",  }}> {/* boxShadow: "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)" */}
           <div id="miniMenu" style={{ display: '-webkit-box', alignItems: "center" }}>
             <div id="HideMenu" >
               <Tooltip title={!drawerOpen ? "Показать панель рабочих мест" : "Скрыть панель рабочих мест"}

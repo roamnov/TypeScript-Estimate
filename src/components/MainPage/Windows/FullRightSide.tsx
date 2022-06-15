@@ -78,10 +78,12 @@ export default function FullRightSide(props: InfoAboutClick) {
           reportContent = String(reportContent).replaceAll(/[\r]+/g, "");
           frame.innerHTML = reportContent
           //reportContent = "<iframe>"+reportContent+"</iframe>"
+          
           JSXTabItems.push(
             <TabItem id={ViewIdentForButton.ViewIdent+ViewIdentForButton.items[key]} style={{textTransform:"none",display:"inline-block", height: currentHeight}} 
               label={ValueAny.Title} >
                <Frame 
+               onClick={(event:any)=>{console.log(event)}}
                initialContent = {reportContent} 
                style ={{width:"100%", height: "100%"}}>
               </Frame> 
@@ -125,11 +127,12 @@ export default function FullRightSide(props: InfoAboutClick) {
             }
           }else{
             ReactDOM.render(
-              <Grid item  id={id+"tabsContainer"}>    
+              <Grid item  id={id+"tabsContainer"} >    
                   <Tabs  selectionMode="dblclick" scrollMode="paging" id={id+"tabs"} 
+                  
                     closeButtons tabPosition="bottom" className="Tabs"  selectedIndex={TabIndex}
                     style={{ height: "400px", width: "100%" }} onChange={OnIndexChange} onClosing={handleClosing} onClose={onCloseTab}>
-    
+                      
                       {JSXTabItems}
               
                   </Tabs>
@@ -143,6 +146,27 @@ export default function FullRightSide(props: InfoAboutClick) {
           let tab:any, tabs:any, valueStylingLabels:any, tabItems:any,valueAnyLabel:any, Fixed:any ;          
           tabs = document.getElementById(id+"tabs");
           if(tabs){ 
+            try{
+              let Test = document.getElementsByClassName("linkref")
+              let valAny:any
+              for(const [key, value] of Object.entries(Test)){
+                // console.log(value)
+                valAny = value
+                valAny.id= valAny.href;
+                valAny.href = "";
+                // console.log(valAny.href)
+                if(!valAny.onclick){
+                  valAny.onclick = function(event:any){
+                    console.log(event.href)
+                    alert(event.id)
+                  }
+                }
+  
+              }
+              // console.log(Test)
+            }catch{
+  
+            }
             tabItems = tabs.getTabs();
             for (const [key, value] of Object.entries(tabs["_tabLabelContainers"])) {
               valueAnyLabel = value;
