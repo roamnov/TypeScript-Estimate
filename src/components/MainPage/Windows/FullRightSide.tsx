@@ -494,7 +494,7 @@ export default function FullRightSide(props: InfoAboutClick) {
                   if (Page.CLSID !== undefined && Page.CLSID === "{C0CED968-8834-405D-8801-A3838BF536F3}") {//Формы
                     content = <FormsMainFile id={props.id} />
                   } else if (Page.CLSID !== undefined && Page.CLSID === "{D8402CE6-6582-4F0D-A82D-C2D9CA73F79E}") {
-                    content = <Params id={"item_params_reports" + props.id} SectionID={props.id} data={loadObjects(Page.Params.Path)} />
+                    content = <Params id={props.id} SectionID={props.id} data={loadObjects(Page.Params.Path)} />
                   } else {
                     content = <StillDevelopmentPage id={props.id} SectionToolsJS={false} />
                   }
