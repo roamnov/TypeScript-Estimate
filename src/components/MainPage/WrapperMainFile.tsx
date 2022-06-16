@@ -13,10 +13,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { IconButton } from '@material-ui/core';
 import Split from 'react-split'
 import Tooltip from '@mui/material/Tooltip';
-import CustomScroll from 'react-custom-scroll';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-export default function WrapperRightSide() {
+import cn from "classnames"
+import useTheme from '../Hooks/useTheme';
+import { ThemeProvider } from '../../provider/ThemeProvider';
 
+export default function WrapperRightSide() {
+  const theme:any = useTheme(); 
   function ClickDocument(ev: any) {
     let AllList, list, itemList
     AllList = document.querySelectorAll("div.css-b62m3t-container")
@@ -34,7 +37,13 @@ export default function WrapperRightSide() {
     }
   }
 
-  
+  React.useEffect(()=>{
+    let SplitterBlock:any = document.getElementById("SideBar_FullRightSide")
+    // console.log(SplitterBlock?.firstChild.children[1])
+    let Splitter = SplitterBlock?.firstChild.children[1]
+    const color = theme ==="light"?"#dcd8cc":"#85bee5"
+    Splitter.style.background= color
+  },[theme])
 
   const [id, setID] = React.useState();
   const [clsid, setCLSID] = React.useState();
@@ -55,14 +64,21 @@ export default function WrapperRightSide() {
   
  
 
-  return (
+  return ( 
+  // <ThemeProvider>
     <div style={{ display: 'flex', height: "100%", overflow: "hidden", position: "absolute", flexDirection: "column", width: "100%" }} >
-      <div style={{ display: 'flex', height: "82px", overflow: "hidden" }} id="Header">
+      <div style={{ display: 'flex', height: "94px", overflow: "hidden" }} id="Header">
         <DashboardNavbar />
-        <div style={{ height: "34px", overflow: "hidden", width: "100%", backgroundColor: "rgb(98, 142, 184)", position: "fixed", top: "48px", boxShadow: "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)" }}>
+        <div className={
+              cn("headerStimate",{light: theme === "light"})
+            }  style={{ height: "34px", overflow: "hidden", width: "100%", position: "fixed", top: "48px",  }}> {/* boxShadow: "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)" */}
           <div id="miniMenu" style={{ display: '-webkit-box', alignItems: "center" }}>
             <div id="HideMenu" >
-              <Tooltip title={!drawerOpen ? "Показать панель рабочих мест" : "Скрыть панель рабочих мест"} >
+              <Tooltip title={!drawerOpen ? "Показать панель рабочих мест" : "Скрыть панель рабочих мест"}
+                className={
+                  cn("iconButtonStimete",{light: theme === "light"})
+                } 
+              >
                 <IconButton aria-label="CancelEdit" size="small" onClick={ShowMenu}>
                   <MenuIcon />
                 </IconButton>
@@ -71,27 +87,35 @@ export default function WrapperRightSide() {
             <div id="HiddenNav" style= {drawerOpen ? {display: 'none'}: {display: 'flex'}} >
               <HiddenNavButton />
             </div>
-            <div id="NameSection" style={{ color: "azure", paddingTop: "6px", fontFamily: "Roboto,Helvetica,Arial, sans-serif", fontWeight: "500", fontSize: "1rem" }}>
+            <div className={
+                    cn("fontColorStimate",{light: theme === "light"})
+                  }  id="NameSection" style={{  paddingTop: "6px", fontFamily: "Roboto,Helvetica,Arial, sans-serif", fontWeight: "500", fontSize: "1rem" }}>
             </div>
           </div>
         </div>
       </div>
 
       <div style={{ display: 'flex', height: "100%", overflow: "hidden", flexDirection: "row" }} id="SideBar_FullRightSide">
-        <Split className="wrap" sizes={[20, 80]}>
-          <div style={drawerOpen ? { width: "calc(20% - 5px)",height: "100%", overflow: "auto", backgroundColor: "#628cb6",  whiteSpace:"nowrap" } : {height: "100%", backgroundColor: "#628cb6", width: "0px"}} id="SideBar" >
+        <Split className="wrap" sizes={[20, 80]}  >
+          <div 
+          className={
+            cn("sidebarStimate",{light: theme === "light"})
+          } 
+          style={drawerOpen ? { width: "calc(20% - 5px)",height: "100%", overflow: "auto", whiteSpace:"nowrap" } : {height: "100%",  width: "0px"}} id="SideBar" >
           <Scrollbars autoHide>
             <SideBar isLoading={setIsLoading} setSelected={setSelected} />
           </Scrollbars>
-         
-            
           </div>
-          <div  style={ drawerOpen ? { display: 'flex', height: "100%", overflow: "hidden", width: "calc(80% - 5px)" }: { display: 'flex', height: "100%", overflow: "hidden", width: "100%" }} id="FullRightSide" >
+          <div className={
+            cn("backgroundColorStimate",{light: theme === "light"})
+          } 
+            style={ drawerOpen ? { display: 'flex', height: "100%", overflow: "hidden", width: "calc(80% - 5px)" }: { display: 'flex', height: "100%", overflow: "hidden", width: "100%" }} id="FullRightSide" >
             <FullRightSide isLoading={isLoading} id={selected?.id} clsic={selected?.clsic} name={selected?.name} />
           </div>
         </Split>
       </div>
     </div>
+    // </ThemeProvider>
   );
 }
 

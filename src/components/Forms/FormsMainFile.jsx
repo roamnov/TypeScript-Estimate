@@ -6,7 +6,8 @@ import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
-import { XMLrequest } from "../Url";
+import { XMLrequest, get_cookie, ImgBASE64 } from "../Url";
+import Box  from "@mui/material/Box";
 import { Tabs, TabItem} from 'smart-webcomponents-react/tabs';
 import Link from '@mui/material/Link';
 import  { tokenProcessingTest } from "../TokenProcessing";
@@ -30,6 +31,7 @@ import DialogActions from "@mui/material/DialogActions"
 import Checkbox from "@mui/material/Checkbox"
 import FormLabel from "@mui/material/FormLabel"
 import ManWhoSoldTheWorld from "../MainPage/stimategrid/test";
+import AccorionDownIcon from "../../static/images/down.png";
 
 
 
@@ -66,9 +68,9 @@ const Accordion = styled((props) => (
       theme.palette.mode === 'dark'
         ? 'rgba(255, 255, 255, .05)'
         : 'rgba(0, 0, 0, .03)',
-    flexDirection: 'row-reverse',
+    // flexDirection: 'row-reverse',
     '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
-      transform: 'rotate(90deg)',
+      transform: 'rotate(180deg)',
     },
     '& .MuiAccordionSummary-content': {
       marginLeft: theme.spacing(1),
@@ -141,16 +143,14 @@ const Accordion = styled((props) => (
 //////////////////////////////////////////////////////////////////////////////////////
 
 export default function FormsMainFile(props){
+    let LastDrx = get_cookie("LastLogin").split(",");
     const [dataForms, setDataForms] = useState();
-    const [dataFormsUpd, setdataFormsUpd] = useState();
     const [expanded, setExpanded] = React.useState('panel1');
     const [expandedMap, setExpandedMap] = React.useState(new Map);
     const [load, setLoad] = React.useState(true)
     const [currentHeight, setCurrentHeight] = useState(window.innerHeight - 189);
     const [subForms, setSubForms] = useState(undefined);
-    const [mainBGColor,setMainBGColor] = useState();
     const [cursor,setCursor] = useState("auto");
-    
 
     const handleResize = () => {
         setCurrentHeight(window.innerHeight - 189);
@@ -232,16 +232,20 @@ export default function FormsMainFile(props){
 
 
     function TextFromServerToBrowser(json, keyName){
-        let Text, FontStyle, ReferenceLink, FontSize, autoSize, FontColor
+        let Text, FontStyle, ReferenceLink, FontSize, autoSize, FontColor, Alignment, BorderWidth
         autoSize = GetParams(json,"AutoSize") === "0"? "hidden": "unset"
         FontSize =  GetParams(json,"Font-size");
         Text = GetParams(json,"Text");
         ReferenceLink = GetParams(json,"Reference");
         FontStyle = BackFontweight(GetParams(json,"Font-style"));
         FontColor = BackColor(GetParams(json,"Font-color"))
+        Alignment = ConvertAlignment (GetParams(json, "Alignment"));
+        BorderWidth =GetParams(json,"BorderWidth");
+        BorderWidth = BorderWidth === undefined? undefined:`${Number(BorderWidth)/100*50}px`
+        // parseInt(FontSize, 10)*0,13}px`,
         if( ReferenceLink === "1"){
             return(
-                    <Typography style={{fontSize: `${parseInt(FontSize, 10)*0,13}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor }}> 
+                    <Typography style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor , textAlign: Alignment, padding:BorderWidth, overflow: "hidden" }}> 
                         <Link keyName={keyName}  component="button" variant="body2" underline="hover" onClick={ClickFormElement}>
                             {Text}
                         </Link>
@@ -249,7 +253,7 @@ export default function FormsMainFile(props){
                 )
         }else{
             return(
-                    <Typography onClick={ClickFormElement} keyName={keyName} style={{fontSize: `${parseInt(FontSize, 10)*0,13}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor }}> 
+                    <Typography onClick={ClickFormElement} keyName={keyName} style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor, textAlign: Alignment, padding:BorderWidth , overflow: "hidden"}}> 
                         {Text}
                     </Typography>
                 )
@@ -363,8 +367,41 @@ export default function FormsMainFile(props){
             return ManWhoSoldTheWorld(props.id, Path)
         }, 1000);
     }
+
+    function ConvertAlignment(item){
+        switch(item){
+            case"центр":
+                return "center"
+            case"влево":
+                return "left"
+            case"вправо":
+                return "right"
+        }
+    }
     
-    function CheckAndReturnComponent(json, SubLabel, keyName){
+    function ConvertBorder(borderInfo , BevelWidth){
+        if(borderInfo){
+            let borderInfoArr= borderInfo.split(",");
+            for(const [key, value] in borderInfoArr){
+                switch(value){
+                    case "лево":
+                        break;
+                    case "право":
+                        break;
+                    case "верх":
+                        break;
+                    case "низ":
+                        break;
+                }
+            } 
+        }
+        
+    }
+// bgcolor(main) - #faf9f5
+// splitter color - #dcd8cc
+//  selected section - #dcd8cc
+
+    function CheckAndReturnComponent(json, SubLabel, keyName, RCDATAFormParent){
         let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Corners, BGColor, returnSub=[];
         Left = GetParams(json, "Left");
         Top = GetParams(json, "Top");
@@ -380,8 +417,9 @@ export default function FormsMainFile(props){
 
                 RCDATA = GetParams(json,"RCDATA");
                 if(SubLabel === "TCategoryPanel"){
+                    let LocalTop = RCDATAFormParent?Number(Top) + 56:Top
                     ReturnComponent.push(
-                    <Grid keyName={keyName} style={{ position:"absolute" ,left:`${Left}px`, top:`${Number(Top) + 38}px`, visibility:Visability }}>
+                    <Grid keyName={keyName} style={{ position:"absolute" ,left:`${Left}px`, top:`${LocalTop}px`, visibility:Visability }}>
                         <img style={{width: `${Width}px`,height:`${Height}px`}} src={`data:image/png;base64,${RCDATA}`} />
                     </Grid>
                     ) 
@@ -398,13 +436,14 @@ export default function FormsMainFile(props){
             case "TButton":
                 Text = GetParams(json,"Text");
                 if(SubLabel === "TCategoryPanel"){
+                    let LocalTop = RCDATAFormParent?Number(Top) + 52:Top
                     ReturnComponent.push(
                         <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
-                        style={{
-                        color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
-                        minWidth: "1px", width: `${Width}px`,height:`${Height}px`,position:"absolute", left:`${Left}px`, top:`${Number(Top) + 40}px`, 
-                        textTransform:"none" , visibility:Visability
-                        }}>
+                            style={{
+                            color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
+                            minWidth: "1px", width: `${Width}px`,height:`${Height}px`,position:"absolute", left:`${Left}px`, top:`${LocalTop}px`, 
+                            textTransform:"none" , visibility:Visability
+                            }}>
                             
                             {TextFromServerToBrowser(json)}  
                             {SubDataProcessing(json)}  
@@ -413,11 +452,11 @@ export default function FormsMainFile(props){
                 }else{
                     ReturnComponent.push(
                         <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
-                        style={{
-                        color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
-                        minWidth: "1px", width: `${Width}px`,height:`${Height}px`, position:"absolute", left:`${Left}px`, top:`${Top}px`, 
-                        textTransform:"none" , visibility:Visability
-                        }}>
+                            style={{
+                            color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
+                            minWidth: "1px", width: `${Width}px`,height:`${Height}px`, position:"absolute", left:`${Left}px`, top:`${Top}px`, 
+                            textTransform:"none" , visibility:Visability
+                            }}>
                             
                             {TextFromServerToBrowser(json)}  
                             {SubDataProcessing(json)}  
@@ -476,7 +515,6 @@ export default function FormsMainFile(props){
                 let Path = json.Params.Path
                 if(Path !== undefined){
                     let params = new Map
-                    console.log(Path)
                     params.set('prefix','programs'); 
                     params.set('comand','GetTableLayout');
                     params.set ('ObjType',"0");
@@ -493,7 +531,7 @@ export default function FormsMainFile(props){
                     break;
                 }
                 
-                
+
                 
                 // GET /programs~GetTableLayout?LicGUID=72D72A7946ED30AB0808358980788EDA&ObjType=0&Path={7FEC323D-E184-4147-8F44-352DD337B515}&SectionID=482 HTTP/1.0
                 // POST /programs~HandleTable?LicGUID=72D72A7946ED30AB0808358980788EDA&Path={7FEC323D-E184-4147-8F44-352DD337B515}&SectionID=482 HTTP/1.0
@@ -513,15 +551,17 @@ export default function FormsMainFile(props){
 
             case "TLabel":
                 let FixedWidth = roughScale(Width, 10) + 8
+               
                 if(SubLabel === "TCategoryPanel"){
+                    let LocalTop = RCDATAFormParent?Number(Top) + 57:Top
                     ReturnComponent.push(
-                        <Grid keyName={keyName} style={{ visibility:Visability, width: `${FixedWidth}px`,height:`${Height}px`,position:"absolute" ,left:`${Left}px`, top:`${Number(Top) + 40}px`, } }>
+                        <Grid keyName={keyName} style={{ visibility:Visability, width: `${FixedWidth}px`,height:`${Height}px`,position:"absolute" ,left:`${Left}px`, top:`${LocalTop}px`, } }>
                             {TextFromServerToBrowser(json, keyName)}                             
                         </Grid>
                     )  
                 }else{
                     ReturnComponent.push(
-                        <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${FixedWidth}px`,height:`${Height}px`, whiteSpace: "nowrap", visibility:Visability }}>
+                        <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${FixedWidth}px`,height:`${Height}px`,  visibility:Visability }}>
                             {TextFromServerToBrowser(json, keyName)}
                         </Grid>
                     )   
@@ -530,10 +570,12 @@ export default function FormsMainFile(props){
                 break;
 
             case "TCategoryPanelGroup"://WITH SUB
-
+                RCDATA = GetParams(json,"RCDATA"); 
                 ReturnComponent.push(
                     <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", visibility:Visability, backgroundColor: BGColor }}>
-                        {SubDataProcessing(json)}
+
+                        {SubDataProcessing(json,null, RCDATA)}
+                        
                     </Grid>
                 )
                 break;
@@ -548,13 +590,21 @@ export default function FormsMainFile(props){
                 
                 let BoolOpen = expandedMap.get(Caption);
                 let TestVisability  = BoolOpen? "inline-block":"none" 
+                let HadImg = RCDATAFormParent?true:false
                 ReturnComponent.push(
                     <Accordion expanded={BoolOpen} onChange={handleChangeAccordion(Caption)} keyName={keyName} >
-                        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" style={{backgroundColor:"#edeae2"}}>
-                            <Typography>{Caption}</Typography>
+                        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" style={{backgroundColor:"#edeae2"}} expandIcon={<img src={AccorionDownIcon}/> }>
+                            <Grid container direction="row" justifyContent="flex-start" alignItems="center">
+                                <Grid item style={{position:"relative", left:"-16px"}}>
+                                    <img  src={`data:image/png;base64,${RCDATAFormParent}`} />
+                                </Grid>
+                                <Grid item>
+                                    <Typography>{Caption}</Typography>
+                                </Grid>
+                            </Grid>
                         </AccordionSummary>
                         <AccordionDetails  style={{ width: `${Width}px`,height:`${Height}px`, display:TestVisability, backgroundColor:"#ffffff"}}>
-                            {SubDataProcessing(json,"TCategoryPanel")} 
+                            {SubDataProcessing(json,"TCategoryPanel",HadImg)} 
                         </AccordionDetails>
                     </Accordion> 
                 )
@@ -587,17 +637,32 @@ export default function FormsMainFile(props){
                 break;
 
             case "TGradientPanel"://WITH SUB
+                let BorderRadius = json.BevelEdges
+                
+                // ConvertBorder(BorderRadius, GetParams(json,"BevelWidth"))
+                let Radius = json.Radius
+                Text = GetParams(json,"Text");
+                Text = Text.substr(0, 8)
+                let BevelWidth= GetParams(json,"BevelWidth");
+                BevelWidth = BevelWidth=== undefined?0:Number(BevelWidth)
                 ReturnComponent.push(
-                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor }}>
+                    <Grid keyName={keyName} 
+                        style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, 
+                        overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor, borderRadius:`${Radius}px`, 
+                        overflow:"hidden", borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px` }}>
                         {SubDataProcessing(json)}
+                        {Text === "Gradient"?<></>:TextFromServerToBrowser(json, keyName)}
                     </Grid>
                 )
                 break;
 
             case "TBevel"://WITH SUB
+                    
                 ReturnComponent.push(
                     <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor }}>
-                        {SubDataProcessing(json)}
+                        <div style={{height:"2px", backgroundColor: "#cbcbca", borderRadius:"1px", marginTop:`${Number(Height*0.5)}px`}}>
+                            {/* {SubDataProcessing(json)} */}
+                        </div>
                     </Grid>
                 )
                 break;
@@ -607,7 +672,6 @@ export default function FormsMainFile(props){
                 PickList = GetParams(json, "PickList").split("\r\n");
                 Text = GetParams(json, "PickList").split("\r\n");
                 Columns = GetParams(json,"Columns");
-                console.log(PickList)
                 for(let key of PickList){
                     if(key !== ""){
                         returnSub.push(
@@ -634,7 +698,6 @@ export default function FormsMainFile(props){
 
             case "TRadioButton":
                 Text = GetParams(json, "Text")
-                console.log(json)
                 ReturnComponent.push(
                     <FormControlLabel value={Text} control={<Radio />} label={Text} />
                 )
@@ -643,6 +706,14 @@ export default function FormsMainFile(props){
             case "TListBox":
 
                 break
+            case "TMarkingPanel":
+
+                ReturnComponent.push(
+                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", visibility:Visability, backgroundColor: BGColor }}>
+                        {SubDataProcessing(json)}
+                    </Grid>
+                )
+                break;
             
         }
         return ReturnComponent;
@@ -652,7 +723,6 @@ function FormDataProcessing(json) {
         if(dataForms !== undefined){
             let val, returnAll=[]
             json = json.Form;
-            // console.log(json.hasOwnProperty("пДействия"))
             for(const [key, value] of Object.entries(json)) {
                 val = value
                 if(val.Type !==undefined ){
@@ -665,14 +735,14 @@ function FormDataProcessing(json) {
         
     }
 
-    function SubDataProcessing(json, subElement){
+    function SubDataProcessing(json, subElement, RCDATA){
         if(dataForms !== undefined){
             let val, returnAll=[]
             //json = json.Form;
             for(const [key, value] of Object.entries(json)) {
                 val = value
                 if(val.Type !==undefined ){
-                    returnAll.push( CheckAndReturnComponent(value, subElement, key)) 
+                    returnAll.push( CheckAndReturnComponent(value, subElement, key, RCDATA)) 
                 }
             } 
             return returnAll 
@@ -693,15 +763,15 @@ function FormDataProcessing(json) {
         ) 
     }else{
         return(
-        <Grid >
+        <>
             <SectionToolsJS ID={props.id} SetBackValue={setSubForms}  buildForms ={FormDataProcessing}/>
-            <Grid id="mainForms" style={{position:"absolute", height: "100%", width:"100%", backgroundColor:"s", cursor: cursor}}>
+            <Grid id="mainForms" style={{position:"relative", height: "100%", width:"100%", backgroundColor:"s", cursor: cursor}}>
                 {FormDataProcessing(dataForms)}
             </Grid>
             <Grid id="RenderFormsModal">
 
             </Grid>
-        </Grid>
+        </>
             
         )  
     }

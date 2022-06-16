@@ -19,14 +19,15 @@ import { useStyles } from "../../Styles"
 import { Tooltip, Typography } from '@mui/material';
 import { Theme } from '../../Wrapper';
 import { HiddenNavButton } from './HiddenNav'
+import useTheme from '../../Hooks/useTheme';
+import cn from "classnames"
 
 const DashboardNavbar = (props: any) => {
+  const theme:any = useTheme(); 
   const [notifications] = useState([]);
-  const [authtoken, setAutnToken] = useLocalStorage(true, "auth")
   let navigate = useNavigate();
   const classes = useStyles();
   const drx = get_cookie("drx");
-
   const HandleSingOut = (event: any) => {
     let params = new Map();
     params.set('comand', 'leave');
@@ -36,20 +37,30 @@ const DashboardNavbar = (props: any) => {
   };
 
   return (
-    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} style={{ backgroundColor: "#628eb8" }}>
+    <AppBar className={
+      cn("headerStimate",{light: theme === "light"})
+    } 
+    position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} >
       <Toolbar className={classes.customizeToolbar} style={{ minHeight: 48, height: 48 }}>
         <Typography
           variant="h5"
           noWrap
           component="div"
           sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+          className={
+            cn("fontColorStimate",{light: theme === "light"})
+          } 
         >
           {drx.replace(".drx", "")}
         </Typography>
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <IconButton color="inherit" size="large">
+        <IconButton  size="large"
+          className={
+            cn("iconButtonStimete",{light: theme === "light"})
+          } 
+        >
           <Badge
             badgeContent={notifications.length}
             color="primary"
@@ -60,7 +71,11 @@ const DashboardNavbar = (props: any) => {
         </IconButton>
         <Tooltip title={"Выход"}>
           <Link to={'/'} >
-            <IconButton color="inherit" size="large" onClick={HandleSingOut}>
+            <IconButton size="large" onClick={HandleSingOut}
+              className={
+                cn("iconButtonStimete",{light: theme === "light"})
+              } 
+            >
               <InputIcon />
 
             </IconButton>

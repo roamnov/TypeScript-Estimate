@@ -17,7 +17,8 @@ const StillDevelopmentPage = (props: any) => {
     
 
     return (
-        <><SectionToolsJS  ID={props.id} />
+        <>
+        {props.SectionToolsJS ? <SectionToolsJS ID={props.id} />: <></>}
         <Grid container direction="row" justifyContent="center" alignItems="center" style={{ height: `${currentHeight}px` }}>
             <Grid item>
                 <div>
