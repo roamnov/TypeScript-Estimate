@@ -19,7 +19,7 @@ import ReactDOM from "react-dom";
 import { isEmptyObject } from "../Tools/Tools";
 import { useNavigate } from "react-router-dom";
 import cn from "classnames"
-import useTheme from "../../Hooks/useTheme";
+import useTheme from "../../Hooks/useTheme.jsx";
 const defaultDrawerWidth = window.innerWidth / 100 * 16.791045;
 const minDrawerWidth = 1;
 const maxDrawerWidth = 400;

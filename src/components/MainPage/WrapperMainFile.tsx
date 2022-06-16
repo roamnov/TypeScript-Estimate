@@ -15,7 +15,7 @@ import Split from 'react-split'
 import Tooltip from '@mui/material/Tooltip';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import cn from "classnames"
-import useTheme from '../Hooks/useTheme';
+import useTheme from '../Hooks/useTheme.jsx';
 import { ThemeProvider } from '../../provider/ThemeProvider';
 
 export default function WrapperRightSide() {

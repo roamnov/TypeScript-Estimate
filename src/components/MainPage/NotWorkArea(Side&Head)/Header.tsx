@@ -19,7 +19,7 @@ import { useStyles } from "../../Styles"
 import { Tooltip, Typography } from '@mui/material';
 import { Theme } from '../../Wrapper';
 import { HiddenNavButton } from './HiddenNav'
-import useTheme from '../../Hooks/useTheme';
+import useTheme from '../../Hooks/useTheme.jsx';
 import cn from "classnames"
 
 const DashboardNavbar = (props: any) => {
