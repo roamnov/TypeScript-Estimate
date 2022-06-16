@@ -34,7 +34,12 @@ export default function Params(props) {
         let lvl = Number(NameParam.dataset.level)
         let NextEl = NameParam.nextElementSibling;
         let NextLvl = Number(NextEl.dataset.level);
-        let ValParam = document.getElementById("item_params_reports" + props.SectionID + "_" + props.id).querySelector(`div[data-id='Value_${NameParam.dataset.id}']`)
+        let ValParam = document.getElementById("item_params_reports" + props.SectionID + "_" + props.id)
+        if (!ValParam)
+        ValParam = document.getElementById("params_" + props.SectionID + "_" + props.id)
+        
+        ValParam = ValParam.querySelector(`div[data-id='Value_${NameParam.dataset.id}']`)
+        
         let ValNextEl = ValParam.nextElementSibling;
         let params = new Map();
         params.set('prefix', 'programs');
@@ -190,7 +195,7 @@ export default function Params(props) {
         }
     }
     return (
-        <Split className="wrap" sizes={[50, 50]}>
+        <Split className="wrap" sizes={[50, 50]} id = {"params_" + props.SectionID + "_" + props.id}>
             <Box>{CreateNameParams()}</Box>
             <Box>
                 {data.map((item) => {
