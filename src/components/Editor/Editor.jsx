@@ -99,19 +99,8 @@ export default function Editor(props) {
   else
     lp = "4px"
   var CheckID = "State_" + props.SectionID + "_" + props.id
-  var EditID = props.SectionID + "_" + props.id  //CreateName()
-  function CreateName(count) {
-    var res, s = "0123456789ABCDEFGHIKLMNOPQRSTVXYZ";
-    if (!count) count = 20
-    for (var n = 0; n <= count; n++) {
-      if (n === 0) {
-        res = s[Math.floor(Math.random() * (count - 1) + 1)];
-      } else {
-        res = res + s[Math.floor(Math.random() * (count - 1) + 1)];
-      }
-    }
-    return res
-  }
+  var EditID = props.SectionID + "_" + props.id
+  
   function SelectCheckState(e) {
     let btn = e.currentTarget;
     let CheckState = btn.dataset.checkstate;
