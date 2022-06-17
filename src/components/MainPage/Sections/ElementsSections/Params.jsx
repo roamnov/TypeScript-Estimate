@@ -123,10 +123,10 @@ export default function Params(props) {
                 paddingLeft: padding
             }}
                 data-level={level ? level : '0'}
-                data-collapsed={props.Options & ParamSetOption_Collapsed ? 1 : 0}
+                data-collapsed={item.Options & ParamSetOption_Collapsed ? 1 : 0}
                 data-id={item.ID}>
                 <Box style={{ height: "24px", width: "24px" }} >
-                    {level < levelNext ? <IconButton style={props.Options & ParamSetOption_Collapsed ? { padding: "0px" } : { padding: "0px", transform: "rotate(90deg)" }} onClick={(e) => ShowHideParams(e)}>
+                    {level < levelNext ? <IconButton style={item.Options & ParamSetOption_Collapsed ? { padding: "0px" } : { padding: "0px", transform: "rotate(90deg)" }} onClick={(e) => ShowHideParams(e)}>
                         <ArrowRightIcon />
                     </IconButton> :
                         <Box style={{ height: "24px", width: "24px" }}>
