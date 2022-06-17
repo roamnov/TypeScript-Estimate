@@ -84,7 +84,7 @@ function handleClickMessageBox (event, RequestID, emptyReq, requestData){//Messa
 }
 
 
-function EmptyRequest(RequestID){
+function EmptyRequest(RequestID, func){
     let params = new Map, data, json;
     data = { "Result":"" }
     params.set('prefix', 'project');
@@ -93,7 +93,7 @@ function EmptyRequest(RequestID){
     params.set("WSM", "1");
     json = XMLrequest(params,  data);
    // setData(json);
-    tokenProcessingTest(json);
+    tokenProcessingTest(json,func);
 }
 
 
@@ -199,7 +199,6 @@ export function  tokenProcessingTest (json, func){
 
             case "GetFileStream":
                 let FileName= json.Params.FileName, data, params = new Map
-                console.log("selestedFile")
                 if(FileName === selestedFile.name){
                     params.set('prefix', 'project');
                     params.set("comand", "ResumeRequest");
@@ -227,10 +226,13 @@ export function  tokenProcessingTest (json, func){
                 
                 break;
             case "GetDirectory":
-                EmptyRequest(RequestID);
+                EmptyRequest(RequestID, func);
                 break;
             case "OutPutText":
                 
+                break;
+            case "PutFileStream":
+                EmptyRequest(RequestID, func);
                 break;
                 
         }
@@ -240,6 +242,7 @@ export function  tokenProcessingTest (json, func){
         let docs = document.getElementById('footerProgress')
         docs.innerHTML = "";
         ReactDOM.render(<></>, document.getElementById('footerProgress'));
+        if(json.ViewIdent) func(json);
     }
     
     

@@ -16,16 +16,14 @@ import SectionReport from '../Sections/ElementsSections/SectionReports'
 import Tooltip from '@mui/material/Tooltip';
 import FormsMainFile from '../../Forms/FormsMainFile.jsx';
 import ReactDOM from 'react-dom';
-import ModalProgress from '../../Containers/ModalProgress';
 import { tokenProcessingTest } from "../../TokenProcessing"
 import IconButton from '@mui/material/IconButton';
 import axios from 'axios';
-import Scrollbars from 'react-custom-scrollbars-2';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
-import Frame from 'react-frame-component';
 import Params from '../Sections/ElementsSections/Params';
 import SectionToolsJS from '../Tools/SectionToolsJS';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 export default function FullRightSide(props: InfoAboutClick) {
@@ -113,6 +111,7 @@ export default function FullRightSide(props: InfoAboutClick) {
       let tabsLength = idTabs === null ? 1 : idTabs["_tabs"].length// определяем длинну
       let ViewIdentForButton: any = { ViewIdent: openReportData.ViewIdent + ".", items: [] }
       let JSXTabItems = []
+      // let Buttons 
       GlobalId = id;
       let reportContent: any
       if (openReportData.Items) {
@@ -173,7 +172,7 @@ export default function FullRightSide(props: InfoAboutClick) {
             ReactDOM.render(
               <Grid item id={id + "tabsContainer"} >
                 <Tabs selectionMode="dblclick" scrollMode="paging" id={id + "tabs"}
-                  closeButtons tabPosition="bottom" className="Tabs" selectedIndex={TabIndex}
+                  tabPosition="bottom" className="Tabs" selectedIndex={TabIndex}
                   style={{ height: "400px", width: "100%" }} onChange={OnIndexChange} onClosing={handleClosing} onClose={onCloseTab}>
 
                   {JSXTabItems}
@@ -186,7 +185,7 @@ export default function FullRightSide(props: InfoAboutClick) {
 
 
         setTimeout(() => {// с задержкой, что бы установить стили и кнопку поставить
-          let tab: any, tabs: any, valueStylingLabels: any, tabItems: any, valueAnyLabel: any, Fixed: any;
+          let tab: any, tabs: any, valueStylingLabels: any, tabItems: any, valueAnyLabel: any, Fixed: any, anyValClick:any, Buttons:any, childrens:any;
           tabs = document.getElementById(id + "tabs");
           if (tabs) {
             try {
@@ -196,12 +195,43 @@ export default function FullRightSide(props: InfoAboutClick) {
                 // console.log(value)
                 valAny = value
                 valAny.id = valAny.href;
-                valAny.href = "";
+                valAny.removeAttribute("href");
                 // console.log(valAny.href)
                 if (!valAny.onclick) {
                   valAny.onclick = function (event: any) {
-                    console.log(event.href)
-                    alert(event.id)
+                    let params = new Map;
+                    
+                    const idArray = event.currentTarget.id.split(",")
+                    console.log(id)
+                    for (const [key,value] of Object.entries(idArray)){
+                      anyValClick = value
+                      anyValClick = anyValClick.split(":")
+                      if(key!== "0"){
+                        console.log(anyValClick)
+                        switch(anyValClick[0]){
+                          case "module":
+                            params.set("prefix",anyValClick[1])
+                            break;
+                          case "token":
+                            params.set("comand",anyValClick[1])
+                            break;
+                          case "params":
+                            params.set("Command",anyValClick[2])
+                            break;
+                          case "viewIdent":
+                            params.set("ViewIdent",anyValClick[1])
+                            break;
+                          case "path":
+                            params.set("Path",anyValClick[1].substring(0, anyValClick[1].length - 1))
+                            break;
+
+                        }
+                      }
+                    }
+                    params.set("SectionID", props.id)
+                    params.set("WSM","1")
+                    let jsonClick = XMLrequest(params)
+                    console.log(jsonClick)
                   }
                 }
 
@@ -217,14 +247,37 @@ export default function FullRightSide(props: InfoAboutClick) {
               Fixed = Fixed === "1" ? true : false;
               valueAnyLabel.firstChild.children["0"].style.marginLeft = "17px"
               valueAnyLabel.firstChild.id = openReportData.ViewIdent + "." + openReportData.Items[key].ViewIdent
-              if (valueAnyLabel.firstChild.children["2"] === undefined) {
+              childrens = valueAnyLabel.firstChild.children
+              Buttons = Number(openReportData.Items[key].Buttons)
+              console.log( valueAnyLabel.firstChild.children["1"])
+              if (childrens["2"] === undefined &&Buttons === 3 || Buttons === 1) {//кнопки закрытия
+                console.log("asas")
+                let CloseButtonContainer = document.createElement("div");// создаем контейнер для кнопки
+                let localId= id + ",CloseButton" + key;
+                CloseButtonContainer.style.height = "10px";
+                CloseButtonContainer.style.width = "10px";
+                CloseButtonContainer.style.position = "absolute";
+                CloseButtonContainer.style.right = "2.5%";
+                CloseButtonContainer.style.top = "28%";
+                CloseButtonContainer.id = localId;
+                valueAnyLabel.firstChild.appendChild(CloseButtonContainer);
+                let idForBttn = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key];
+                ReactDOM.render(
+                  <IconButton  id={idForBttn + ","  + key} style={{ width: 10, height: 10, fontSize: "small" }} >
+                    <CloseIcon fontSize="small"/>
+                  </IconButton>
+                  , CloseButtonContainer);
+              }
+              // smart-tab-close-button
+              if (childrens["3"] === undefined || childrens["2"] === undefined && Buttons ===3 || Buttons === 2) {//кнопки для пинов
                 let PinButtonContainer = document.createElement("div");// создаем контейнер для кнопки
+                let localId= id + ",ButtonFixUp" + key
                 PinButtonContainer.style.height = "10px";
                 PinButtonContainer.style.width = "10px";
                 PinButtonContainer.style.position = "absolute";
                 PinButtonContainer.style.left = "3.2%";
                 PinButtonContainer.style.top = "22%";
-                PinButtonContainer.id = id + ",ButtonFixUp" + key;
+                PinButtonContainer.id = localId;
                 valueAnyLabel.firstChild.appendChild(PinButtonContainer);
                 let idForBttn = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key];
                 ReactDOM.render(
@@ -236,7 +289,7 @@ export default function FullRightSide(props: InfoAboutClick) {
             }
             for (const [key, value] of Object.entries(tabItems)) {
               tab = value
-              tab.style.height = `${currentHeight}px`;// даём высоту 
+              tab.style.height = `${currentHeight-10}px`;// даём высоту 
               tab.style.display = "inline-block"
             }
           }
@@ -326,21 +379,22 @@ export default function FullRightSide(props: InfoAboutClick) {
       index = detail.index;
     tabs = document.getElementById(GlobalId + "tabs");// получаем блок вкладок
     tabsItem = tabs.getTabs();
-    ViewIdent = event.explicitOriginalTarget.parentElement.id
+
+    // ViewIdent = event.explicitOriginalTarget.parentElement.id
+    ViewIdent = document.getElementById(GlobalId + `,ButtonFixUp${index}`)
+    console.log(ViewIdent)
     params.set('prefix', 'reptabs');
     params.set("comand", "CloseTabPage");
     params.set("ViewIdent", ViewIdent);
-    XMLrequest(params);
+    // XMLrequest(params);
   }
 
   function onHeightChange(element: any) {
-
     let items: any = element.getTabs(), tab: any;
-    console.log(items)
     let container: any = document.getElementById(`print_reports${props.id}`);//ищем блок СЕКЦИИ
     for (const [key, value] of Object.entries(items)) {
       tab = value
-      tab.style.height = `${currentHeight}px`;// даём высоту 
+      tab.style.height = `${currentHeight-10}px`;// даём высоту 
       tab.style.display = "inline-block"
     }
   }
@@ -433,6 +487,9 @@ export default function FullRightSide(props: InfoAboutClick) {
         }
         tokenProcessingTest(json, setOpenReportData);
         // ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} setReturnValue={setOpenReportData}/> , document.getElementById('RenderModal'));
+        break;
+      case undefined:
+        setOpenReportData(json)
         break;
       default:
         tokenProcessingTest(json);
