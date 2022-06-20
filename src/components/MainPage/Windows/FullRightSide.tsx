@@ -245,22 +245,22 @@ export default function FullRightSide(props: InfoAboutClick) {
               valueAnyLabel = value;
               Fixed = openReportData.Items[key].Fixed;
               Fixed = Fixed === "1" ? true : false;
-              valueAnyLabel.firstChild.children["0"].style.marginLeft = "17px"
+              
               valueAnyLabel.firstChild.id = openReportData.ViewIdent + "." + openReportData.Items[key].ViewIdent
               childrens = valueAnyLabel.firstChild.children
               Buttons = Number(openReportData.Items[key].Buttons)
-              console.log( valueAnyLabel.firstChild.children["1"])
-              if (childrens["2"] === undefined &&Buttons === 3 || Buttons === 1) {//кнопки закрытия
-                console.log("asas")
+              const closeButtonId = id + ",CloseButton" + key;
+              if (CheckChilder(childrens, closeButtonId) &&Buttons === 3 || Buttons === 1) {//кнопки закрытия
                 let CloseButtonContainer = document.createElement("div");// создаем контейнер для кнопки
                 let localId= id + ",CloseButton" + key;
                 CloseButtonContainer.style.height = "10px";
                 CloseButtonContainer.style.width = "10px";
                 CloseButtonContainer.style.position = "absolute";
-                CloseButtonContainer.style.right = "2.5%";
-                CloseButtonContainer.style.top = "28%";
+                CloseButtonContainer.style.right = "4.5%";
+                CloseButtonContainer.style.top = "25.5%";
                 CloseButtonContainer.id = localId;
                 valueAnyLabel.firstChild.appendChild(CloseButtonContainer);
+                valueAnyLabel.firstChild.children["0"].style.marginRight = "10px"
                 let idForBttn = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key];
                 ReactDOM.render(
                   <IconButton  id={idForBttn + ","  + key} style={{ width: 10, height: 10, fontSize: "small" }} >
@@ -269,7 +269,8 @@ export default function FullRightSide(props: InfoAboutClick) {
                   , CloseButtonContainer);
               }
               // smart-tab-close-button
-              if (childrens["3"] === undefined || childrens["2"] === undefined && Buttons ===3 || Buttons === 2) {//кнопки для пинов
+              const PinButtonId = id + ",ButtonFixUp" + key
+              if (CheckChilder(childrens, PinButtonId) && Buttons ===3 || Buttons === 2) {//кнопки для пинов
                 let PinButtonContainer = document.createElement("div");// создаем контейнер для кнопки
                 let localId= id + ",ButtonFixUp" + key
                 PinButtonContainer.style.height = "10px";
@@ -279,12 +280,21 @@ export default function FullRightSide(props: InfoAboutClick) {
                 PinButtonContainer.style.top = "22%";
                 PinButtonContainer.id = localId;
                 valueAnyLabel.firstChild.appendChild(PinButtonContainer);
+                valueAnyLabel.firstChild.children["0"].style.marginLeft = "17px"
                 let idForBttn = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key];
                 ReactDOM.render(
                   <IconButton id={idForBttn + "," + Fixed + "," + key} style={{ width: 10, height: 10, fontSize: "small" }} onClick={FixUpTabPage}>
                     {Fixed === true ? <LockIcon fontSize='small' /> : <LockOpenIcon fontSize='small' />}
                   </IconButton>
                   , PinButtonContainer);
+              }else if(!document.getElementById(id+","+ key)){
+                let DataContainer = document.createElement("div");
+                DataContainer.style.display = "none";
+                DataContainer.id = id+","+ key;
+                let Data = document.createElement("div");
+                Data.id = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key]+",";
+                DataContainer.appendChild(Data)
+                valueAnyLabel.firstChild.appendChild(DataContainer);
               }
             }
             for (const [key, value] of Object.entries(tabItems)) {
@@ -299,7 +309,21 @@ export default function FullRightSide(props: InfoAboutClick) {
     }
   }
 
+  function CheckChilder(children:any ,id:any){
+    let valueAny:any
+    for(const[key,value] of Object.entries(children)){
+      valueAny = value;
+      if(valueAny.id === id){
+        return false
+      }
+    }
+    return true
+  }
 
+  function setMarginForButtons(elem:any){
+    // const Bool = 
+
+  }
 
   function FixUpTabPage(event: any) {//GET /reptabs~FixupTabPage?LicGUID=31CDFD96401AD8BDBB6C2BB22C8E8150&Fixed=1&ViewIdent=Report453-Section108.{E31774C7-0524-4A9C-9BF7-708D4FDC05AB}
     let params = new Map
@@ -330,7 +354,14 @@ export default function FullRightSide(props: InfoAboutClick) {
     tabsItem = Tabs.getTabs();
     ViewIdent = document.getElementById(GlobalId + `,ButtonFixUp${index}`)
     if (ViewIdent) ViewIdent = ViewIdent.children[0].id.split(",")[0]
-    if (EventTabContent === "<div></div>") {
+    if (!ViewIdent){
+      
+      ViewIdent = document.getElementById(GlobalId + `,${index}`)
+      ViewIdent = ViewIdent.children[0].id.split(",")[0]
+      console.log(ViewIdent)
+      
+    } 
+    if (EventTabContent === undefined || EventTabContent === "undefined") {
       let paramsGetPageContent = new Map;
       EventTabLabel = Tabs.getTabLabel(index);
       paramsGetPageContent.set('prefix', 'reptabs');
@@ -352,6 +383,10 @@ export default function FullRightSide(props: InfoAboutClick) {
       }
     }
   }
+
+function ClickCells(event:any){
+  console.log(event)
+}
 
   function onCloseTab(event: any) {
     const index = event.detail.index
