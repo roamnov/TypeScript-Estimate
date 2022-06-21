@@ -30,7 +30,6 @@ export default function FullRightSide(props: InfoAboutClick) {
 
   const [value, setValue] = React.useState(0);
   const [openReportData, setOpenReportData] = React.useState<any>({});
-  const [globalIdHook, setGlobalIdHook] = React.useState<any>();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -102,210 +101,232 @@ export default function FullRightSide(props: InfoAboutClick) {
             rep = frame.outerHTML
     return rep
   }
-  function RenderReports() {
-    if (!isEmptyObject(openReportData)) {// проверка на пустой ли объект
+  function RenderReports(id:any) {
+    let idTabs: any = document.getElementById(id + "tabs")//получаем основной блок табов, мб мы его уже рисовали
+    let tabsLength = idTabs === null ? 1 : idTabs["_tabs"].length// определяем длинну
+    let ViewIdentForButton: any = { ViewIdent: openReportData.ViewIdent + ".", items: [] }
+    let JSXTabItems = []
+    GlobalId = id;
+    let reportContent: any
+    if (openReportData.Items) {
+      let ValueAny: any
+      for (const [key, value] of Object.entries(openReportData.Items)) {
+        ValueAny = value;
+        ViewIdentForButton.items.push(ValueAny.ViewIdent)
+        reportContent = String(ValueAny.content).replaceAll(/[\n]+/g, "");
+        reportContent = String(reportContent).replaceAll(/[\r]+/g, "");
+        if (reportContent !== "undefined") {
+          
+          reportContent = InsertIdReport(reportContent)
+        }
+        JSXTabItems.push(
+          <TabItem id={ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key]} style={{ textTransform: "none", display: "inline-block", height: currentHeight }}
+            label={ValueAny.Title} content={reportContent} >
+          </TabItem>
+        )
+      }
+    }
+    ViewIdentObj = ViewIdentForButton
+
+    if (document.getElementById(id) === null || tabsLength === 0 || openReportData.Items) {// если длинна равна 0(уже создавали табы) или мы не создавали еще контейнер для вкладок который потом будет скрывать
+      let newReportWindow: any// в ней у нас хранится блок для секции дерева
+      let TabIndex = openReportData.TabIndex;
+      pringReportsDoc = document.getElementById(`print_reports${props.id}`);//ищем блок СЕКЦИИ
+      TabIndex = TabIndex === undefined ? 0 : Number(TabIndex)
+      newReportWindow = document.getElementById(id);// получаем блок
+      RenderSoloReport(id,newReportWindow,false);
+
+      if (tabsLength === 0) {
+        idTabs.insert(0, { label: openReportData.Items[0].Title, content: openReportData.Items[0].content });
+      } else {
+        newReportWindow = document.getElementById(id);
+        if (openReportData.Items && idTabs !== null) {
+          let ValueAny: any
+          for (const [key, value] of Object.entries(openReportData.Items)) {
+            ValueAny = value;
+            if (idTabs["_tabs"][key] === undefined) {
+              idTabs.insert(Number(key), { label: ValueAny.Title, content: ValueAny.content ? reportContent : undefined });
+            } else {
+              idTabs.update(Number(key), ValueAny.Title, ValueAny.content ? reportContent : undefined)
+            }
+            idTabs.select(TabIndex)
+          }
+        } else {
+          ReactDOM.render(
+            <Grid item id={id + "tabsContainer"} >
+              <Tabs selectionMode="dblclick" scrollMode="paging" id={id + "tabs"}
+                tabPosition="bottom" className="Tabs" selectedIndex={TabIndex}
+                style={{ height: "400px", width: "100%" }} onChange={OnIndexChange} >
+
+                {JSXTabItems}
+
+              </Tabs>
+            </Grid>
+            , newReportWindow);
+        }
+      }
+
+
+      setTimeout(() => {// с задержкой, что бы установить стили и кнопку поставить
+        let tab: any, tabs: any, valueStylingLabels: any, tabItems: any, valueAnyLabel: any, Fixed: any, anyValClick:any, Buttons:any, childrens:any;
+        tabs = document.getElementById(id + "tabs");
+        if (tabs) {
+          try {
+            let Test = document.getElementsByClassName("linkref")
+            let valAny: any
+            for (const [key, value] of Object.entries(Test)) {
+              // console.log(value)
+              valAny = value
+              valAny.id = valAny.href;
+              valAny.removeAttribute("href");
+              // console.log(valAny.href)
+              if (!valAny.onclick) {
+                valAny.onclick = function (event: any) {
+                  let params = new Map;
+                  
+                  const idArray = event.currentTarget.id.split(",")
+                  console.log(id)
+                  for (const [key,value] of Object.entries(idArray)){
+                    anyValClick = value
+                    anyValClick = anyValClick.split(":")
+                    if(key!== "0"){
+                      console.log(anyValClick)
+                      switch(anyValClick[0]){
+                        case "module":
+                          params.set("prefix",anyValClick[1])
+                          break;
+                        case "token":
+                          params.set("comand",anyValClick[1])
+                          break;
+                        case "params":
+                          params.set("Command",anyValClick[2])
+                          break;
+                        case "viewIdent":
+                          params.set("ViewIdent",anyValClick[1])
+                          break;
+                        case "path":
+                          params.set("Path",anyValClick[1].substring(0, anyValClick[1].length - 1))
+                          break;
+
+                      }
+                    }
+                  }
+                  params.set("SectionID", props.id)
+                  params.set("WSM","1")
+                  let jsonClick = XMLrequest(params)
+                  console.log(jsonClick)
+                }
+              }
+
+            }
+            // console.log(Test)
+          } catch {
+
+          }
+          tabItems = tabs.getTabs();
+          for (const [key, value] of Object.entries(tabs["_tabLabelContainers"])) {
+            valueAnyLabel = value;
+            Fixed = openReportData.Items[key].Fixed;
+            Fixed = Fixed === "1" ? true : false;
+            
+            valueAnyLabel.firstChild.id = openReportData.ViewIdent + "." + openReportData.Items[key].ViewIdent
+            childrens = valueAnyLabel.firstChild.children
+            Buttons = Number(openReportData.Items[key].Buttons)
+            const closeButtonId = id + ",CloseButton" + key;
+            if (CheckChilder(childrens, closeButtonId) &&Buttons === 3 || Buttons === 1) {//кнопки закрытия
+              let CloseButtonContainer = document.createElement("div");// создаем контейнер для кнопки
+              let localId= id + ",CloseButton" + key;
+              CloseButtonContainer.style.height = "10px";
+              CloseButtonContainer.style.width = "10px";
+              CloseButtonContainer.style.position = "absolute";
+              CloseButtonContainer.style.right = "4.5%";
+              CloseButtonContainer.style.top = "25.5%";
+              CloseButtonContainer.id = localId;
+              valueAnyLabel.firstChild.appendChild(CloseButtonContainer);
+              valueAnyLabel.firstChild.children["0"].style.marginRight = "10px"
+              let idForBttn = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key];
+              ReactDOM.render(
+                <IconButton  id={idForBttn + ","  + key} style={{ width: 10, height: 10, fontSize: "small" }} onClick={CustomClose} >
+                  <CloseIcon fontSize="small"/>
+                </IconButton>
+                , CloseButtonContainer);
+            }
+            // smart-tab-close-button
+            const PinButtonId = id + ",ButtonFixUp" + key
+            if (CheckChilder(childrens, PinButtonId) && Buttons ===3 || Buttons === 2) {//кнопки для пинов
+              let PinButtonContainer = document.createElement("div");// создаем контейнер для кнопки
+              let localId= id + ",ButtonFixUp" + key
+              PinButtonContainer.style.height = "10px";
+              PinButtonContainer.style.width = "10px";
+              PinButtonContainer.style.position = "absolute";
+              PinButtonContainer.style.left = "3.2%";
+              PinButtonContainer.style.top = "22%";
+              PinButtonContainer.id = localId;
+              valueAnyLabel.firstChild.appendChild(PinButtonContainer);
+              valueAnyLabel.firstChild.children["0"].style.marginLeft = "17px"
+              let idForBttn = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key];
+              ReactDOM.render(
+                <IconButton id={idForBttn + "," + Fixed + "," + key} style={{ width: 10, height: 10, fontSize: "small" }} onClick={FixUpTabPage}>
+                  {Fixed === true ? <LockIcon fontSize='small' /> : <LockOpenIcon fontSize='small' />}
+                </IconButton>
+                , PinButtonContainer);
+            }else if(!document.getElementById(id+","+ key)){
+              let DataContainer = document.createElement("div");
+              DataContainer.style.display = "none";
+              DataContainer.id = id+","+ key;
+              let Data = document.createElement("div");
+              Data.id = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key]+",";
+              DataContainer.appendChild(Data)
+              valueAnyLabel.firstChild.appendChild(DataContainer);
+            }
+          }
+          for (const [key, value] of Object.entries(tabItems)) {
+            tab = value
+            tab.style.height = `${currentHeight-10}px`;// даём высоту 
+            tab.style.display = "inline-block"
+          }
+        }
+      }, 50);
+
+    }
+  }
+
+  function WichReportRender(){
+    if (!isEmptyObject(openReportData)) {
       let arrOfReportId = openReportData.ViewIdent.split("-");// переменная для того что бы получить id отчёта
       arrOfReportId = arrOfReportId[0].split("Report")
       const id = "print_reports" + props.id + "_" + arrOfReportId[1]//создаем id для последующего его использования. id = выбранный отчёт в tree
-      let idTabs: any = document.getElementById(id + "tabs")//получаем основной блок табов, мб мы его уже рисовали
-      let tabsLength = idTabs === null ? 1 : idTabs["_tabs"].length// определяем длинну
-      let ViewIdentForButton: any = { ViewIdent: openReportData.ViewIdent + ".", items: [] }
-      let JSXTabItems = []
-      // let Buttons 
-      GlobalId = id;
-      let reportContent: any
-      if (openReportData.Items) {
-        let ValueAny: any
-        for (const [key, value] of Object.entries(openReportData.Items)) {
-          ValueAny = value;
-          ViewIdentForButton.items.push(ValueAny.ViewIdent)
-          reportContent = String(ValueAny.content).replaceAll(/[\n]+/g, "");
-          reportContent = String(reportContent).replaceAll(/[\r]+/g, "");
-          if (reportContent !== "undefined") {
-            
-            reportContent = InsertIdReport(reportContent)
-          }
-          JSXTabItems.push(
-            <TabItem id={ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key]} style={{ textTransform: "none", display: "inline-block", height: currentHeight }}
-              label={ValueAny.Title} content={reportContent} >
-            </TabItem>
-          )
-        }
+      switch(openReportData.CLSID){
+        case "{18CCCA1A-CD3D-41B3-8C20-9F80AA3ED8CE}"://групповые
+          RenderReports(id);
+          break;
+        case "{55D200F8-A5EE-4BB8-B9AD-762B6FB815D1}"://обычная форма просмотра
+          let newReportWindow: any// в ней у нас хранится блок для секции дерева
+          let TabIndex = openReportData.TabIndex;
+          pringReportsDoc = document.getElementById(`print_reports${props.id}`);//ищем блок СЕКЦИИ
+          TabIndex = TabIndex === undefined ? 0 : Number(TabIndex)
+          newReportWindow = document.getElementById(id);// получаем блок
+          RenderSoloReport(id, newReportWindow, true);
+          break;
       }
-      ViewIdentObj = ViewIdentForButton
+    }
+    
 
-      if (document.getElementById(id) === null || tabsLength === 0 || openReportData.Items) {// если длинна равна 0(уже создавали табы) или мы не создавали еще контейнер для вкладок который потом будет скрывать
-        let newReportWindow: any// в ней у нас хранится блок для секции дерева
-        let TabIndex = openReportData.TabIndex;
-        pringReportsDoc = document.getElementById(`print_reports${props.id}`);//ищем блок СЕКЦИИ
-        TabIndex = TabIndex === undefined ? 0 : Number(TabIndex)
-        newReportWindow = document.getElementById(id);// получаем блок
+  }
 
-        if (newReportWindow === null) {// если уже создавали вкладку
-          pringReportsDoc.querySelectorAll('.ActivParams').forEach((n: {
-            classList: {
-              remove: (arg0: string) => void; add: (arg0: string) => void;
-            };
-          }) => { n.classList.remove('ActivParams'); n.classList.add('NoActivParams') })
-          newReportWindow = document.createElement("div");// создаем блок 
-          newReportWindow.classList.add("Params");
-          newReportWindow.classList.add("ActivParams");
-          newReportWindow.id = id;
-          pringReportsDoc.appendChild(newReportWindow);
-        }
-        if (tabsLength === 0) {
-          idTabs.insert(0, { label: openReportData.Items[0].Title, content: openReportData.Items[0].content });
-        } else {
-          newReportWindow = document.getElementById(id);
-          if (openReportData.Items && idTabs !== null) {
-            let ValueAny: any
-            for (const [key, value] of Object.entries(openReportData.Items)) {
-              ValueAny = value;
-              if (idTabs["_tabs"][key] === undefined) {
-                idTabs.insert(Number(key), { label: ValueAny.Title, content: ValueAny.content ? reportContent : "<div></div>" });
-              } else {
-                idTabs.update(Number(key), ValueAny.Title, ValueAny.content ? reportContent : "<div></div>")
-              }
-              idTabs.select(TabIndex)
-            }
-          } else {
-            ReactDOM.render(
-              <Grid item id={id + "tabsContainer"} >
-                <Tabs selectionMode="dblclick" scrollMode="paging" id={id + "tabs"}
-                  tabPosition="bottom" className="Tabs" selectedIndex={TabIndex}
-                  style={{ height: "400px", width: "100%" }} onChange={OnIndexChange} onClosing={handleClosing} onClose={onCloseTab}>
-
-                  {JSXTabItems}
-
-                </Tabs>
-              </Grid>
-              , newReportWindow);
-          }
-        }
-
-
-        setTimeout(() => {// с задержкой, что бы установить стили и кнопку поставить
-          let tab: any, tabs: any, valueStylingLabels: any, tabItems: any, valueAnyLabel: any, Fixed: any, anyValClick:any, Buttons:any, childrens:any;
-          tabs = document.getElementById(id + "tabs");
-          if (tabs) {
-            try {
-              let Test = document.getElementsByClassName("linkref")
-              let valAny: any
-              for (const [key, value] of Object.entries(Test)) {
-                // console.log(value)
-                valAny = value
-                valAny.id = valAny.href;
-                valAny.removeAttribute("href");
-                // console.log(valAny.href)
-                if (!valAny.onclick) {
-                  valAny.onclick = function (event: any) {
-                    let params = new Map;
-                    
-                    const idArray = event.currentTarget.id.split(",")
-                    console.log(id)
-                    for (const [key,value] of Object.entries(idArray)){
-                      anyValClick = value
-                      anyValClick = anyValClick.split(":")
-                      if(key!== "0"){
-                        console.log(anyValClick)
-                        switch(anyValClick[0]){
-                          case "module":
-                            params.set("prefix",anyValClick[1])
-                            break;
-                          case "token":
-                            params.set("comand",anyValClick[1])
-                            break;
-                          case "params":
-                            params.set("Command",anyValClick[2])
-                            break;
-                          case "viewIdent":
-                            params.set("ViewIdent",anyValClick[1])
-                            break;
-                          case "path":
-                            params.set("Path",anyValClick[1].substring(0, anyValClick[1].length - 1))
-                            break;
-
-                        }
-                      }
-                    }
-                    params.set("SectionID", props.id)
-                    params.set("WSM","1")
-                    let jsonClick = XMLrequest(params)
-                    console.log(jsonClick)
-                  }
-                }
-
-              }
-              // console.log(Test)
-            } catch {
-
-            }
-            tabItems = tabs.getTabs();
-            for (const [key, value] of Object.entries(tabs["_tabLabelContainers"])) {
-              valueAnyLabel = value;
-              Fixed = openReportData.Items[key].Fixed;
-              Fixed = Fixed === "1" ? true : false;
-              
-              valueAnyLabel.firstChild.id = openReportData.ViewIdent + "." + openReportData.Items[key].ViewIdent
-              childrens = valueAnyLabel.firstChild.children
-              Buttons = Number(openReportData.Items[key].Buttons)
-              const closeButtonId = id + ",CloseButton" + key;
-              if (CheckChilder(childrens, closeButtonId) &&Buttons === 3 || Buttons === 1) {//кнопки закрытия
-                let CloseButtonContainer = document.createElement("div");// создаем контейнер для кнопки
-                let localId= id + ",CloseButton" + key;
-                CloseButtonContainer.style.height = "10px";
-                CloseButtonContainer.style.width = "10px";
-                CloseButtonContainer.style.position = "absolute";
-                CloseButtonContainer.style.right = "4.5%";
-                CloseButtonContainer.style.top = "25.5%";
-                CloseButtonContainer.id = localId;
-                valueAnyLabel.firstChild.appendChild(CloseButtonContainer);
-                valueAnyLabel.firstChild.children["0"].style.marginRight = "10px"
-                let idForBttn = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key];
-                ReactDOM.render(
-                  <IconButton  id={idForBttn + ","  + key} style={{ width: 10, height: 10, fontSize: "small" }} >
-                    <CloseIcon fontSize="small"/>
-                  </IconButton>
-                  , CloseButtonContainer);
-              }
-              // smart-tab-close-button
-              const PinButtonId = id + ",ButtonFixUp" + key
-              if (CheckChilder(childrens, PinButtonId) && Buttons ===3 || Buttons === 2) {//кнопки для пинов
-                let PinButtonContainer = document.createElement("div");// создаем контейнер для кнопки
-                let localId= id + ",ButtonFixUp" + key
-                PinButtonContainer.style.height = "10px";
-                PinButtonContainer.style.width = "10px";
-                PinButtonContainer.style.position = "absolute";
-                PinButtonContainer.style.left = "3.2%";
-                PinButtonContainer.style.top = "22%";
-                PinButtonContainer.id = localId;
-                valueAnyLabel.firstChild.appendChild(PinButtonContainer);
-                valueAnyLabel.firstChild.children["0"].style.marginLeft = "17px"
-                let idForBttn = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key];
-                ReactDOM.render(
-                  <IconButton id={idForBttn + "," + Fixed + "," + key} style={{ width: 10, height: 10, fontSize: "small" }} onClick={FixUpTabPage}>
-                    {Fixed === true ? <LockIcon fontSize='small' /> : <LockOpenIcon fontSize='small' />}
-                  </IconButton>
-                  , PinButtonContainer);
-              }else if(!document.getElementById(id+","+ key)){
-                let DataContainer = document.createElement("div");
-                DataContainer.style.display = "none";
-                DataContainer.id = id+","+ key;
-                let Data = document.createElement("div");
-                Data.id = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key]+",";
-                DataContainer.appendChild(Data)
-                valueAnyLabel.firstChild.appendChild(DataContainer);
-              }
-            }
-            for (const [key, value] of Object.entries(tabItems)) {
-              tab = value
-              tab.style.height = `${currentHeight-10}px`;// даём высоту 
-              tab.style.display = "inline-block"
-            }
-          }
-        }, 50);
-
-      }
+  function RenderSoloReport(id:any,newReportWindow:any,bool?:any){
+    if (newReportWindow === null) {// если уже создавали вкладку
+      pringReportsDoc.querySelectorAll('.ActivParams').forEach((n: {
+        classList: {
+          remove: (arg0: string) => void; add: (arg0: string) => void;
+        };
+      }) => { n.classList.remove('ActivParams'); n.classList.add('NoActivParams') })
+      newReportWindow = document.createElement("div");// создаем блок 
+      newReportWindow.classList.add("Params");
+      newReportWindow.classList.add("ActivParams");
+      newReportWindow.id = id;
+      if(bool)newReportWindow.innerHTML = openReportData.Items[0].content
+      pringReportsDoc.appendChild(newReportWindow);
     }
   }
 
@@ -320,10 +341,6 @@ export default function FullRightSide(props: InfoAboutClick) {
     return true
   }
 
-  function setMarginForButtons(elem:any){
-    // const Bool = 
-
-  }
 
   function FixUpTabPage(event: any) {//GET /reptabs~FixupTabPage?LicGUID=31CDFD96401AD8BDBB6C2BB22C8E8150&Fixed=1&ViewIdent=Report453-Section108.{E31774C7-0524-4A9C-9BF7-708D4FDC05AB}
     let params = new Map
@@ -350,16 +367,12 @@ export default function FullRightSide(props: InfoAboutClick) {
     const index = event.detail.index
     Tabs = document.getElementById(GlobalId + "tabs");
     EventTabContent = Tabs.getTabContent(index);
-    console.log(event)
     tabsItem = Tabs.getTabs();
     ViewIdent = document.getElementById(GlobalId + `,ButtonFixUp${index}`)
     if (ViewIdent) ViewIdent = ViewIdent.children[0].id.split(",")[0]
     if (!ViewIdent){
-      
       ViewIdent = document.getElementById(GlobalId + `,${index}`)
-      ViewIdent = ViewIdent.children[0].id.split(",")[0]
-      console.log(ViewIdent)
-      
+      if(ViewIdent) ViewIdent = ViewIdent.children[0].id.split(",")[0]
     } 
     if (EventTabContent === undefined || EventTabContent === "undefined") {
       let paramsGetPageContent = new Map;
@@ -388,41 +401,48 @@ function ClickCells(event:any){
   console.log(event)
 }
 
-  function onCloseTab(event: any) {
-    const index = event.detail.index
-    let tabs: any, tabContent: any, tabLabel: any, params = new Map, json: any, ViewIdent: any
-    tabs = document.getElementById(GlobalId + "tabs");// получаем блок вкладок
-    if (index > 0) {// print_reports108_453,ButtonFixUp2
-      ViewIdent = document.getElementById(GlobalId + `,ButtonFixUp${index - 1}`)
+function CustomClose(event:any){
+  let arrEvent = event.currentTarget.getAttribute("id").split(",")
+  let tabs: any
+  tabs = document.getElementById(GlobalId + "tabs");
+  handleClosing(arrEvent["0"])
+  tabs.removeAt(Number(arrEvent["1"]))
+  onCloseTab(Number(arrEvent["1"]))
+}
+
+function onCloseTab(index: any) {
+  // const index = event.detail.index
+  let tabs: any, tabContent: any, tabLabel: any, params = new Map, json: any, ViewIdent: any
+  tabs = document.getElementById(GlobalId + "tabs");// получаем блок вкладок
+  if (index > 0) {// print_reports108_453,ButtonFixUp2
+    ViewIdent = document.getElementById(GlobalId + `,ButtonFixUp${index - 1}`)
+    if (ViewIdent) ViewIdent = ViewIdent.children[0].id.split(",")[0]
+    if (!ViewIdent){
+      ViewIdent = document.getElementById(GlobalId + `,${index-1}`)
       ViewIdent = ViewIdent.children[0].id.split(",")[0]
-      tabContent = tabs.getTabContent(index - 1);
-      if (tabContent === "<div></div>") {
-        params.set('prefix', 'reptabs');
-        params.set("comand", "GetPageContent");
-        params.set("ViewIdent", ViewIdent);
-        params.set("HTML", "1");
-        tabLabel = tabs.getTabLabel(index - 1);
-        json = XMLrequest(params);
-        tabs.update(index - 1, tabLabel, json.content)
-      }
+    } 
+    tabContent = tabs.getTabContent(index - 1);
+    if (tabContent === undefined || tabContent ===  "undefined") {
+      params.set('prefix', 'reptabs');
+      params.set("comand", "GetPageContent");
+      params.set("ViewIdent", ViewIdent);
+      params.set("HTML", "1");
+      tabLabel = tabs.getTabLabel(index - 1);
+      json = XMLrequest(params);
+      tabs.update(index - 1, tabLabel, json.content)
     }
   }
+}
 
-  function handleClosing(event: any) {
-    let params = new Map, tabs: any, tabsItem: any, ViewIdent: any;
-    const detail = event.detail,
-      index = detail.index;
-    tabs = document.getElementById(GlobalId + "tabs");// получаем блок вкладок
-    tabsItem = tabs.getTabs();
-
-    // ViewIdent = event.explicitOriginalTarget.parentElement.id
-    ViewIdent = document.getElementById(GlobalId + `,ButtonFixUp${index}`)
-    console.log(ViewIdent)
-    params.set('prefix', 'reptabs');
-    params.set("comand", "CloseTabPage");
-    params.set("ViewIdent", ViewIdent);
-    // XMLrequest(params);
-  }
+function handleClosing(ViewIdent:any) {
+  let params = new Map, tabs: any, tabsItem: any
+  tabs = document.getElementById(GlobalId + "tabs");// получаем блок вкладок
+  tabsItem = tabs.getTabs();
+  params.set('prefix', 'reptabs');
+  params.set("comand", "CloseTabPage");
+  params.set("ViewIdent", ViewIdent);
+  XMLrequest(params);
+}
 
   function onHeightChange(element: any) {
     let items: any = element.getTabs(), tab: any;
@@ -438,7 +458,7 @@ function ClickCells(event:any){
 
     // RunTabsReports();
     try {
-      RenderReports();
+      WichReportRender();
     } catch (err) {
       console.log(err)
     }
@@ -569,7 +589,7 @@ function ClickCells(event:any){
             } else
               if (Page.CLSID !== undefined && Page.CLSID == "{B357E5B2-137F-4253-BBEF-E5CFD697E362}") {
                 defaultButton = <Tooltip title="Сформировать отчет" >
-                  <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{ textTransform: "none", marginLeft: "0.88%" }}>
+                  <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{ textTransform: "none", marginLeft: "0.88%" , marginBottom:"0.6%" }}>
                     Выполнить
                   </Button>
                 </Tooltip>
@@ -577,7 +597,7 @@ function ClickCells(event:any){
               } else
                 if (Page.CLSID !== undefined && Page.CLSID == "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}") {//Секция Документов/отчётов
                   defaultButton = <Tooltip title="Сформировать отчет" >
-                    <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{ textTransform: "none", marginLeft: "0.88%" }}>
+                    <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{ textTransform: "none", marginLeft: "0.88%" , marginBottom:"0.6%"}}>
                       Выполнить
                     </Button>
                   </Tooltip>
