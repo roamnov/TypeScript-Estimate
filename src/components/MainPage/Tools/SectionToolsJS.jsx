@@ -148,10 +148,8 @@ const SectionToolsJS = (props) =>{
         params.set('comand','GetSectionTools');
         params.set('SectionID', props.ID);
         json = XMLrequest(params)
-        if(json){
-            setButtonsSection(json["Buttons"]);
-            setMenuBarSection(json["MenuBar"])
-        }
+        if(json["Buttons"])setButtonsSection(json["Buttons"]);
+        if(json) setMenuBarSection(json["MenuBar"])
         
     }
 
@@ -160,8 +158,8 @@ const SectionToolsJS = (props) =>{
         params.set('prefix','config'); 
         params.set('comand','GetWorkPlaceTools');
         json = XMLrequest(params)
-        if(json){
-            setDataButtonsDefault(json["Buttons"]["Button"]);
+        if(json["Buttons"])setDataButtonsDefault(json["Buttons"]["Button"]);
+        if(json["MenuBar"]){
             setMenuBarDefault(json["MenuBar"]);
             CreateMap(json["MenuBar"]);
         }
