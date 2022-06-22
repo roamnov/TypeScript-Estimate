@@ -110,7 +110,8 @@ export default function FullRightSide(props: InfoAboutClick) {
             }
             st = st.join("")
             frame.querySelector("body").children[1].innerHTML = st
-            rep = frame.outerHTML
+            Html = String(Html).replaceAll("\'", "\"");
+            rep = "<iframe srcdoc ='"+Html+"' style = 'width: 100%; height: 100%;'></iframe>"
     return rep
   }
   function RenderReports(id:any) {
