@@ -358,7 +358,7 @@ export default function FullRightSide(props: InfoAboutClick) {
       newReportWindow.id = id;
       newReportWindow.style.height = "100%"
       if(bool){
-        newReportWindow.innerHTML = openReportData.Items[0].content
+        newReportWindow.innerHTML = InsertIdReport(openReportData.Items[0].content)
         
       }
       pringReportsDoc.appendChild(newReportWindow);
