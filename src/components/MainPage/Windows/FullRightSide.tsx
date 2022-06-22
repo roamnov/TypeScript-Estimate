@@ -79,6 +79,9 @@ export default function FullRightSide(props: InfoAboutClick) {
   {
     var rep
     var frame: any
+    Html = String(Html).replaceAll("\'", "\"");
+            Html = String(Html).replaceAll("overflow: hidden;", "");
+            Html = String(Html).replaceAll("#13", "");
     var ClassTable = "RepTable_" + RandomString(10)
             var newDoc = new DOMParser().parseFromString(Html, "text/html")
             frame = newDoc.children[0]
@@ -98,9 +101,9 @@ export default function FullRightSide(props: InfoAboutClick) {
                   cc = cc + 1
               }
               if (s !== "") {
-                if (s[1] !== "@") {
+                /*if (s[1] !== "@") {
                   st[n] = "#" + ClassTable + " " + s;
-                }
+                }*/
                 c = ""
                 for (cn = 0; cn <= cc - 1; cn++) {
                   c = c + "}"
@@ -108,11 +111,11 @@ export default function FullRightSide(props: InfoAboutClick) {
                 st[n] = st[n] + c
               }
             }
+            st.push("p {margin:0}");
             st = st.join("")
             frame.querySelector("body").children[1].innerHTML = st
-            Html = String(Html).replaceAll("\'", "\"");
-            Html = String(Html).replaceAll("overflow: hidden;", "\"");
-            rep = "<iframe srcdoc ='"+Html+"' style = 'width: 100%; height: 100%;'></iframe>"
+            
+            rep = "<iframe srcdoc ='"+frame.outerHTML+"' style = 'width: 100%; height: 100%;'></iframe>"
     return rep
   }
   function RenderReports(id:any) {
@@ -168,7 +171,7 @@ export default function FullRightSide(props: InfoAboutClick) {
         } else {
           ReactDOM.render(
             <Grid item id={id + "tabsContainer"} style={{height:"inherit"}}>
-              <Tabs selectionMode="dblclick" scrollMode="paging" id={id + "tabs"}
+              <Tabs  scrollMode="paging" id={id + "tabs"} animation="none"
                 tabPosition="bottom"  selectedIndex={TabIndex}
                 style={{  width: "100%", height:`97%` }} onChange={OnIndexChange} >
 
