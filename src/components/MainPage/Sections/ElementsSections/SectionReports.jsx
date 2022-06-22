@@ -24,7 +24,9 @@ export default function SectionReports(props) {
         </SplitterItem>
         <SplitterItem size="80%" collapsible id={"item_print_reports" + props.id} >
             <Scrollbars>
-                <Grid  id= {`print_reports${props.id}`}></Grid>
+                <Grid  id= {`print_reports${props.id}`} style={{height:"100%"}}>
+
+                </Grid>
             </Scrollbars>
         </SplitterItem>
     </Splitter>

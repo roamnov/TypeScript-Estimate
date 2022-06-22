@@ -38,6 +38,18 @@ export default function FullRightSide(props: InfoAboutClick) {
 
   const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight - 295);
 
+  function ReturnHeightBasedOnCLSID(){
+  if(props.clsic){
+    switch(props.clsic){
+      case "{B357E5B2-137F-4253-BBEF-E5CFD697E362}":// только отчёты
+        return window.innerHeight - 145
+      case "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}":
+        return window.innerHeight - 295
+    }
+  }
+  }
+
+
   const handleResize = () => {
     setCurrentHeight(window.innerHeight - 295);
   }
@@ -153,10 +165,10 @@ export default function FullRightSide(props: InfoAboutClick) {
           }
         } else {
           ReactDOM.render(
-            <Grid item id={id + "tabsContainer"} >
+            <Grid item id={id + "tabsContainer"} style={{height:"inherit"}}>
               <Tabs selectionMode="dblclick" scrollMode="paging" id={id + "tabs"}
-                tabPosition="bottom" className="Tabs" selectedIndex={TabIndex}
-                style={{ height: "400px", width: "100%" }} onChange={OnIndexChange} >
+                tabPosition="bottom"  selectedIndex={TabIndex}
+                style={{  width: "100%", height:`97%` }} onChange={OnIndexChange} >
 
                 {JSXTabItems}
 
@@ -171,58 +183,7 @@ export default function FullRightSide(props: InfoAboutClick) {
         let tab: any, tabs: any, valueStylingLabels: any, tabItems: any, valueAnyLabel: any, Fixed: any, anyValClick:any, Buttons:any, childrens:any;
         tabs = document.getElementById(id + "tabs");
         if (tabs) {
-          try {
-            let Test = document.getElementsByClassName("linkref")
-            let valAny: any
-            for (const [key, value] of Object.entries(Test)) {
-              // console.log(value)
-              valAny = value
-              valAny.id = valAny.href;
-              valAny.removeAttribute("href");
-              // console.log(valAny.href)
-              if (!valAny.onclick) {
-                valAny.onclick = function (event: any) {
-                  let params = new Map;
-                  
-                  const idArray = event.currentTarget.id.split(",")
-                  console.log(id)
-                  for (const [key,value] of Object.entries(idArray)){
-                    anyValClick = value
-                    anyValClick = anyValClick.split(":")
-                    if(key!== "0"){
-                      console.log(anyValClick)
-                      switch(anyValClick[0]){
-                        case "module":
-                          params.set("prefix",anyValClick[1])
-                          break;
-                        case "token":
-                          params.set("comand",anyValClick[1])
-                          break;
-                        case "params":
-                          params.set("Command",anyValClick[2])
-                          break;
-                        case "viewIdent":
-                          params.set("ViewIdent",anyValClick[1])
-                          break;
-                        case "path":
-                          params.set("Path",anyValClick[1].substring(0, anyValClick[1].length - 1))
-                          break;
 
-                      }
-                    }
-                  }
-                  params.set("SectionID", props.id)
-                  params.set("WSM","1")
-                  let jsonClick = XMLrequest(params)
-                  console.log(jsonClick)
-                }
-              }
-
-            }
-            // console.log(Test)
-          } catch {
-
-          }
           tabItems = tabs.getTabs();
           for (const [key, value] of Object.entries(tabs["_tabLabelContainers"])) {
             valueAnyLabel = value;
@@ -239,8 +200,8 @@ export default function FullRightSide(props: InfoAboutClick) {
               CloseButtonContainer.style.height = "10px";
               CloseButtonContainer.style.width = "10px";
               CloseButtonContainer.style.position = "absolute";
-              CloseButtonContainer.style.right = "4.5%";
-              CloseButtonContainer.style.top = "25.5%";
+              CloseButtonContainer.style.right = "6.5%";
+              CloseButtonContainer.style.top = "26.5%";
               CloseButtonContainer.id = localId;
               valueAnyLabel.firstChild.appendChild(CloseButtonContainer);
               valueAnyLabel.firstChild.children["0"].style.marginRight = "10px"
@@ -280,11 +241,11 @@ export default function FullRightSide(props: InfoAboutClick) {
               valueAnyLabel.firstChild.appendChild(DataContainer);
             }
           }
-          for (const [key, value] of Object.entries(tabItems)) {
-            tab = value
-            tab.style.height = `${currentHeight-10}px`;// даём высоту 
-            tab.style.display = "inline-block"
-          }
+          // for (const [key, value] of Object.entries(tabItems)) {
+          //   tab = value
+          //   tab.style.height = `${currentHeight-10}px`;// даём высоту 
+          //   tab.style.display = "inline-block"
+          // }
         }
       }, 50);
 
@@ -299,6 +260,7 @@ export default function FullRightSide(props: InfoAboutClick) {
       switch(openReportData.CLSID){
         case "{18CCCA1A-CD3D-41B3-8C20-9F80AA3ED8CE}"://групповые
           RenderReports(id);
+          LinkrefClick(openReportData.Items[0].ViewIdent);
           break;
         case "{55D200F8-A5EE-4BB8-B9AD-762B6FB815D1}"://обычная форма просмотра
           let newReportWindow: any// в ней у нас хранится блок для секции дерева
@@ -307,11 +269,60 @@ export default function FullRightSide(props: InfoAboutClick) {
           TabIndex = TabIndex === undefined ? 0 : Number(TabIndex)
           newReportWindow = document.getElementById(id);// получаем блок
           RenderSoloReport(id, newReportWindow, true);
+          LinkrefClick(openReportData.Items[0].ViewIdent);
           break;
       }
     }
-    
+  }
 
+  function LinkrefClick(ViewIdent:any){
+    try {
+      let Test = document.getElementsByClassName("linkref")
+      let valAny: any, anyValClick:any
+      for (const [key, value] of Object.entries(Test)) {
+        valAny = value
+        valAny.id = ViewIdent     
+        if(valAny.onclick === null){
+          valAny.onclick = function (event: any) {
+            let params = new Map;
+            console.log(event.currentTarget.attributes["data-path"].value)
+            const id = event.currentTarget.id
+            params.set("prefix", "cellobj")
+            params.set("comand", "CallCellHandler")
+            params.set("Command", "EditRef")
+            params.set("ViewIdent", event.currentTarget.id)
+            params.set("Path", event.currentTarget.attributes["data-path"].value)
+            params.set("SectionID", props.id)
+            params.set("WSM","1")
+            let jsonClick = XMLrequest(params)
+            console.log(jsonClick)
+            switch (jsonClick.Token) {
+              case "ShowProgressDialog":
+                let Path = jsonClick.Params.Path;
+                let doc = document.getElementById('RenderModal')
+                if (doc !== null) {
+                  doc.innerHTML = "";
+                }
+                tokenProcessingTest(jsonClick, setOpenReportData);
+                // ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} setReturnValue={setOpenReportData}/> , document.getElementById('RenderModal'));
+                break;
+              case undefined:
+                setOpenReportData(jsonClick)
+                break;
+              default:
+                tokenProcessingTest(jsonClick);
+                break;
+              }
+          
+        }
+        }
+        
+
+      }
+      // console.log(Test)
+    } catch {
+
+    }
   }
 
   function RenderSoloReport(id:any,newReportWindow:any,bool?:any){
@@ -325,7 +336,11 @@ export default function FullRightSide(props: InfoAboutClick) {
       newReportWindow.classList.add("Params");
       newReportWindow.classList.add("ActivParams");
       newReportWindow.id = id;
-      if(bool)newReportWindow.innerHTML = openReportData.Items[0].content
+      newReportWindow.style.height = "100%"
+      if(bool){
+        newReportWindow.innerHTML = openReportData.Items[0].content
+        
+      }
       pringReportsDoc.appendChild(newReportWindow);
     }
   }
@@ -397,7 +412,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     }
   }
 
-function ClickCells(event:any){
+function ClickCells(event?:any){
   console.log(event)
 }
 
@@ -467,13 +482,13 @@ function handleClosing(ViewIdent:any) {
   React.useEffect(() => {
     let tabs: any = document.getElementById(GlobalId + "tabs");
     if (!isEmptyObject(openReportData)) {
-      let arrOfReportId = openReportData.ViewIdent.split("-");// переменная для того что бы получить id отчёта
-      arrOfReportId = arrOfReportId[0].split("Report")
-      const id = "print_reports" + props.id + "_" + arrOfReportId[1]//создаем id для последующего его использования. id = выбранный отчёт в tree
-      tabs = document.getElementById(id + "tabs");
-      if (tabs) {
-        onHeightChange(tabs);
-      }
+      // let arrOfReportId = openReportData.ViewIdent.split("-");// переменная для того что бы получить id отчёта
+      // arrOfReportId = arrOfReportId[0].split("Report")
+      // const id = "print_reports" + props.id + "_" + arrOfReportId[1]//создаем id для последующего его использования. id = выбранный отчёт в tree
+      // tabs = document.getElementById(id + "tabs");
+      // if (tabs) {
+      //   onHeightChange(tabs);
+      // }
     }
 
   }, [currentHeight])
