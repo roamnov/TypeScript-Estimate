@@ -185,13 +185,28 @@ export default function FullRightSide(props: InfoAboutClick) {
         let tab: any, tabs: any, valueStylingLabels: any, tabItems: any, valueAnyLabel: any, Fixed: any, anyValClick:any, Buttons:any, childrens:any;
         tabs = document.getElementById(id + "tabs");
         if (tabs) {
-
           tabItems = tabs.getTabs();
+          delete tabs.children[0]["$"].events.down
           for (const [key, value] of Object.entries(tabs["_tabLabelContainers"])) {
             valueAnyLabel = value;
             Fixed = openReportData.Items[key].Fixed;
             Fixed = Fixed === "1" ? true : false;
-            
+            if(!valueAnyLabel.firstChild.getAttribute("key")){
+              valueAnyLabel.firstChild.setAttribute("key", key)
+              valueAnyLabel.firstChild.children["0"].setAttribute("key", key)
+              valueAnyLabel.firstChild.setAttribute("tabsid", id)
+              valueAnyLabel.firstChild.children["0"].setAttribute("tabsid", id)
+            }
+            valueAnyLabel.firstChild.onclick = function(event:any){
+              if(event.target.className === "smart-tab-label-text-container" || event.target.className === "smart-tab-label-text-wrapper" ){
+                const id = event.target.getAttribute("key")
+                const tabsid = event.target.getAttribute("tabsid")
+                const tabs:any = document.getElementById(tabsid + "tabs");
+                tabs.select(Number(id))
+              }
+              // smart-tab-label-text-container
+              // smart-tab-label-text-wrapper
+            }
             valueAnyLabel.firstChild.id = openReportData.ViewIdent + "." + openReportData.Items[key].ViewIdent
             childrens = valueAnyLabel.firstChild.children
             Buttons = Number(openReportData.Items[key].Buttons)
