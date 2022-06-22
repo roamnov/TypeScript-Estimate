@@ -111,6 +111,7 @@ export default function FullRightSide(props: InfoAboutClick) {
             st = st.join("")
             frame.querySelector("body").children[1].innerHTML = st
             Html = String(Html).replaceAll("\'", "\"");
+            Html = String(Html).replaceAll("overflow: hidden;", "\"");
             rep = "<iframe srcdoc ='"+Html+"' style = 'width: 100%; height: 100%;'></iframe>"
     return rep
   }
