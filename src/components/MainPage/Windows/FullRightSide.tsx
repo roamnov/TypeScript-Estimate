@@ -24,7 +24,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import Params from '../Sections/ElementsSections/Params';
 import SectionToolsJS from '../Tools/SectionToolsJS';
 import CloseIcon from '@mui/icons-material/Close';
-
+import Frame from 'react-frame-component';
 
 export default function FullRightSide(props: InfoAboutClick) {
 
@@ -90,11 +90,7 @@ export default function FullRightSide(props: InfoAboutClick) {
   function InsertIdReport(Html: string) {
     DeleteActivFrame();
     var rep
-    /*frame.forEach(n => {
-      n.querySelectorAll(".ActivReport").forEach(f => {
-        f.classList.remove('ActivReport')
-      })
-    }) */   //  .classList.remove('ActivReport')});
+    //  .classList.remove('ActivReport')});
     // frame = frame.querySelector("iframe.ActivReport");
     //document.querySelectorAll("iframe.ActivReport").forEach(n => {n.classList.remove('ActivReport')})
     Html = String(Html).replaceAll("\'", "\"");
@@ -102,40 +98,9 @@ export default function FullRightSide(props: InfoAboutClick) {
     Html = String(Html).replaceAll(/[\n]+/g, "");
     Html = String(Html).replaceAll(/[\r]+/g, "");
     // Html = String(Html).replaceAll("#13", "");
-    /*var ClassTable = "RepTable_" + RandomString(10)
-            var newDoc = new DOMParser().parseFromString(Html, "text/html")
-            frame = newDoc.children[0]
-            
-            frame.querySelector("body").children[0].id = ClassTable;
-            let st = frame.querySelector("body").children[1].innerHTML
-            st = st.split("}")
-            for (let n = 0; n <= st.length - 1; n++) {
-              let c = st[n].length
-              var cc: any, cn: any, s: any
-              s = st[n]
-              cc = 0;
-              for (cn = 0; cn <= c - 1; cn++) {
-                let sym = s[cn]
-
-                if (sym === "{")
-                  cc = cc + 1
-              }
-              if (s !== "") {
-                if (s[1] !== "@") {
-                  st[n] = "#" + ClassTable + " " + s;
-                }
-                c = ""
-                for (cn = 0; cn <= cc - 1; cn++) {
-                  c = c + "}"
-                }
-                st[n] = st[n] + c
-              }
-            }
-          //  st.push("p {margin:0}");
-            st = st.join("")
-            frame.querySelector("body").children[1].innerHTML = st
-            */
+    var newDoc = new DOMParser().parseFromString(Html, "text/html")
     rep = "<iframe srcdoc ='" + Html + "' style = 'width: 100%; height: 100%; border-width: 0px;' class='ActivReport'></iframe>"
+    
     return rep
   }
   function RenderReports(id: any) {
@@ -317,7 +282,12 @@ export default function FullRightSide(props: InfoAboutClick) {
 
   function LinkrefClick(ViewIdent: any) {
     try {
-      let Test = document.getElementsByClassName("linkref")
+      let frame: any
+      let frams = document.querySelectorAll(".Params.ActivParams");
+        for (let n = 0; n<=frams.length - 1; n++)
+        frame = frams[n].querySelector("iframe.ActivReport");
+        
+      let Test = frame.contentDocument.getElementsByClassName("linkref")
       let valAny: any, anyValClick: any
       for (const [key, value] of Object.entries(Test)) {
         valAny = value
