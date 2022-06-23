@@ -4,11 +4,25 @@ import Tree from '../../Windows/ViewData/Tree/tree';
 import Params from './Params'
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import Grid from "@mui/material/Grid"
-
+import  IconButton from '@mui/material/IconButton';
+import PrintRoundedIcon from '@mui/icons-material/PrintRounded';
 export default function SectionReports(props) {
+    function PrintReport(ev)
+    { //Params ActivParams
+        let frame, frams = document.querySelectorAll(".Params.ActivParams");
+        for (let n = 0; n<=frams.length - 1; n++)
+        frame = frams[n].querySelector("iframe.ActivReport");
+        if (frame.contentWindow)
+        {
+            frame.contentWindow.print()  
+        }
+    }
     return  <>
     {props.SectionToolsJS ? <SectionToolsJS ID={props.id} />: <></>}
     {props.defaultButton}
+    <IconButton>
+      <PrintRoundedIcon onClick= {PrintReport}/>  
+    </IconButton>
     <Splitter style={{ height: "100%", width: "100%" }} id = {"ParamsFor_"+props.id} liveResize>
         <SplitterItem size="20%" collapsible id={"item_tree_params_reports_" + props.id} >
             <Splitter style={{ width: "100%" }} orientation="horizontal">

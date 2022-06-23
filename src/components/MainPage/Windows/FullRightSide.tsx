@@ -38,15 +38,15 @@ export default function FullRightSide(props: InfoAboutClick) {
 
   const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight - 295);
 
-  function ReturnHeightBasedOnCLSID(){
-  if(props.clsic){
-    switch(props.clsic){
-      case "{B357E5B2-137F-4253-BBEF-E5CFD697E362}":// только отчёты
-        return window.innerHeight - 145
-      case "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}":
-        return window.innerHeight - 295
+  function ReturnHeightBasedOnCLSID() {
+    if (props.clsic) {
+      switch (props.clsic) {
+        case "{B357E5B2-137F-4253-BBEF-E5CFD697E362}":// только отчёты
+          return window.innerHeight - 145
+        case "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}":
+          return window.innerHeight - 295
+      }
     }
-  }
   }
 
 
@@ -60,9 +60,6 @@ export default function FullRightSide(props: InfoAboutClick) {
 
   let pringReportsDoc: any
 
-  function createMarkup(code: any) {
-    return { __html: code };
-  }
   function RandomString(count: any) {
     var res, s = "0123456789ABCDEFGHIKLMNOPQRSTVXYZ";
     if (!count) count = 20
@@ -75,14 +72,37 @@ export default function FullRightSide(props: InfoAboutClick) {
     }
     return res
   }
-  function InsertIdReport(Html:string)
-  {
+  function DeleteActivFrame() {
+   
+    var frams: any
+    frams = document.querySelectorAll(".Params.ActivParams")
+    for (let n = 0; n <= frams.length - 1; n++) {
+      let Activ = frams[n]
+      let reps = Activ.querySelectorAll(".ActivReport")
+      for (let f = 0; f <= reps.length - 1; f++) {
+        let rep = reps[f];
+        if (rep) {
+          rep.classList.remove('ActivReport')
+        }
+      }
+    }
+  }
+  function InsertIdReport(Html: string) {
+    DeleteActivFrame();
     var rep
-    var frame: any
+    /*frame.forEach(n => {
+      n.querySelectorAll(".ActivReport").forEach(f => {
+        f.classList.remove('ActivReport')
+      })
+    }) */   //  .classList.remove('ActivReport')});
+    // frame = frame.querySelector("iframe.ActivReport");
+    //document.querySelectorAll("iframe.ActivReport").forEach(n => {n.classList.remove('ActivReport')})
     Html = String(Html).replaceAll("\'", "\"");
-            Html = String(Html).replaceAll("overflow: hidden;", "");
-            Html = String(Html).replaceAll("#13", "");
-    var ClassTable = "RepTable_" + RandomString(10)
+    Html = String(Html).replaceAll("overflow: hidden;", "");
+    Html = String(Html).replaceAll(/[\n]+/g, "");
+    Html = String(Html).replaceAll(/[\r]+/g, "");
+    // Html = String(Html).replaceAll("#13", "");
+    /*var ClassTable = "RepTable_" + RandomString(10)
             var newDoc = new DOMParser().parseFromString(Html, "text/html")
             frame = newDoc.children[0]
             
@@ -101,9 +121,9 @@ export default function FullRightSide(props: InfoAboutClick) {
                   cc = cc + 1
               }
               if (s !== "") {
-                /*if (s[1] !== "@") {
+                if (s[1] !== "@") {
                   st[n] = "#" + ClassTable + " " + s;
-                }*/
+                }
                 c = ""
                 for (cn = 0; cn <= cc - 1; cn++) {
                   c = c + "}"
@@ -111,14 +131,14 @@ export default function FullRightSide(props: InfoAboutClick) {
                 st[n] = st[n] + c
               }
             }
-            st.push("p {margin:0}");
+          //  st.push("p {margin:0}");
             st = st.join("")
             frame.querySelector("body").children[1].innerHTML = st
-            
-            rep = "<iframe srcdoc ='"+frame.outerHTML+"' style = 'width: 100%; height: 100%;'></iframe>"
+            */
+    rep = "<iframe srcdoc ='" + Html + "' style = 'width: 100%; height: 100%; border-width: 0px;' class='ActivReport'></iframe>"
     return rep
   }
-  function RenderReports(id:any) {
+  function RenderReports(id: any) {
     let idTabs: any = document.getElementById(id + "tabs")//получаем основной блок табов, мб мы его уже рисовали
     let tabsLength = idTabs === null ? 1 : idTabs["_tabs"].length// определяем длинну
     let ViewIdentForButton: any = { ViewIdent: openReportData.ViewIdent + ".", items: [] }
@@ -133,7 +153,7 @@ export default function FullRightSide(props: InfoAboutClick) {
         reportContent = String(ValueAny.content).replaceAll(/[\n]+/g, "");
         reportContent = String(reportContent).replaceAll(/[\r]+/g, "");
         if (reportContent !== "undefined") {
-          
+
           reportContent = InsertIdReport(reportContent)
         }
         JSXTabItems.push(
@@ -151,7 +171,7 @@ export default function FullRightSide(props: InfoAboutClick) {
       pringReportsDoc = document.getElementById(`print_reports${props.id}`);//ищем блок СЕКЦИИ
       TabIndex = TabIndex === undefined ? 0 : Number(TabIndex)
       newReportWindow = document.getElementById(id);// получаем блок
-      RenderSoloReport(id,newReportWindow,false);
+      RenderSoloReport(id, newReportWindow, false);
 
       if (tabsLength === 0) {
         idTabs.insert(0, { label: openReportData.Items[0].Title, content: openReportData.Items[0].content });
@@ -170,10 +190,10 @@ export default function FullRightSide(props: InfoAboutClick) {
           }
         } else {
           ReactDOM.render(
-            <Grid item id={id + "tabsContainer"} style={{height:"inherit"}}>
-              <Tabs  scrollMode="paging" id={id + "tabs"} animation="none"
-                tabPosition="bottom"  selectedIndex={TabIndex}
-                style={{  width: "100%", height:`97%` }} onChange={OnIndexChange} >
+            <Grid item id={id + "tabsContainer"} style={{ height: "inherit" }}>
+              <Tabs scrollMode="paging" id={id + "tabs"} animation="none"
+                tabPosition="bottom" selectedIndex={TabIndex}
+                style={{ width: "100%", height: `97%` }} onChange={OnIndexChange} >
 
                 {JSXTabItems}
 
@@ -185,7 +205,7 @@ export default function FullRightSide(props: InfoAboutClick) {
 
 
       setTimeout(() => {// с задержкой, что бы установить стили и кнопку поставить
-        let tab: any, tabs: any, valueStylingLabels: any, tabItems: any, valueAnyLabel: any, Fixed: any, anyValClick:any, Buttons:any, childrens:any;
+        let tab: any, tabs: any, valueStylingLabels: any, tabItems: any, valueAnyLabel: any, Fixed: any, anyValClick: any, Buttons: any, childrens: any;
         tabs = document.getElementById(id + "tabs");
         if (tabs) {
           tabItems = tabs.getTabs();
@@ -194,17 +214,17 @@ export default function FullRightSide(props: InfoAboutClick) {
             valueAnyLabel = value;
             Fixed = openReportData.Items[key].Fixed;
             Fixed = Fixed === "1" ? true : false;
-            if(!valueAnyLabel.firstChild.getAttribute("key")){
+            if (!valueAnyLabel.firstChild.getAttribute("key")) {
               valueAnyLabel.firstChild.setAttribute("key", key)
               valueAnyLabel.firstChild.children["0"].setAttribute("key", key)
               valueAnyLabel.firstChild.setAttribute("tabsid", id)
               valueAnyLabel.firstChild.children["0"].setAttribute("tabsid", id)
             }
-            valueAnyLabel.firstChild.onclick = function(event:any){
-              if(event.target.className === "smart-tab-label-text-container" || event.target.className === "smart-tab-label-text-wrapper" ){
+            valueAnyLabel.firstChild.onclick = function (event: any) {
+              if (event.target.className === "smart-tab-label-text-container" || event.target.className === "smart-tab-label-text-wrapper") {
                 const id = event.target.getAttribute("key")
                 const tabsid = event.target.getAttribute("tabsid")
-                const tabs:any = document.getElementById(tabsid + "tabs");
+                const tabs: any = document.getElementById(tabsid + "tabs");
                 tabs.select(Number(id))
               }
               // smart-tab-label-text-container
@@ -214,9 +234,9 @@ export default function FullRightSide(props: InfoAboutClick) {
             childrens = valueAnyLabel.firstChild.children
             Buttons = Number(openReportData.Items[key].Buttons)
             const closeButtonId = id + ",CloseButton" + key;
-            if (CheckChilder(childrens, closeButtonId) &&Buttons === 3 || Buttons === 1) {//кнопки закрытия
+            if (CheckChilder(childrens, closeButtonId) && Buttons === 3 || Buttons === 1) {//кнопки закрытия
               let CloseButtonContainer = document.createElement("div");// создаем контейнер для кнопки
-              let localId= id + ",CloseButton" + key;
+              let localId = id + ",CloseButton" + key;
               CloseButtonContainer.style.height = "10px";
               CloseButtonContainer.style.width = "10px";
               CloseButtonContainer.style.position = "absolute";
@@ -227,16 +247,16 @@ export default function FullRightSide(props: InfoAboutClick) {
               valueAnyLabel.firstChild.children["0"].style.marginRight = "10px"
               let idForBttn = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key];
               ReactDOM.render(
-                <IconButton  id={idForBttn + ","  + key} style={{ width: 10, height: 10, fontSize: "small" }} onClick={CustomClose} >
-                  <CloseIcon fontSize="small"/>
+                <IconButton id={idForBttn + "," + key} style={{ width: 10, height: 10, fontSize: "small" }} onClick={CustomClose} >
+                  <CloseIcon fontSize="small" />
                 </IconButton>
                 , CloseButtonContainer);
             }
             // smart-tab-close-button
             const PinButtonId = id + ",ButtonFixUp" + key
-            if (CheckChilder(childrens, PinButtonId) && Buttons ===3 || Buttons === 2) {//кнопки для пинов
+            if (CheckChilder(childrens, PinButtonId) && Buttons === 3 || Buttons === 2) {//кнопки для пинов
               let PinButtonContainer = document.createElement("div");// создаем контейнер для кнопки
-              let localId= id + ",ButtonFixUp" + key
+              let localId = id + ",ButtonFixUp" + key
               PinButtonContainer.style.height = "10px";
               PinButtonContainer.style.width = "10px";
               PinButtonContainer.style.position = "absolute";
@@ -251,12 +271,12 @@ export default function FullRightSide(props: InfoAboutClick) {
                   {Fixed === true ? <LockIcon fontSize='small' /> : <LockOpenIcon fontSize='small' />}
                 </IconButton>
                 , PinButtonContainer);
-            }else if(!document.getElementById(id+","+ key)){
+            } else if (!document.getElementById(id + "," + key)) {
               let DataContainer = document.createElement("div");
               DataContainer.style.display = "none";
-              DataContainer.id = id+","+ key;
+              DataContainer.id = id + "," + key;
               let Data = document.createElement("div");
-              Data.id = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key]+",";
+              Data.id = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key] + ",";
               DataContainer.appendChild(Data)
               valueAnyLabel.firstChild.appendChild(DataContainer);
             }
@@ -272,12 +292,12 @@ export default function FullRightSide(props: InfoAboutClick) {
     }
   }
 
-  function WichReportRender(){
+  function WichReportRender() {
     if (!isEmptyObject(openReportData)) {
       let arrOfReportId = openReportData.ViewIdent.split("-");// переменная для того что бы получить id отчёта
       arrOfReportId = arrOfReportId[0].split("Report")
       const id = "print_reports" + props.id + "_" + arrOfReportId[1]//создаем id для последующего его использования. id = выбранный отчёт в tree
-      switch(openReportData.CLSID){
+      switch (openReportData.CLSID) {
         case "{18CCCA1A-CD3D-41B3-8C20-9F80AA3ED8CE}"://групповые
           RenderReports(id);
           LinkrefClick(openReportData.Items[0].ViewIdent);
@@ -295,14 +315,14 @@ export default function FullRightSide(props: InfoAboutClick) {
     }
   }
 
-  function LinkrefClick(ViewIdent:any){
+  function LinkrefClick(ViewIdent: any) {
     try {
       let Test = document.getElementsByClassName("linkref")
-      let valAny: any, anyValClick:any
+      let valAny: any, anyValClick: any
       for (const [key, value] of Object.entries(Test)) {
         valAny = value
-        valAny.id = ViewIdent     
-        if(valAny.onclick === null){
+        valAny.id = ViewIdent
+        if (valAny.onclick === null) {
           valAny.onclick = function (event: any) {
             let params = new Map;
             console.log(event.currentTarget.attributes["data-path"].value)
@@ -313,7 +333,7 @@ export default function FullRightSide(props: InfoAboutClick) {
             params.set("ViewIdent", event.currentTarget.id)
             params.set("Path", event.currentTarget.attributes["data-path"].value)
             params.set("SectionID", props.id)
-            params.set("WSM","1")
+            params.set("WSM", "1")
             let jsonClick = XMLrequest(params)
             console.log(jsonClick)
             switch (jsonClick.Token) {
@@ -332,11 +352,11 @@ export default function FullRightSide(props: InfoAboutClick) {
               default:
                 tokenProcessingTest(jsonClick);
                 break;
-              }
-          
+            }
+
+          }
         }
-        }
-        
+
 
       }
       // console.log(Test)
@@ -345,7 +365,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     }
   }
 
-  function RenderSoloReport(id:any,newReportWindow:any,bool?:any){
+  function RenderSoloReport(id: any, newReportWindow: any, bool?: any) {
     if (newReportWindow === null) {// если уже создавали вкладку
       pringReportsDoc.querySelectorAll('.ActivParams').forEach((n: {
         classList: {
@@ -357,19 +377,19 @@ export default function FullRightSide(props: InfoAboutClick) {
       newReportWindow.classList.add("ActivParams");
       newReportWindow.id = id;
       newReportWindow.style.height = "100%"
-      if(bool){
+      if (bool) {
         newReportWindow.innerHTML = InsertIdReport(openReportData.Items[0].content)
-        
+
       }
       pringReportsDoc.appendChild(newReportWindow);
     }
   }
 
-  function CheckChilder(children:any ,id:any){
-    let valueAny:any
-    for(const[key,value] of Object.entries(children)){
+  function CheckChilder(children: any, id: any) {
+    let valueAny: any
+    for (const [key, value] of Object.entries(children)) {
       valueAny = value;
-      if(valueAny.id === id){
+      if (valueAny.id === id) {
         return false
       }
     }
@@ -405,10 +425,10 @@ export default function FullRightSide(props: InfoAboutClick) {
     tabsItem = Tabs.getTabs();
     ViewIdent = document.getElementById(GlobalId + `,ButtonFixUp${index}`)
     if (ViewIdent) ViewIdent = ViewIdent.children[0].id.split(",")[0]
-    if (!ViewIdent){
+    if (!ViewIdent) {
       ViewIdent = document.getElementById(GlobalId + `,${index}`)
-      if(ViewIdent) ViewIdent = ViewIdent.children[0].id.split(",")[0]
-    } 
+      if (ViewIdent) ViewIdent = ViewIdent.children[0].id.split(",")[0]
+    }
     if (EventTabContent === undefined || EventTabContent === "undefined") {
       let paramsGetPageContent = new Map;
       EventTabLabel = Tabs.getTabLabel(index);
@@ -418,8 +438,7 @@ export default function FullRightSide(props: InfoAboutClick) {
       paramsGetPageContent.set("HTML", "1");
       json = XMLrequest(paramsGetPageContent)
       let content = json.content
-      content = String(content).replaceAll(/[\n]+/g, "");
-      content = String(content).replaceAll(/[\r]+/g, "");
+      
       content = InsertIdReport(content)
       Tabs.update(index, EventTabLabel, content)
     } else {
@@ -428,63 +447,67 @@ export default function FullRightSide(props: InfoAboutClick) {
         params.set("comand", "PageChanged");
         params.set("ViewIdent", ViewIdent);
         XMLrequest(params);
+        DeleteActivFrame();
+        let frame = tabsItem[index]
+        frame = frame.querySelector("iframe")
+        frame.classList.add("ActivReport")
       }
     }
   }
 
-function ClickCells(event?:any){
-  console.log(event)
-}
+  function ClickCells(event?: any) {
+    console.log(event)
+  }
 
-function CustomClose(event:any){
-  let arrEvent = event.currentTarget.getAttribute("id").split(",")
-  let tabs: any
-  tabs = document.getElementById(GlobalId + "tabs");
-  handleClosing(arrEvent["0"])
-  tabs.removeAt(Number(arrEvent["1"]))
-  onCloseTab(Number(arrEvent["1"]))
-}
+  function CustomClose(event: any) {
+    let arrEvent = event.currentTarget.getAttribute("id").split(",")
+    let tabs: any
+    tabs = document.getElementById(GlobalId + "tabs");
+    handleClosing(arrEvent["0"])
+    tabs.removeAt(Number(arrEvent["1"]))
+    onCloseTab(Number(arrEvent["1"]))
+  }
 
-function onCloseTab(index: any) {
-  // const index = event.detail.index
-  let tabs: any, tabContent: any, tabLabel: any, params = new Map, json: any, ViewIdent: any
-  tabs = document.getElementById(GlobalId + "tabs");// получаем блок вкладок
-  if (index > 0) {// print_reports108_453,ButtonFixUp2
-    ViewIdent = document.getElementById(GlobalId + `,ButtonFixUp${index - 1}`)
-    if (ViewIdent) ViewIdent = ViewIdent.children[0].id.split(",")[0]
-    if (!ViewIdent){
-      ViewIdent = document.getElementById(GlobalId + `,${index-1}`)
-      ViewIdent = ViewIdent.children[0].id.split(",")[0]
-    } 
-    tabContent = tabs.getTabContent(index - 1);
-    if (tabContent === undefined || tabContent ===  "undefined") {
-      params.set('prefix', 'reptabs');
-      params.set("comand", "GetPageContent");
-      params.set("ViewIdent", ViewIdent);
-      params.set("HTML", "1");
-      tabLabel = tabs.getTabLabel(index - 1);
-      json = XMLrequest(params);
-      tabs.update(index - 1, tabLabel, json.content)
+  function onCloseTab(index: any) {
+    // const index = event.detail.index
+    let tabs: any, tabContent: any, tabLabel: any, params = new Map, json: any, ViewIdent: any
+    tabs = document.getElementById(GlobalId + "tabs");// получаем блок вкладок
+    if (index > 0) {// print_reports108_453,ButtonFixUp2
+      ViewIdent = document.getElementById(GlobalId + `,ButtonFixUp${index - 1}`)
+      if (ViewIdent) ViewIdent = ViewIdent.children[0].id.split(",")[0]
+      if (!ViewIdent) {
+        ViewIdent = document.getElementById(GlobalId + `,${index - 1}`)
+        ViewIdent = ViewIdent.children[0].id.split(",")[0]
+      }
+      tabContent = tabs.getTabContent(index - 1);
+      if (tabContent === undefined || tabContent === "undefined") {
+        params.set('prefix', 'reptabs');
+        params.set("comand", "GetPageContent");
+        params.set("ViewIdent", ViewIdent);
+        params.set("HTML", "1");
+        tabLabel = tabs.getTabLabel(index - 1);
+        json = XMLrequest(params);
+        tabs.update(index - 1, tabLabel, json.content)
+      }
     }
   }
-}
 
-function handleClosing(ViewIdent:any) {
-  let params = new Map, tabs: any, tabsItem: any
-  tabs = document.getElementById(GlobalId + "tabs");// получаем блок вкладок
-  tabsItem = tabs.getTabs();
-  params.set('prefix', 'reptabs');
-  params.set("comand", "CloseTabPage");
-  params.set("ViewIdent", ViewIdent);
-  XMLrequest(params);
-}
+  function handleClosing(ViewIdent: any) {
+    let params = new Map, tabs: any, tabsItem: any
+    tabs = document.getElementById(GlobalId + "tabs");// получаем блок вкладок
+    tabsItem = tabs.getTabs();
+    params.set('prefix', 'reptabs');
+    params.set("comand", "CloseTabPage");
+    params.set("ViewIdent", ViewIdent);
+    XMLrequest(params);
+  }
 
   function onHeightChange(element: any) {
     let items: any = element.getTabs(), tab: any;
     let container: any = document.getElementById(`print_reports${props.id}`);//ищем блок СЕКЦИИ
     for (const [key, value] of Object.entries(items)) {
       tab = value
-      tab.style.height = `${currentHeight-10}px`;// даём высоту 
+      tab.style.height = `${currentHeight - 10}px`;// даём высоту 
       tab.style.display = "inline-block"
     }
   }
@@ -624,7 +647,7 @@ function handleClosing(ViewIdent:any) {
             } else
               if (Page.CLSID !== undefined && Page.CLSID == "{B357E5B2-137F-4253-BBEF-E5CFD697E362}") {
                 defaultButton = <Tooltip title="Сформировать отчет" >
-                  <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{ textTransform: "none", marginLeft: "0.88%" , marginBottom:"0.6%" }}>
+                  <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{ textTransform: "none", marginLeft: "0.88%", marginBottom: "0.6%" }}>
                     Выполнить
                   </Button>
                 </Tooltip>
@@ -632,7 +655,7 @@ function handleClosing(ViewIdent:any) {
               } else
                 if (Page.CLSID !== undefined && Page.CLSID == "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}") {//Секция Документов/отчётов
                   defaultButton = <Tooltip title="Сформировать отчет" >
-                    <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{ textTransform: "none", marginLeft: "0.88%" , marginBottom:"0.6%"}}>
+                    <Button variant="outlined" size="small" onClick={(e) => OpenReport(e)} style={{ textTransform: "none", marginLeft: "0.88%", marginBottom: "0.6%" }}>
                       Выполнить
                     </Button>
                   </Tooltip>
