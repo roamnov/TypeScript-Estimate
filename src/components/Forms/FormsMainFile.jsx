@@ -401,6 +401,33 @@ export default function FormsMainFile(props){
 // splitter color - #dcd8cc
 //  selected section - #dcd8cc
 
+
+function DeleteActivFrame() {
+   
+    var frams
+    frams = document.querySelectorAll(".Params.ActivParams")
+    for (let n = 0; n <= frams.length - 1; n++) {
+      let Activ = frams[n]
+      let reps = Activ.querySelectorAll(".ActivReport")
+      for (let f = 0; f <= reps.length - 1; f++) {
+        let rep = reps[f];
+        if (rep) {
+          rep.classList.remove('ActivReport')
+        }
+      }
+    }
+  }
+  function InsertIdReport(Html) {
+    DeleteActivFrame();
+    var rep
+    Html = String(Html).replaceAll("\'", "\"");
+    Html = String(Html).replaceAll("overflow: hidden;", "");
+    Html = String(Html).replaceAll(/[\n]+/g, "");
+    Html = String(Html).replaceAll(/[\r]+/g, "");
+    rep = "<iframe srcdoc ='" + Html + "' style = 'width: 100%; height: 100%; border-width: 0px;' class='ActivReport'></iframe>"
+    return rep
+  }
+
     function CheckAndReturnComponent(json, SubLabel, keyName, RCDATAFormParent){
         let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Corners, BGColor, returnSub=[];
         Left = GetParams(json, "Left");
@@ -511,6 +538,20 @@ export default function FormsMainFile(props){
                 break;
 
             case "TSectionPanel":// WITH SUB
+                if(json.CLSID === "{408E20A3-4BE3-4DCD-98BD-2613A8968783}") {//content
+                   
+                    let content = InsertIdReport(json.content)
+                    console.log(content)
+                    ReturnComponent.push(
+                        <Grid id={`gridpanel`+props.id} keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability, backgroundColor: BGColor }}>
+                            <div dangerouslySetInnerHTML={{ __html: content }} style={{height:"inherit"}}>
+
+                            </div>
+                        </Grid>
+                    )
+                    break;
+                }
+
             try{
                 let Path = json.Params.Path
                 if(Path !== undefined){
