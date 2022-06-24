@@ -12,6 +12,8 @@ import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import ReportRoundedIcon from '@mui/icons-material/ReportRounded';
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import { Grid } from '@material-ui/core';
+import { red } from '@mui/material/colors';
+import { Button } from '@mui/material';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -22,20 +24,34 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalContainer(props: containerProps) {
+export default function ModalContainer(props: any) {
   const [open, setOpen] = React.useState(true);
+
+  React.useEffect(()=>{
+    if(!open){
+      setOpen(true)
+    }
+  },[props])
 
   const title= ()=>{
       switch(props.dlgType){
         case "Предупреждение":
           return <ReportRoundedIcon fontSize='large'/>
         case "Ошибка":
-          return <ErrorRoundedIcon  fontSize='large'/>
+          return <ErrorRoundedIcon  fontSize='large' sx={{ color: red[500] }}/>
         case "Информация":
           return <InfoRoundedIcon  fontSize='large'/>
         case "Вопрос":
           return //<QuestionMarkRoundedIcon  fontSize='large'/>
       }
+  }
+
+  const DefaultButtonOk = ()=>{
+    return(
+      <Button style={{textTransform: "none"}} onClick={handleClose} variant="outlined">
+        Ок
+      </Button>
+    )
   }
 
   const handleClose = () => {
@@ -54,11 +70,11 @@ export default function ModalContainer(props: containerProps) {
       >
         <DialogTitle>{props.dlgType}</DialogTitle>
         <DialogContent>
-        <Grid container direction="row" justifyContent="space-evenly" alignItems="center" spacing={2} >
-          <Grid item>
+        <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={3} >
+          <Grid item style={{paddingLeft:"43px"}}>
               {title()}
           </Grid>
-          <Grid item>
+          <Grid item xs={9}>
             <DialogContentText style={{marginTop:"2%"}}>
             {props.content}
             </DialogContentText>
@@ -70,7 +86,7 @@ export default function ModalContainer(props: containerProps) {
         </DialogContent>
         <DialogActions >
           <div id="DialogActionTest">
-            {props.buttons}
+            {props.buttons?props.buttons:<DefaultButtonOk/>}
           </div>
         </DialogActions>
       </Dialog>

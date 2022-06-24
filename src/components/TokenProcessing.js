@@ -167,15 +167,7 @@ export function  tokenProcessingTest (json, func){
                 let Path = json.Params.Path;
                 let doc = document.getElementById('RenderModal')
                 doc.innerHTML = "";
-                let sas = true
-                if(sas === true){
-                    // return <ModalProgress open={true}  Json={json} path={Path} />
-                    // let test =  ModalProgressContainer( true ,json, Path)
-                    // console.log(test)
-                }else{
-                   
-                }
-                 ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} setReturnValue={func} /> , document.getElementById('RenderModal'));
+                ReactDOM.render(<ModalProgress open={true}  Json={json} path={Path} setReturnValue={func} /> , document.getElementById('RenderModal'));
                 break;
 
             case "SetProgressLabel":

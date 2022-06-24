@@ -1,4 +1,7 @@
+import { Button } from "@mui/material";
 import axios, { AxiosRequestConfig } from "axios";
+import ReactDOM from "react-dom";
+import ModalContainer from "./Containers/ModalContainer";
 import setHost from "./SetHost.js"
 
 
@@ -68,7 +71,14 @@ export function XMLrequest(params: any, postData?: any) {
 
     //console.log(res)
     try {
-        return JSON.parse(res)
+        const parsedJSON = JSON.parse(res)
+        
+        if(parsedJSON.error){
+            const Message = `Ошибка выполнения операции на сервере: ${parsedJSON.error.content}`
+            console.log(parsedJSON.error)
+            ReactDOM.render(<ModalContainer dlgType={"Ошибка"} content={Message} />, document.getElementById('footerProgress'));
+        }
+        return parsedJSON
     } catch (err) {
         console.log(err)
     }

@@ -32,7 +32,7 @@ import Checkbox from "@mui/material/Checkbox"
 import FormLabel from "@mui/material/FormLabel"
 import ManWhoSoldTheWorld from "../MainPage/stimategrid/test";
 import AccorionDownIcon from "../../static/images/down.png";
-
+import Frame from 'react-frame-component';
 
 
 
@@ -169,6 +169,15 @@ export default function FormsMainFile(props){
             BuildFromClicked();
         }
     },[subForms])
+
+    useEffect(()=>{
+        setTimeout(() => {
+            LinkrefClick();
+        }, 50);
+            
+            console.log("as")
+        
+    },[document.getElementById("mainForms" +props.id)])
 
     
 
@@ -337,11 +346,12 @@ export default function FormsMainFile(props){
         return parsed ;
       }
       
-    async function ClickFormElement(event){
+    function ClickFormElement(event){
         let params = new Map, json, Name, TokenReturn;
         // setCursor("wait")
         Name = event.currentTarget.getAttribute("name");
         Name = Name === null? event.currentTarget.getAttribute("keyName"): Name
+        Name = Name === null? event.currentTarget.getAttribute("data-path"): Name
         params.set('prefix', 'forms');
         params.set("comand", "ElementEvent");
         params.set("SectionID", props.id);/////
@@ -426,6 +436,36 @@ function DeleteActivFrame() {
     Html = String(Html).replaceAll(/[\r]+/g, "");
     rep = "<iframe srcdoc ='" + Html + "' style = 'width: 100%; height: 100%; border-width: 0px;' class='ActivReport'></iframe>"
     return rep
+  }
+
+  function LinkrefClick(ViewIdent) {
+    
+        let frame
+        let frams = document.querySelectorAll(".TestForms");
+        console.log(frams)
+
+        for (let n = 0; n<=frams.length - 1; n++){
+            frame = frams[n].querySelector("iframe.ActivReport");
+            frame.onload = function (ev) { 
+            let Test = frame.contentDocument.getElementsByClassName("linkref")
+            let valAny
+            for (const [key, value] of Object.entries(Test)) {
+                valAny = value
+                valAny.id = ViewIdent ?ViewIdent:null
+                if (valAny.onclick === null) {
+                valAny.onclick = function(event){
+                    ClickFormElement(event);
+                }
+                }
+            }
+        }
+        }
+        
+    
+
+  
+
+    
   }
 
     function CheckAndReturnComponent(json, SubLabel, keyName, RCDATAFormParent){
@@ -539,12 +579,10 @@ function DeleteActivFrame() {
 
             case "TSectionPanel":// WITH SUB
                 if(json.CLSID === "{408E20A3-4BE3-4DCD-98BD-2613A8968783}") {//content
-                   
                     let content = InsertIdReport(json.content)
-                    console.log(content)
                     ReturnComponent.push(
                         <Grid id={`gridpanel`+props.id} keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability, backgroundColor: BGColor }}>
-                            <div dangerouslySetInnerHTML={{ __html: content }} style={{height:"inherit"}}>
+                            <div dangerouslySetInnerHTML={{ __html: content }} style={{height:"inherit"}} >
 
                             </div>
                         </Grid>
@@ -767,11 +805,19 @@ function FormDataProcessing(json) {
             for(const [key, value] of Object.entries(json)) {
                 val = value
                 if(val.Type !==undefined ){
+                    
                     returnAll.push( CheckAndReturnComponent(value, false, key))                     
                 }
             }
             // setCursor("auto") 
-            return returnAll 
+            // return returnAll
+            // ReactDOM.render(returnAll,document.getElementById("mainForms") )
+            return(
+                <div  className="TestForms" >
+                    {returnAll}
+                </div>
+            )
+            
         }
         
     }
@@ -806,7 +852,7 @@ function FormDataProcessing(json) {
         return(
         <>
             <SectionToolsJS ID={props.id} SetBackValue={setSubForms}  buildForms ={FormDataProcessing}/>
-            <Grid id="mainForms" style={{position:"relative", height: "100%", width:"100%", backgroundColor:"s", cursor: cursor}}>
+            <Grid id={"mainForms" + props.id} style={{position:"relative", height: "100%", width:"100%", backgroundColor:"s", cursor: cursor}}>
                 {FormDataProcessing(dataForms)}
             </Grid>
             <Grid id="RenderFormsModal">
