@@ -97,12 +97,15 @@ export default function FullRightSide(props: InfoAboutClick) {
     Html = String(Html).replaceAll("overflow: hidden;", "");
     Html = String(Html).replaceAll(/[\n]+/g, "");
     Html = String(Html).replaceAll(/[\r]+/g, "");
+    Html = String(Html).replaceAll('onClick="ClickCells(event)"', "");
+    //onClick="ClickCells(event)"
     // Html = String(Html).replaceAll("#13", "");
     var newDoc = new DOMParser().parseFromString(Html, "text/html")
     rep = "<iframe srcdoc ='" + Html + "' style = 'width: 100%; height: 100%; border-width: 0px;' class='ActivReport'></iframe>"
     
     return rep
   }
+
   function RenderReports(id: any) {
     let idTabs: any = document.getElementById(id + "tabs")//получаем основной блок табов, мб мы его уже рисовали
     let tabsLength = idTabs === null ? 1 : idTabs["_tabs"].length// определяем длинну
@@ -167,8 +170,7 @@ export default function FullRightSide(props: InfoAboutClick) {
             , newReportWindow);
         }
       }
-
-
+      
       setTimeout(() => {// с задержкой, что бы установить стили и кнопку поставить
         let tab: any, tabs: any, valueStylingLabels: any, tabItems: any, valueAnyLabel: any, Fixed: any, anyValClick: any, Buttons: any, childrens: any;
         tabs = document.getElementById(id + "tabs");
@@ -286,7 +288,7 @@ export default function FullRightSide(props: InfoAboutClick) {
       let frams = document.querySelectorAll(".Params.ActivParams");
         for (let n = 0; n<=frams.length - 1; n++)
         frame = frams[n].querySelector("iframe.ActivReport");
-        
+        frame.onload = function (ev: any) { 
       let Test = frame.contentDocument.getElementsByClassName("linkref")
       let valAny: any, anyValClick: any
       for (const [key, value] of Object.entries(Test)) {
@@ -324,7 +326,7 @@ export default function FullRightSide(props: InfoAboutClick) {
                 break;
             }
 
-          }
+          }}
         }
 
 
