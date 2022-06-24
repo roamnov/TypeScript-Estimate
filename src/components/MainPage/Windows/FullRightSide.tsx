@@ -267,7 +267,7 @@ export default function FullRightSide(props: InfoAboutClick) {
       switch (openReportData.CLSID) {
         case "{18CCCA1A-CD3D-41B3-8C20-9F80AA3ED8CE}"://групповые
           RenderReports(id);
-          LinkrefClick(openReportData.Items[0].ViewIdent);
+          LinkrefClick(openReportData.ViewIdent);
           break;
         case "{55D200F8-A5EE-4BB8-B9AD-762B6FB815D1}"://обычная форма просмотра
           let newReportWindow: any// в ней у нас хранится блок для секции дерева
@@ -276,7 +276,7 @@ export default function FullRightSide(props: InfoAboutClick) {
           TabIndex = TabIndex === undefined ? 0 : Number(TabIndex)
           newReportWindow = document.getElementById(id);// получаем блок
           RenderSoloReport(id, newReportWindow, true);
-          LinkrefClick(openReportData.Items[0].ViewIdent);
+          LinkrefClick(openReportData.ViewIdent);
           break;
       }
     }
@@ -350,7 +350,7 @@ export default function FullRightSide(props: InfoAboutClick) {
       newReportWindow.id = id;
       newReportWindow.style.height = "100%"
       if (bool) {
-        newReportWindow.innerHTML = InsertIdReport(openReportData.Items[0].content)
+        newReportWindow.innerHTML = InsertIdReport(openReportData.content)
 
       }
       pringReportsDoc.appendChild(newReportWindow);
