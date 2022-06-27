@@ -151,6 +151,7 @@ export default function FormsMainFile(props){
     const [currentHeight, setCurrentHeight] = useState(window.innerHeight - 189);
     const [subForms, setSubForms] = useState(undefined);
     const [cursor,setCursor] = useState("auto");
+    const [count, setCount]= useState(1)
 
     const handleResize = () => {
         setCurrentHeight(window.innerHeight - 189);
@@ -170,14 +171,6 @@ export default function FormsMainFile(props){
         }
     },[subForms])
 
-    useEffect(()=>{
-        setTimeout(() => {
-            LinkrefClick();
-        }, 50);
-            
-            console.log("as")
-        
-    },[document.getElementById("mainForms" +props.id)])
 
     
 
@@ -241,7 +234,7 @@ export default function FormsMainFile(props){
 
 
     function TextFromServerToBrowser(json, keyName){
-        let Text, FontStyle, ReferenceLink, FontSize, autoSize, FontColor, Alignment, BorderWidth
+        let Text, FontStyle, ReferenceLink, FontSize, autoSize, FontColor, Alignment, BorderWidth, FontFamily
         autoSize = GetParams(json,"AutoSize") === "0"? "hidden": "unset"
         FontSize =  GetParams(json,"Font-size");
         Text = GetParams(json,"Text");
@@ -251,10 +244,14 @@ export default function FormsMainFile(props){
         Alignment = ConvertAlignment (GetParams(json, "Alignment"));
         BorderWidth =GetParams(json,"BorderWidth");
         BorderWidth = BorderWidth === undefined? undefined:`${Number(BorderWidth)/100*50}px`
+        FontFamily = GetParams(json,"Font-name");
         // parseInt(FontSize, 10)*0,13}px`,
         if( ReferenceLink === "1"){
             return(
-                    <Typography style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor , textAlign: Alignment, padding:BorderWidth, overflow: "hidden" }}> 
+                    <Typography style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, 
+                    textDecoration:FontStyle, overflow: autoSize, color: FontColor , textAlign: Alignment, padding:BorderWidth, overflow: "hidden" ,
+                    fontFamily:FontFamily
+                    }}> 
                         <Link keyName={keyName}  component="button" variant="body2" underline="hover" onClick={ClickFormElement}>
                             {Text}
                         </Link>
@@ -262,7 +259,10 @@ export default function FormsMainFile(props){
                 )
         }else{
             return(
-                    <Typography onClick={ClickFormElement} keyName={keyName} style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor, textAlign: Alignment, padding:BorderWidth , overflow: "hidden"}}> 
+                    <Typography onClick={ClickFormElement} keyName={keyName} 
+                    style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, 
+                    overflow: autoSize, color: FontColor, textAlign: Alignment, padding:BorderWidth , overflow: "hidden", FontFamily:FontFamily
+                    }}> 
                         {Text}
                     </Typography>
                 )
@@ -439,27 +439,30 @@ function DeleteActivFrame() {
   }
 
   function LinkrefClick(ViewIdent) {
-    
         let frame
-        let frams = document.querySelectorAll(".TestForms");
-        console.log(frams)
-
+        let frams = document.querySelectorAll(`.${"TestForms" + props.id}`);
         for (let n = 0; n<=frams.length - 1; n++){
             frame = frams[n].querySelector("iframe.ActivReport");
             frame.onload = function (ev) { 
             let Test = frame.contentDocument.getElementsByClassName("linkref")
-            let valAny
             for (const [key, value] of Object.entries(Test)) {
-                valAny = value
-                valAny.id = ViewIdent ?ViewIdent:null
-                if (valAny.onclick === null) {
-                valAny.onclick = function(event){
+                if (value.onclick === null) {
+                    value.onclick = function(event){
                     ClickFormElement(event);
-                }
+                    }
                 }
             }
+            
         }
-        }
+            let elem = frame.contentDocument.getElementsByClassName("linkref")
+            for (const [key, value] of Object.entries(elem)) {
+                if (value.onclick === null) {
+                value.onclick = function(event){
+                    ClickFormElement(event);
+                    }
+                }
+            }
+    }
         
     
 
@@ -502,10 +505,13 @@ function DeleteActivFrame() {
 
             case "TButton":
                 Text = GetParams(json,"Text");
+                const rcdataIcon = json.RCDATA
+                let icon = <img  src={`data:image/png;base64,${rcdataIcon}`} />
                 if(SubLabel === "TCategoryPanel"){
                     let LocalTop = RCDATAFormParent?Number(Top) + 52:Top
                     ReturnComponent.push(
                         <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
+                            startIcon={icon}
                             style={{
                             color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
                             minWidth: "1px", width: `${Width}px`,height:`${Height}px`,position:"absolute", left:`${Left}px`, top:`${LocalTop}px`, 
@@ -519,6 +525,7 @@ function DeleteActivFrame() {
                 }else{
                     ReturnComponent.push(
                         <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
+                            startIcon={icon}
                             style={{
                             color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
                             minWidth: "1px", width: `${Width}px`,height:`${Height}px`, position:"absolute", left:`${Left}px`, top:`${Top}px`, 
@@ -582,8 +589,8 @@ function DeleteActivFrame() {
                     let content = InsertIdReport(json.content)
                     ReturnComponent.push(
                         <Grid id={`gridpanel`+props.id} keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability, backgroundColor: BGColor }}>
-                            <div dangerouslySetInnerHTML={{ __html: content }} style={{height:"inherit"}} >
-
+                            <div dangerouslySetInnerHTML={{ __html: content }} style={{height:"inherit"}} onLoadCapture={LinkrefClick}>
+                                
                             </div>
                         </Grid>
                     )
@@ -651,7 +658,9 @@ function DeleteActivFrame() {
             case "TCategoryPanelGroup"://WITH SUB
                 RCDATA = GetParams(json,"RCDATA"); 
                 ReturnComponent.push(
-                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", visibility:Visability, backgroundColor: BGColor }}>
+                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:"95%", overflowY:"auto", overflowX:"hidden", visibility:Visability, 
+                    // backgroundColor: BGColor
+                     }}>
 
                         {SubDataProcessing(json,null, RCDATA)}
                         
@@ -724,9 +733,11 @@ function DeleteActivFrame() {
                 Text = Text.substr(0, 8)
                 let BevelWidth= GetParams(json,"BevelWidth");
                 BevelWidth = BevelWidth=== undefined?0:Number(BevelWidth)
+                Width = json.Parent === "Form1"?"100%":`${Width}px`;
+                Height = json.Parent === "Form1"?"95%":`${Height}px`;
                 ReturnComponent.push(
                     <Grid keyName={keyName} 
-                        style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, 
+                        style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: Width,height: Height, 
                         overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor, borderRadius:`${Radius}px`, 
                         overflow:"hidden", borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px` }}>
                         {SubDataProcessing(json)}
@@ -809,11 +820,9 @@ function FormDataProcessing(json) {
                     returnAll.push( CheckAndReturnComponent(value, false, key))                     
                 }
             }
-            // setCursor("auto") 
-            // return returnAll
-            // ReactDOM.render(returnAll,document.getElementById("mainForms") )
+
             return(
-                <div  className="TestForms" >
+                <div  className={"TestForms"+props.id} >
                     {returnAll}
                 </div>
             )
