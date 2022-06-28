@@ -25,10 +25,6 @@ import Params from '../Sections/ElementsSections/Params';
 import SectionToolsJS from '../Tools/SectionToolsJS';
 import CloseIcon from '@mui/icons-material/Close';
 import Frame from 'react-frame-component';
-import { Viewer,Worker } from '@react-pdf-viewer/core';
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 export default function FullRightSide(props: InfoAboutClick) {
 
@@ -41,8 +37,6 @@ export default function FullRightSide(props: InfoAboutClick) {
   var ViewIdentObj: any
 
   const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight - 295);
-
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   function ReturnHeightBasedOnCLSID() {
     if (props.clsic) {
@@ -371,16 +365,6 @@ export default function FullRightSide(props: InfoAboutClick) {
     }
   }
 
-  const base64toUint8Array = (data: string) => {  //конвертация pdf из base64 в uint8array
-    const bytes = atob(data);
-    let length = bytes.length;
-    let out = new Uint8Array(length);
-    while (length--) {
-        out[length] = bytes.charCodeAt(length);
-    }
-    return out
-  };
-
   function RenderPdfReport(id: any, newReportWindow: any, bool?: any) {
     if (newReportWindow === null) {// если уже создавали вкладку
       pringReportsDoc.querySelectorAll('.ActivParams').forEach((n: {
@@ -394,9 +378,7 @@ export default function FullRightSide(props: InfoAboutClick) {
       newReportWindow.id = id;
       newReportWindow.style.height = "100%"
       let content = <div>
-                      <Worker   workerUrl="https://unpkg.com/pdfjs-dist@2.12.313/build/pdf.worker.min.js">
-                         <Viewer fileUrl={base64toUint8Array(openReportData.RCDATA)} plugins={[defaultLayoutPluginInstance]}/>
-                     </Worker>
+                      <iframe src={'data:application/pdf;base64,'+openReportData.RCDATA} width="100%" height="800"/>  
                     </div>
       ReactDOM.render(content, newReportWindow);
       pringReportsDoc.appendChild(newReportWindow);
