@@ -25,6 +25,10 @@ import Params from '../Sections/ElementsSections/Params';
 import SectionToolsJS from '../Tools/SectionToolsJS';
 import CloseIcon from '@mui/icons-material/Close';
 import Frame from 'react-frame-component';
+import { Viewer,Worker } from '@react-pdf-viewer/core';
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 export default function FullRightSide(props: InfoAboutClick) {
 
@@ -37,6 +41,8 @@ export default function FullRightSide(props: InfoAboutClick) {
   var ViewIdentObj: any
 
   const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight - 295);
+
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   function ReturnHeightBasedOnCLSID() {
     if (props.clsic) {
@@ -278,6 +284,14 @@ export default function FullRightSide(props: InfoAboutClick) {
           RenderSoloReport(id, newReportWindow, true);
           LinkrefClick(openReportData.ViewIdent);
           break;
+        case "{A5CDFCEB-A95A-4ABC-839E-77D1D1F5CD86}": 
+          let newReportWindow1: any// в ней у нас хранится блок для секции дерева
+          let TabIndex1 = openReportData.TabIndex;
+          pringReportsDoc = document.getElementById(`print_reports${props.id}`);//ищем блок СЕКЦИИ
+          TabIndex1 = TabIndex1 === undefined ? 0 : Number(TabIndex)
+          newReportWindow1 = document.getElementById(id);// получаем блок
+          RenderPdfReport(id, newReportWindow1, true); 
+          break;
       }
     }
   }
@@ -353,6 +367,38 @@ export default function FullRightSide(props: InfoAboutClick) {
         newReportWindow.innerHTML = InsertIdReport(openReportData.content)
 
       }
+      pringReportsDoc.appendChild(newReportWindow);
+    }
+  }
+
+  const base64toUint8Array = (data: string) => {  //конвертация pdf из base64 в uint8array
+    const bytes = atob(data);
+    let length = bytes.length;
+    let out = new Uint8Array(length);
+    while (length--) {
+        out[length] = bytes.charCodeAt(length);
+    }
+    return out
+  };
+
+  function RenderPdfReport(id: any, newReportWindow: any, bool?: any) {
+    if (newReportWindow === null) {// если уже создавали вкладку
+      pringReportsDoc.querySelectorAll('.ActivParams').forEach((n: {
+        classList: {
+          remove: (arg0: string) => void; add: (arg0: string) => void;
+        };
+      }) => { n.classList.remove('ActivParams'); n.classList.add('NoActivParams') })
+      newReportWindow = document.createElement("div");// создаем блок 
+      newReportWindow.classList.add("Params");
+      newReportWindow.classList.add("ActivParams");
+      newReportWindow.id = id;
+      newReportWindow.style.height = "100%"
+      let content = <div>
+                      <Worker   workerUrl="https://unpkg.com/pdfjs-dist@2.12.313/build/pdf.worker.min.js">
+                         <Viewer fileUrl={base64toUint8Array(openReportData.RCDATA)} plugins={[defaultLayoutPluginInstance]}/>
+                     </Worker>
+                    </div>
+      ReactDOM.render(content, newReportWindow);
       pringReportsDoc.appendChild(newReportWindow);
     }
   }
@@ -559,7 +605,9 @@ export default function FullRightSide(props: InfoAboutClick) {
     params.set('comand', 'ExecuteReport');
     params.set('SectionID', SectionID);
     params.set('ReportID', ReportID);
-    params.set('HTML', 1);
+    params.set('HTML', 0);           //загрузка архивом
+    params.set('Lazy', 0);
+    params.set('ArchTypes', 'zip');
     params.set('WSM', 1);
     json = XMLrequest(params)
 
