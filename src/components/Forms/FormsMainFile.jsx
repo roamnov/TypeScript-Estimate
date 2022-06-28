@@ -151,7 +151,7 @@ export default function FormsMainFile(props){
     const [currentHeight, setCurrentHeight] = useState(window.innerHeight - 189);
     const [subForms, setSubForms] = useState(undefined);
     const [cursor,setCursor] = useState("auto");
-    const [count, setCount]= useState(1)
+    const [radioValues, setRadioValues]= useState({})
 
     const handleResize = () => {
         setCurrentHeight(window.innerHeight - 189);
@@ -261,9 +261,14 @@ export default function FormsMainFile(props){
             return(
                     <Typography onClick={ClickFormElement} keyName={keyName} 
                     style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, 
-                    overflow: autoSize, color: FontColor, textAlign: Alignment, padding:BorderWidth , overflow: "hidden", FontFamily:FontFamily
-                    }}> 
+                    overflow: autoSize, color: FontColor, textAlign: Alignment, padding:BorderWidth , overflow: "hidden", FontFamily:FontFamily, 
+                    whiteSpace:"pre-wrap"
+                    }}
+                    > 
+                    
                         {Text}
+                    
+                        
                     </Typography>
                 )
         }
@@ -346,16 +351,20 @@ export default function FormsMainFile(props){
         return parsed ;
       }
       
-    function ClickFormElement(event){
-        let params = new Map, json, Name, TokenReturn;
+    function ClickFormElement(event,IName, Index){
+        let params = new Map, json, Name = null, TokenReturn;
         // setCursor("wait")
-        Name = event.currentTarget.getAttribute("name");
-        Name = Name === null? event.currentTarget.getAttribute("keyName"): Name
-        Name = Name === null? event.currentTarget.getAttribute("data-path"): Name
+        if(event){
+            Name = event.currentTarget.getAttribute("name");
+            Name = Name === null? event.currentTarget.getAttribute("keyName"): Name
+            Name = Name === null? event.currentTarget.getAttribute("data-path"): Name
+        }
+        Name = Name === null? IName: Name
         params.set('prefix', 'forms');
         params.set("comand", "ElementEvent");
         params.set("SectionID", props.id);/////
         params.set("Name", Name);
+        if(Index) params.set("Index", Index)
         params.set("WSM", "1");
         json = XMLrequest(params);
         // await axios.get(URL(params)).then((res)=> setData(res.data));
@@ -463,13 +472,18 @@ function DeleteActivFrame() {
                 }
             }
     }
-        
-    
-
-  
-
     
   }
+
+  function RadioChange(event){
+    let Name,index
+    const  value = event.target.value.split(",")
+    Name = value[0]
+    index = value[1]
+    ClickFormElement(null,Name,index)
+    // const newJsonForRadio = Object.assign({[Name]:event.target.value},radioValues)
+
+    }
 
     function CheckAndReturnComponent(json, SubLabel, keyName, RCDATAFormParent){
         let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Corners, BGColor, returnSub=[];
@@ -733,9 +747,34 @@ function DeleteActivFrame() {
                 Text = Text.substr(0, 8)
                 let BevelWidth= GetParams(json,"BevelWidth");
                 BevelWidth = BevelWidth=== undefined?0:Number(BevelWidth)
-                Width = json.Parent === "Form1"?"100%":`${Width}px`;
-                Height = json.Parent === "Form1"?"95%":`${Height}px`;
-                ReturnComponent.push(
+                Width = json.Parent.substring(0,4) === "Form"?"100%":`${Width}px`;
+                Height = json.Parent.substring(0,4) === "Form"?"95%":`${Height}px`;
+                if(json.RadioButton1){
+                    let counterOfRadio= 0, defaultValueOfRadio = Name+ ","
+                    for(const [key,value] of Object.entries(json)){
+                        if(key.substring(0,11) === "RadioButton"){
+                            if(value.Checked === "1"){
+                                defaultValueOfRadio += counterOfRadio ;
+                            }
+                            counterOfRadio+=1;
+                        }
+                    }
+                    ReturnComponent.push(
+                        <Grid keyName={keyName} 
+                            style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: Width,height: Height, 
+                            overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor, borderRadius:`${Radius}px`, 
+                            overflow:"hidden", borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px` }}>
+                            
+                            <FormControl >
+                                    <RadioGroup  onChange={RadioChange} defaultValue={defaultValueOfRadio} value={radioValues[Name]}>
+                                        
+                                       {SubDataProcessing(json)}
+                                </RadioGroup>
+                            </FormControl>
+                        </Grid>
+                    )
+                }else{
+                   ReturnComponent.push(
                     <Grid keyName={keyName} 
                         style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: Width,height: Height, 
                         overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor, borderRadius:`${Radius}px`, 
@@ -743,7 +782,9 @@ function DeleteActivFrame() {
                         {SubDataProcessing(json)}
                         {Text === "Gradient"?<></>:TextFromServerToBrowser(json, keyName)}
                     </Grid>
-                )
+                    ) 
+                }
+                
                 break;
 
             case "TBevel"://WITH SUB
@@ -788,8 +829,11 @@ function DeleteActivFrame() {
 
             case "TRadioButton":
                 Text = GetParams(json, "Text")
+                let RadioValue= json.Parent +","+ `${Number(keyName.substring(11,12))-1}`
                 ReturnComponent.push(
-                    <FormControlLabel value={Text} control={<Radio />} label={Text} />
+                    <FormControlLabel value={RadioValue} control={<Radio />} label={Text}
+                    style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`,}}
+                    />
                 )
                 break;
 
@@ -822,7 +866,7 @@ function FormDataProcessing(json) {
             }
 
             return(
-                <div  className={"TestForms"+props.id} >
+                <div  className={"TestForms"+props.id}  style={{position:"relative", height: "100%", width:"100%"}}>
                     {returnAll}
                 </div>
             )
