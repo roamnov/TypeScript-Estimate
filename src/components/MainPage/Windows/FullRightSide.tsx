@@ -147,8 +147,15 @@ export default function FullRightSide(props: InfoAboutClick) {
         newReportWindow = document.getElementById(id);
         if (openReportData.Items && idTabs !== null) {
           let ValueAny: any
+          console.log("AS")
           for (const [key, value] of Object.entries(openReportData.Items)) {
             ValueAny = value;
+            reportContent = String(ValueAny.content).replaceAll(/[\n]+/g, "");
+            reportContent = String(reportContent).replaceAll(/[\r]+/g, "");
+            if (reportContent !== "undefined") {
+    
+              reportContent = InsertIdReport(reportContent)
+            }
             if (idTabs["_tabs"][key] === undefined) {
               idTabs.insert(Number(key), { label: ValueAny.Title, content: ValueAny.content ? reportContent : undefined });
             } else {
@@ -587,9 +594,6 @@ export default function FullRightSide(props: InfoAboutClick) {
     params.set('comand', 'ExecuteReport');
     params.set('SectionID', SectionID);
     params.set('ReportID', ReportID);
-    params.set('HTML', 0);           //загрузка архивом
-    params.set('Lazy', 0);
-    params.set('ArchTypes', 'zip');
     params.set('WSM', 1);
     json = XMLrequest(params)
 
