@@ -33,7 +33,9 @@ import FormLabel from "@mui/material/FormLabel"
 import ManWhoSoldTheWorld from "../MainPage/stimategrid/test";
 import AccorionDownIcon from "../../static/images/down.png";
 import Frame from 'react-frame-component';
-
+import useTheme from "../Hooks/useTheme";
+import cn from "classnames"
+import Fade from '@mui/material/Fade';
 
 
 function PaperComponent(props) {
@@ -144,10 +146,12 @@ const Accordion = styled((props) => (
 
 export default function FormsMainFile(props){
     let LastDrx = get_cookie("LastLogin").split(",");
+    const theme = useTheme(); 
     const [dataForms, setDataForms] = useState();
     const [expanded, setExpanded] = React.useState('panel1');
     const [expandedMap, setExpandedMap] = React.useState(new Map);
     const [load, setLoad] = React.useState(true)
+    const [transition, setTransition] = React.useState(true)
     const [currentHeight, setCurrentHeight] = useState(window.innerHeight - 189);
     const [subForms, setSubForms] = useState(undefined);
     const [cursor,setCursor] = useState("auto");
@@ -181,7 +185,8 @@ export default function FormsMainFile(props){
         params.set("SectionID", props.id);/////
         json = XMLrequest(params);
         setDataForms(json);
-        setLoad(false);        
+        setLoad(false);  
+        setTransition(false)      
     }
 
     const GetParamDialog = (Path) =>{
@@ -276,10 +281,10 @@ export default function FormsMainFile(props){
            
     }
 
-    const handleChangeAccordion =
-    (panel) => (event, newExpanded) => {
+    const handleChangeAccordion = (panel) => (event, newExpanded) => {
       setExpanded(newExpanded ? panel : false);
       setExpandedMap(expandedMap.set(panel, !expandedMap.get(panel)))
+      console.log(event)
     };
 
 
@@ -353,6 +358,7 @@ export default function FormsMainFile(props){
       
     function ClickFormElement(event,IName, Index){
         let params = new Map, json, Name = null, TokenReturn;
+        
         // setCursor("wait")
         if(event){
             Name = event.currentTarget.getAttribute("name");
@@ -367,14 +373,19 @@ export default function FormsMainFile(props){
         if(Index) params.set("Index", Index)
         params.set("WSM", "1");
         json = XMLrequest(params);
-        // await axios.get(URL(params)).then((res)=> setData(res.data));
-        TokenReturn = tokenProcessingTest(json, "forms");
-        if( TokenReturn !== undefined){
-            GetParamDialog(TokenReturn);
-        }else if(json.Form !== undefined){
-            // CheckAndReturnComponent(json);
-            setDataForms(json);
+        if(!isEmptyObject(json)){
+            setTransition(true)
+            TokenReturn = tokenProcessingTest(json, "forms");
+            if( TokenReturn !== undefined){
+                GetParamDialog(TokenReturn);
+            }else if(json.Form !== undefined){
+                // CheckAndReturnComponent(json);
+                setDataForms(json);
+            }  
+           setTransition(false) 
         }
+        // await axios.get(URL(params)).then((res)=> setData(res.data));
+        
     }
 
     function sortByIndex(arr) {
@@ -694,7 +705,7 @@ function DeleteActivFrame() {
                 let TestVisability  = BoolOpen? "inline-block":"none" 
                 let HadImg = RCDATAFormParent?true:false
                 ReturnComponent.push(
-                    <Accordion expanded={BoolOpen} onChange={handleChangeAccordion(Caption)} keyName={keyName} >
+                    <Accordion expanded={BoolOpen} onChange={handleChangeAccordion(Caption)} keyName={keyName} style={{marginBottom:"2%"}}>
                         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" style={{backgroundColor:"#edeae2"}} expandIcon={<img src={AccorionDownIcon}/> }>
                             <Grid container direction="row" justifyContent="flex-start" alignItems="center">
                                 <Grid item style={{position:"relative", left:"-16px"}}>
@@ -705,7 +716,7 @@ function DeleteActivFrame() {
                                 </Grid>
                             </Grid>
                         </AccordionSummary>
-                        <AccordionDetails  style={{ width: `${Width}px`,height:`${Height}px`, display:TestVisability, backgroundColor:"#ffffff"}}>
+                        <AccordionDetails  style={{ width: `${Width}px`,height:`${Height}px`, display:BoolOpen? "inline-block":"none" , backgroundColor:"#ffffff"}}>
                             {SubDataProcessing(json,"TCategoryPanel",HadImg)} 
                         </AccordionDetails>
                     </Accordion> 
@@ -740,15 +751,17 @@ function DeleteActivFrame() {
 
             case "TGradientPanel"://WITH SUB
                 let BorderRadius = json.BevelEdges
-                
+                let BorderStyle = json.BorderStyle;
+                BorderStyle = BorderStyle ==="линия"?true:false
                 // ConvertBorder(BorderRadius, GetParams(json,"BevelWidth"))
                 let Radius = json.Radius
                 Text = GetParams(json,"Text");
                 Text = Text.substr(0, 8)
                 let BevelWidth= GetParams(json,"BevelWidth");
                 BevelWidth = BevelWidth=== undefined?0:Number(BevelWidth)
-                Width = json.Parent.substring(0,4) === "Form"?"100%":`${Width}px`;
-                Height = json.Parent.substring(0,4) === "Form"?"95%":`${Height}px`;
+                BevelWidth = Number(Radius) > 0? BevelWidth : 0
+                Width = json.Parent.substring(0,4) === "Form232"?"100%":`${Width}px`;
+                Height = json.Parent.substring(0,4) === "Form12"?"95%":`${Height}px`;
                 if(json.RadioButton1){
                     let counterOfRadio= 0, defaultValueOfRadio = Name+ ","
                     for(const [key,value] of Object.entries(json)){
@@ -763,7 +776,7 @@ function DeleteActivFrame() {
                         <Grid keyName={keyName} 
                             style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: Width,height: Height, 
                             overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor, borderRadius:`${Radius}px`, 
-                            overflow:"hidden", borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px` }}>
+                            overflow:"hidden", borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px`}}>
                             
                             <FormControl >
                                     <RadioGroup  onChange={RadioChange} defaultValue={defaultValueOfRadio} value={radioValues[Name]}>
@@ -778,7 +791,7 @@ function DeleteActivFrame() {
                     <Grid keyName={keyName} 
                         style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: Width,height: Height, 
                         overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor, borderRadius:`${Radius}px`, 
-                        overflow:"hidden", borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px` }}>
+                        overflow:"hidden", borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px`}}>
                         {SubDataProcessing(json)}
                         {Text === "Gradient"?<></>:TextFromServerToBrowser(json, keyName)}
                     </Grid>
@@ -831,8 +844,19 @@ function DeleteActivFrame() {
                 Text = GetParams(json, "Text")
                 let RadioValue= json.Parent +","+ `${Number(keyName.substring(11,12))-1}`
                 ReturnComponent.push(
-                    <FormControlLabel value={RadioValue} control={<Radio />} label={Text}
+                    <FormControlLabel value={RadioValue} control={<Radio 
+                        sx={{
+                            '& .MuiSvgIcon-root': {
+                              fontSize: 18,
+                              color: "#4d4d4d",
+                                '&.Mui-checked': {
+                                color: "#4d4d4d",
+                                },
+                            },
+                          }}
+                    />} label={Text}
                     style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`,}}
+ 
                     />
                 )
                 break;
@@ -890,29 +914,40 @@ function FormDataProcessing(json) {
         
     }
 
-    if(load === true){
+    function Load (){
         return(
             <Grid container direction="row" justifyContent="center" alignItems="center" style={{ height: `${currentHeight}px` }}>
                 <Grid item>
                     <div>
-                        <CircularProgress />
+                        <CircularProgress
+                            className={
+                                cn("circularProgress",{light: theme === "light"})
+                            } 
+                        />
                     </div>
                 </Grid>
             </Grid>
             
         ) 
-    }else{
+    }
+
+
         return(
         <>
             <SectionToolsJS ID={props.id} SetBackValue={setSubForms}  buildForms ={FormDataProcessing}/>
-            <Grid id={"mainForms" + props.id} style={{position:"relative", height: "100%", width:"100%", backgroundColor:"s", cursor: cursor}}>
-                {FormDataProcessing(dataForms)}
-            </Grid>
+            <Fade in={!transition}>
+                <Grid id={"mainForms" + props.id} style={{position:"relative", height: "100%", width:"100%", backgroundColor:"s", cursor: cursor}}>
+                    
+                        {load?<Load/> :FormDataProcessing(dataForms)}
+                   
+                </Grid>
+             </Fade>
+            
             <Grid id="RenderFormsModal">
 
             </Grid>
         </>
             
         )  
-    }
+    
 }

@@ -20,6 +20,7 @@ function StyleSmartWebcomponents()
     --header-light: #dcd8cc;
     --iconButtonColor: #ffffff;
     --iconButtonColor-light:#9d9b93;
+    --darker-light:#c6ba97;
     --smart-primary-rgb: 99,159,230;
     --smart-primary: rgb(var(--smart-primary-rgb));
     --smart-primary-color: #fff;
@@ -55745,6 +55746,13 @@ input[type=date]::-webkit-calendar-picker-indicator {
 }
 
 const GlobalStyleTree = createGlobalStyle`
+
+.circularProgress{
+    color:var(--accent-blue)
+}
+.circularProgress.light{
+    color:var(--darker-light)
+}
 
 .headerStimate{
     background-color:var(--accent-blue)

@@ -67,7 +67,7 @@ export default function WrapperRightSide() {
   return ( 
   // <ThemeProvider>
     <div style={{ display: 'flex', height: "100%", overflow: "hidden", position: "absolute", flexDirection: "column", width: "100%" }} >
-      <div style={{ display: 'flex', height: "94px", overflow: "hidden" }} id="Header">
+      <div style={{ display: 'flex', height: "94px", overflow: "hidden", marginBottom:"-3px" }} id="Header">
         <DashboardNavbar />
         <div className={
               cn("headerStimate",{light: theme === "light"})
