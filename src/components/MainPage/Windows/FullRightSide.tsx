@@ -24,6 +24,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import Params from '../Sections/ElementsSections/Params';
 import SectionToolsJS from '../Tools/SectionToolsJS';
 import CloseIcon from '@mui/icons-material/Close';
+import PdfPage from './PdfPage';
 import Frame from 'react-frame-component';
 
 export default function FullRightSide(props: InfoAboutClick) {
@@ -48,7 +49,6 @@ export default function FullRightSide(props: InfoAboutClick) {
       }
     }
   }
-
 
   const handleResize = () => {
     setCurrentHeight(window.innerHeight - 295);
@@ -372,8 +372,9 @@ export default function FullRightSide(props: InfoAboutClick) {
     }
   }
 
+ 
   function RenderPdfReport(id: any, newReportWindow: any, bool?: any) {
-    if (newReportWindow === null) {// если уже создавали вкладку
+      if (newReportWindow === null) {// если уже создавали вкладку
       pringReportsDoc.querySelectorAll('.ActivParams').forEach((n: {
         classList: {
           remove: (arg0: string) => void; add: (arg0: string) => void;
@@ -383,10 +384,9 @@ export default function FullRightSide(props: InfoAboutClick) {
       newReportWindow.classList.add("Params");
       newReportWindow.classList.add("ActivParams");
       newReportWindow.id = id;
-      newReportWindow.style.height = "100%"
-      let content = <div>
-                      <iframe src={'data:application/pdf;base64,'+openReportData.RCDATA} width="100%" height="800"/>  
-                    </div>
+      newReportWindow.style.height = "100%"  
+      
+    let content = <PdfPage RCDATA={openReportData.RCDATA}/>
       ReactDOM.render(content, newReportWindow);
       pringReportsDoc.appendChild(newReportWindow);
     }
