@@ -282,13 +282,19 @@ export default function FormsMainFile(props){
     }
 
     const handleChangeAccordion = (panel) => (event, newExpanded) => {
-        let ariaexpanded  
+        let ariaexpanded , params = new Map; 
         setExpanded(newExpanded ? panel : false);
         setExpandedMap(expandedMap.set(panel, !expandedMap.get(panel)))
         const id = event.currentTarget.getAttribute("keyName")
         let content = document.getElementById(id + "content")
         ariaexpanded = content.style.display ==="inline-block"?"none":"inline-block";
         content.style.display =ariaexpanded
+        params.set('prefix', 'forms');
+        params.set("comand", "ElementEvent");
+        params.set("SectionID", props.id);/////
+        params.set("Name", id);
+        params.set("Collapsed", ariaexpanded==="inline-block"?"0":"1");
+        let json = XMLrequest(params);
     };
 
 
@@ -520,27 +526,31 @@ export default function FormsMainFile(props){
             if(value.substring(2,3) !== "%"){
                 if(TargetSolo === count){
                     elemWidthPrecent = `${Number(value) / widthprecent}%`;
-                    elemPX = Number(value)
+                    elemPX = Number(value) / 2
                 }else{
                     if(count < TargetSolo){
-                        LeftPx += Number(value) 
+                        LeftPx += Number(value) /2
                     }else{
-                        RightPx += Number(value)
+                        RightPx += Number(value) /2
                     }
                 }
                 count +=1
             }
         }
-        LeftPx =left + LeftPx 
-        LeftPrecent= `${LeftPx / widthprecent}%`
-        RightPrecent = `${(width  - (LeftPx + elemPX )) /widthprecent}%`
+        if(RightPx>0){
+            elemPX+= RightPx;
+        }else if(LeftPx > 0){
+            elemPX-= LeftPx;
+        }
+        LeftPrecent = `calc(${ColsArrayWithPrecent[0]} - ${elemPX}px)`
+        RightPrecent = `calc(${ColsArrayWithPrecent[ColsArrayWithPrecent.length - 1]} - ${elemPX}px)`
         // console.log(elemWidthPrecent, LeftPrecent, RightPrecent)
         // console.log(ColsArrayWithPrecent, TargetSolo, width) 
         return {ml:LeftPrecent , mr:RightPrecent, w:elemWidthPrecent}
     }
 
     function CheckAndReturnComponent(json, SubLabel, keyName, RCDATAFormParent, widthFromParent,ColsFromParent){
-        let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Right,Bottom, BGColor, returnSub=[],style;
+        let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Right,Bottom, BGColor, returnSub=[],style, Anchors;
         Left = GetParams(json, "Left");
         Top = GetParams(json, "Top");
         Height = GetParams(json, "Height");
@@ -550,6 +560,7 @@ export default function FormsMainFile(props){
         Visability = GetParams(json, "Visible");
         Visability = Visability ==="1"?"visible": Visability === undefined?"visible":"hidden" ;
         BGColor = BackColor(GetParams(json, "Back-color"));
+        Anchors = json.Anchors;
         switch(json.Type){
             case "TImage":
 
@@ -653,10 +664,24 @@ export default function FormsMainFile(props){
                 break;
 
             case "TSectionPanel":// WITH SUB
+                if(json.align){
+                    Width= "100%"
+                    Height = "100%"
+                }else{
+                    Width= `${Width}px`
+                    Height = `${Height}px`
+                }
+                style={position:"absolute",left:`${Left}px`, top:`${Top}px`, width: Width,height:Height, visibility:Visability, backgroundColor: BGColor }
                 if(json.CLSID === "{408E20A3-4BE3-4DCD-98BD-2613A8968783}") {//content
                     let content = InsertIdReport(json.content)
+                    console.log(Left, Top)
+                    if(Left === undefined && Top=== undefined){
+                        delete style.left
+                        delete style.top
+                        delete style.position
+                    }
                     ReturnComponent.push(
-                        <Grid id={`gridpanel`+props.id} keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability, backgroundColor: BGColor }}>
+                        <Grid id={`gridpanel`+props.id} keyName={keyName} style={style}>
                             <div dangerouslySetInnerHTML={{ __html: content }} style={{height:"inherit"}} onLoadCapture={LinkrefClick}>
                                 
                             </div>
@@ -706,11 +731,24 @@ export default function FormsMainFile(props){
             case "TLabel":
                 let FixedWidth = roughScale(Width, 10) + 8
                 style ={position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${FixedWidth}px`,height:`${Height}px`,  visibility:Visability }
-                // if(ColsFromParent){
-                //     const jm= CalculateMargin(ColsFromParent,json.Target,widthFromParent, Number(Left));
-                //     style = Object.assign(style, { right:jm.mr})
-                //     delete style.width
-                // } 
+                Anchors = json.Anchors;
+                Anchors = ShouldUseFullScreen(Anchors);
+                Right = Anchors.w ?`${Left}px`:`${0}px`;
+                Height = Anchors.h ?"95%":`${Height}px`;
+                Width =  `${Width}px`
+                if(json.Align === "целиком"){
+                    Width = "100%"
+                    Height = "95%"
+                }
+                if(ColsFromParent){
+                    const jm= CalculateMargin(ColsFromParent,json.Target,widthFromParent, Number(Left));
+                    style = Object.assign(style, { right:jm.mr, left:jm.ml})
+                    // delete style.width
+                } 
+                if(Anchors.w && !ColsFromParent){
+                    delete style.width
+                    style = Object.assign(style,{right:Right})
+                }
                 if(SubLabel === "TCategoryPanel"){
                     let LocalTop = RCDATAFormParent?Number(Top) + 57:Top
                     style=Object.assign(style, {top:`${LocalTop}px`})
@@ -747,12 +785,12 @@ export default function FormsMainFile(props){
                 if(json.Caption){
                     Caption= json.Caption
                 }else{
-                    Caption = GetParams(json,"Сaption"); 
+                    Caption = json.caption; 
                 }
                 
                 let BoolOpen = expandedMap.get(Caption);
-                let TestVisability  = BoolOpen? "inline-block":"none" 
                 let HadImg = RCDATAFormParent?true:false
+                Width = Width === undefined? "100%": `${Width}px`
                 ReturnComponent.push(
                     <Accordion expanded={BoolOpen} onChange={handleChangeAccordion(Caption)} keyName={keyName} style={{marginBottom:"2%"}}>
                         <AccordionSummary  keyName={keyName}  style={{backgroundColor:"#edeae2"}} expandIcon={<img src={AccorionDownIcon}/> }>
@@ -765,7 +803,7 @@ export default function FormsMainFile(props){
                                 </Grid>
                             </Grid>
                         </AccordionSummary>
-                        <AccordionDetails keyName={keyName+"content"} id={keyName+"content"} bool={"false"} style={{ width: `${Width}px`,height:`${Height}px`, display:BoolOpen? "inline-block":"none" , backgroundColor:"#ffffff"}}>
+                        <AccordionDetails keyName={keyName+"content"} id={keyName+"content"} bool={"false"} style={{ width: Width,height:`${Height}px`, display:BoolOpen? "inline-block":"none" , backgroundColor:"#ffffff", padding:0}}>
                             {SubDataProcessing(json,"TCategoryPanel",HadImg)} 
                         </AccordionDetails>
                     </Accordion> 
@@ -801,7 +839,6 @@ export default function FormsMainFile(props){
             case "TGradientPanel"://WITH SUB
                 let BorderRadius = json.BevelEdges
                 let BorderStyle = json.BorderStyle;
-                let Anchors = json.Anchors;
                 BorderStyle = BorderStyle ==="линия"?true:false
                 // ConvertBorder(BorderRadius, GetParams(json,"BevelWidth"))
                 let Radius = json.Radius
