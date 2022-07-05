@@ -181,14 +181,15 @@ export default function Params(props) {
                 el.setAttribute("data-objref", otv.Values[0].ObjRef)
                 el.setAttribute("data-id", otv.Values[0].ID)
                 el.setAttribute("data-editval", otv.Values[0].EditVal)
-                let params = new Map();
+                if(otv.NeedRefresh)
+               { let params = new Map();
                 params.set('prefix', 'reports');
                 params.set('comand', 'GetReportParams');
                 params.set('ReportID', props.id);
                 params.set('SectionID', props.SectionID);
                 params.set('NeedRefresh', 1);
                 let data = XMLrequest(params);
-                SetData(data.Items)
+                SetData(data.Items)}
 
             }
 
