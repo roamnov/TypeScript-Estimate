@@ -367,16 +367,18 @@ export default function FormsMainFile(props){
       }
       
     function ClickFormElement(event,IName, Index){
-        let params = new Map, json, Name = null, TokenReturn;
+        let params = new Map, json, Name = null, TokenReturn, el;
         
         // setCursor("wait")
         if(event.currentTarget){
+            el = event.currentTarget
             Name = event.currentTarget.getAttribute("name");
             Name = Name === null? event.currentTarget.getAttribute("keyName"): Name
             Name = Name === null? event.currentTarget.getAttribute("data-path"): Name
         }
         else if (event.tagName)
         {
+            el = event
             Name = event.getAttribute("name");
             Name = Name === null? event.getAttribute("keyName"): Name
             Name = Name === null? event.getAttribute("data-path"): Name 
@@ -386,6 +388,7 @@ export default function FormsMainFile(props){
         params.set("comand", "ElementEvent");
         params.set("SectionID", props.id);/////
         params.set("Name", Name);
+        params.set("Text", el.dataset.value);
         if(Index) params.set("Index", Index)
         params.set("WSM", "1");
         json = XMLrequest(params);
