@@ -364,7 +364,7 @@ export default function SideBar(props: MainBoxBackClick) {
             sx={{
               width: "100%",
               bgcolor: bgcolortheme,
-              marginTop: 1,
+              pt: 0
             }}
             style={{ scrollbarWidth: "none" }}
             aria-labelledby="nested-list-subheader"

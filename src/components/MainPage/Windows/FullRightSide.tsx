@@ -24,6 +24,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import Params from '../Sections/ElementsSections/Params';
 import SectionToolsJS from '../Tools/SectionToolsJS';
 import CloseIcon from '@mui/icons-material/Close';
+import PdfPage from './PdfPage';
 import Frame from 'react-frame-component';
 
 export default function FullRightSide(props: InfoAboutClick) {
@@ -48,7 +49,6 @@ export default function FullRightSide(props: InfoAboutClick) {
       }
     }
   }
-
 
   const handleResize = () => {
     setCurrentHeight(window.innerHeight - 295);
@@ -147,8 +147,15 @@ export default function FullRightSide(props: InfoAboutClick) {
         newReportWindow = document.getElementById(id);
         if (openReportData.Items && idTabs !== null) {
           let ValueAny: any
+          console.log("AS")
           for (const [key, value] of Object.entries(openReportData.Items)) {
             ValueAny = value;
+            reportContent = String(ValueAny.content).replaceAll(/[\n]+/g, "");
+            reportContent = String(reportContent).replaceAll(/[\r]+/g, "");
+            if (reportContent !== "undefined") {
+    
+              reportContent = InsertIdReport(reportContent)
+            }
             if (idTabs["_tabs"][key] === undefined) {
               idTabs.insert(Number(key), { label: ValueAny.Title, content: ValueAny.content ? reportContent : undefined });
             } else {
@@ -278,6 +285,14 @@ export default function FullRightSide(props: InfoAboutClick) {
           RenderSoloReport(id, newReportWindow, true);
           LinkrefClick(openReportData.ViewIdent);
           break;
+        case "{A5CDFCEB-A95A-4ABC-839E-77D1D1F5CD86}": 
+          let newReportWindow1: any// в ней у нас хранится блок для секции дерева
+          let TabIndex1 = openReportData.TabIndex;
+          pringReportsDoc = document.getElementById(`print_reports${props.id}`);//ищем блок СЕКЦИИ
+          TabIndex1 = TabIndex1 === undefined ? 0 : Number(TabIndex)
+          newReportWindow1 = document.getElementById(id);// получаем блок
+          RenderPdfReport(id, newReportWindow1, true); 
+          break;
       }
     }
   }
@@ -353,6 +368,26 @@ export default function FullRightSide(props: InfoAboutClick) {
         newReportWindow.innerHTML = InsertIdReport(openReportData.content)
 
       }
+      pringReportsDoc.appendChild(newReportWindow);
+    }
+  }
+
+ 
+  function RenderPdfReport(id: any, newReportWindow: any, bool?: any) {
+      if (newReportWindow === null) {// если уже создавали вкладку
+      pringReportsDoc.querySelectorAll('.ActivParams').forEach((n: {
+        classList: {
+          remove: (arg0: string) => void; add: (arg0: string) => void;
+        };
+      }) => { n.classList.remove('ActivParams'); n.classList.add('NoActivParams') })
+      newReportWindow = document.createElement("div");// создаем блок 
+      newReportWindow.classList.add("Params");
+      newReportWindow.classList.add("ActivParams");
+      newReportWindow.id = id;
+      newReportWindow.style.height = "100%"  
+      
+    let content = <PdfPage RCDATA={openReportData.RCDATA}/>
+      ReactDOM.render(content, newReportWindow);
       pringReportsDoc.appendChild(newReportWindow);
     }
   }
@@ -559,7 +594,6 @@ export default function FullRightSide(props: InfoAboutClick) {
     params.set('comand', 'ExecuteReport');
     params.set('SectionID', SectionID);
     params.set('ReportID', ReportID);
-    params.set('HTML', 1);
     params.set('WSM', 1);
     json = XMLrequest(params)
 

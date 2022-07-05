@@ -33,7 +33,9 @@ import FormLabel from "@mui/material/FormLabel"
 import ManWhoSoldTheWorld from "../MainPage/stimategrid/test";
 import AccorionDownIcon from "../../static/images/down.png";
 import Frame from 'react-frame-component';
-
+import useTheme from "../Hooks/useTheme";
+import cn from "classnames"
+import Fade from '@mui/material/Fade';
 
 
 function PaperComponent(props) {
@@ -144,13 +146,16 @@ const Accordion = styled((props) => (
 
 export default function FormsMainFile(props){
     let LastDrx = get_cookie("LastLogin").split(",");
+    const theme = useTheme(); 
     const [dataForms, setDataForms] = useState();
     const [expanded, setExpanded] = React.useState('panel1');
     const [expandedMap, setExpandedMap] = React.useState(new Map);
     const [load, setLoad] = React.useState(true)
+    const [transition, setTransition] = React.useState(true)
     const [currentHeight, setCurrentHeight] = useState(window.innerHeight - 189);
     const [subForms, setSubForms] = useState(undefined);
     const [cursor,setCursor] = useState("auto");
+    const [radioValues, setRadioValues]= useState({})
 
     const handleResize = () => {
         setCurrentHeight(window.innerHeight - 189);
@@ -170,14 +175,6 @@ export default function FormsMainFile(props){
         }
     },[subForms])
 
-    useEffect(()=>{
-        setTimeout(() => {
-            LinkrefClick();
-        }, 50);
-            
-            console.log("as")
-        
-    },[document.getElementById("mainForms" +props.id)])
 
     
 
@@ -188,7 +185,8 @@ export default function FormsMainFile(props){
         params.set("SectionID", props.id);/////
         json = XMLrequest(params);
         setDataForms(json);
-        setLoad(false);        
+        setLoad(false);  
+        setTransition(false)      
     }
 
     const GetParamDialog = (Path) =>{
@@ -241,7 +239,7 @@ export default function FormsMainFile(props){
 
 
     function TextFromServerToBrowser(json, keyName){
-        let Text, FontStyle, ReferenceLink, FontSize, autoSize, FontColor, Alignment, BorderWidth
+        let Text, FontStyle, ReferenceLink, FontSize, autoSize, FontColor, Alignment, BorderWidth, FontFamily
         autoSize = GetParams(json,"AutoSize") === "0"? "hidden": "unset"
         FontSize =  GetParams(json,"Font-size");
         Text = GetParams(json,"Text");
@@ -251,10 +249,14 @@ export default function FormsMainFile(props){
         Alignment = ConvertAlignment (GetParams(json, "Alignment"));
         BorderWidth =GetParams(json,"BorderWidth");
         BorderWidth = BorderWidth === undefined? undefined:`${Number(BorderWidth)/100*50}px`
+        FontFamily = GetParams(json,"Font-name");
         // parseInt(FontSize, 10)*0,13}px`,
         if( ReferenceLink === "1"){
             return(
-                    <Typography style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor , textAlign: Alignment, padding:BorderWidth, overflow: "hidden" }}> 
+                    <Typography style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, 
+                    textDecoration:FontStyle, overflow: autoSize, color: FontColor , textAlign: Alignment, padding:BorderWidth, overflow: "hidden" ,
+                    fontFamily:FontFamily
+                    }}> 
                         <Link keyName={keyName}  component="button" variant="body2" underline="hover" onClick={ClickFormElement}>
                             {Text}
                         </Link>
@@ -262,8 +264,16 @@ export default function FormsMainFile(props){
                 )
         }else{
             return(
-                    <Typography onClick={ClickFormElement} keyName={keyName} style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, overflow: autoSize, color: FontColor, textAlign: Alignment, padding:BorderWidth , overflow: "hidden"}}> 
+                    <Typography onClick={ClickFormElement} keyName={keyName} 
+                    style={{fontSize: `${FontSize}px`, fontWeight: FontStyle, fontStyle:FontStyle, textDecoration:FontStyle, 
+                    overflow: autoSize, color: FontColor, textAlign: Alignment, padding:BorderWidth , overflow: "hidden", FontFamily:FontFamily, 
+                    whiteSpace:"pre-wrap"
+                    }}
+                    > 
+                    
                         {Text}
+                    
+                        
                     </Typography>
                 )
         }
@@ -271,10 +281,20 @@ export default function FormsMainFile(props){
            
     }
 
-    const handleChangeAccordion =
-    (panel) => (event, newExpanded) => {
-      setExpanded(newExpanded ? panel : false);
-      setExpandedMap(expandedMap.set(panel, !expandedMap.get(panel)))
+    const handleChangeAccordion = (panel) => (event, newExpanded) => {
+        let ariaexpanded , params = new Map; 
+        setExpanded(newExpanded ? panel : false);
+        setExpandedMap(expandedMap.set(panel, !expandedMap.get(panel)))
+        const id = event.currentTarget.getAttribute("keyName")
+        let content = document.getElementById(id + "content")
+        ariaexpanded = content.style.display ==="inline-block"?"none":"inline-block";
+        content.style.display =ariaexpanded
+        params.set('prefix', 'forms');
+        params.set("comand", "ElementEvent");
+        params.set("SectionID", props.id);/////
+        params.set("Name", id);
+        params.set("Collapsed", ariaexpanded==="inline-block"?"0":"1");
+        let json = XMLrequest(params);
     };
 
 
@@ -346,26 +366,36 @@ export default function FormsMainFile(props){
         return parsed ;
       }
       
-    function ClickFormElement(event){
-        let params = new Map, json, Name, TokenReturn;
+    function ClickFormElement(event,IName, Index){
+        let params = new Map, json, Name = null, TokenReturn;
+        
         // setCursor("wait")
-        Name = event.currentTarget.getAttribute("name");
-        Name = Name === null? event.currentTarget.getAttribute("keyName"): Name
-        Name = Name === null? event.currentTarget.getAttribute("data-path"): Name
+        if(event){
+            Name = event.currentTarget.getAttribute("name");
+            Name = Name === null? event.currentTarget.getAttribute("keyName"): Name
+            Name = Name === null? event.currentTarget.getAttribute("data-path"): Name
+        }
+        Name = Name === null? IName: Name
         params.set('prefix', 'forms');
         params.set("comand", "ElementEvent");
         params.set("SectionID", props.id);/////
         params.set("Name", Name);
+        if(Index) params.set("Index", Index)
         params.set("WSM", "1");
         json = XMLrequest(params);
-        // await axios.get(URL(params)).then((res)=> setData(res.data));
-        TokenReturn = tokenProcessingTest(json, "forms");
-        if( TokenReturn !== undefined){
-            GetParamDialog(TokenReturn);
-        }else if(json.Form !== undefined){
-            // CheckAndReturnComponent(json);
-            setDataForms(json);
+        if(!isEmptyObject(json)){
+            setTransition(true)
+            TokenReturn = tokenProcessingTest(json, "forms");
+            if( TokenReturn !== undefined){
+                GetParamDialog(TokenReturn);
+            }else if(json.Form !== undefined){
+                // CheckAndReturnComponent(json);
+                setDataForms(json);
+            }  
+           setTransition(false) 
         }
+        // await axios.get(URL(params)).then((res)=> setData(res.data));
+        
     }
 
     function sortByIndex(arr) {
@@ -412,21 +442,22 @@ export default function FormsMainFile(props){
 //  selected section - #dcd8cc
 
 
-function DeleteActivFrame() {
-   
-    var frams
-    frams = document.querySelectorAll(".Params.ActivParams")
-    for (let n = 0; n <= frams.length - 1; n++) {
-      let Activ = frams[n]
-      let reps = Activ.querySelectorAll(".ActivReport")
-      for (let f = 0; f <= reps.length - 1; f++) {
-        let rep = reps[f];
-        if (rep) {
-          rep.classList.remove('ActivReport')
+    function DeleteActivFrame() {
+    
+        var frams
+        frams = document.querySelectorAll(".Params.ActivParams")
+        for (let n = 0; n <= frams.length - 1; n++) {
+        let Activ = frams[n]
+        let reps = Activ.querySelectorAll(".ActivReport")
+        for (let f = 0; f <= reps.length - 1; f++) {
+            let rep = reps[f];
+            if (rep) {
+            rep.classList.remove('ActivReport')
+            }
         }
-      }
+        }
     }
-  }
+  
   function InsertIdReport(Html) {
     DeleteActivFrame();
     var rep
@@ -439,37 +470,87 @@ function DeleteActivFrame() {
   }
 
   function LinkrefClick(ViewIdent) {
-    
-        let frame
-        let frams = document.querySelectorAll(".TestForms");
-        console.log(frams)
-
-        for (let n = 0; n<=frams.length - 1; n++){
-            frame = frams[n].querySelector("iframe.ActivReport");
-            frame.onload = function (ev) { 
-            let Test = frame.contentDocument.getElementsByClassName("linkref")
-            let valAny
-            for (const [key, value] of Object.entries(Test)) {
-                valAny = value
-                valAny.id = ViewIdent ?ViewIdent:null
-                if (valAny.onclick === null) {
-                valAny.onclick = function(event){
-                    ClickFormElement(event);
-                }
+    let frame
+    let frams = document.querySelectorAll(`.${"TestForms" + props.id}`);
+    for (let n = 0; n<=frams.length - 1; n++){
+        frame = frams[n].querySelector("iframe.ActivReport");
+        frame.onload = function (ev) { 
+        let Test = frame.contentDocument.getElementsByClassName("linkref")
+        for (const [key, value] of Object.entries(Test)) {
+            if (value.onclick === null) {
+                value.onclick = function(event){
+                ClickFormElement(event);
                 }
             }
         }
-        }
         
-    
+    }
+        let elem = frame.contentDocument.getElementsByClassName("linkref")
+        for (const [key, value] of Object.entries(elem)) {
+            if (value.onclick === null) {
+            value.onclick = function(event){
+                ClickFormElement(event);
+                }
+            }
+        }
+    }
+    }
 
-  
+  function RadioChange(event){
+    let Name,index
+    const  value = event.target.value.split(",")
+    Name = value[0]
+    index = value[1]
+    ClickFormElement(null,Name,index)
+    // const newJsonForRadio = Object.assign({[Name]:event.target.value},radioValues)
 
-    
-  }
+    }
 
-    function CheckAndReturnComponent(json, SubLabel, keyName, RCDATAFormParent){
-        let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Corners, BGColor, returnSub=[];
+    function ShouldUseFullScreen(Anchors){
+        let w,h
+        w = Anchors.includes("лево,право")
+        h = Anchors.includes("верх,низ")
+        return {w:w,h:h}
+    }
+
+    function CalculateSize(pw,cw){
+        let oneprecent = Number(pw) / 100 * 1
+        return `${Number(cw)/oneprecent}%`
+    }
+
+    function CalculateMargin(cols,target, width, left){
+        let TargetSolo=Number(target.split(":")[0]), count = 1, elemWidthPrecent ,LeftPx = 0, RightPx = 0, RightPrecent, LeftPrecent, elemPX;
+        let ColsArrayWithPrecent = cols.split(";");
+        const widthprecent = width / 100;
+        for(const[key,value] of Object.entries(ColsArrayWithPrecent)){
+            if(value.substring(2,3) !== "%"){
+                if(TargetSolo === count){
+                    elemWidthPrecent = `${Number(value) / widthprecent}%`;
+                    elemPX = Number(value) / 2
+                }else{
+                    if(count < TargetSolo){
+                        LeftPx += Number(value) /2
+                    }else{
+                        RightPx += Number(value) /2
+                    }
+                }
+                count +=1
+            }
+        }
+        if(RightPx>0){
+            elemPX+= RightPx;
+        }else if(LeftPx > 0){
+            elemPX-= LeftPx;
+        }
+        LeftPrecent = `calc(${ColsArrayWithPrecent[0]} - ${elemPX}px)`
+        RightPrecent = `calc(${ColsArrayWithPrecent[ColsArrayWithPrecent.length - 1]} - ${elemPX}px)`
+        // console.log(elemWidthPrecent, LeftPrecent, RightPrecent)
+        // console.log(ColsArrayWithPrecent, TargetSolo, width) 
+        return {ml:LeftPrecent , mr:RightPrecent, w:elemWidthPrecent}
+    }
+
+    function CheckAndReturnComponent(json, SubLabel, keyName, RCDATAFormParent, widthFromParent,ColsFromParent){
+        let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Right,Bottom, BGColor, returnSub=[],style, Anchors;
         Left = GetParams(json, "Left");
         Top = GetParams(json, "Top");
         Height = GetParams(json, "Height");
@@ -479,6 +560,7 @@ function DeleteActivFrame() {
         Visability = GetParams(json, "Visible");
         Visability = Visability ==="1"?"visible": Visability === undefined?"visible":"hidden" ;
         BGColor = BackColor(GetParams(json, "Back-color"));
+        Anchors = json.Anchors;
         switch(json.Type){
             case "TImage":
 
@@ -502,10 +584,13 @@ function DeleteActivFrame() {
 
             case "TButton":
                 Text = GetParams(json,"Text");
+                const rcdataIcon = json.RCDATA
+                let icon = <img  src={`data:image/png;base64,${rcdataIcon}`} />
                 if(SubLabel === "TCategoryPanel"){
                     let LocalTop = RCDATAFormParent?Number(Top) + 52:Top
                     ReturnComponent.push(
                         <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
+                            startIcon={icon}
                             style={{
                             color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
                             minWidth: "1px", width: `${Width}px`,height:`${Height}px`,position:"absolute", left:`${Left}px`, top:`${LocalTop}px`, 
@@ -519,6 +604,7 @@ function DeleteActivFrame() {
                 }else{
                     ReturnComponent.push(
                         <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
+                            startIcon={icon}
                             style={{
                             color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
                             minWidth: "1px", width: `${Width}px`,height:`${Height}px`, position:"absolute", left:`${Left}px`, top:`${Top}px`, 
@@ -578,12 +664,26 @@ function DeleteActivFrame() {
                 break;
 
             case "TSectionPanel":// WITH SUB
+                if(json.align){
+                    Width= "100%"
+                    Height = "100%"
+                }else{
+                    Width= `${Width}px`
+                    Height = `${Height}px`
+                }
+                style={position:"absolute",left:`${Left}px`, top:`${Top}px`, width: Width,height:Height, visibility:Visability, backgroundColor: BGColor }
                 if(json.CLSID === "{408E20A3-4BE3-4DCD-98BD-2613A8968783}") {//content
                     let content = InsertIdReport(json.content)
+                    console.log(Left, Top)
+                    if(Left === undefined && Top=== undefined){
+                        delete style.left
+                        delete style.top
+                        delete style.position
+                    }
                     ReturnComponent.push(
-                        <Grid id={`gridpanel`+props.id} keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability, backgroundColor: BGColor }}>
-                            <div dangerouslySetInnerHTML={{ __html: content }} style={{height:"inherit"}} >
-
+                        <Grid id={`gridpanel`+props.id} keyName={keyName} style={style}>
+                            <div dangerouslySetInnerHTML={{ __html: content }} style={{height:"inherit"}} onLoadCapture={LinkrefClick}>
+                                
                             </div>
                         </Grid>
                     )
@@ -630,17 +730,36 @@ function DeleteActivFrame() {
 
             case "TLabel":
                 let FixedWidth = roughScale(Width, 10) + 8
-               
+                style ={position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${FixedWidth}px`,height:`${Height}px`,  visibility:Visability }
+                Anchors = json.Anchors;
+                Anchors = ShouldUseFullScreen(Anchors);
+                Right = Anchors.w ?`${Left}px`:`${0}px`;
+                Height = Anchors.h ?"95%":`${Height}px`;
+                Width =  `${Width}px`
+                if(json.Align === "целиком"){
+                    Width = "100%"
+                    Height = "95%"
+                }
+                if(ColsFromParent){
+                    const jm= CalculateMargin(ColsFromParent,json.Target,widthFromParent, Number(Left));
+                    style = Object.assign(style, { right:jm.mr, left:jm.ml})
+                    // delete style.width
+                } 
+                if(Anchors.w && !ColsFromParent){
+                    delete style.width
+                    style = Object.assign(style,{right:Right})
+                }
                 if(SubLabel === "TCategoryPanel"){
                     let LocalTop = RCDATAFormParent?Number(Top) + 57:Top
+                    style=Object.assign(style, {top:`${LocalTop}px`})
                     ReturnComponent.push(
-                        <Grid keyName={keyName} style={{ visibility:Visability, width: `${FixedWidth}px`,height:`${Height}px`,position:"absolute" ,left:`${Left}px`, top:`${LocalTop}px`, } }>
+                        <Grid keyName={keyName} style={style}>
                             {TextFromServerToBrowser(json, keyName)}                             
                         </Grid>
                     )  
                 }else{
                     ReturnComponent.push(
-                        <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${FixedWidth}px`,height:`${Height}px`,  visibility:Visability }}>
+                        <Grid keyName={keyName} style={style}>
                             {TextFromServerToBrowser(json, keyName)}
                         </Grid>
                     )   
@@ -651,7 +770,9 @@ function DeleteActivFrame() {
             case "TCategoryPanelGroup"://WITH SUB
                 RCDATA = GetParams(json,"RCDATA"); 
                 ReturnComponent.push(
-                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", visibility:Visability, backgroundColor: BGColor }}>
+                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:"90%", overflowY:"auto", overflowX:"hidden", visibility:Visability, 
+                    // backgroundColor: BGColor
+                     }}>
 
                         {SubDataProcessing(json,null, RCDATA)}
                         
@@ -664,25 +785,25 @@ function DeleteActivFrame() {
                 if(json.Caption){
                     Caption= json.Caption
                 }else{
-                    Caption = GetParams(json,"Сaption"); 
+                    Caption = json.caption; 
                 }
                 
                 let BoolOpen = expandedMap.get(Caption);
-                let TestVisability  = BoolOpen? "inline-block":"none" 
                 let HadImg = RCDATAFormParent?true:false
+                Width = Width === undefined? "100%": `${Width}px`
                 ReturnComponent.push(
-                    <Accordion expanded={BoolOpen} onChange={handleChangeAccordion(Caption)} keyName={keyName} >
-                        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" style={{backgroundColor:"#edeae2"}} expandIcon={<img src={AccorionDownIcon}/> }>
-                            <Grid container direction="row" justifyContent="flex-start" alignItems="center">
-                                <Grid item style={{position:"relative", left:"-16px"}}>
+                    <Accordion expanded={BoolOpen} onChange={handleChangeAccordion(Caption)} keyName={keyName} style={{marginBottom:"2%"}}>
+                        <AccordionSummary  keyName={keyName}  style={{backgroundColor:"#edeae2"}} expandIcon={<img src={AccorionDownIcon}/> }>
+                            <Grid container direction="row" justifyContent="flex-start" alignItems="center" keyName={keyName}>
+                                <Grid item style={{position:"relative", left:"-16px"}} keyName={keyName}>
                                     <img  src={`data:image/png;base64,${RCDATAFormParent}`} />
                                 </Grid>
-                                <Grid item>
-                                    <Typography>{Caption}</Typography>
+                                <Grid item keyName={keyName}>
+                                    <Typography keyName={keyName} >{Caption}</Typography>
                                 </Grid>
                             </Grid>
                         </AccordionSummary>
-                        <AccordionDetails  style={{ width: `${Width}px`,height:`${Height}px`, display:TestVisability, backgroundColor:"#ffffff"}}>
+                        <AccordionDetails keyName={keyName+"content"} id={keyName+"content"} bool={"false"} style={{ width: Width,height:`${Height}px`, display:BoolOpen? "inline-block":"none" , backgroundColor:"#ffffff", padding:0}}>
                             {SubDataProcessing(json,"TCategoryPanel",HadImg)} 
                         </AccordionDetails>
                     </Accordion> 
@@ -717,28 +838,75 @@ function DeleteActivFrame() {
 
             case "TGradientPanel"://WITH SUB
                 let BorderRadius = json.BevelEdges
-                
+                let BorderStyle = json.BorderStyle;
+                BorderStyle = BorderStyle ==="линия"?true:false
                 // ConvertBorder(BorderRadius, GetParams(json,"BevelWidth"))
                 let Radius = json.Radius
                 Text = GetParams(json,"Text");
                 Text = Text.substr(0, 8)
                 let BevelWidth= GetParams(json,"BevelWidth");
                 BevelWidth = BevelWidth=== undefined?0:Number(BevelWidth)
-                ReturnComponent.push(
-                    <Grid keyName={keyName} 
-                        style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, 
-                        overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor, borderRadius:`${Radius}px`, 
-                        overflow:"hidden", borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px` }}>
+                BevelWidth = Number(Radius) > 0? BevelWidth : 0
+                Anchors = ShouldUseFullScreen(Anchors);
+                Right = Anchors.w ?`${Left}px`:`${0}px`;
+                Height = Anchors.h ?"95%":`${Height}px`;
+                Width =  `${Width}px`
+                if(json.Align === "целиком"){
+                    Width = "100%"
+                    Height = "95%"
+                }
+                
+                style = {position:"absolute" ,left:`${Left}px`, top:`${Top}px`,height: Height, width: Width,
+                overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor, borderRadius:`${Radius}px`, 
+                overflow:"hidden", borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px`}
+                
+                if(Anchors.w){
+                    delete style.width
+                    style = Object.assign(style,{right:Right})
+                }
+                if(json.RadioButton1){
+                    let counterOfRadio= 0, defaultValueOfRadio = Name+ ","
+                    for(const [key,value] of Object.entries(json)){
+                        if(key.substring(0,11) === "RadioButton"){
+                            if(value.Checked === "1"){
+                                defaultValueOfRadio += counterOfRadio ;
+                            }
+                            counterOfRadio+=1;
+                        }
+                    }
+                    ReturnComponent.push(
+                        <Grid keyName={keyName}   style={style}>
+                            
+                            <FormControl >
+                                    <RadioGroup  onChange={RadioChange} defaultValue={defaultValueOfRadio} value={radioValues[Name]}>
+                                        
+                                       {SubDataProcessing(json)}
+                                </RadioGroup>
+                            </FormControl>
+                        </Grid>
+                    )
+                }else{
+                   ReturnComponent.push(
+                    <Grid keyName={keyName}  style={style}>
                         {SubDataProcessing(json)}
                         {Text === "Gradient"?<></>:TextFromServerToBrowser(json, keyName)}
                     </Grid>
-                )
+                    ) 
+                }
+                
                 break;
 
             case "TBevel"://WITH SUB
-                    
+                style = {position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,
+                height:`${Height}px`, overflowY:"auto", overflowX:"hidden", display:Visability, 
+                backgroundColor: BGColor }
+
+                if(ColsFromParent){
+                    const jm= CalculateMargin(ColsFromParent,json.Target,widthFromParent, Number(Left));
+                    style = Object.assign(style, {left:jm.ml , right:jm.mr })
+                }    
                 ReturnComponent.push(
-                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor }}>
+                    <Grid keyName={keyName} style={style}>
                         <div style={{height:"2px", backgroundColor: "#cbcbca", borderRadius:"1px", marginTop:`${Number(Height*0.5)}px`}}>
                             {/* {SubDataProcessing(json)} */}
                         </div>
@@ -777,8 +945,22 @@ function DeleteActivFrame() {
 
             case "TRadioButton":
                 Text = GetParams(json, "Text")
+                let RadioValue= json.Parent +","+ `${Number(keyName.substring(11,12))-1}`
                 ReturnComponent.push(
-                    <FormControlLabel value={Text} control={<Radio />} label={Text} />
+                    <FormControlLabel value={RadioValue} control={<Radio 
+                        sx={{
+                            '& .MuiSvgIcon-root': {
+                              fontSize: 18,
+                              color: "#4d4d4d",
+                                '&.Mui-checked': {
+                                color: "#4d4d4d",
+                                },
+                            },
+                          }}
+                    />} label={Text}
+                    style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`,}}
+ 
+                    />
                 )
                 break;
 
@@ -786,10 +968,13 @@ function DeleteActivFrame() {
 
                 break
             case "TMarkingPanel":
+                let WidthPrecent = CalculateSize(widthFromParent,Width )
+                style = {position:"absolute" ,left:`${Left}px`, right:`${Left}px`,  top:`${Top}px`,height:`${Height}px`,
+                overflowY:"auto", overflowX:"hidden", visibility:Visability, backgroundColor: BGColor }
 
                 ReturnComponent.push(
-                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, overflowY:"auto", overflowX:"hidden", visibility:Visability, backgroundColor: BGColor }}>
-                        {SubDataProcessing(json)}
+                    <Grid keyName={keyName} style={style}>
+                        {SubDataProcessing(json,"TMarkingPanel",null,json.Cols)}
                     </Grid>
                 )
                 break;
@@ -805,15 +990,17 @@ function FormDataProcessing(json) {
             for(const [key, value] of Object.entries(json)) {
                 val = value
                 if(val.Type !==undefined ){
-                    
-                    returnAll.push( CheckAndReturnComponent(value, false, key))                     
+                    try{
+                        returnAll.push( CheckAndReturnComponent(value, false, key))
+                    }catch(err){
+                        console.log(err)
+                    }
+                                         
                 }
             }
-            // setCursor("auto") 
-            // return returnAll
-            // ReactDOM.render(returnAll,document.getElementById("mainForms") )
+
             return(
-                <div  className="TestForms" >
+                <div  className={"TestForms"+props.id}  style={{position:"relative", height: "100%", width:"100%"}}>
                     {returnAll}
                 </div>
             )
@@ -822,14 +1009,14 @@ function FormDataProcessing(json) {
         
     }
 
-    function SubDataProcessing(json, subElement, RCDATA){
+    function SubDataProcessing(json, subElement, RCDATA,Cols){
         if(dataForms !== undefined){
             let val, returnAll=[]
             //json = json.Form;
             for(const [key, value] of Object.entries(json)) {
                 val = value
                 if(val.Type !==undefined ){
-                    returnAll.push( CheckAndReturnComponent(value, subElement, key, RCDATA)) 
+                    returnAll.push( CheckAndReturnComponent(value, subElement, key, RCDATA, json.Width,Cols)) 
                 }
             } 
             return returnAll 
@@ -837,29 +1024,40 @@ function FormDataProcessing(json) {
         
     }
 
-    if(load === true){
+    function Load (){
         return(
             <Grid container direction="row" justifyContent="center" alignItems="center" style={{ height: `${currentHeight}px` }}>
                 <Grid item>
                     <div>
-                        <CircularProgress />
+                        <CircularProgress
+                            className={
+                                cn("circularProgress",{light: theme === "light"})
+                            } 
+                        />
                     </div>
                 </Grid>
             </Grid>
             
         ) 
-    }else{
+    }
+
+
         return(
         <>
             <SectionToolsJS ID={props.id} SetBackValue={setSubForms}  buildForms ={FormDataProcessing}/>
-            <Grid id={"mainForms" + props.id} style={{position:"relative", height: "100%", width:"100%", backgroundColor:"s", cursor: cursor}}>
-                {FormDataProcessing(dataForms)}
-            </Grid>
+            <Fade in={!transition}>
+                <Grid id={"mainForms" + props.id} style={{position:"relative", height: "100%", width:"100%", backgroundColor:"s", cursor: cursor}}>
+                    
+                        {load?<Load/> :FormDataProcessing(dataForms)}
+                   
+                </Grid>
+             </Fade>
+            
             <Grid id="RenderFormsModal">
 
             </Grid>
         </>
             
         )  
-    }
+    
 }

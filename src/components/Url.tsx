@@ -73,7 +73,7 @@ export function XMLrequest(params: any, postData?: any) {
     try {
         const parsedJSON = JSON.parse(res)
         
-        if(parsedJSON.error){
+        if(parsedJSON.error && params.get("comand")!== "enter"){
             const Message = `Ошибка выполнения операции на сервере: ${parsedJSON.error.content}`
             console.log(parsedJSON.error)
             ReactDOM.render(<ModalContainer dlgType={"Ошибка"} content={Message} />, document.getElementById('footerProgress'));

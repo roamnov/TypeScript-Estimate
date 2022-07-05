@@ -6,7 +6,7 @@ LastDrx = LastDrx === undefined? "": LastDrx[0]
 console.log(LastDrx)
 LastDrx = LastDrx === "МакетыЛК.drx"?  "light": "blue"
 
-export const ThemeContext = createContext({type: "light"})
+export const ThemeContext = createContext("light")
 
 // ThemeContext.Provider
 
