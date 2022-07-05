@@ -370,10 +370,16 @@ export default function FormsMainFile(props){
         let params = new Map, json, Name = null, TokenReturn;
         
         // setCursor("wait")
-        if(event){
+        if(event.currentTarget){
             Name = event.currentTarget.getAttribute("name");
             Name = Name === null? event.currentTarget.getAttribute("keyName"): Name
             Name = Name === null? event.currentTarget.getAttribute("data-path"): Name
+        }
+        else if (event.tagName)
+        {
+            Name = event.getAttribute("name");
+            Name = Name === null? event.getAttribute("keyName"): Name
+            Name = Name === null? event.getAttribute("data-path"): Name 
         }
         Name = Name === null? IName: Name
         params.set('prefix', 'forms');
@@ -665,7 +671,7 @@ export default function FormsMainFile(props){
                         
                         <TextField variant="standard"  defaultValue={Text} style={{ width: `${Width}px`,height:`${Height}px` }} />
                         */ }
-                        <Editor list={list} name={keyName} value={Text} EditStyle={EditStyleCompleteInt} style={{ width: `${Width}px`,height:`${Height}px` }} onDropDownList={ClickFormElement} />
+                        <Editor list={list} name={keyName} value={Text} EditStyle={EditStyleCompleteInt} style={{ width: `${Width}px`,height:`${Height}px` }} onEdit = {ClickFormElement}/>
                     </Grid>
                     
                 )

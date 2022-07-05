@@ -83,7 +83,18 @@ export default function Editor(props) {
   const RightArrowRed = 'url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcKICAgdmlld0JveD0iMCAwIDQ4IDQ4IgogICB2ZXJzaW9uPSIxLjEiCiAgIGlkPSJzdmc0IgogICBzb2RpcG9kaTpkb2NuYW1lPSJyZWRfYXJyb3dfY2hlY2tib3guc3ZnIgogICBpbmtzY2FwZTp2ZXJzaW9uPSIxLjEuMSAoM2JmNWFlMGQyNSwgMjAyMS0wOS0yMCkiCiAgIHhtbG5zOmlua3NjYXBlPSJodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIgogICB4bWxuczpzb2RpcG9kaT0iaHR0cDovL3NvZGlwb2RpLnNvdXJjZWZvcmdlLm5ldC9EVEQvc29kaXBvZGktMC5kdGQiCiAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGRlZnMKICAgICBpZD0iZGVmczgiIC8+CiAgPHNvZGlwb2RpOm5hbWVkdmlldwogICAgIGlkPSJuYW1lZHZpZXc2IgogICAgIHBhZ2Vjb2xvcj0iI2ZmZmZmZiIKICAgICBib3JkZXJjb2xvcj0iIzY2NjY2NiIKICAgICBib3JkZXJvcGFjaXR5PSIxLjAiCiAgICAgaW5rc2NhcGU6cGFnZXNoYWRvdz0iMiIKICAgICBpbmtzY2FwZTpwYWdlb3BhY2l0eT0iMC4wIgogICAgIGlua3NjYXBlOnBhZ2VjaGVja2VyYm9hcmQ9IjAiCiAgICAgc2hvd2dyaWQ9ImZhbHNlIgogICAgIGlua3NjYXBlOnpvb209IjE3LjMzMzMzMyIKICAgICBpbmtzY2FwZTpjeD0iMjMuOTcxMTU0IgogICAgIGlua3NjYXBlOmN5PSIyNC4wMjg4NDciCiAgICAgaW5rc2NhcGU6d2luZG93LXdpZHRoPSIxMjgwIgogICAgIGlua3NjYXBlOndpbmRvdy1oZWlnaHQ9Ijk2MSIKICAgICBpbmtzY2FwZTp3aW5kb3cteD0iLTgiCiAgICAgaW5rc2NhcGU6d2luZG93LXk9IjU2IgogICAgIGlua3NjYXBlOndpbmRvdy1tYXhpbWl6ZWQ9IjEiCiAgICAgaW5rc2NhcGU6Y3VycmVudC1sYXllcj0ic3ZnNCIgLz4KICA8cGF0aAogICAgIGQ9Ik0xMS41IDZDOC40ODAyMjU5IDYgNiA4LjQ4MDIyNTkgNiAxMS41TDYgMzYuNUM2IDM5LjUxOTc3NCA4LjQ4MDIyNTkgNDIgMTEuNSA0MkwzNi41IDQyQzM5LjUxOTc3NCA0MiA0MiAzOS41MTk3NzQgNDIgMzYuNUw0MiAxMS41QzQyIDguNDgwMjI1OSAzOS41MTk3NzQgNiAzNi41IDZMMTEuNSA2IHogTSAxMS41IDlMMzYuNSA5QzM3Ljg5ODIyNiA5IDM5IDEwLjEwMTc3NCAzOSAxMS41TDM5IDM2LjVDMzkgMzcuODk4MjI2IDM3Ljg5ODIyNiAzOSAzNi41IDM5TDExLjUgMzlDMTAuMTAxNzc0IDM5IDkgMzcuODk4MjI2IDkgMzYuNUw5IDExLjVDOSAxMC4xMDE3NzQgMTAuMTAxNzc0IDkgMTEuNSA5IHoiCiAgICAgaWQ9InBhdGgyIiAvPgogIDxwYXRoCiAgICAgZD0ibSAyNS43ODU3MTQsMzAuODg0NjE1IGMgLTAuMDkwNjksMCAtMC4xODEzNjEsLTAuMDE3NTcgLTAuMjYyNzQyLC0wLjA1MjczIC0wLjIwNDYxMywtMC4wODQgLTAuMzMyNDk2LC0wLjI1NTg3OSAtMC4zMzI0OTYsLTAuNDQ3MzAxIFYgMjYuMzg0MjY4IEggMTIuMDk1MjM4IEMgMTEuNzY3MzkyLDI2LjM4NDI2OCAxMS41LDI2LjE2MTU5NCAxMS41LDI1Ljg4NDIyOSB2IC00LjAwMDMxNSBjIDAsLTAuMjc1NDEyIDAuMjY3MzkyLC0wLjUwMDAzOSAwLjU5NTIzOCwtMC41MDAwMzkgaCAxMy4wOTUyMzggdiAtNC4wMDAzMTQgYyAwLC0wLjE4OTQ2OCAwLjEyNzg4MywtMC4zNjMzMDkgMC4zMzI0OTYsLTAuNDQ3MzAxIDAuMjAyMjg4LC0wLjA4NCAwLjQ0NDEwNCwtMC4wNjQ0NiAwLjYyNTQ2NSwwLjA1MDc5IGwgMTAuMTE5MDQ4LDYuNTAwNTEgQyAzNi40MTM5NjksMjMuNTgxMzEzIDM2LjUsMjMuNzI3ODEgMzYuNSwyMy44ODQwNzEgYyAwLDAuMTU2MjYzIC0wLjA4NjA0LDAuMzAyNzU4IC0wLjIzNDg0LDAuMzk2NTE2IGwgLTEwLjExOTA0OCw2LjUwMDUxIGMgLTAuMTA0NjM4LDAuMDY4MzcgLTAuMjMyNTE1LDAuMTAzNTE4IC0wLjM2MDM5OCwwLjEwMzUxOCB6IgogICAgIGZpbGw9IiNkMDA0MDQiCiAgICAgaWQ9InBhdGgyLTgiCiAgICAgc3R5bGU9InN0cm9rZS13aWR0aDowLjU0NTU2NyIgLz4KPC9zdmc+Cg==")'
   const Unknown = 'url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcKICAgdmlld0JveD0iMCAwIDQ4IDQ4IgogICB2ZXJzaW9uPSIxLjEiCiAgIGlkPSJzdmc0IgogICBzb2RpcG9kaTpkb2NuYW1lPSJjaGVja2VkX2xfY2hlY2tib3guc3ZnIgogICBpbmtzY2FwZTp2ZXJzaW9uPSIxLjEuMSAoM2JmNWFlMGQyNSwgMjAyMS0wOS0yMCkiCiAgIHhtbG5zOmlua3NjYXBlPSJodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIgogICB4bWxuczpzb2RpcG9kaT0iaHR0cDovL3NvZGlwb2RpLnNvdXJjZWZvcmdlLm5ldC9EVEQvc29kaXBvZGktMC5kdGQiCiAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGRlZnMKICAgICBpZD0iZGVmczYiIC8+CiAgPHNvZGlwb2RpOm5hbWVkdmlldwogICAgIGlkPSJuYW1lZHZpZXc0IgogICAgIHBhZ2Vjb2xvcj0iI2ZmZmZmZiIKICAgICBib3JkZXJjb2xvcj0iIzY2NjY2NiIKICAgICBib3JkZXJvcGFjaXR5PSIxLjAiCiAgICAgaW5rc2NhcGU6cGFnZXNoYWRvdz0iMiIKICAgICBpbmtzY2FwZTpwYWdlb3BhY2l0eT0iMC4wIgogICAgIGlua3NjYXBlOnBhZ2VjaGVja2VyYm9hcmQ9IjAiCiAgICAgc2hvd2dyaWQ9ImZhbHNlIgogICAgIGlua3NjYXBlOnpvb209IjE3LjMzMzMzMyIKICAgICBpbmtzY2FwZTpjeD0iMjQuMDI4ODQ2IgogICAgIGlua3NjYXBlOmN5PSIyNC4wMjg4NDYiCiAgICAgaW5rc2NhcGU6d2luZG93LXdpZHRoPSIxMjgwIgogICAgIGlua3NjYXBlOndpbmRvdy1oZWlnaHQ9Ijk2MSIKICAgICBpbmtzY2FwZTp3aW5kb3cteD0iLTgiCiAgICAgaW5rc2NhcGU6d2luZG93LXk9IjU2IgogICAgIGlua3NjYXBlOndpbmRvdy1tYXhpbWl6ZWQ9IjEiCiAgICAgaW5rc2NhcGU6Y3VycmVudC1sYXllcj0ic3ZnNCIgLz4KICA8cGF0aAogICAgIGQ9Ik0xMS41IDZDOC40ODAyMjU5IDYgNiA4LjQ4MDIyNTkgNiAxMS41TDYgMzYuNUM2IDM5LjUxOTc3NCA4LjQ4MDIyNTkgNDIgMTEuNSA0MkwzNi41IDQyQzM5LjUxOTc3NCA0MiA0MiAzOS41MTk3NzQgNDIgMzYuNUw0MiAxMS41QzQyIDguNDgwMjI1OSAzOS41MTk3NzQgNiAzNi41IDZMMTEuNSA2IHogTSAxMS41IDlMMzYuNSA5QzM3Ljg5ODIyNiA5IDM5IDEwLjEwMTc3NCAzOSAxMS41TDM5IDM2LjVDMzkgMzcuODk4MjI2IDM3Ljg5ODIyNiAzOSAzNi41IDM5TDExLjUgMzlDMTAuMTAxNzc0IDM5IDkgMzcuODk4MjI2IDkgMzYuNUw5IDExLjVDOSAxMC4xMDE3NzQgMTAuMTAxNzc0IDkgMTEuNSA5IHoiCiAgICAgaWQ9InBhdGgyIiAvPgogIDxwYXRoCiAgICAgZD0ibSAzNC43MzQ1NjksMTIuODk4Mzc2IGMgLTAuNDE0MTIxLDAuMDE0ODcgLTAuNzk0MTM4LDAuMjM3OTQyIC0xLjAxMzM3OSwwLjU5NDg1MSBMIDIxLjk4OTM3OSwzMS43NTUxMTEgMTQuMzg5MDM3LDI1LjA3Mjk2NiBjIC0wLjMyNjQyNSwtMC4zNDQ1MTcgLTAuODE2MDYzLC0wLjQ3MzQwMSAtMS4yNjY3MjQsLTAuMzI5NjQ0IC0wLjQ0ODIyNSwwLjE0MTI3NSAtMC43ODE5NTgsMC41Mjc5MjkgLTAuODU5OTExLDAuOTk4ODUyIC0wLjA3Nzk1LDAuNDczNCAwLjEwOTYxNCwwLjk0OTI3OSAwLjQ4OTYzOCwxLjIzNDMxMyBsIDguNjkxNjc0LDcuNjUzNzMxIGMgMC4yNzI4MzIsMC4yMzU0NjMgMC42MzMzNjIsMC4zMzk1NiAwLjk4NjU4MywwLjI4NzUxMiAwLjM1NTY1NywtMC4wNTQ1MyAwLjY2OTkwMiwtMC4yNjAyNDcgMC44NjQ3ODIsLTAuNTY1MTA5IEwgMzUuODI1OSwxNC44ODEyMDkgYyAwLjI2Nzk2MSwtMC4zOTkwNDQgMC4yODk4ODUsLTAuOTE0NTggMC4wNTg0NiwtMS4zMzU5MzQgLTAuMjMxNDIsLTAuNDE4ODcyIC0wLjY3NzIxLC0wLjY2OTIwNCAtMS4xNDk3OTUsLTAuNjQ2ODk5IHoiCiAgICAgaWQ9InBhdGgyLTYiCiAgICAgc3R5bGU9InN0cm9rZS13aWR0aDowLjYyOTAzOTtmaWxsOiM5OTk5OTkiIC8+Cjwvc3ZnPgo=")'
   const Reject = 'url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcKICAgdmlld0JveD0iMCAwIDQ4IDQ4IgogICB2ZXJzaW9uPSIxLjEiCiAgIGlkPSJzdmc0IgogICBzb2RpcG9kaTpkb2NuYW1lPSJDbG9zZV9jaGVja2JveC5zdmciCiAgIGlua3NjYXBlOnZlcnNpb249IjEuMS4xICgzYmY1YWUwZDI1LCAyMDIxLTA5LTIwKSIKICAgeG1sbnM6aW5rc2NhcGU9Imh0dHA6Ly93d3cuaW5rc2NhcGUub3JnL25hbWVzcGFjZXMvaW5rc2NhcGUiCiAgIHhtbG5zOnNvZGlwb2RpPSJodHRwOi8vc29kaXBvZGkuc291cmNlZm9yZ2UubmV0L0RURC9zb2RpcG9kaS0wLmR0ZCIKICAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgogICB4bWxuczpzdmc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8ZGVmcwogICAgIGlkPSJkZWZzOCIgLz4KICA8c29kaXBvZGk6bmFtZWR2aWV3CiAgICAgaWQ9Im5hbWVkdmlldzYiCiAgICAgcGFnZWNvbG9yPSIjZmZmZmZmIgogICAgIGJvcmRlcmNvbG9yPSIjNjY2NjY2IgogICAgIGJvcmRlcm9wYWNpdHk9IjEuMCIKICAgICBpbmtzY2FwZTpwYWdlc2hhZG93PSIyIgogICAgIGlua3NjYXBlOnBhZ2VvcGFjaXR5PSIwLjAiCiAgICAgaW5rc2NhcGU6cGFnZWNoZWNrZXJib2FyZD0iMCIKICAgICBzaG93Z3JpZD0iZmFsc2UiCiAgICAgaW5rc2NhcGU6em9vbT0iMTcuMzMzMzMzIgogICAgIGlua3NjYXBlOmN4PSIyMy45NzExNTQiCiAgICAgaW5rc2NhcGU6Y3k9IjI0LjAyODg0NyIKICAgICBpbmtzY2FwZTp3aW5kb3ctd2lkdGg9IjEyODAiCiAgICAgaW5rc2NhcGU6d2luZG93LWhlaWdodD0iOTYxIgogICAgIGlua3NjYXBlOndpbmRvdy14PSItOCIKICAgICBpbmtzY2FwZTp3aW5kb3cteT0iNTYiCiAgICAgaW5rc2NhcGU6d2luZG93LW1heGltaXplZD0iMSIKICAgICBpbmtzY2FwZTpjdXJyZW50LWxheWVyPSJzdmc0IiAvPgogIDxwYXRoCiAgICAgZD0iTTExLjUgNkM4LjQ4MDIyNTkgNiA2IDguNDgwMjI1OSA2IDExLjVMNiAzNi41QzYgMzkuNTE5Nzc0IDguNDgwMjI1OSA0MiAxMS41IDQyTDM2LjUgNDJDMzkuNTE5Nzc0IDQyIDQyIDM5LjUxOTc3NCA0MiAzNi41TDQyIDExLjVDNDIgOC40ODAyMjU5IDM5LjUxOTc3NCA2IDM2LjUgNkwxMS41IDYgeiBNIDExLjUgOUwzNi41IDlDMzcuODk4MjI2IDkgMzkgMTAuMTAxNzc0IDM5IDExLjVMMzkgMzYuNUMzOSAzNy44OTgyMjYgMzcuODk4MjI2IDM5IDM2LjUgMzlMMTEuNSAzOUMxMC4xMDE3NzQgMzkgOSAzNy44OTgyMjYgOSAzNi41TDkgMTEuNUM5IDEwLjEwMTc3NCAxMC4xMDE3NzQgOSAxMS41IDkgeiIKICAgICBpZD0icGF0aDIiIC8+CiAgPHBhdGgKICAgICBkPSJtIDE1LjI0MTg2NiwxMy4yMTE1MzkgLTIuNTA2ODY4LDIuMzU5NDA0IDguNzYwMjY2LDguMTkzMDk2IC04Ljc2MDI2Niw4LjE5MzA5NiAyLjUwNjg2OCwyLjM1OTQwNCA4Ljc2MDI2NiwtOC4xOTMwOTYgOC43NjAyNjUsOC4xOTMwOTYgMi40NzkzMiwtMi4zNTk0MDQgLTguNzMyNzE3LC04LjE5MzA5NiA4LjczMjcxNywtOC4xOTMwOTYgLTIuNDc5MzIsLTIuMzU5NDA0IC04Ljc2MDI2NSw4LjE5MzA5NiB6IgogICAgIGZpbGw9IiNkMDA0MDQiCiAgICAgaWQ9InBhdGgyLTEiCiAgICAgc3R5bGU9InN0cm9rZS13aWR0aDowLjg1NTIxNiIgLz4KPC9zdmc+Cg==")';
-
+  function RandomString(count) {
+    var res, s = "0123456789ABCDEFGHIKLMNOPQRSTVXYZ";
+    if (!count) count = 20
+    for (var n = 0; n <= count; n++) {
+      if (n === 0) {
+        res = s[Math.floor(Math.random() * (count - 1) + 1)];
+      } else {
+        res = res + s[Math.floor(Math.random() * (count - 1) + 1)];
+      }
+    }
+    return res
+  }
   var p = 0;
   if (props.EditStyle & EditStyle_Calendar) p = p + 1
   else {
@@ -98,9 +109,19 @@ export default function Editor(props) {
     lp = "28px"
   else
     lp = "4px"
-  var CheckID = "State_" + props.SectionID + "_" + props.id
-  var EditID = props.SectionID + "_" + props.id
-  
+  var CheckID, EditID
+  if (props.SectionID & props.id) {
+    CheckID = "State_" + props.SectionID + "_" + props.id
+    EditID = props.SectionID + "_" + props.id
+  }
+
+  else {
+    CheckID = RandomString(10)
+    EditID = RandomString(10)
+  }
+
+
+
   function SelectCheckState(e) {
     let btn = e.currentTarget;
     let CheckState = btn.dataset.checkstate;
@@ -108,8 +129,7 @@ export default function Editor(props) {
     let Check = document.getElementById(btn.dataset.checkid)
     let selectCheckState = SelectBackgroundCheck(CheckState)
     Check.style.backgroundImage = selectCheckState
-    if (parent)
-    {
+    if (parent) {
       parent.setAttribute("data-checkState", CheckState)
     }
     EnterValue(parent)
@@ -321,11 +341,14 @@ export default function Editor(props) {
       let p
       if (ev) p = ev.currentTarget;
      // let list = document.getElementById("mouse-over-popover-list");
-     // const withinBoundaries = ev.composedPath().includes(list);
-      if (!p)
-        p = document.getElementById("mouse-over-popover")
-      if (p)
-        p.remove()
+      let inp = document.getElementById("for" + EditID)
+      const withinBoundaries = ev.composedPath().includes(inp);
+      if (!withinBoundaries) {
+        if (!p)
+          p = document.getElementById("mouse-over-popover")
+        if (p)
+          p.remove()
+      }
     }
     function ClickItemList(ev) {
       let p = ev.currentTarget;
@@ -354,10 +377,8 @@ export default function Editor(props) {
     let it = [];
     let width = parent.getBoundingClientRect().width
     let index = 0, indexv, val = parent.dataValue
-
+    let text
     for (let pair of items) {
-      let text
-
       text = pair[1]
       if (typeof text == "string") {
         if (val === text) {
@@ -398,7 +419,7 @@ export default function Editor(props) {
           position: "fixed", zIndex: 1, width: width - 8 + "px", marginLeft: "2px",
           paddingLeft: "0px", marginTop: "0px"
         }}>
-          <input placeholder="Поиск ..." role="searchbox" aria-label="Поиск ..." smart-id="filterInput" onKeyUp={(ev) => FindItems(ev)} /></div></Box>}
+          <input id={"for" + EditID} placeholder="Поиск ..." role="searchbox" aria-label="Поиск ..." smart-id="filterInput" onKeyUp={(ev) => FindItems(ev)} /></div></Box>}
       <List style={{ maxHeight: 200 - top + "px", width: width - 2 + "px", top: top + "px" }} >
         {it.map((item) => { return item })}
       </List></Box>
@@ -414,18 +435,26 @@ export default function Editor(props) {
     let div = e.currentTarget;
     let id = div.getAttribute("for");
     let edit = document.getElementById(id)
-    if (props.onDropDownList) {
+    if (props.list) {
+      list = props.list.split(',')
+    } else if (props.onDropDownList) {
       list = props.onDropDownList(edit)
-      if (list) {
-        CreateList(list, edit)
-        // setAnchorElList(edit)
-      }
     }
+    if (list) {
+      if (list.length) {
+        let l1 = new Map();
+        for (let n = 0; n <= list.length - 1; n++) {
+          l1.set(n, list[n])
+        }
+        list = l1;
+      }
+      CreateList(list, edit)
+      // setAnchorElList(edit)
+    }
+
   }
 
-  if (props.list) {
-    list = props.list.split(',')
-  }
+
   function EnterValue(ev, TextChanged) {
     props.onEdit(ev, TextChanged)
   }
@@ -490,7 +519,7 @@ export default function Editor(props) {
   DropList = props.EditStyle & EditStyle_Calendar ? <Box data-id={props.id} style={{ position: "relative", width: "100%", ...props.style }}>
     <Input style={{ width: "100%", height: "100%", borderRadius: "0px", borderRightWidth: "0px", borderTopWidth: "0px", borderLeftWidth: "0px", borderColor: "black" }} type="date" value={props.value}
       onChange={(ev) => props.onEdit(ev)}
-
+      name={props.name}
       id={EditID}
       data-id={props.id}
       data-path={props.Path}
@@ -505,6 +534,7 @@ export default function Editor(props) {
           <MaskedTextBox id={EditID} data-id={props.id} onChange={(ev) => props.onEdit(ev)} style={{ height: props.style.height, padding: "0px", width: "100%", paddingRight: p, paddingLeft: lp, borderRadius: "0px", borderRightWidth: "0px", borderTopWidth: "0px", borderLeftWidth: "0px", borderColor: "black" }} value={props.caption ? props.caption : props.value ? props.value : ""} mask={props.mask} /> :
           <Input data-path={props.Path}
             id={EditID}
+            name={props.name}
             data-id={props.id}
             data-objref={props.ObjRef}
             data-editval={props.EditVal}
