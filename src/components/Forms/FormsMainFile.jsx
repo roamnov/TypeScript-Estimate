@@ -630,12 +630,20 @@ export default function FormsMainFile(props){
                 break;
 
             case "TSectionEditor":
-                let EditStyle, EditStyleCompleteInt = 0;
+                let EditStyle, EditStyleCompleteInt = 0, PickListEditor,list="";
                 Text = GetParams(json,"Text")
                 // console.log(GetParams(json, "EditStyle"))
                 EditStyle = GetParams(json, "EditStyle");
+                PickListEditor = GetParams(json, "PickList");
+                
                 try{
                     EditStyle = EditStyle === undefined? EditStyle: EditStyle.split(",");
+                    PickListEditor = PickListEditor.split("\r\n")
+                    PickListEditor.pop();
+                    for (const [key, value] of Object.entries(PickListEditor)){
+                        list += `${value},`
+                    }
+                    list = list === ""? list:list.substring(0, list.length - 1)
                 }catch{
 
                 }
@@ -657,7 +665,7 @@ export default function FormsMainFile(props){
                         
                         <TextField variant="standard"  defaultValue={Text} style={{ width: `${Width}px`,height:`${Height}px` }} />
                         */ }
-                        <Editor value={Text} EditStyle={EditStyleCompleteInt} style={{ width: `${Width}px`,height:`${Height}px` }}/>
+                        <Editor list={list} name={keyName} value={Text} EditStyle={EditStyleCompleteInt} style={{ width: `${Width}px`,height:`${Height}px` }} onDropDownList={ClickFormElement} />
                     </Grid>
                     
                 )
