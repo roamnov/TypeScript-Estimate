@@ -384,14 +384,18 @@ export default function FormsMainFile(props){
             Name = Name === null? event.getAttribute("data-path"): Name 
         }
         Name = Name === null? IName: Name
-        params.set('prefix', 'forms');
+        if (Name)
+        {
+          params.set('prefix', 'forms');
         params.set("comand", "ElementEvent");
         params.set("SectionID", props.id);/////
         params.set("Name", Name);
-        params.set("Text", el.dataset.value);
+        if (el.dataset.value)
+         params.set("Text", el.dataset.value);
         if(Index) params.set("Index", Index)
-        params.set("WSM", "1");
+         params.set("WSM", "1");
         json = XMLrequest(params);
+    }
         if(!isEmptyObject(json)){
             setTransition(true)
             TokenReturn = tokenProcessingTest(json, "forms");
