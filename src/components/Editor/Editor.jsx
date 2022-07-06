@@ -474,7 +474,13 @@ export default function Editor(props) {
     if (val) el.value = val
   }
 
-
+function onEdit(ev)
+{ 
+  let d = ev.target.value.split("-")
+  ev.currentTarget.dataset.value = d[2]+"."+d[1]+"."+d[0]
+  if (props.onEdit)
+    props.onEdit(ev)
+}
   function SelectBackgroundCheck(CheckState) {
     let res
     if (CheckState) {
@@ -518,7 +524,7 @@ export default function Editor(props) {
   }
   DropList = props.EditStyle & EditStyle_Calendar ? <Box data-id={props.id} style={{ position: "relative", width: "100%", ...props.style }}>
     <Input style={{ width: "100%", height: "100%", borderRadius: "0px", borderRightWidth: "0px", borderTopWidth: "0px", borderLeftWidth: "0px", borderColor: "black" }} type="date" value={props.value}
-      onChange={(ev) => props.onEdit(ev)}
+      onChange={(ev) => onEdit(ev)}
       name={props.name}
       id={EditID}
       data-id={props.id}
