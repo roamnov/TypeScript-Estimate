@@ -410,13 +410,14 @@ export default function Editor(props) {
         backgroundColor: "white",
         border: "2px solid",
         width: width + "px",
+        overflowX: "hidden",
         left: parent.getBoundingClientRect().left + "px",
         top: parent.getBoundingClientRect().top + parent.getBoundingClientRect().height + "px"
       }}
       id="mouse-over-popover-list">
       {it.length <= 1 ? <></> : <Box className="smart-list-box">
         <div className="smart-list-box-filter-input-container vscroll" role="presentation" smart-id="filterInputContainer" style={{
-          position: "fixed", zIndex: 1, width: width - 8 + "px", marginLeft: "2px",
+          position: "fixed", zIndex: 1, width: width - 25 + "px", marginLeft: "2px",
           paddingLeft: "0px", marginTop: "0px"
         }}>
           <input id={"for" + EditID} placeholder="Поиск ..." role="searchbox" aria-label="Поиск ..." smart-id="filterInput" onKeyUp={(ev) => FindItems(ev)} /></div></Box>}
