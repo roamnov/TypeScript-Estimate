@@ -107,6 +107,7 @@ export default function FullRightSide(props: InfoAboutClick) {
       for (const [key, value] of Object.entries(openReportData.Items)) {
         ValueAny = value;
         ViewIdentForButton.items.push(ValueAny.ViewIdent)
+        if (ValueAny.RCDATA==undefined ){
         reportContent = String(ValueAny.content).replaceAll(/[\n]+/g, "");
         reportContent = String(reportContent).replaceAll(/[\r]+/g, "");
         if (reportContent !== "undefined") {
@@ -118,8 +119,18 @@ export default function FullRightSide(props: InfoAboutClick) {
             label={ValueAny.Title} content={reportContent} >
           </TabItem>
         )
+      }  else {
+        reportContent =  ValueAny.RCDATA
+        JSXTabItems.push(
+          <TabItem id={ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key]} style={{ textTransform: "none", display: "inline-block", height: currentHeight }}
+            label={ValueAny.Title}  >
+              <PdfPage RCDATA={reportContent} offsetHeight={55}/> 
+          </TabItem>
+        ) 
+      }
       }
     }
+
     ViewIdentObj = ViewIdentForButton
 
     if (document.getElementById(id) === null || tabsLength === 0 || openReportData.Items) {// если длинна равна 0(уже создавали табы) или мы не создавали еще контейнер для вкладок который потом будет скрывать
@@ -431,12 +442,26 @@ export default function FullRightSide(props: InfoAboutClick) {
       paramsGetPageContent.set('prefix', 'reptabs');
       paramsGetPageContent.set("comand", "GetPageContent");
       paramsGetPageContent.set("ViewIdent", ViewIdent);
-      paramsGetPageContent.set("HTML", "1");
+      //paramsGetPageContent.set("HTML", "1");
       json = XMLrequest(paramsGetPageContent)
-      let content = json.content
-      
-      content = InsertIdReport(content)
-      Tabs.update(index, EventTabLabel, content)
+      let content 
+      let pdfReport = document.getElementById(ViewIdent); //получаем ссылку на текущую вкладку
+      if (json.RCDATA!==undefined) //если отчет в pdf
+      { 
+        content = <PdfPage RCDATA={json.RCDATA} offsetHeight={55}/>  
+        let newReportWindow = document.createElement("div");// создаем блок 
+        newReportWindow.classList.add("PdfReport"+index);
+        newReportWindow.id = index;
+        newReportWindow.style.height = "100%"  
+        ReactDOM.render(content, newReportWindow);
+        Tabs.update(index, EventTabLabel,'')   //обновляем вкладку
+        if (pdfReport!== null) pdfReport.appendChild(newReportWindow);  //добавляем во вкладку отчет в pdf 
+      } else 
+        {
+          content = json.content 
+          content = InsertIdReport(content)  
+          Tabs.update(index, EventTabLabel, content)                
+        }
     } else {
       if (ViewIdent) {
         params.set('prefix', 'reptabs');
