@@ -354,6 +354,8 @@ export default function Editor(props) {
       let p = ev.currentTarget;
       parent.dataset.value = p.innerText;
       parent.dataset.objref = p.dataset.index
+      parent = parent.querySelector("input")
+      parent.value = p.innerText
       EnterValue(parent)
       CloseList()
     }
