@@ -32,7 +32,7 @@ import Checkbox from "@mui/material/Checkbox"
 import FormLabel from "@mui/material/FormLabel"
 import ManWhoSoldTheWorld from "../MainPage/stimategrid/test";
 import AccorionDownIcon from "../../static/images/down.png";
-import Frame from 'react-frame-component';
+import { Scrollbars } from 'react-custom-scrollbars-2';
 import useTheme from "../Hooks/useTheme";
 import cn from "classnames"
 import Fade from '@mui/material/Fade';
@@ -282,21 +282,35 @@ export default function FormsMainFile(props){
     }
 
     const handleChangeAccordion = (panel) => (event, newExpanded) => {
-        let ariaexpanded , params = new Map; 
-        setExpanded(newExpanded ? panel : false);
+        let ariaexpanded , params = new Map, TokenReturn, json; 
+        setExpanded(!expanded);
         setExpandedMap(expandedMap.set(panel, !expandedMap.get(panel)))
         const id = event.currentTarget.getAttribute("keyName")
         let content = document.getElementById(id + "content")
         ariaexpanded = content.style.display ==="inline-block"?"none":"inline-block";
-        content.style.display =ariaexpanded
+        content.style.display = ariaexpanded
         params.set('prefix', 'forms');
         params.set("comand", "ElementEvent");
         params.set("SectionID", props.id);/////
         params.set("Name", id);
         params.set("Collapsed", ariaexpanded==="inline-block"?"0":"1");
-        let json = XMLrequest(params);
+        json = XMLrequest(params);
+        CheckAnserOnElementEvent(json);
     };
 
+    function CheckAnserOnElementEvent(json){
+        if(!isEmptyObject(json)){
+            setTransition(true)
+            const TokenReturn = tokenProcessingTest(json, "forms");
+            if( TokenReturn !== undefined){
+                GetParamDialog(TokenReturn);
+            }else if(json.Form !== undefined){
+                // CheckAndReturnComponent(json);
+                setDataForms(json);
+            }  
+           setTransition(false) 
+        }
+    }
 
     function BackColor(color){
         if (color === undefined) return "rgb(240,240,240)"
@@ -370,43 +384,34 @@ export default function FormsMainFile(props){
         let params = new Map, json, Name = null, TokenReturn, el;
         
         // setCursor("wait")
-        if(event.currentTarget){
-            el = event.currentTarget
-            Name = event.currentTarget.getAttribute("name");
-            Name = Name === null? event.currentTarget.getAttribute("keyName"): Name
-            Name = Name === null? event.currentTarget.getAttribute("data-path"): Name
-        }
-        else if (event.tagName)
-        {
-            el = event
-            Name = event.getAttribute("name");
-            Name = Name === null? event.getAttribute("keyName"): Name
-            Name = Name === null? event.getAttribute("data-path"): Name 
+        if(event !== undefined){
+            if(event.currentTarget){
+                el = event.currentTarget
+                Name = event.currentTarget.getAttribute("name");
+                Name = Name === null? event.currentTarget.getAttribute("keyName"): Name
+                Name = Name === null? event.currentTarget.getAttribute("data-path"): Name
+            }else if (event.tagName){
+                el = event
+                Name = event.getAttribute("name");
+                Name = Name === null? event.getAttribute("keyName"): Name
+                Name = Name === null? event.getAttribute("data-path"): Name 
+            }   
         }
         Name = Name === null? IName: Name
-        if (Name)
-        {
+        
+        if (Name !== null ){
           params.set('prefix', 'forms');
-        params.set("comand", "ElementEvent");
-        params.set("SectionID", props.id);/////
-        params.set("Name", Name);
-        if (el.dataset.value)
-         params.set("Text", el.dataset.value);
-        if(Index) params.set("Index", Index)
-         params.set("WSM", "1");
-        json = XMLrequest(params);
-    }
-        if(!isEmptyObject(json)){
-            setTransition(true)
-            TokenReturn = tokenProcessingTest(json, "forms");
-            if( TokenReturn !== undefined){
-                GetParamDialog(TokenReturn);
-            }else if(json.Form !== undefined){
-                // CheckAndReturnComponent(json);
-                setDataForms(json);
-            }  
-           setTransition(false) 
+            params.set("comand", "ElementEvent");
+            params.set("SectionID", props.id);/////
+            params.set("Name", Name);
+            if (el) params.set("Text", el.dataset.value);
+            if(Index) params.set("Index", Index)
+            params.set("WSM", "1");
+            json = XMLrequest(params);
+            CheckAnserOnElementEvent(json);
         }
+
+        
         // await axios.get(URL(params)).then((res)=> setData(res.data));
         
     }
@@ -514,7 +519,8 @@ export default function FormsMainFile(props){
     const  value = event.target.value.split(",")
     Name = value[0]
     index = value[1]
-    ClickFormElement(null,Name,index)
+    console.log(Name,index )
+    ClickFormElement(undefined,Name,index)
     // const newJsonForRadio = Object.assign({[Name]:event.target.value},radioValues)
 
     }
@@ -603,7 +609,7 @@ export default function FormsMainFile(props){
                     let LocalTop = RCDATAFormParent?Number(Top) + 52:Top
                     ReturnComponent.push(
                         <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
-                            startIcon={icon}
+                            startIcon={rcdataIcon === undefined?undefined:icon}
                             style={{
                             color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
                             minWidth: "1px", width: `${Width}px`,height:`${Height}px`,position:"absolute", left:`${Left}px`, top:`${LocalTop}px`, 
@@ -617,7 +623,7 @@ export default function FormsMainFile(props){
                 }else{
                     ReturnComponent.push(
                         <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
-                            startIcon={icon}
+                            startIcon={rcdataIcon === undefined?undefined:icon}
                             style={{
                             color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
                             minWidth: "1px", width: `${Width}px`,height:`${Height}px`, position:"absolute", left:`${Left}px`, top:`${Top}px`, 
@@ -678,7 +684,7 @@ export default function FormsMainFile(props){
                         
                         <TextField variant="standard"  defaultValue={Text} style={{ width: `${Width}px`,height:`${Height}px` }} />
                         */ }
-                        <Editor list={list} name={keyName} value={Text} EditStyle={EditStyleCompleteInt} style={{ width: `${Width}px`,height:`${Height}px` }} onEdit = {ClickFormElement}/>
+                        <Editor list={list} name={keyName} value={Text} EditStyle={EditStyleCompleteInt} style={{ width: `${Width}px`,height:`${Height}px` }} onDropDownList={ClickFormElement} />
                     </Grid>
                     
                 )
@@ -695,7 +701,6 @@ export default function FormsMainFile(props){
                 style={position:"absolute",left:`${Left}px`, top:`${Top}px`, width: Width,height:Height, visibility:Visability, backgroundColor: BGColor }
                 if(json.CLSID === "{408E20A3-4BE3-4DCD-98BD-2613A8968783}") {//content
                     let content = InsertIdReport(json.content)
-                    console.log(Left, Top)
                     if(Left === undefined && Top=== undefined){
                         delete style.left
                         delete style.top
@@ -772,7 +777,8 @@ export default function FormsMainFile(props){
                 }
                 if(SubLabel === "TCategoryPanel"){
                     let LocalTop = RCDATAFormParent?Number(Top) + 57:Top
-                    style=Object.assign(style, {top:`${LocalTop}px`})
+                    style=Object.assign(style, {top:`${LocalTop}px`,})
+                    console.log()
                     ReturnComponent.push(
                         <Grid keyName={keyName} style={style}>
                             {TextFromServerToBrowser(json, keyName)}                             
@@ -794,37 +800,48 @@ export default function FormsMainFile(props){
                     <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:"90%", overflowY:"auto", overflowX:"hidden", visibility:Visability, 
                     // backgroundColor: BGColor
                      }}>
-
-                        {SubDataProcessing(json,null, RCDATA)}
+                         <Scrollbars autoHide>
+                             {SubDataProcessing(json,null, RCDATA)}
+                         </Scrollbars>
+                        
                         
                     </Grid>
                 )
                 break;
 
             case "TCategoryPanel"://WITH SUB
-                let Caption
+                let Caption, name = keyName, fs, Collapsed
                 if(json.Caption){
                     Caption= json.Caption
                 }else{
                     Caption = json.caption; 
                 }
-                
+                if(json.click$name){
+                    name = json.click$name
+                }
+                Collapsed = json.Collapsed === undefined? json.collapsed === undefined?true :false:false 
                 let BoolOpen = expandedMap.get(Caption);
+                if(BoolOpen === undefined && Collapsed){
+                    expandedMap.set(Caption, true)
+                    BoolOpen = expandedMap.get(Caption);
+                }
                 let HadImg = RCDATAFormParent?true:false
                 Width = Width === undefined? "100%": `${Width}px`
+                style ={ width: Width,height:`${Height}px`, display:BoolOpen? "inline-block":"none" , backgroundColor:"#ffffff", padding:0}
+                fs = BackFontweight(json["Font-style"])
                 ReturnComponent.push(
                     <Accordion expanded={BoolOpen} onChange={handleChangeAccordion(Caption)} keyName={keyName} style={{marginBottom:"2%"}}>
                         <AccordionSummary  keyName={keyName}  style={{backgroundColor:"#edeae2"}} expandIcon={<img src={AccorionDownIcon}/> }>
                             <Grid container direction="row" justifyContent="flex-start" alignItems="center" keyName={keyName}>
                                 <Grid item style={{position:"relative", left:"-16px"}} keyName={keyName}>
-                                    <img  src={`data:image/png;base64,${RCDATAFormParent}`} />
+                                    <img  src={`data:image/png;base64,${json["RCDATA"] === undefined?RCDATAFormParent:json["RCDATA"]}`} />
                                 </Grid>
                                 <Grid item keyName={keyName}>
-                                    <Typography keyName={keyName} >{Caption}</Typography>
+                                    <Typography keyName={keyName} style={{ fontWeight: fs, fontStyle:fs, textDecoration:fs,}} >{Caption}</Typography>
                                 </Grid>
                             </Grid>
                         </AccordionSummary>
-                        <AccordionDetails keyName={keyName+"content"} id={keyName+"content"} bool={"false"} style={{ width: Width,height:`${Height}px`, display:BoolOpen? "inline-block":"none" , backgroundColor:"#ffffff", padding:0}}>
+                        <AccordionDetails keyName={keyName+"content"} id={keyName+"content"} bool={"false"} style={style}>
                             {SubDataProcessing(json,"TCategoryPanel",HadImg)} 
                         </AccordionDetails>
                     </Accordion> 
@@ -840,7 +857,9 @@ export default function FormsMainFile(props){
                 }
                 sortByIndex(SortedTabs)
                 ReturnComponent.push(
-                    <Tabs keyName={keyName} class="Tabs" selectedIndex={0} style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, display:Visability, backgroundColor: BGColor }} >
+                    <Tabs keyName={keyName} class="Tabs" selectedIndex={0} 
+                    style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`,
+                     display:Visability, backgroundColor: BGColor }} >
                         {SubDataProcessing(SortedTabs, "TTabbedPages")} 
                     </Tabs>
                 )
@@ -850,7 +869,7 @@ export default function FormsMainFile(props){
                 Text = GetParams(json,"Text");
                 Text = Text === undefined? GetParams(json,"Title"): Text;
                 ReturnComponent.push(
-                   <TabItem keyName={keyName} label={Text} style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, display:Visability, backgroundColor: BGColor }}>
+                   <TabItem keyName={keyName} label={Text} style={{ position:"absolute" ,left:`${Left}px`,  width: `${Width}px`,height:`${Height}px`, display:Visability, backgroundColor: BGColor}}>
                        {SubDataProcessing(json, "TTabPagePanel")} 
                     </TabItem> 
                 )
@@ -906,6 +925,17 @@ export default function FormsMainFile(props){
                             </FormControl>
                         </Grid>
                     )
+                }else if(SubLabel === "TCategoryPanel"){
+                    ReturnComponent.push(
+                        <Grid keyName={keyName}  
+                        style = {{height: Height, width: Width,
+                            left:`${Left}px`, top:`${Top}px`, position:"relative",
+                        overflowY:"auto", overflow:"hidden",}} 
+                        >
+                            {SubDataProcessing(json,  "TCategoryPanel")}
+                           
+                        </Grid>
+                        ) 
                 }else{
                    ReturnComponent.push(
                     <Grid keyName={keyName}  style={style}>
@@ -994,15 +1024,57 @@ export default function FormsMainFile(props){
                 overflowY:"auto", overflowX:"hidden", visibility:Visability, backgroundColor: BGColor }
 
                 ReturnComponent.push(
-                    <Grid keyName={keyName} style={style}>
+                    <Grid keyName={keyName} style={style} >
                         {SubDataProcessing(json,"TMarkingPanel",null,json.Cols)}
                     </Grid>
                 )
                 break;
             
         }
+        
         return ReturnComponent;
     }
+
+function ChangeTabs(event){
+    setTimeout(() => {
+        let main = document.getElementsByClassName("Tabs")
+        let Tabs, tabsHeader, span
+        for (const [keyOfTabs, valueOfTabs] of Object.entries(main)){
+            Tabs = valueOfTabs
+            if(!Tabs.getAttribute("styled")){
+                Tabs.setAttribute("styled", "true")
+                for (const [key, value] of Object.entries(Tabs["_tabLabelContainers"])) {
+                    value.style.BorderRadius = "0px"
+                    value.classList.add("Borders");
+                    value.classList.add("selectedTabItem[selected]");
+                    if(Number(key) === 0){
+                        value.classList.add("WithoutLeftBorder");
+                    }else{
+                        value.classList.add("LeftBorder");
+                    }
+                    if(Tabs["_tabLabelContainers"].length -1 === Number(key)){
+                        value.classList.add("RightBorder");
+                    }else{
+                        value.classList.add("WithoutRightBorder");
+                    }
+                } 
+                tabsHeader = Tabs.children[0].children[0];
+                tabsHeader.style.backgroundColor = "#ffffff"
+                tabsHeader.classList.add("disableBorder");
+                Tabs.children[0].children[0].children[0].classList.add("SmartCustom");
+                console.log(Tabs.children[0].children[0].children[0])
+                span = Tabs.children[0].children[0].children[0].getElementsByTagName("span")[0]
+                span.classList.add("selectionBarCustom")
+                Tabs.children[0].children[1].style.overflowY = "scroll" //Это где данные отображаются 
+                Tabs.children[0].children[1].classList.add("headerSmartCustom"); 
+            }
+            
+        }
+        
+    }, 100);
+}
+
+
 
 function FormDataProcessing(json) {
         if(dataForms !== undefined){
@@ -1021,7 +1093,7 @@ function FormDataProcessing(json) {
             }
 
             return(
-                <div  className={"TestForms"+props.id}  style={{position:"relative", height: "100%", width:"100%"}}>
+                <div  className={"TestForms"+props.id}  style={{position:"relative", height: "100%", width:"100%"}} onLoad={ChangeTabs}>
                     {returnAll}
                 </div>
             )
