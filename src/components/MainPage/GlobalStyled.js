@@ -55747,6 +55747,62 @@ input[type=date]::-webkit-calendar-picker-indicator {
 
 const GlobalStyleTree = createGlobalStyle`
 
+.Borders{
+    border-radius: 0px !important; 
+    border-top-width: 0px !important;
+    border-bottom-width: 0px !important;
+    border-style: solid !important; 
+    margin: 0px !important; 
+    border-color: #c7c7c7 !important; 
+    background-color: white !important;
+}
+
+.div#selectedTabItem[selected]{
+    color: "#005c99" !important;
+}
+
+.disableBorder{
+    border-width: 0px !important;
+}
+
+.headerSmartCustom{
+    background: "#ffffff";
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: #c7c7c7 !important; 
+}
+
+.SmartCustom{
+    background: "#ffffff";
+    border-top-width: 1px !important;
+    border-bottom-width: 0px !important;
+    border-right-width: 1px !important;
+    border-left-width: 1px !important;
+    border-style: solid !important;
+    border-color: #c7c7c7 !important; 
+}
+
+.WithoutRightBorder{
+    border-right-width: 0px !important;
+}
+
+.RightBorder{
+    border-right-width: 1px !important;
+}
+
+.WithoutLeftBorder{
+    border-left-width: 0px !important;
+}
+
+.LeftBorder{
+    border-left-width: 1px !important;
+}
+
+.selectionBarCustom{
+    background: #ffb196 !important; 
+    top: 0px;
+}
+
 .circularProgress{
     color:var(--accent-blue)
 }
