@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import IconButton from '@mui/material/IconButton';
-import {  XMLrequest } from '../../../../Url';
+import { XMLrequest } from '../../../../Url';
 import Switch from '../../../../Switch/Switch';
 import Editor from "../../../../Editor/Editor"
 import Tooltip from '@mui/material/Tooltip';
@@ -11,7 +11,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import { sql } from '@codemirror/lang-sql';
 import { Tabs, TabItem } from 'smart-webcomponents-react/tabs';
 import Params from "../../../Sections/ElementsSections/Params"
-
+import { Tree, TreeItem, TreeItemsGroup } from 'smart-webcomponents-react/tree';
 
 export function clickTab(event) {
   let lbl = event.currentTarget;
@@ -36,9 +36,12 @@ export function clickTab(event) {
     contentTab1.classList.remove("contentactive")
   }
 }
-export default function Tree(props) {
+export default function MyTree(props) {
   let data;
-  var ApplyButtons;
+  const IconOpenFolder = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAAB90lEQVRoge2WO08UURSAvzM77iPsQgJY8SgsjJ2N2klLbClsDf9CGhR+ADT2amJlZWJjIo0dkVjAkmCg0tgaEiQmwLKHYhiy7OzI3Mk+zsb7VfeeeZ1vzpk7Fzwej8fzPyOdgvqOaRqsA/NALdOdlBVZ5GUXc8tEQuAy+W1g3PluA5AIEpHozbsnDyC80NeDFojaJj99lki20Bu0Xw+/gT8In2nyXBY5SDupUwWsUENZQNjUt0ylnWRZIGYcZS3t4DAIwD++y2ERGEs7MCwCqYTOV4jA5ASMjcKtYsq/vPvoV/4CW8CyPPr+JY47VkBgZhpuT0Kxf8lfUgHmgA3duvskDroJjFahOtLlvJwJ0eCVapS7m0Ct2pOMcnCHzXuz4CpQLvckm1wUwnNwERCJ+t4CyjEPd3+Bi0CpFElYQKiLRHs2NwErKDvxMLtA2ZBAIPWrYeaLLAk0JU8FDK1Ap4XdeJhNIAyhUOhZPo78lMf1w3iSTcDSByzUW6fZBCqGBFpWIMhcAUP9r3kqYKqFAscKiEDJyBYCTggq+62BmwVKRTtbCHRPHnw7a410Eji6NrO0/iPb7ZGkgLBxbW6p/1U+tIc6VWAJ+H01syPwiR97H9uDCQF5xj7CfeA9cDTQPZACjcYhTVZpHC/IU84Hl4zH4/F4LHIB3RVfydN5JmcAAAAASUVORK5CYII="
+  const IconFolder = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAmElEQVRIiWNgGAUDDRhhjP/zGbwYGBlmMjAwyGCo+s/QyJjI0ECOBUxIVmE3HCJX/38+eRYgfLCW5z+DpAQDAwsLOeYgwJ8/fxm+fGpkdHvVjGrBMZX/FBsOA79//2W0vsvCwIAcRNQynIGBgYGVlRnGZMKnjhpg1IJRC0YtQLXgCfWM/f8Y0wLGf2nIEhQanka5OaOAWgAAdiEh3MqSfL4AAAAASUVORK5CYII="
+  const IconList = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAABmJLR0QA/wD/AP+gvaeTAAACfElEQVRIib2VTUhUURTHf/fNjOPofGTWfOVMhhFUEgRhUabkYtZCm8gEjWzRokULlwUZSLswIlxE4iKiWgUVmYsgCJqNMKEwZUKMjOP4AY36Xlq+12IEpxnfvKcz9d8c7nmH87v3nvPOhf8ske/IZDK1QLMQosJ0EiHiTqcztm3g0tKSV1XVz0IIr1nYhjRFUfp8Pt8to0Br3rpVCOG91nOf1bVf5kiqRlvkuLjU2XZzZmZGDgQCd00DVVW1CyFQNY07jww3C0B6WWWgfxjx5AMdF8/2JxIJJRQKDejFS6ayFpGQJILnO3kXTfDs+UfhdrvvxePxK/8MCCAsFuouXObV+y+8fjMm/H7/YCwW694qNr+GBRqfh6kfhX6PHVrqNteSzUaoo4enQw9xOCqk1pbDgyMjIwuRSOTltoDzP2F6udC/stFTlVZwWEHVgKpKDnZdZfjxA0LBXbZwONwHjAKyaaCexMYP5aqArqO5X6oZTTYx+S1F08kDLmAv8N00sDkIpwKFfkvByNDfW+7CEGiRwGI6t7EMgROLEKyG2BykFf24Ez6od5cBeGR31uZ2ZCkyBKblbGMklyGzph9X74EaexmAFpGdDlYJ7EWKaXaCGAJrHVm730R9ygKcWICgE8bSkFzRjzsTLFfT1GbtuZBxMjMyHm0KuGyQkjfH2Vba58zO15KBqgYq8FuD1fUiccYsc0BvVdY2eExmNFBZ3sPtaMsTKvIqb1+M7jjp5PgUe04fMgX8CnD9RjuyXGSsGKgheIzGxjDpuWSKvPL+BfR4PJ+i0ehtn9/ZDo6Srjs1O73Y29s7BMzm+vVetRrAVQoQWAfmgJ1fVTn0B+QbqU31/zFJAAAAAElFTkSuQmCC"
+  var ApplyButtons, openTree = false
   const [currentHeight, setCurrentHeight] = React.useState(window.innerHeight - 205);
 
   const handleResize = () => {
@@ -61,54 +64,24 @@ export default function Tree(props) {
   }
 
   function ShowChild(event) {
-    let span = event.currentTarget;
+    let span = event.target;
+    let tag = "smart-tree-items-group"
+    while (span.tagName !== tag.toUpperCase()) {
+      span = span.parentNode;
+    }
     let id = span.id.split("_")[1];
-    let btn = event.currentTarget.parentNode;
-    let li = btn.parentNode.parentNode
-    let spanFolder = btn.nextSibling;
-    let ol;
-    ol = li.querySelector("ol")
+    let children = span.querySelector(".smart-tree-item-container")
 
-    if (span.classList.contains("rct-icon-expand-close")) {
-      span.classList.remove("rct-icon-expand-close")
-      span.classList.add("rct-icon-expand-open")
-      spanFolder = spanFolder.querySelector(".rct-icon-parent-close")
-      if (spanFolder) {
-        spanFolder.classList.remove("rct-icon-parent-close")
-        spanFolder.classList.add("rct-icon-parent-open")
-      }
-      if (!ol) {
-        ol = document.createElement("ol");
-        ReactDOM.render(CreateListTree(id), ol)
-        ol.classList.add("hiddenBlock")
-
-        li.appendChild(ol)
-        ol.classList.remove("hiddenBlock")
-        ol.classList.add("showBlock")
-      }
-      else {
-        ol.classList.remove("hiddenBlock")
-        ol.classList.add("showBlock")
-      }
+    if (!children.children.length) {
+      let ol = document.createElement("div");
+      ReactDOM.render(CreateListTree(id), ol)
+      span.innerHTML = ol.innerHTML;
     }
-    else {
-      span.classList.add("rct-icon-expand-close")
-      span.classList.remove("rct-icon-expand-open")
-      spanFolder = spanFolder.querySelector(".rct-icon-parent-open")
-      if (spanFolder) {
-        spanFolder.classList.add("rct-icon-parent-close")
-        spanFolder.classList.remove("rct-icon-parent-open")
-      }
-      if (ol) {
-        ol.classList.add("hiddenBlock")
-        ol.classList.remove("showBlock")
-      }
-    }
-    let TreeDBView = document.getElementById("Tree" + props.Module);
-    if (TreeDBView) {
-      let w = TreeDBView.getBoundingClientRect().width
-      TreeDBView.scrollLeft = -99999999;
-    }
+    /* let TreeDBView = document.getElementById("Tree" + props.Module);
+     if (TreeDBView) {
+       let w = TreeDBView.getBoundingClientRect().width
+       TreeDBView.scrollLeft = -99999999;
+     }*/
   }
   function GetObjectValues() {
     let params = new Map();
@@ -280,25 +253,25 @@ export default function Tree(props) {
 
   function ShowParams(id) {
     let param = document.getElementById("item_params_reports" + props.SectionID);
-    let reportSection = document.getElementById("print_reports"+props.SectionID);
-    let reportButton = document.getElementById("buttons_for_section"+props.SectionID);
+    let reportSection = document.getElementById("print_reports" + props.SectionID);
+    let reportButton = document.getElementById("buttons_for_section" + props.SectionID);
     if (param) {
       let paramBox = document.getElementById("item_params_reports" + props.SectionID + "_" + id)
       let reportBox = document.getElementById("print_reports" + props.SectionID + "_" + id)
       let reportButtonBox = document.getElementById("button_report_token" + props.SectionID + "_" + id)
       if (paramBox) {
-        param.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+        param.querySelectorAll('.ActivParams').forEach(n => { n.classList.remove('ActivParams'); n.classList.add('NoActivParams') })
         paramBox.classList.add("ActivParams");
         paramBox.classList.remove("NoActivParams");
-        reportSection.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+        reportSection.querySelectorAll('.ActivParams').forEach(n => { n.classList.remove('ActivParams'); n.classList.add('NoActivParams') })
         reportBox.classList.add("ActivParams");
         reportBox.classList.remove("NoActivParams");
-       
-          // reportButton.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
-          // reportButtonBox.classList.add("ActivParams");
-          // reportButtonBox.classList.remove("NoActivParams");
-        
-        
+
+        // reportButton.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+        // reportButtonBox.classList.add("ActivParams");
+        // reportButtonBox.classList.remove("NoActivParams");
+
+
       }
       else {
         let params = new Map();
@@ -308,17 +281,17 @@ export default function Tree(props) {
         params.set('SectionID', props.SectionID);
         let otv = XMLrequest(params);
         let parametry = document.createElement("div");
-        param.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
-        reportSection.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
+        param.querySelectorAll('.ActivParams').forEach(n => { n.classList.remove('ActivParams'); n.classList.add('NoActivParams') })
+        reportSection.querySelectorAll('.ActivParams').forEach(n => { n.classList.remove('ActivParams'); n.classList.add('NoActivParams') })
         // reportButton.querySelectorAll('.ActivParams').forEach(n => {n.classList.remove('ActivParams'); n.classList.add('NoActivParams')})
         parametry.classList.add("Params");
         parametry.classList.add("ActivParams");
         parametry.id = "item_params_reports" + props.SectionID + "_" + id
-        
+
 
         param.appendChild(parametry);
-        let paramBox = <Params id= {id} SectionID = {props.SectionID} data = {otv}/>
-        
+        let paramBox = <Params id={id} SectionID={props.SectionID} data={otv} />
+
         ReactDOM.render(paramBox, parametry)
       }
     }
@@ -326,33 +299,67 @@ export default function Tree(props) {
   }
 
   function clickItem(event) {
-    let span = event.currentTarget;
-    let label = span.parentNode;
+    let item = event.currentTarget;
+    let label = event.target;
     let parent;
     parent = label;
-    while (!parent.classList.contains("react-checkbox-tree")) {
-      parent = parent.parentNode;
+    let tag, tag1
+    if (label.classList.length > 1) {
+      ShowChild(event)
+    /* let img = label.parentNode
+      img = label.parentNode
+      if (img) {
+        img = img.querySelector("img")
+        if (img.src == IconFolder) {
+          img.src = IconOpenFolder
+          openTree = true
+        }
+        else {
+          img.src = IconFolder
+         openTree = false
+        }
+      }*/
     }
-    parent.querySelectorAll('.SelectItemTree').forEach(n => n.classList.remove('SelectItemTree'))
-    label.classList.add("SelectItemTree");
+    else {
+      tag = "smart-tree-item"
+      tag1 = "smart-tree-items-group"
+      let n = 0
+      while (n == 0) {
+        if (label.tagName !== tag.toUpperCase()) {
+          if (label.tagName !== tag1.toUpperCase()) {
+            label = label.parentNode;
+          } else
+            n = 1
+        }
+        else n = 1;
+      }
 
-    let id = span.id.split("_")[1];
-    switch (props.CLSID) {
-      case "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}":
-        {
-          parent = document.getElementById("DBviewData");
-          let tabs = parent.querySelector(".tabs.activetabs");
-          if (tabs)
-            tabs.classList.remove("activetabs");
-          ShowTabsData(id);
-          break;
-        }
-      case "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}" :
-      case "{B357E5B2-137F-4253-BBEF-E5CFD697E362}":
-        {
-          ShowParams(id)
-          break;
-        }
+
+      let id = label.id.split("_")[1];
+      tag = "smart-tree"
+      let Tree = label
+      while (Tree.tagName !== tag.toUpperCase()) {
+        Tree = Tree.parentNode;
+      }
+      Tree.querySelectorAll('.ActivTree').forEach(n => { n.classList.remove('ActivTree') }) 
+      label.classList.add("ActivTree")
+      switch (props.CLSID) {
+        case "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}":
+          {
+            parent = document.getElementById("DBviewData");
+            let tabs = parent.querySelector(".tabs.activetabs");
+            if (tabs)
+              tabs.classList.remove("activetabs");
+            ShowTabsData(id);
+            break;
+          }
+        case "{A358FF4E-4CE5-4CDF-B32D-38CC28448C61}":
+        case "{B357E5B2-137F-4253-BBEF-E5CFD697E362}":
+          {
+            ShowParams(id)
+            break;
+          }
+      }
     }
   }
 
@@ -374,43 +381,36 @@ export default function Tree(props) {
 
     var itemTree = <>
       {data.map((item) => {
-        let id = item["id"] ? item["id"] : item["ID"]
-        return <li className={item.leaf ? "rct-node rct-node-leaf" : "rct-node rct-node-parent rct-node-collapsed"} id={id} style={{ whiteSpace: "nowrap" }}>
-          <span className='rct-text'>
-            {!item.leaf ?
-              <button aria-label="Toggle" title="Toggle" type="button" className='rct-collapse rct-collapse-btn'>
-                <span className='rct-icon rct-icon-expand-close' onClick={(event) => ShowChild(event)} id={"itemBtn_" + id}></span>
-              </button> :
-              <></>
-            }
-            <label>
-              {props.multiCheck ?
-                <span aria-checked="false" aria-disabled="false" className='rct-checkbox' role="checkbox" tabindex="0">
-                  <span className='rct-icon rct-icon-uncheck'></span>
-                </span>
-                :
-                <></>
-              }
-              <span className='rct-node-icon'>
-                <span className={item.leaf ? 'rct-icon rct-icon-leaf' : 'rct-icon rct-icon-parent-close'}></span>
-              </span>
-              <span className='rct-title' id={"item_" + id} onClick={(event) => clickItem(event)}>{item["text"] ? item["text"] : item["Text"]}</span>
-            </label>
-          </span>
-        </li>
+        let it, id = item["id"] ? item["id"] : item["ID"]
+
+        if (item.leaf)
+          it = <TreeItem id={"item_" + id} onClick={(event) => clickItem(event)}><div style={{ alignItems: "end", display: "flex" }}>
+            <img style={{ width: "24px", height: "24px" }} src={IconList} /><div>{item["text"] ? item["text"] : item["Text"]}</div></div>
+          </TreeItem>
+        else
+          it = <TreeItemsGroup id={"item_" + id} onClick={(event) => clickItem(event)}>
+            <div style={{ alignItems: "end", display: "flex" }}>
+              <img style={{ width: "24px", height: "24px" }} src={IconFolder} />
+              <div>
+                {item["text"] ? item["text"] : item["Text"]}
+              </div>
+            </div>
+          </TreeItemsGroup>
+        return it
       })}
     </>
     return itemTree
   }
 
   fetchData()
-
+  let selectionMode
+  if (props.multiCheck)
+    selectionMode = "checkBox"
+  else
+    selectionMode = "none"
   return (
-    <div id={"Tree" + props.Module} className='react-checkbox-tree rct-icons-fa5' style={{ height: '100%', overflowX: "auto" }} >
-      <ol>
-        {CreateListTree()}
-      </ol>
-
-    </div>
+    <Tree showRootLines showLines id={"Tree" + props.Module} hasThreeStates selectionMode={selectionMode} style={{ height: '100%', overflowX: "auto", width: "100%" }}>
+      {CreateListTree()}
+    </Tree>
   );
 }

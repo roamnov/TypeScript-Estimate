@@ -44755,8 +44755,6 @@ smart-tree {
 
 .smart-tree .smart-tree-item-label-element>span {
     overflow: hidden;
-    padding: 9px 12px;
-    padding: var(--smart-tree-item-padding);
     position: relative;
     text-overflow: ellipsis;
     white-space: nowrap
@@ -44774,14 +44772,16 @@ smart-tree {
     align-items: center;
     display: flex;
     flex-direction: row;
-    height: 36px;
-    height: var(--smart-tree-item-label-height);
+   
     justify-content: space-between;
     overflow: hidden;
     position: relative;
     width: 100%
 }
-
+.ActivTree
+{
+   background-color: #e2e0e0
+}
 .smart-tree .smart-tree-edit-input {
     border: 1px solid #e0e0e0;
     border: 1px solid var(--smart-border);

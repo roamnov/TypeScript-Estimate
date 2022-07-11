@@ -11,25 +11,27 @@ import { Splitter, SplitterItem } from 'smart-webcomponents-react/splitter';
 
 
 export default function SectionsDBview(props) {
-    function OpenData() {
-        let tree = document.getElementById("TreeDBView");
+    function OpenData(ev) {
+        let tree = document.querySelector("#DBviewTree smart-tree");
+        let tabs
         if (tree) {
-            let SelectItemTree = tree.querySelector(".SelectItemTree");
+            let SelectItemTree = tree.querySelector(".ActivTree");
             if (SelectItemTree) {
-                let span = SelectItemTree.querySelector("span.rct-title")
-                if (span) {
-                    let idItem = span.id.split("_")[1]
+                    let idItem = SelectItemTree.id.split("_")[1]
                     if (idItem) {
+                        tabs = document.getElementById("tabDataView"+idItem)
+                        tabs = tabs.querySelector("smart-tabs")
+                        tabs.select(0)
                        // clickTab(document.getElementById("tab1_" + idItem))
                         ManWhoSoldTheWorld(idItem)
                     }
                 }
             }
-        }
+        
     }
 
     let defaultButton = <Tooltip title="Показать данные" >
-        <Button variant="outlined" style={{ textTransform:"none"}} size="small" onClick={() => OpenData()}>
+        <Button variant="outlined" style={{ textTransform:"none"}} size="small" onClick={(ev) => OpenData(ev)}>
             Открыть
         </Button>
     </Tooltip>
