@@ -306,19 +306,6 @@ export default function MyTree(props) {
     let tag, tag1
     if (label.classList.length > 1) {
       ShowChild(event)
-    /* let img = label.parentNode
-      img = label.parentNode
-      if (img) {
-        img = img.querySelector("img")
-        if (img.src == IconFolder) {
-          img.src = IconOpenFolder
-          openTree = true
-        }
-        else {
-          img.src = IconFolder
-         openTree = false
-        }
-      }*/
     }
     else {
       tag = "smart-tree-item"
@@ -341,8 +328,10 @@ export default function MyTree(props) {
       while (Tree.tagName !== tag.toUpperCase()) {
         Tree = Tree.parentNode;
       }
-      Tree.querySelectorAll('.ActivTree').forEach(n => { n.classList.remove('ActivTree') }) 
+      Tree.querySelectorAll('.ActivTree').forEach(n => { n.classList.remove('ActivTree');  n.removeAttribute("selected");n.removeAttribute("aria-selected")}) 
       label.classList.add("ActivTree")
+      label.setAttribute("selected", "")
+      label.setAttribute("aria-selected", "true")
       switch (props.CLSID) {
         case "{A759DBA0-9FA2-11D5-B97A-C2A4095B2C3B}":
           {

@@ -44778,10 +44778,7 @@ smart-tree {
     position: relative;
     width: 100%
 }
-.ActivTree
-{
-   background-color: #e2e0e0
-}
+
 .smart-tree .smart-tree-edit-input {
     border: 1px solid #e0e0e0;
     border: 1px solid var(--smart-border);
