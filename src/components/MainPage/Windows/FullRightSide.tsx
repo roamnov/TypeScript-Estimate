@@ -26,6 +26,8 @@ import SectionToolsJS from '../Tools/SectionToolsJS';
 import CloseIcon from '@mui/icons-material/Close';
 import PdfPage from './PdfPage';
 import Frame from 'react-frame-component';
+import unpinned from "./../../../static/images/unpinned.png"
+import pinned from "./../../../static/images/pinned.png"
 
 export default function FullRightSide(props: InfoAboutClick) {
 
@@ -242,7 +244,8 @@ export default function FullRightSide(props: InfoAboutClick) {
               let idForBttn = ViewIdentForButton.ViewIdent + ViewIdentForButton.items[key];
               ReactDOM.render(
                 <IconButton id={idForBttn + "," + Fixed + "," + key} style={{ width: 10, height: 10, fontSize: "small" }} onClick={FixUpTabPage}>
-                  {Fixed === true ? <LockIcon fontSize='small' /> : <LockOpenIcon fontSize='small' />}
+                  {Fixed === true ? <img src={pinned} style={{width:"22px"}}/> : <img src={unpinned} style={{width:"22px"}}/>}
+                  
                 </IconButton>
                 , PinButtonContainer);
             } else if (!document.getElementById(id + "," + key)) {
@@ -418,7 +421,7 @@ export default function FullRightSide(props: InfoAboutClick) {
     XMLrequest(params);
     ReactDOM.render(
       <IconButton id={ViewIdent + "," + `${TrueOrFalse}` + "," + key} style={{ width: 10, height: 10, fontSize: "small" }} onClick={FixUpTabPage}>
-        {TrueOrFalse === true ? <LockIcon fontSize='small' /> : <LockOpenIcon fontSize='small' />}
+        {TrueOrFalse === true ? <img src={pinned} style={{width:"22px"}}/> : <img src={unpinned} style={{width:"22px"}}/>}
       </IconButton>
       , document.getElementById(GlobalId + ",ButtonFixUp" + key));
 
