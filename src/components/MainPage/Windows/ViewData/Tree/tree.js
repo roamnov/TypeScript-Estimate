@@ -328,7 +328,7 @@ export default function MyTree(props) {
       while (Tree.tagName !== tag.toUpperCase()) {
         Tree = Tree.parentNode;
       }
-      Tree.querySelectorAll('.ActivTree').forEach(n => { n.classList.remove('ActivTree');  n.removeAttribute("selected");n.removeAttribute("aria-selected")}) 
+      Tree.querySelectorAll('.ActivTree').forEach(n => { n.classList.remove('ActivTree'); n.removeAttribute("selected"); n.removeAttribute("aria-selected") })
       label.classList.add("ActivTree")
       label.setAttribute("selected", "")
       label.setAttribute("aria-selected", "true")
@@ -373,11 +373,14 @@ export default function MyTree(props) {
         let it, id = item["id"] ? item["id"] : item["ID"]
 
         if (item.leaf)
-          it = <TreeItem id={"item_" + id} onClick={(event) => clickItem(event)}><div style={{ alignItems: "end", display: "flex" }}>
-            <img style={{ width: "24px", height: "24px" }} src={IconList} /><div>{item["text"] ? item["text"] : item["Text"]}</div></div>
+          it = <TreeItem id={"item_" + id} onClick={(event) => clickItem(event)} style={props.style}>
+            <div style={{ alignItems: "end", display: "flex" }}>
+              <img style={{ width: "24px", height: "24px" }} src={IconList} /><div>{item["text"] ? item["text"] : item["Text"]}
+              </div>
+            </div>
           </TreeItem>
         else
-          it = <TreeItemsGroup id={"item_" + id} onClick={(event) => clickItem(event)}>
+          it = <TreeItemsGroup id={"item_" + id} onClick={(event) => clickItem(event)} style={props.style}>
             <div style={{ alignItems: "end", display: "flex" }}>
               <img style={{ width: "24px", height: "24px" }} src={IconFolder} />
               <div>
