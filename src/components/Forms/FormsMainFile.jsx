@@ -863,7 +863,7 @@ export default function FormsMainFile(props){
                    if (gridPanel)
                    {
                     let Path =gridPanel.dataset.path
-                    GridMaker(Path)
+                    ManWhoSoldTheWorld(props.id, Path)
                    } 
                    
                 }
