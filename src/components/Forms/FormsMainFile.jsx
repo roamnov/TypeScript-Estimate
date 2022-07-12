@@ -707,7 +707,7 @@ export default function FormsMainFile(props){
                         delete style.position
                     }
                     ReturnComponent.push(
-                        <Grid id={`gridpanel`+props.id} keyName={keyName} style={style}>
+                        <Grid id={`grid-panel`+props.id} keyName={keyName} style={style}>
                             <div dangerouslySetInnerHTML={{ __html: content }} style={{height:"inherit"}} onLoadCapture={LinkrefClick}>
                                 
                             </div>
@@ -727,11 +727,12 @@ export default function FormsMainFile(props){
                     params.set("SectionID", props.id) 
                     XMLrequest(params)
                     ReturnComponent.push(
-                        <Grid id={`gridpanel`+props.id} keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability, backgroundColor: BGColor }}>
+                        <Grid data-Path = {Path} id={`gridpanel`+props.id} keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: Width,height:Height, visibility:Visability, backgroundColor: BGColor }}>
                             <Paper  elevation={2}>
-                               {GridMaker(Path)} 
+                                
                             </Paper>
                         </Grid>
+
                     )
                     break;
                 }
@@ -856,8 +857,19 @@ export default function FormsMainFile(props){
                     }
                 }
                 sortByIndex(SortedTabs)
+                function ClicTabItem(event)
+                {
+                   let gridPanel = document.getElementById("gridpanel"+props.id)
+                   if (gridPanel)
+                   {
+                    let Path =gridPanel.dataset.path
+                    GridMaker(Path)
+                   } 
+                   
+                }
                 ReturnComponent.push(
                     <Tabs keyName={keyName} class="Tabs" selectedIndex={0} 
+                    onChange = {ClicTabItem}
                     style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`,
                      display:Visability, backgroundColor: BGColor }} >
                         {SubDataProcessing(SortedTabs, "TTabbedPages")} 
