@@ -56218,11 +56218,7 @@ position: relative;
 {
     display: block;
 }
-.tabs input
-{
-    display: none;
-    margin: 3px 3px 0px 5px  
-}
+
 /* стили секций с содержанием */
 .tabs section {
   display: none;
@@ -56275,10 +56271,14 @@ position: relative;
 
 `;
 const GlobalStyleGrid = createGlobalStyle`
-.transition
-{
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.6, 1) 0ms;
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('font-awesome/fonts/fontawesome-webfont.eot?v=4.4.0');
+    src: url('font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.4.0') format('embedded-opentype'), url('font-awesome/fonts/fontawesome-webfont.woff2?v=4.4.0') format('woff2'), url('font-awesome/fonts/fontawesome-webfont.woff?v=4.4.0') format('woff'), url('font-awesome/fonts/fontawesome-webfont.ttf?v=4.4.0') format('truetype'), url('font-awesome/fonts/fontawesome-webfont.svg?v=4.4.0#fontawesomeregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
+
 .login-form-mask-box {
 	top: 50%;
 	left: 50%;
@@ -56296,7 +56296,7 @@ const GlobalStyleGrid = createGlobalStyle`
 	height: 15px;
 	display: inline-block;
 	background-position: center;
-	
+	background: url(images/loading.gif)
 }
 
 .login-form-mask {
@@ -56394,14 +56394,10 @@ const GlobalStyleGrid = createGlobalStyle`
 }
 
 .col-move-top {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAYAAACprHcmAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpGMERBNEVBOTc4RUQxMUUyQTFFQkQ0M0Y5RUJBMDMxNiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpGMERBNEVBQTc4RUQxMUUyQTFFQkQ0M0Y5RUJBMDMxNiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkYwREE0RUE3NzhFRDExRTJBMUVCRDQzRjlFQkEwMzE2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkYwREE0RUE4NzhFRDExRTJBMUVCRDQzRjlFQkEwMzE2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+k/H0TQAAAThJREFUeNpiZEAAxv4tycai0vynIdz/DK+efDIt8p17FswBAiYkxUyPbr3mQ+IzPLoN5sPVsCCb/OXTL3ZGBkYGEAKp+frxJzsDlIduMti2/xAbGf7//wtU9h9FFqSLec7RnCygGuWf3//I8YtwBzIyghT/Z/jw5ut6Dk7WRwyMjHdTrCdPA5nMfHzHrRMsrKyh/CI8gYxQGxiBOgSAfBZWltBj228cB6ljBpl+/tDdPx/ffbuiZSrrxMrGzM3wnxHsnJ/ffr9e2Lk/a8Os49eA6r4yQ4Pl74PrL7++fv7xqp6Foh0zGyPXz6+/38xu2lN4dOs1UFC+BeLfyG7nBGIlKy/N6Km706+Yu2tEA/mKUHFGBuRggbI5gFgMiPmB+CMQvwLiH7BIYUQNOjCfFYp/QzE8/AACDAATU2xb7K2RJAAAAABJRU5ErkJggg==');
-
-	/*background-image: url('../images/col-move-top.png');*/
+	background-image: url('images/col-move-top.png');
 }
 .col-move-bottom {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAYAAACprHcmAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoxNjFBMTkyMjc5MkExMUUyQTFFQkQ0M0Y5RUJBMDMxNiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDoxNjFBMTkyMzc5MkExMUUyQTFFQkQ0M0Y5RUJBMDMxNiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjE2MUExOTIwNzkyQTExRTJBMUVCRDQzRjlFQkEwMzE2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjE2MUExOTIxNzkyQTExRTJBMUVCRDQzRjlFQkEwMzE2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+2nCebQAAAThJREFUeNpiZEAFjH2bk1WEJXnnvnn+OanYd+5doNh/mCQTssKW5dHqIlJ8+1hYmGxFJHn2Ny2NVgOJoytmbF4WrS6nJrabiYlBBiTPzMwiI68utqd5WQxcAyPExBh1OVXR3UzMTDKMYGGIzYz/mRj+/Pv75MGNVy510UtvgUxm5hXg8Hv+4N2BJ3de7wep+/8fYs7ju6/3P7//7gC/EKc/SB3IHDYgFgJiMc9YY/OYYvtZDP8ZgXr+MSzrO5K2bfHpk0C5V0D8jgVI/AXij0D8U0iMRxmkEAQZGJkYBMW43gDFHwPxD5A6mOLvQPybi5cDJAg08z8DyGwuXnYQ/zMQ/0EPOrBjQdYzwgLrPyNqJCCxmYFYHIiVgZgf6jRQpLyE2o6iGMTmAGJuqKd/AfFXqHvB4QMQYAAOWGBjZyBLhwAAAABJRU5ErkJggg==');
-
-	/*background-image: url('../images/col-move-bottom.png');*/
+	background-image: url('images/col-move-bottom.png');
 }
 
 .grid-with-row-lines .grid-item {
@@ -56503,9 +56499,7 @@ const GlobalStyleGrid = createGlobalStyle`
 .collapse-img {
     width: 15px;
     height: 15px;
-    background-image: url('data:image/gif;base64,R0lGODlhQAAUAMZaACYmJllZWRzE9y3I9y3J9y7I9y7J92HW+Xfc+oWFhYiIiJiYmKGhoaampqmpqby8vILf+6Xk+aXm+6fk+abm+6jn+6nn+67n+q/n+q7o+rDo+7Po+7Pp+8nJyd/f38Xu/Mfv/Mjv/M3u+8rw/NDv+9Dy/dXw+tfx/Nfy/Nny/Nry/Nzy+93y+9/z+9zz/N70/eLi4unp6ezs7O3t7e7u7uDz++H0++P0++L1/eP2/eX1++b1++f2++T2/eX2/eb3/ef3/ej2++j3/er3/Ov3/O33/On4/er4/ev4/ev4/u/4++34/Oz5/u35/u74/O/4/O75/u/5/u/6/vLy8vH4+/L5+/P5+/D4/PD6/vH6/v///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////yH5BAEKAH8ALAAAAABAABQAAAfIgH+Cg4SFhoeIiYqLjI2Oj5CRkpOUlZaXmJmahkxCm4QdU59/PQgfo38NDjCRDwqJLwIEEpEZBzuJDTMMHo8PAACJKgIYAxSPEwICNrl/Mgs0jb8BwYgoAiIXBCCNEQIQAi3NfzEJM4vT1Ikn2CQcAiWLyRDgNc3P0Yrp6ogpAiQaDIRYlOEbPQE3cu3qtUgBMGCvELkQsIFABUYHlCk7ECTXqk84BBSw0GiHjRY1bgR5kijUKCMIRqCamQXKzJs4c+rcybNnoUAAOw==');
-
-    /*background-image: url(../images/arrows.gif);*/
+    background-image: url(images/arrows.gif);
 	vertical-align: top;
     border: 0;
     cursor: pointer;
@@ -56553,7 +56547,7 @@ ul.pagination li {
     display: inline;
 }
 
-ul.pagination li a {
+ul.pagination li span {
     color: black;
     float: left;
     padding: 1px 3px;
@@ -56563,7 +56557,7 @@ ul.pagination li a {
     font-size: 14px;
 }
 
-ul.pagination li a:hover:not(.active) {
+ul.pagination li span:hover:not(.active) {
     background-color: #ddd;
 }
 `

@@ -400,7 +400,7 @@ export default function FormsMainFile(props){
         Name = Name === null? IName: Name
         
         if (Name !== null ){
-            params.set('prefix', 'forms');
+          params.set('prefix', 'forms');
             params.set("comand", "ElementEvent");
             params.set("SectionID", props.id);/////
             params.set("Name", Name);
@@ -420,9 +420,9 @@ export default function FormsMainFile(props){
         arr.sort((a, b) => a.Index > b.Index ? 1 : -1);
       }
 
-    function GridMaker(Path, keyName){
+    function GridMaker(Path){
         setTimeout(() => {
-            return ManWhoSoldTheWorld(props.id, Path, keyName)
+            return ManWhoSoldTheWorld(props.id, Path)
         }, 1000);
     }
 
@@ -605,12 +605,10 @@ export default function FormsMainFile(props){
                 Text = GetParams(json,"Text");
                 const rcdataIcon = json.RCDATA
                 let icon = <img  src={`data:image/png;base64,${rcdataIcon}`} />
-                let sxStyle = Text ===""?{ "& .MuiButton-startIcon": { margin: "0px" }}:{}
                 if(SubLabel === "TCategoryPanel"){
                     let LocalTop = RCDATAFormParent?Number(Top) + 52:Top
                     ReturnComponent.push(
                         <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
-                        sx={sxStyle}
                             startIcon={rcdataIcon === undefined?undefined:icon}
                             style={{
                             color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
@@ -625,7 +623,6 @@ export default function FormsMainFile(props){
                 }else{
                     ReturnComponent.push(
                         <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
-                        sx={sxStyle}
                             startIcon={rcdataIcon === undefined?undefined:icon}
                             style={{
                             color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
@@ -702,7 +699,6 @@ export default function FormsMainFile(props){
                     Height = `${Height}px`
                 }
                 style={position:"absolute",left:`${Left}px`, top:`${Top}px`, width: Width,height:Height, visibility:Visability, backgroundColor: BGColor }
-
                 if(json.CLSID === "{408E20A3-4BE3-4DCD-98BD-2613A8968783}") {//content
                     let content = InsertIdReport(json.content)
                     if(Left === undefined && Top=== undefined){
@@ -711,44 +707,43 @@ export default function FormsMainFile(props){
                         delete style.position
                     }
                     ReturnComponent.push(
-                        <Grid id={`gridpanel`+props.id + keyName} keyName={keyName} style={style}>
+                        <Grid id={`grid-panel`+props.id} keyName={keyName} style={style}>
                             <div dangerouslySetInnerHTML={{ __html: content }} style={{height:"inherit"}} onLoadCapture={LinkrefClick}>
                                 
                             </div>
                         </Grid>
                     )
                     break;
-                }else if(json.CLSID ==="{295EA015-4573-4AD9-922A-A14CE0FD9C78}"){//grid
-                        try{
-                        let Path = json.Params.Path
-                        if(Path !== undefined){
-                            let params = new Map
-                            params.set('prefix','programs'); 
-                            params.set('comand','GetTableLayout');
-                            params.set ('ObjType',"0");
-                            params.set("Path",Path )
-                            params.set("SectionID", props.id) 
-                            XMLrequest(params)
-                            ReturnComponent.push(
-                                <Grid id={`gridpanel`+props.id } keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: Width,height:Height, visibility:Visability, backgroundColor: BGColor }}>
-                                    <Paper  elevation={2}>
-                                    {GridMaker(Path, keyName)} 
-                                    </Paper>
-                                </Grid>
-                            )
-                            break;
-                        }
-                        
-
-                        
-                        // GET /programs~GetTableLayout?LicGUID=72D72A7946ED30AB0808358980788EDA&ObjType=0&Path={7FEC323D-E184-4147-8F44-352DD337B515}&SectionID=482 HTTP/1.0
-                        // POST /programs~HandleTable?LicGUID=72D72A7946ED30AB0808358980788EDA&Path={7FEC323D-E184-4147-8F44-352DD337B515}&SectionID=482 HTTP/1.0
-                    }catch(err){
-                        // console.log(err)
-                    } 
                 }
 
-            
+            try{
+                let Path = json.Params.Path
+                if(Path !== undefined){
+                    let params = new Map
+                    params.set('prefix','programs'); 
+                    params.set('comand','GetTableLayout');
+                    params.set ('ObjType',"0");
+                    params.set("Path",Path )
+                    params.set("SectionID", props.id) 
+                    XMLrequest(params)
+                    ReturnComponent.push(
+                        <Grid data-Path = {Path} id={`gridpanel`+props.id} keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: Width,height:Height, visibility:Visability, backgroundColor: BGColor }}>
+                            <Paper  elevation={2}>
+                                
+                            </Paper>
+                        </Grid>
+
+                    )
+                    break;
+                }
+                
+
+                
+                // GET /programs~GetTableLayout?LicGUID=72D72A7946ED30AB0808358980788EDA&ObjType=0&Path={7FEC323D-E184-4147-8F44-352DD337B515}&SectionID=482 HTTP/1.0
+                // POST /programs~HandleTable?LicGUID=72D72A7946ED30AB0808358980788EDA&Path={7FEC323D-E184-4147-8F44-352DD337B515}&SectionID=482 HTTP/1.0
+            }catch(err){
+                // console.log(err)
+            }
                 
                 // console.log(json)
                 ReturnComponent.push(
@@ -827,11 +822,8 @@ export default function FormsMainFile(props){
                 }
                 Collapsed = json.Collapsed === undefined? json.collapsed === undefined?true :false:false 
                 let BoolOpen = expandedMap.get(Caption);
-                if( Collapsed){
+                if(BoolOpen === undefined && Collapsed){
                     expandedMap.set(Caption, true)
-                    BoolOpen = expandedMap.get(Caption);
-                }else{
-                    expandedMap.set(Caption, false)
                     BoolOpen = expandedMap.get(Caption);
                 }
                 let HadImg = RCDATAFormParent?true:false
@@ -865,8 +857,19 @@ export default function FormsMainFile(props){
                     }
                 }
                 sortByIndex(SortedTabs)
+                function ClicTabItem(event)
+                {
+                   let gridPanel = document.getElementById("gridpanel"+props.id)
+                   if (gridPanel)
+                   {
+                    let Path =gridPanel.dataset.path
+                    ManWhoSoldTheWorld(props.id, Path)
+                   } 
+                   
+                }
                 ReturnComponent.push(
                     <Tabs keyName={keyName} class="Tabs" selectedIndex={0} 
+                    onChange = {ClicTabItem}
                     style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`,
                      display:Visability, backgroundColor: BGColor }} >
                         {SubDataProcessing(SortedTabs, "TTabbedPages")} 
@@ -894,15 +897,11 @@ export default function FormsMainFile(props){
                 Text = GetParams(json,"Text");
                 Text = Text.substr(0, 8)
                 let BevelWidth= GetParams(json,"BevelWidth");
-                
                 BevelWidth = BevelWidth=== undefined?0:Number(BevelWidth)
                 BevelWidth = Number(Radius) > 0? BevelWidth : 0
                 Anchors = ShouldUseFullScreen(Anchors);
-                // console.log(Number(Top) , Number(Height))
                 Right = Anchors.w ?`${Left}px`:`${0}px`;
-                Bottom = Anchors.h ?`${Number(Top) + Number(Height)}px`:`${0}px`;
-                Height = `${Height}px`
-                console.log(Bottom)
+                Height = Anchors.h ?"95%":`${Height}px`;
                 Width =  `${Width}px`
                 if(json.Align === "целиком"){
                     Width = "100%"
@@ -916,11 +915,6 @@ export default function FormsMainFile(props){
                 if(Anchors.w){
                     delete style.width
                     style = Object.assign(style,{right:Right})
-                }
-                if(Anchors.h){
-                    
-                    // delete style.height
-                    // style = Object.assign(style,{bottom:Bottom})
                 }
                 if(json.RadioButton1){
                     let counterOfRadio= 0, defaultValueOfRadio = Name+ ","
@@ -958,7 +952,7 @@ export default function FormsMainFile(props){
                    ReturnComponent.push(
                     <Grid keyName={keyName}  style={style}>
                         {SubDataProcessing(json)}
-                        {json.ShowCaption === "0"?<></>:TextFromServerToBrowser(json, keyName)}
+                        {Text === "Gradient"?<></>:TextFromServerToBrowser(json, keyName)}
                     </Grid>
                     ) 
                 }
