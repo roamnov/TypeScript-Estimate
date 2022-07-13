@@ -605,11 +605,11 @@ export default function FormsMainFile(props){
                 Text = GetParams(json,"Text");
                 const rcdataIcon = json.RCDATA
                 let icon = <img  src={`data:image/png;base64,${rcdataIcon}`} />
-                let sxStyle = Text ===""?{ "& .MuiButton-startIcon": { margin: "0px" }}:{}
+                let sxStyle = Text ===""?{ "& .MuiButton-startIcon": { margin: "0px" }}:Text ==="undefined"?{ "& .MuiButton-startIcon": { margin: "0px" }}:{}
                 if(SubLabel === "TCategoryPanel"){
                     let LocalTop = RCDATAFormParent?Number(Top) + 52:Top
                     ReturnComponent.push(
-                        <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
+                        <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="text" 
                             startIcon={rcdataIcon === undefined?undefined:icon} sx={sxStyle}
                             style={{
                             color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
@@ -623,7 +623,7 @@ export default function FormsMainFile(props){
                     )
                 }else{
                     ReturnComponent.push(
-                        <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="outlined" 
+                        <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="text" 
                             startIcon={rcdataIcon === undefined?undefined:icon} sx={sxStyle}
                             style={{
                             color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
@@ -644,7 +644,8 @@ export default function FormsMainFile(props){
                 Text = GetParams(json,"Text")
                 ReturnComponent.push(
                     <Grid keyName={keyName} style={{whiteSpace:"nowrap"}}  >
-                        <FormControlLabel keyName={keyName} style={{width:"max-content" ,  position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability}} control={<Checkbox defaultChecked />} label={TextFromServerToBrowser(json, keyName)} />
+                        <FormControlLabel keyName={keyName} style={{width:"max-content" ,  position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, visibility:Visability}}
+                         control={<Checkbox keyName={keyName} defaultChecked={json.Checked ==="0"?false:true} onChange={ClickFormElement} />} label={TextFromServerToBrowser(json, keyName)} />
                     </Grid>
                 )
                 break;
@@ -727,9 +728,9 @@ export default function FormsMainFile(props){
                         params.set("SectionID", props.id) 
                         XMLrequest(params)
                         ReturnComponent.push(
-                            <Grid id={`gridpanel`+props.id } keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: Width,height:Height, visibility:Visability, backgroundColor: BGColor }}>
+                            <Grid id={`gridpanel`+props.id } data-path={Path} keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: Width,height:Height, visibility:Visability, backgroundColor: BGColor }}>
                                 <Paper  elevation={2}>
-                                {GridMaker(Path, keyName)} 
+                                
                                 </Paper>
                             </Grid>
                         )
@@ -897,8 +898,8 @@ export default function FormsMainFile(props){
                 // ConvertBorder(BorderRadius, GetParams(json,"BevelWidth"))
                 let Radius = json.Radius
                 Text = GetParams(json,"Text");
-                Text = Text.substr(0, 8)
                 let BevelWidth= GetParams(json,"BevelWidth");
+                let Scrolling = json.Scrolling === "1"?true:false
                 BevelWidth = BevelWidth=== undefined?0:Number(BevelWidth)
                 BevelWidth = Number(Radius) > 0? BevelWidth : 0
                 Anchors = ShouldUseFullScreen(Anchors);
@@ -913,8 +914,9 @@ export default function FormsMainFile(props){
                 }
                 
                 style = {position:"absolute" ,left:`${Left}px`, top:`${Top}px`,height: Height, width: Width,
-                overflowY:"auto", overflowX:"hidden", display:Visability, backgroundColor: BGColor, borderRadius:`${Radius}px`, 
-                overflow:"hidden", borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px`}
+                overflowX:"hidden",  display:Visability, backgroundColor: BGColor, borderRadius:`${Radius}px`, 
+                borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px`}
+                style = Scrolling? Object.assign(style,{overflowY:"scroll"}):Object.assign(style,{overflowY:"hidden"})
                 
                 if(Anchors.w){
                     delete style.width
