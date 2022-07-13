@@ -1,8 +1,9 @@
 
 'use strict';
 import  {get_cookie, XMLrequest} from "../../Url"
-
-
+import Editor from "../../../components/Editor/Editor";
+import * as React from 'react';
+import ReactDOM from 'react-dom';
 const ManWhoSoldTheWorld = (IDbd, Path)=>{
 
     'use strict';
@@ -863,7 +864,7 @@ function createGrid(panel) {
         td.style.backgroundColor = GRID_BACKGROUND;
         tr.appendChild(td);
         
-        for (let i = 0, items = me.columns.fields, div, col, width; i < items.length; i++) {
+        for (let i = 0, items = me.columns.fields, div, div1, col, width; i < items.length; i++) {
             col = items[i];
             td = document.createElement('td');
             td.className = 'grid-td';
@@ -877,7 +878,9 @@ function createGrid(panel) {
             td.style.width = width + "px";
             td.role = ROLE_COLDATA;
             div = document.createElement('div');
+            div1 = document.createElement('div');
             div.className = 'grid-cell-inner';
+           // ReactDOM.render(<Editor style = {{height:"24px"}}EditStyle = {16} value = {me.source.getFieldText(col.fieldName)}/>, div)
             div.textContent = me.source.getFieldText(col.fieldName);
             td.appendChild(div);
             tr.appendChild(td);
@@ -950,6 +953,7 @@ function createGrid(panel) {
                         cl = el.children[i];
                         if (cl.field) {
                             col = cl.col;
+                           // ReactDOM.render(<Editor style = {{height:"100%"}}EditStyle = {1} value = {me.source.getFieldText(cl.field.fieldName)}/>, cl.children[0])
                             cl.children[0].textContent = me.source.getFieldText(cl.field.fieldName);
                             if (col == currentCol) {
                                 cl.classList.remove('grid-item-focused');
@@ -1844,7 +1848,7 @@ function createGrid(panel) {
             if (handleColumnField) {
                 sizeMarker.style.opacity = 1;
                 appendEvent('mousemove', sizeColumn);
-                appendEvent('dblclick', dblClickColumn(sizeMarker.sizeEl.field), sizeMarker);
+                appendEvent('dblСlick', dblClickColumn(sizeMarker.sizeEl.field), sizeMarker);
             }
         }
     }
@@ -1897,7 +1901,7 @@ function createGrid(panel) {
 
     leftRightMover = document.createElement('ul');
     leftRightMover.className = "pagination";
-    leftRightMover.innerHTML = '<li><a href="#" role="l">❮</a></li><li><a href="#" role="r">❯</a></li>';
+    leftRightMover.innerHTML = '<li><span role="l">❮</span></li><li><span  role="r">❯</span></li>';
     leftRightMover.style.position = "absolute";
     leftRightMover.style.right = "-7px";
     leftRightMover.style.top = "2px";
