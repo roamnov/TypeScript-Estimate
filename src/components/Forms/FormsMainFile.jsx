@@ -36,6 +36,7 @@ import { Scrollbars } from 'react-custom-scrollbars-2';
 import useTheme from "../Hooks/useTheme";
 import cn from "classnames"
 import Fade from '@mui/material/Fade';
+import ModalDialog from "../Containers/ModalDialog";
 
 
 function PaperComponent(props) {
@@ -233,6 +234,11 @@ export default function FormsMainFile(props){
                 
                 ReactDOM.render(<DialogSlide content={JSX} style={{height: `${height}px`, width: `${width}px`}} Path={Path} /> , document.getElementById('RenderFormsModal'));
                 break;
+                
+                case undefined:
+                ReactDOM.render( ReturnParamDialogComponent(subForms) , document.getElementById('footerProgress'))
+                break;  
+
         }
     }
 
@@ -567,7 +573,11 @@ export default function FormsMainFile(props){
         // console.log(ColsArrayWithPrecent, TargetSolo, width) 
         return {ml:LeftPrecent , mr:RightPrecent, w:elemWidthPrecent}
     }
-
+    function ReturnParamDialogComponent(subForms){
+        let ReturnComponent =[]
+        ReturnComponent.push(<ModalDialog props={subForms}/>)
+        return ReturnComponent
+    }
     function CheckAndReturnComponent(json, SubLabel, keyName, RCDATAFormParent, widthFromParent,ColsFromParent){
         let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Right,Bottom, BGColor, returnSub=[],style, Anchors;
         Left = GetParams(json, "Left");
