@@ -157,6 +157,9 @@ export default function FormsMainFile(props){
     const [subForms, setSubForms] = useState(undefined);
     const [cursor,setCursor] = useState("auto");
     const [radioValues, setRadioValues]= useState({})
+    var mainFormsHeight = (window.innerHeight - 166.5)/100 
+    var expandedMapTest = new Map
+    var TabsName
 
     const handleResize = () => {
         setCurrentHeight(window.innerHeight - 189);
@@ -234,11 +237,9 @@ export default function FormsMainFile(props){
                 
                 ReactDOM.render(<DialogSlide content={JSX} style={{height: `${height}px`, width: `${width}px`}} Path={Path} /> , document.getElementById('RenderFormsModal'));
                 break;
-                
-                case undefined:
+            case undefined:
                 ReactDOM.render( ReturnParamDialogComponent(subForms) , document.getElementById('footerProgress'))
-                break;  
-
+                break;
         }
     }
 
@@ -301,10 +302,10 @@ export default function FormsMainFile(props){
         params.set("Name", id);
         params.set("Collapsed", ariaexpanded==="inline-block"?"0":"1");
         json = XMLrequest(params);
-        CheckAnserOnElementEvent(json);
+        CheckAnserOnElementEvent(json, "TCategoryPanelGroup");
     };
 
-    function CheckAnserOnElementEvent(json){
+    function CheckAnserOnElementEvent(json, from){
         if(!isEmptyObject(json)){
             setTransition(true)
             const TokenReturn = tokenProcessingTest(json, "forms");
@@ -387,7 +388,7 @@ export default function FormsMainFile(props){
       }
       
     function ClickFormElement(event,IName, Index){
-        let params = new Map, json, Name = null, TokenReturn, el;
+        let params = new Map, json, Name = null, TokenReturn, el = {dataset:{value:undefined}}, dataValue;
         
         // setCursor("wait")
         if(event !== undefined){
@@ -406,11 +407,13 @@ export default function FormsMainFile(props){
         Name = Name === null? IName: Name
         
         if (Name !== null ){
-          params.set('prefix', 'forms');
+            dataValue = el.dataset.value
+            console.log(el, Name)
+            params.set('prefix', 'forms');
             params.set("comand", "ElementEvent");
             params.set("SectionID", props.id);/////
             params.set("Name", Name);
-            if (el) params.set("Text", el.dataset.value);
+            if (dataValue !== undefined) params.set("Text", dataValue.value);
             if(Index) params.set("Index", Index)
             params.set("WSM", "1");
             json = XMLrequest(params);
@@ -426,11 +429,6 @@ export default function FormsMainFile(props){
         arr.sort((a, b) => a.Index > b.Index ? 1 : -1);
       }
 
-    function GridMaker(Path){
-        setTimeout(() => {
-            return ManWhoSoldTheWorld(props.id, Path)
-        }, 1000);
-    }
 
     function ConvertAlignment(item){
         switch(item){
@@ -569,15 +567,86 @@ export default function FormsMainFile(props){
         }
         LeftPrecent = `calc(${ColsArrayWithPrecent[0]} - ${elemPX}px)`
         RightPrecent = `calc(${ColsArrayWithPrecent[ColsArrayWithPrecent.length - 1]} - ${elemPX}px)`
-        // console.log(elemWidthPrecent, LeftPrecent, RightPrecent)
-        // console.log(ColsArrayWithPrecent, TargetSolo, width) 
         return {ml:LeftPrecent , mr:RightPrecent, w:elemWidthPrecent}
     }
+
     function ReturnParamDialogComponent(subForms){
         let ReturnComponent =[]
         ReturnComponent.push(<ModalDialog props={subForms}/>)
         return ReturnComponent
     }
+
+
+    function ChangeTabs(){
+        setTimeout(() => {
+            let Tabs, tabsHeader, span
+            Tabs = document.getElementById("Tabs"+props.id)
+            if(!Tabs.getAttribute("styled")){
+                Tabs.setAttribute("styled", "true")
+                for (const [key, value] of Object.entries(Tabs["_tabLabelContainers"])) {
+                    value.style.BorderRadius = "0px"
+                    value.classList.add("Borders");
+                    value.classList.add("selectedTabItem[selected]");
+                    if(Number(key) === 0){
+                        value.classList.add("WithoutLeftBorder");
+                    }else{
+                        value.classList.add("LeftBorder");
+                    }
+                    if(Tabs["_tabLabelContainers"].length -1 === Number(key)){
+                        value.classList.add("RightBorder");
+                    }else{
+                        value.classList.add("WithoutRightBorder");
+                    }
+                } 
+                tabsHeader = Tabs.children[0].children[0];
+                tabsHeader.style.backgroundColor = "#ffffff"
+                tabsHeader.classList.add("disableBorder");
+                Tabs.children[0].children[0].children[0].classList.add("SmartCustom");
+                console.log(Tabs.children[0].children[0].children[0])
+                span = Tabs.children[0].children[0].children[0].getElementsByTagName("span")[0]
+                span.classList.add("selectionBarCustom")
+                Tabs.children[0].children[1].style.overflowY = "hidden" //Это где данные отображаются 
+                Tabs.children[0].children[1].classList.add("headerSmartCustom"); 
+            }
+                
+        }, 300);
+    }
+
+
+    function isThereChild(json){
+        for(const[key,value] of Object.entries(json)){
+            if(value.Type !==undefined ){
+                return true
+            }
+        }
+        return false
+    }
+
+    function CheckFrameEdges(FrameEdges, Radius){
+        let FrameEdgesArr = FrameEdges.split(","), json={}
+        if(FrameEdgesArr.length > 1 ){
+            for(const [key, value] of Object.entries(FrameEdgesArr)) {
+                switch(value){
+                    case"ВерхЛево":
+                        json = Object.assign(json,{borderTopLeftRadius:`${Radius}px`})
+                        break;
+                    case"НизЛево":
+                        json = Object.assign(json,{borderBottomLeftRadius:`${Radius}px`})
+                        break;
+                    case"ВерхПраво":
+                        json = Object.assign(json,{borderTopRightRadius:`${Radius}px`})
+                        break;
+                    case"НизПраво":
+                        json = Object.assign(json,{borderBottomRightRadius:`${Radius}px`})
+                        break;
+                }
+            }
+            return json
+        }
+        
+    }
+
+
     function CheckAndReturnComponent(json, SubLabel, keyName, RCDATAFormParent, widthFromParent,ColsFromParent){
         let ReturnComponent =[],Enabled, Height, Left, Top, Name, Width,  RCDATA, Text, Visability, Right,Bottom, BGColor, returnSub=[],style, Anchors;
         Left = GetParams(json, "Left");
@@ -719,7 +788,7 @@ export default function FormsMainFile(props){
                         delete style.position
                     }
                     ReturnComponent.push(
-                        <Grid id={`grid-panel`+props.id} keyName={keyName} style={style}>
+                        <Grid id={`innerHTMLpanel`+props.id} keyName={keyName} style={style}>
                             <div dangerouslySetInnerHTML={{ __html: content }} style={{height:"inherit"}} onLoadCapture={LinkrefClick}>
                                 
                             </div>
@@ -789,7 +858,6 @@ export default function FormsMainFile(props){
                 if(SubLabel === "TCategoryPanel"){
                     let LocalTop = RCDATAFormParent?Number(Top) + 57:Top
                     style=Object.assign(style, {top:`${LocalTop}px`,})
-                    console.log()
                     ReturnComponent.push(
                         <Grid keyName={keyName} style={style}>
                             {TextFromServerToBrowser(json, keyName)}                             
@@ -807,6 +875,7 @@ export default function FormsMainFile(props){
 
             case "TCategoryPanelGroup"://WITH SUB
                 RCDATA = GetParams(json,"RCDATA"); 
+                console.log(json.RCDATA)
                 ReturnComponent.push(
                     <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:"90%", overflowY:"auto", overflowX:"hidden", visibility:Visability, 
                     // backgroundColor: BGColor
@@ -830,16 +899,19 @@ export default function FormsMainFile(props){
                 if(json.click$name){
                     name = json.click$name
                 }
-                Collapsed = json.Collapsed === undefined? json.collapsed === undefined?true :false:false 
-                let BoolOpen = expandedMap.get(Caption);
-                if( Collapsed){
-                    expandedMap.set(Caption, true)
+                Collapsed = json.Collapsed === undefined? true :false
+                let BoolOpen =expandedMap.get(Caption);
+                if(Collapsed && BoolOpen===undefined){
+                    expandedMap.set(Caption, Collapsed)
+                    expandedMapTest.set(Caption, Collapsed)
+                    // console.log(expandedMap, expandedMapTest)
                     BoolOpen = expandedMap.get(Caption);
                 }else{
-                    expandedMap.set(Caption, false)
                     BoolOpen = expandedMap.get(Caption);
                 }
-                let HadImg = RCDATAFormParent?true:false
+                
+                const imgData = json["RCDATA"] === undefined?RCDATAFormParent:json["RCDATA"]
+                let HadImg = imgData !== undefined?true:false
                 Width = Width === undefined? "100%": `${Width}px`
                 style ={ width: Width,height:`${Height}px`, display:BoolOpen? "inline-block":"none" , backgroundColor:"#ffffff", padding:0}
                 fs = BackFontweight(json["Font-style"])
@@ -848,7 +920,7 @@ export default function FormsMainFile(props){
                         <AccordionSummary  keyName={keyName}  style={{backgroundColor:"#edeae2"}} expandIcon={<img src={AccorionDownIcon}/> }>
                             <Grid container direction="row" justifyContent="flex-start" alignItems="center" keyName={keyName}>
                                 <Grid item style={{position:"relative", left:"-16px"}} keyName={keyName}>
-                                    <img  src={`data:image/png;base64,${json["RCDATA"] === undefined?RCDATAFormParent:json["RCDATA"]}`} />
+                                    {imgData === undefined? <></>:<img  src={`data:image/png;base64,${imgData}`} />}
                                 </Grid>
                                 <Grid item keyName={keyName}>
                                     <Typography keyName={keyName} style={{ fontWeight: fs, fontStyle:fs, textDecoration:fs,}} >{Caption}</Typography>
@@ -863,6 +935,7 @@ export default function FormsMainFile(props){
                 break;
 
             case "TTabbedPages"://WITH SUB
+                let tabIndex
                 let SortedTabs = [];
                 for(const [key, value] of Object.entries(json)) {
                     if(typeof(value) === "object"){
@@ -870,22 +943,24 @@ export default function FormsMainFile(props){
                     }
                 }
                 sortByIndex(SortedTabs)
-                function ClicTabItem(event)
-                {
-                   let gridPanel = document.getElementById("gridpanel"+props.id)
-                   if (gridPanel)
-                   {
-                    let Path =gridPanel.dataset.path
-                    ManWhoSoldTheWorld(props.id, Path)
-                   } 
-                   
+                tabIndex = json.TabIndex === undefined? 0 : Number(json.TabIndex)
+                TabsName = keyName;
+                function ClicTabItem(event, id){
+                    let gridPanel = document.getElementById("gridpanel"+props.id),Tabs
+                    console.log(event)
+                    if (gridPanel){
+                        let Path =gridPanel.dataset.path
+                        ManWhoSoldTheWorld(props.id, Path)
+                    }
+                    ClickFormElement(undefined,TabsName,event.detail.index)
                 }
                 ReturnComponent.push(
-                    <Tabs keyName={keyName} class="Tabs" selectedIndex={0} 
-                    onChange = {ClicTabItem}
-                    style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`,
-                     display:Visability, backgroundColor: BGColor }} >
+                    <Tabs keyName={keyName} class= "Tabs" selectedIndex={tabIndex} id={"Tabs"+props.id}
+                        onChange = {ClicTabItem}
+                        style={{ position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`,
+                        display:Visability, backgroundColor: BGColor, padding: "0px" }}   >
                         {SubDataProcessing(SortedTabs, "TTabbedPages")} 
+                        {ChangeTabs()}
                     </Tabs>
                 )
                 break;
@@ -894,7 +969,7 @@ export default function FormsMainFile(props){
                 Text = GetParams(json,"Text");
                 Text = Text === undefined? GetParams(json,"Title"): Text;
                 ReturnComponent.push(
-                   <TabItem keyName={keyName} label={Text} style={{ position:"absolute" ,left:`${Left}px`,  width: `${Width}px`,height:`${Height}px`, display:Visability, backgroundColor: BGColor}}>
+                   <TabItem  keyName={keyName} label={Text} style={{ position:"absolute" ,left:`${Left}px`,  width: `${Width}px`,height:`${Height}px`, display:Visability, backgroundColor: BGColor}}>
                        {SubDataProcessing(json, "TTabPagePanel")} 
                     </TabItem> 
                 )
@@ -902,21 +977,21 @@ export default function FormsMainFile(props){
                 break;
 
             case "TGradientPanel"://WITH SUB
-                let BorderRadius = json.BevelEdges
+                let BorderRadius = json.BevelEdges, h
                 let BorderStyle = json.BorderStyle;
                 BorderStyle = BorderStyle ==="линия"?true:false
                 // ConvertBorder(BorderRadius, GetParams(json,"BevelWidth"))
                 let Radius = json.Radius
+                let FrameEdges = CheckFrameEdges(json.FrameEdges, Radius)
                 Text = GetParams(json,"Text");
                 let BevelWidth= GetParams(json,"BevelWidth");
-                let Scrolling = json.Scrolling === "1"?true:false
+                let Scrolling = json.Scrolling === "1"?isThereChild(json)?true:false:false
                 BevelWidth = BevelWidth=== undefined?0:Number(BevelWidth)
                 BevelWidth = Number(Radius) > 0? BevelWidth : 0
                 Anchors = ShouldUseFullScreen(Anchors);
                 Right = Anchors.w ?`${Left}px`:`${0}px`;
                 Bottom = Anchors.h ?`${Number(Top) + Number(Height)}px`:`${0}px`;
                 Height = `${Height}px`
-                console.log(Bottom)
                 Width =  `${Width}px`
                 if(json.Align === "целиком"){
                     Width = "100%"
@@ -927,15 +1002,17 @@ export default function FormsMainFile(props){
                 overflowX:"hidden",  display:Visability, backgroundColor: BGColor, borderRadius:`${Radius}px`, 
                 borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px`}
                 style = Scrolling? Object.assign(style,{overflowY:"scroll"}):Object.assign(style,{overflowY:"hidden"})
-                
+                if(FrameEdges !== undefined){
+                    delete style.borderRadius
+                    style = Object.assign(style,FrameEdges)
+                }
                 if(Anchors.w){
                     delete style.width
                     style = Object.assign(style,{right:Right})
                 }
                 if(Anchors.h){
-                    
-                    // delete style.height
-                    // style = Object.assign(style,{bottom:Bottom})
+                    delete style.height
+                    style = Object.assign(style,{bottom:"20px"})
                 }
                 if(json.RadioButton1){
                     let counterOfRadio= 0, defaultValueOfRadio = Name+ ","
@@ -972,8 +1049,10 @@ export default function FormsMainFile(props){
                 }else{
                    ReturnComponent.push(
                     <Grid keyName={keyName}  style={style}>
-                        {SubDataProcessing(json)}
-                        {json.ShowCaption === "0"?<></>:TextFromServerToBrowser(json, keyName)}
+                        <Scrollbars autoHide>
+                            {SubDataProcessing(json)}
+                            {json.ShowCaption === "0"?<></>:TextFromServerToBrowser(json, keyName)} 
+                        </Scrollbars>
                     </Grid>
                     ) 
                 }
@@ -984,14 +1063,45 @@ export default function FormsMainFile(props){
                 style = {position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,
                 height:`${Height}px`, overflowY:"auto", overflowX:"hidden", display:Visability, 
                 backgroundColor: BGColor }
+                const Shape = json.Shape
+                let styleForBorders = {height:"inherit", borderColor: "#cbcbca", borderRadius:"1px", borderStyle:"solid", borderWidth: "2px"}
+                Anchors = ShouldUseFullScreen(Anchors);
+                Right = Anchors.w ?`${Left}px`:`${0}px`;
+                Bottom = Anchors.h ?`${Number(Top) + Number(Height)}px`:`${0}px`;
+                Height = `${Height}px`
+                Width =  `${Width}px`
+                switch(Shape){
+                    case "прямоугольник":
+                        styleForBorders = Object.assign(styleForBorders,{borderWidth: "2px"})
+                        break;
+                    case "сверху":
+                        styleForBorders = Object.assign(styleForBorders,{borderWidth: "2px 0px 0px 0px"})
+                        break;
+                    case "слева":
+                        styleForBorders = Object.assign(styleForBorders,{borderWidth: "0px 0px 0px 2px"})
+                        break;
+                    case "справа":
+                        styleForBorders = Object.assign(styleForBorders,{borderWidth: "0px 2px 0px 0px"})
+                        break;
+                    case "снизу":
+                        styleForBorders = Object.assign(styleForBorders,{borderWidth: "0px 0px 2px 0px"})
+                        break;
+                    case "рамка":
+                        styleForBorders = Object.assign(styleForBorders,{borderWidth: "3px"})
+                        break;
+                }
 
                 if(ColsFromParent){
                     const jm= CalculateMargin(ColsFromParent,json.Target,widthFromParent, Number(Left));
                     style = Object.assign(style, {left:jm.ml , right:jm.mr })
                 }    
+                if(Anchors.w && SubLabel !== "TMarkingPanel"){
+                    delete style.width
+                    style = Object.assign(style,{right:Right, marginRight: "2px"})
+                }
                 ReturnComponent.push(
                     <Grid keyName={keyName} style={style}>
-                        <div style={{height:"2px", backgroundColor: "#cbcbca", borderRadius:"1px", marginTop:`${Number(Height*0.5)}px`}}>
+                        <div style={styleForBorders}>
                             {/* {SubDataProcessing(json)} */}
                         </div>
                     </Grid>
@@ -1011,7 +1121,7 @@ export default function FormsMainFile(props){
                     }
                 }
                 ReturnComponent.push(
-                    <FormControl style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`,}}>
+                    <FormControl style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:`${Height}px`, }}>
                         <FormLabel >{Text[0]}</FormLabel>
                             <RadioGroup
                                 row={Columns === "1"?false:true}
@@ -1068,44 +1178,6 @@ export default function FormsMainFile(props){
         return ReturnComponent;
     }
 
-function ChangeTabs(event){
-    setTimeout(() => {
-        let main = document.getElementsByClassName("Tabs")
-        let Tabs, tabsHeader, span
-        for (const [keyOfTabs, valueOfTabs] of Object.entries(main)){
-            Tabs = valueOfTabs
-            if(!Tabs.getAttribute("styled")){
-                Tabs.setAttribute("styled", "true")
-                for (const [key, value] of Object.entries(Tabs["_tabLabelContainers"])) {
-                    value.style.BorderRadius = "0px"
-                    value.classList.add("Borders");
-                    value.classList.add("selectedTabItem[selected]");
-                    if(Number(key) === 0){
-                        value.classList.add("WithoutLeftBorder");
-                    }else{
-                        value.classList.add("LeftBorder");
-                    }
-                    if(Tabs["_tabLabelContainers"].length -1 === Number(key)){
-                        value.classList.add("RightBorder");
-                    }else{
-                        value.classList.add("WithoutRightBorder");
-                    }
-                } 
-                tabsHeader = Tabs.children[0].children[0];
-                tabsHeader.style.backgroundColor = "#ffffff"
-                tabsHeader.classList.add("disableBorder");
-                Tabs.children[0].children[0].children[0].classList.add("SmartCustom");
-                console.log(Tabs.children[0].children[0].children[0])
-                span = Tabs.children[0].children[0].children[0].getElementsByTagName("span")[0]
-                span.classList.add("selectionBarCustom")
-                Tabs.children[0].children[1].style.overflowY = "scroll" //Это где данные отображаются 
-                Tabs.children[0].children[1].classList.add("headerSmartCustom"); 
-            }
-            
-        }
-        
-    }, 100);
-}
 
 
 
@@ -1126,7 +1198,7 @@ function FormDataProcessing(json) {
             }
 
             return(
-                <div  className={"TestForms"+props.id}  style={{position:"relative", height: "100%", width:"100%"}} onLoad={ChangeTabs}>
+                <div  className={"TestForms"+props.id}  style={{position:"relative", height: "100%", width:"100%"}} >
                     {returnAll}
                 </div>
             )
@@ -1172,7 +1244,7 @@ function FormDataProcessing(json) {
         <>
             <SectionToolsJS ID={props.id} SetBackValue={setSubForms}  buildForms ={FormDataProcessing}/>
             <Fade in={!transition}>
-                <Grid id={"mainForms" + props.id} style={{position:"relative", height: "100%", width:"100%", backgroundColor:"s", cursor: cursor}}>
+                <Grid id={"mainForms" + props.id} style={{position:"relative", height: "96%", width:"100%", backgroundColor:"s", cursor: cursor}}>
                     
                         {load?<Load/> :FormDataProcessing(dataForms)}
                    

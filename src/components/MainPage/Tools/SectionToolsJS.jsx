@@ -293,7 +293,7 @@ const SectionToolsJS = (props) =>{
                     
                     assemblyLists.push(
                         <Grid item  key={key}>
-                            <Button id={key} onClick={handleClick} style={{textTransform:"none"}}>
+                            <Button id={key} onClick={handleClick} style={{textTransform:"none", height:"25px"}}>
                                 {key}
                             </Button>
                             <Menu id={key} anchorEl={anchorElset} open={openSet} onClose={handleClose} >
@@ -394,7 +394,7 @@ const SectionToolsJS = (props) =>{
     
 
     return(
-        <Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" sx={{pl:1}} >
+        <Grid  container  direction="row"  justifyContent="flex-start" alignItems="center" sx={{pl:1}} id={"tools"+props.ID} >
            <div id="RenderModal">  </div>
            <div id="RenderModalSub"> </div>
            
