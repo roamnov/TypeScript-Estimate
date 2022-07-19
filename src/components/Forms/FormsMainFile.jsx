@@ -623,27 +623,30 @@ export default function FormsMainFile(props){
     }
 
     function CheckFrameEdges(FrameEdges, Radius){
-        let FrameEdgesArr = FrameEdges.split(","), json={}
-        if(FrameEdgesArr.length > 1 ){
-            for(const [key, value] of Object.entries(FrameEdgesArr)) {
-                switch(value){
-                    case"ВерхЛево":
-                        json = Object.assign(json,{borderTopLeftRadius:`${Radius}px`})
-                        break;
-                    case"НизЛево":
-                        json = Object.assign(json,{borderBottomLeftRadius:`${Radius}px`})
-                        break;
-                    case"ВерхПраво":
-                        json = Object.assign(json,{borderTopRightRadius:`${Radius}px`})
-                        break;
-                    case"НизПраво":
-                        json = Object.assign(json,{borderBottomRightRadius:`${Radius}px`})
-                        break;
+        let FrameEdgesArr , json={}
+        if(FrameEdges !== undefined){
+           FrameEdgesArr = FrameEdges.split(",") 
+          
+            if(FrameEdgesArr.length > 1 ){
+                for(const [key, value] of Object.entries(FrameEdgesArr)) {
+                    switch(value){
+                        case"ВерхЛево":
+                            json = Object.assign(json,{borderTopLeftRadius:`${Radius}px`})
+                            break;
+                        case"НизЛево":
+                            json = Object.assign(json,{borderBottomLeftRadius:`${Radius}px`})
+                            break;
+                        case"ВерхПраво":
+                            json = Object.assign(json,{borderTopRightRadius:`${Radius}px`})
+                            break;
+                        case"НизПраво":
+                            json = Object.assign(json,{borderBottomRightRadius:`${Radius}px`})
+                            break;
+                    }
                 }
+                return json
             }
-            return json
         }
-        
     }
 
 
