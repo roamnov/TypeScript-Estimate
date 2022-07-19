@@ -202,7 +202,7 @@ export default function Params(props) {
                 val = val[2] + "-" + val[1] + "-" + val[0]
             }
             else
-                val = item.EditVal ? item.EditVal : item.value
+                val = item.EditVal ? item.EditVal : item.Value
         }
         let edit = <Editor value={val}
             EditStyle={item.EditStyle}
@@ -212,7 +212,7 @@ export default function Params(props) {
             CLSID={item.CLSID}
             Path={props.data.Path}
             ObjRef={item.ObjRef}
-            EditVal={item.EditVal}
+            EditVal={item.Value}
             SectionID={props.SectionID}
             //  setdata={SetData}
             onDropDownList={onDropDownList}
@@ -237,13 +237,13 @@ export default function Params(props) {
        
         for (let n = 0; n <= edit.length - 1; n++) {
             let el = edit[n];
-            let val = td.innerHTML
             let inp = el.querySelector("input")
+            let val = inp.dataset.editval
             let otv = onEdit(inp)//.dispatchEvent(new Event('change'))
 
             if (otv) el.parentNode.innerHTML = otv
             else
-            
+            el.parentNode.innerHTML = val
             el.remove()
         }
 
