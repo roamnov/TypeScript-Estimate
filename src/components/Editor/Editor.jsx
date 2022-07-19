@@ -340,7 +340,7 @@ export default function Editor(props) {
     function CloseList(ev) {
       let p
       if (ev) p = ev.currentTarget;
-     // let list = document.getElementById("mouse-over-popover-list");
+      // let list = document.getElementById("mouse-over-popover-list");
       let inp = document.getElementById("for" + EditID)
       const withinBoundaries = ev.composedPath().includes(inp);
       if (!withinBoundaries) {
@@ -436,6 +436,7 @@ export default function Editor(props) {
   }
   function onDropDownList(e) {
     let div = e.currentTarget;
+    console.log(div)
     let id = div.getAttribute("for");
     let edit = document.getElementById(id)
     if (props.list) {
@@ -463,6 +464,13 @@ export default function Editor(props) {
   }
   function EditFocus(e) {
     let el = e.currentTarget;
+    let parent = el.parentNode.parentNode
+    if (parent) {
+      parent = parent.querySelector(".ButtonGroup")
+      if (parent) {
+        parent.style.display = ""
+      }
+    }
     setBlur(el)
     let val = el.dataEditval;
     if (val) {
@@ -475,15 +483,21 @@ export default function Editor(props) {
     let val = el.dataValue;
     // EnterValue(el, 1)
     if (val) el.value = val
+    let parent = el.parentNode.parentNode
+    if (parent) {
+      parent = parent.querySelector(".ButtonGroup")
+      if (parent) {
+        parent.style.display = "none"
+      }
+    }
   }
 
-function onEdit(ev)
-{ 
-  let d = ev.target.value.split("-")
-  ev.currentTarget.dataset.value = d[2]+"."+d[1]+"."+d[0]
-  if (props.onEdit)
-    props.onEdit(ev)
-}
+  function onEdit(ev) {
+    let d = ev.target.value.split("-")
+    ev.currentTarget.dataset.value = d[2] + "." + d[1] + "." + d[0]
+    if (props.onEdit)
+      props.onEdit(ev)
+  }
   function SelectBackgroundCheck(CheckState) {
     let res
     if (CheckState) {
@@ -525,91 +539,59 @@ function onEdit(ev)
       }
     return res
   }
-  DropList = props.EditStyle & EditStyle_Calendar ? <Box data-id={props.id} style={{ position: "relative", width: "100%", ...props.style }}>
-    <Input style={{ width: "100%", height: "100%", borderRadius: "0px", borderRightWidth: "0px", borderTopWidth: "0px", borderLeftWidth: "0px", borderColor: "black" }} type="date" value={props.value}
-      onChange={(ev) => onEdit(ev)}
-      name={props.name}
-      id={EditID}
-      data-id={props.id}
+  let Buttons = [], ReactButtons
+
+  if (props.EditStyle) {
+    if (props.EditStyle & EditStyle_Calendar) {
+    }
+    else {
+      if (props.EditStyle & EditStyle_Ellipsis) {
+        Buttons.push(
+          <span className="text-field__aicon-2" htmlFor={EditID}>
+            <img style={{ width: "14px" }} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAARklEQVQ4jWNgGAWDA3gxMDA8hmJPcsQfMzAwWDEwMNgwMDA8QlJIlDgTVJCJgYGBEYvriBL3hNrwiIGBwQNJEanio2DAAAD2phTHiUz1AQAAAABJRU5ErkJggg=="></img>
+          </span>)
+      }
+      if (props.EditStyle & EditStyle_PickList) {
+        Buttons.push(
+          <span className="text-field__aicon-2" onClick={onDropDownList} htmlFor={EditID} >
+            <img style={{ width: "14px" }} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAv0lEQVQ4jd3QsUrDYBQF4C8UxK5FXAM+hXN8AqmLD2AdKmbJUOjsHOzcB3ERwU1XsW8iYgd1uYGQ/oHMOfDD4d5z7rn3Z1Q4RTFAV4QWTFrmLc5whF2P+QqXuMYzviDDC/LgmxCmzJvQ5OHJmg2OcY5XPGGBGT6iP8cF7vGHG3ziLWsl3OIED5FS4x0/Yb7DLyrsY5sDlFgFb4bUwUWvTP5OZ5N1ol7FCYPQHdJrzlLFQIlp8G88Dk1vYxlvzPgH4I0f/Ofj0OAAAAAASUVORK5CYII="></img>
+          </span>)
+      }
+    }
+    if (Buttons.length)
+      ReactButtons = <div style={{
+        display: "flex",
+        position: "absolute",
+        right: "0px",
+        top: "0px",
+        height: "100%"
+      }}>
+        {
+          Buttons.map((b) => { return b })}
+      </div>
+  }
+  DropList = <div className="text-field__icon">
+    <input className="text-field__input" placeholder="не выбрано"
+      style={{ paddingRight: Buttons.length * 24 + "px" }}
       data-path={props.Path}
+      id={EditID}
+      type={props.EditStyle & EditStyle_Calendar ? "date" : "text"}
+      name={props.name}
+      data-id={props.id}
       data-objref={props.ObjRef}
       data-editval={props.EditVal}
       data-sectionid={props.SectionID}
-      data-value={props.value ? props.value : ""} />
-  </Box> :
-    <Box className='basic-single css-b62m3t-container' data-id={props.id} data-sectionid={props.sectionid} style={{ position: "relative", width: "100%", ...props.style }} >
-      <Box>
-        {props.mask ?
-          <MaskedTextBox id={EditID} data-id={props.id} onChange={(ev) => props.onEdit(ev)} style={{ height: props.style.height, padding: "0px", width: "100%", paddingRight: p, paddingLeft: lp, borderRadius: "0px", borderRightWidth: "0px", borderTopWidth: "0px", borderLeftWidth: "0px", borderColor: "black" }} value={props.caption ? props.caption : props.value ? props.value : ""} mask={props.mask} /> :
-          <Input data-path={props.Path}
-            id={EditID}
-            name={props.name}
-            data-id={props.id}
-            data-objref={props.ObjRef}
-            data-editval={props.EditVal}
-            data-sectionid={props.SectionID}
-            data-checkstate={props.CheckState}
-            //  onKeyDown={(ev) => EnterValue(ev)}
-            data-type={props.Type}
-            onClick={(e) => EditFocus(e)}
-            onChange={(ev) => props.onEdit(ev, 1)}
-            onBlur={(e) => SetValueEdit(e)}
-            value={props.caption ? props.caption : props.value ? props.value : ""}
-            data-value={props.caption ? props.caption : props.value ? props.value : ""}
-            style={{ height: props.style.height, padding: "0px", width: "100%", paddingRight: p, paddingLeft: lp, borderRadius: "0px", borderRightWidth: "0px", borderTopWidth: "0px", borderLeftWidth: "0px", borderColor: "black" }} >
-          </Input>
-        }
-      </Box>
+      data-checkstate={props.CheckState}
+      //  onKeyDown={(ev) => EnterValue(ev)}
+      data-type={props.Type}
+      //onClick={(e) => EditFocus(e)}
+      onChange={(ev) => props.onEdit(ev, 1)}
+      onBlur={(e) => SetValueEdit(e)}
+      defaultValue={props.caption ? props.caption : props.value ? props.value : ""}
+      data-value={props.caption ? props.caption : props.value ? props.value : ""}
+    />
+    {ReactButtons}
+  </div>
 
-      {props.EditStyle ?
-        <Box style={{ position: "absolute", top: "0px", right: "0px" }}>
-          <ButtonGroup variant="text" aria-label="text button group">
-            {props.EditStyle & EditStyle_Ellipsis ?
-              <IconButton style={{ padding: "0px", minWidth: props.style.height }} ><MoreHorizIcon style={{ position: "relative", top: "3px", fill: "black" }} /></IconButton>
-              :
-              <></>}
-            {props.EditStyle & EditStyle_PickList ?
-              <>
-                <IconButton
-                  onClick={onDropDownList}
-                  for={EditID}
-                  style={{ padding: "0px", minWidth: props.style.height }}
-                  aria-owns={openList ? 'mouse-over-popover' : undefined} aria-haspopup="true">
-                  <ArrowDropDownIcon style={{ fill: "black" }} />
-
-                </IconButton>
-
-              </>
-              :
-              <></>}
-            {props.EditStyle & EditStyle_UpDown ?
-              <ButtonGroup orientation="vertical"
-                aria-label="vertical contained button group"
-                variant="text">
-                <IconButton style={{ padding: "0px", minWidth: props.style.height, borderRightWidth: "0px", height: (Number(props.style.height.replace(/[^+\d]/g, '')) / 2) + "px" }} >
-                  <ArrowDropUpIcon style={{ position: "relative", height: "100%", fill: "black" }} viewBox="6 5 12 12" />
-                </IconButton>
-                <IconButton style={{ padding: "0px", minWidth: props.style.height, height: (Number(props.style.height.replace(/[^+\d]/g, '')) / 2) + "px" }} >
-                  <ArrowDropDownIcon style={{ position: "relative", height: "100%", fill: "black", top: "-4px" }} viewBox="6 5 12 12" />
-                </IconButton>
-              </ButtonGroup >
-              :
-              <></>}
-          </ButtonGroup>
-        </Box>
-        : <></>
-      }
-
-
-      {props.EditStyle & EditStyle_Check ? <Box style={{ position: "absolute", top: "0px", left: "0px", minWidth: props.style.height, height: props.style.height }} >
-        <IconButton id={CheckID} style={{ padding: "0px", width: "100%", height: "100%", backgroundImage: SelectBackgroundCheck() }} aria-owns={open ? 'mouse-over-popover' : undefined}
-          aria-haspopup="true"
-          onClick={handlePopoverOpen}
-        ></IconButton>
-        {
-          ButtonGroupCheck()
-        }
-      </Box> : <></>}
-    </Box>
   return DropList
 }

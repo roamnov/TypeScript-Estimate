@@ -768,7 +768,7 @@ export default function FormsMainFile(props){
                         
                         <TextField variant="standard"  defaultValue={Text} style={{ width: `${Width}px`,height:`${Height}px` }} />
                         */ }
-                        <Editor list={list} name={keyName} value={Text} EditStyle={EditStyleCompleteInt} style={{ width: `${Width}px`,height:`${Height}px` }} onDropDownList={ClickFormElement} />
+                        <Editor list={list} name={keyName} value={Text} EditStyle={EditStyleCompleteInt} style={{ width: `${Width}px`,height:`${Height}px` }} onDropDownList={ClickFormElement} onEdit = {ClickFormElement}/>
                     </Grid>
                     
                 )
