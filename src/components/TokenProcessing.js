@@ -203,6 +203,10 @@ export function  tokenProcessingTest (json, func){
                 
                 break;
 
+            case "ExecuteParamDialog":
+                return json.Params.Path
+                break;
+
             case "ShellExecute":
                 let RCDATA =""
                 let FileNameShell = json.Params.FileName;
