@@ -434,7 +434,7 @@ export default function Editor(props) {
     document.body.appendChild(background)
     //return itemList
   }
-  function onDropDownList(e) {
+  function onCreateList(e) {
     let div = e.currentTarget;
     console.log(div)
     let id = div.getAttribute("for");
@@ -498,6 +498,10 @@ export default function Editor(props) {
     if (props.onEdit)
       props.onEdit(ev)
   }
+  function onClickButton(e)
+  {
+    alert(e)
+  }
   function SelectBackgroundCheck(CheckState) {
     let res
     if (CheckState) {
@@ -547,14 +551,14 @@ export default function Editor(props) {
     else {
       if (props.EditStyle & EditStyle_Ellipsis) {
         Buttons.push(
-          <span className="text-field__aicon-2" htmlFor={EditID}>
-            <img style={{ width: "14px" }} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAARklEQVQ4jWNgGAWDA3gxMDA8hmJPcsQfMzAwWDEwMNgwMDA8QlJIlDgTVJCJgYGBEYvriBL3hNrwiIGBwQNJEanio2DAAAD2phTHiUz1AQAAAABJRU5ErkJggg=="></img>
+          <span className="textFieldIcon EditStyle_Ellipsis" onClick={onClickButton} htmlFor={EditID}>
+            <img  style={{ width: "14px" }} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAARklEQVQ4jWNgGAWDA3gxMDA8hmJPcsQfMzAwWDEwMNgwMDA8QlJIlDgTVJCJgYGBEYvriBL3hNrwiIGBwQNJEanio2DAAAD2phTHiUz1AQAAAABJRU5ErkJggg=="/>
           </span>)
       }
       if (props.EditStyle & EditStyle_PickList) {
         Buttons.push(
-          <span className="text-field__aicon-2" onClick={onDropDownList} htmlFor={EditID} >
-            <img style={{ width: "14px" }} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAv0lEQVQ4jd3QsUrDYBQF4C8UxK5FXAM+hXN8AqmLD2AdKmbJUOjsHOzcB3ERwU1XsW8iYgd1uYGQ/oHMOfDD4d5z7rn3Z1Q4RTFAV4QWTFrmLc5whF2P+QqXuMYzviDDC/LgmxCmzJvQ5OHJmg2OcY5XPGGBGT6iP8cF7vGHG3ziLWsl3OIED5FS4x0/Yb7DLyrsY5sDlFgFb4bUwUWvTP5OZ5N1ol7FCYPQHdJrzlLFQIlp8G88Dk1vYxlvzPgH4I0f/Ofj0OAAAAAASUVORK5CYII="></img>
+          <span className="textFieldIcon EditStyle_PickList" onClick={onCreateList} htmlFor={EditID} >
+            <img style={{ width: "14px" }} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAv0lEQVQ4jd3QsUrDYBQF4C8UxK5FXAM+hXN8AqmLD2AdKmbJUOjsHOzcB3ERwU1XsW8iYgd1uYGQ/oHMOfDD4d5z7rn3Z1Q4RTFAV4QWTFrmLc5whF2P+QqXuMYzviDDC/LgmxCmzJvQ5OHJmg2OcY5XPGGBGT6iP8cF7vGHG3ziLWsl3OIED5FS4x0/Yb7DLyrsY5sDlFgFb4bUwUWvTP5OZ5N1ol7FCYPQHdJrzlLFQIlp8G88Dk1vYxlvzPgH4I0f/Ofj0OAAAAAASUVORK5CYII="/>
           </span>)
       }
     }
@@ -566,10 +570,19 @@ export default function Editor(props) {
         top: "0px",
         height: "100%"
       }}>
-        {
-          Buttons.map((b) => { return b })}
+        {Buttons.map((b) => { return b })}
       </div>
   }
+  let value = props.caption ? props.caption : props.value ? props.value : ""
+  if (props.EditStyle & EditStyle_Calendar) {
+    let val = value.split(".")
+    if (val.length == 3) {
+        val = val[2] + "-" + val[1] + "-" + val[0]
+    }
+    else
+        val = props.caption ? props.caption : props.value ? props.value : ""
+        value = val   
+}
   DropList = <div className="text-field__icon">
     <input className="text-field__input" placeholder="не выбрано"
       style={{ paddingRight: Buttons.length * 24 + "px" }}
@@ -585,13 +598,24 @@ export default function Editor(props) {
       //  onKeyDown={(ev) => EnterValue(ev)}
       data-type={props.Type}
       //onClick={(e) => EditFocus(e)}
-      onChange={(ev) => props.onEdit(ev, 1)}
+      onChange={ props.onEdit ?(ev) => props.onEdit(ev, 1): null}
       onBlur={(e) => SetValueEdit(e)}
-      defaultValue={props.caption ? props.caption : props.value ? props.value : ""}
-      data-value={props.caption ? props.caption : props.value ? props.value : ""}
+      defaultValue={value}
+      data-value={value}
     />
     {ReactButtons}
-  </div>
+  </div> 
+  let container
+if (props.parent)
+  {
+    container = document.createElement("div")
+    ReactDOM.render(DropList, container) 
+    props.parent.innerHTML = ""
+    props.parent.appendChild(container)
+    props.parent.querySelector(".EditStyle_Ellipsis").addEventListener("click", onClickButton)
+    props.parent.querySelector(".EditStyle_PickList").addEventListener("click", onCreateList)
+    
+  }
 
   return DropList
 }

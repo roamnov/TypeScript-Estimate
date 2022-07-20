@@ -407,13 +407,23 @@ export default function FormsMainFile(props){
         Name = Name === null? IName: Name
         
         if (Name !== null ){
-            dataValue = el.dataset.value
+            //dataValue = el.dataset.value
+          //  if (!dataValue)
+            dataValue = el.value
+            if (el.type =="date")
+            {
+                let val = dataValue.split("-")
+              if (val.length) {
+               val = val[2] + "." + val[1] + "." + val[0]
+               dataValue = val
+            }
+            }
             console.log(el, Name)
             params.set('prefix', 'forms');
             params.set("comand", "ElementEvent");
             params.set("SectionID", props.id);/////
             params.set("Name", Name);
-            if (dataValue !== undefined) params.set("Text", dataValue.value);
+            if (dataValue !== undefined & dataValue !=="" ) params.set("Text", dataValue);
             if(Index) params.set("Index", Index)
             params.set("WSM", "1");
             json = XMLrequest(params);
