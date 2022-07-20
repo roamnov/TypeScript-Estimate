@@ -27,7 +27,6 @@ ReactDOM.render(
           display: block;
           width: 100%;
           height: 100%;
-          padding-left: 15px;
           font-family: inherit;
          
           font-weight: 400;
@@ -67,7 +66,12 @@ ReactDOM.render(
         .text-field__icon {
           position: relative;
         }
-    
+        .text-field__icon input
+        {
+          border:none;
+          borderRadius: "0";
+          transition: "";
+        }
         .text-field__icon .text-field__input {
           padding-right: 2.5rem;
         }
@@ -77,7 +81,7 @@ ReactDOM.render(
         }
     
         /* active icon - 2 вариант */
-        .text-field__aicon-2 {
+        .textFieldIcon {
           
           display: flex;
           align-items: center;
@@ -95,7 +99,7 @@ ReactDOM.render(
           border-bottom-right-radius: 0.25rem;
         }
     
-        .text-field__aicon-2:hover {
+        .textFieldIcon:hover {
           background-color: #e0e0e0;
         }
         `}

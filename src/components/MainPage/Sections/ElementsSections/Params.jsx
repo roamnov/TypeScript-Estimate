@@ -78,7 +78,7 @@ export default function Params(props) {
         let params = new Map();
         params.set('prefix', 'programs');
         params.set('comand', 'GetParamValues');
-        params.set('ID', el.dataId);
+        params.set('ID', el.dataset.id);
         params.set('Path', props.data.Path);
         let otv = XMLrequest(params).Items
         for (let i = 0; i <= otv.length - 1; i = i + 1) {
@@ -149,9 +149,11 @@ export default function Params(props) {
                     let data = XMLrequest(params);
                     SetData(data.Items)
                 }
-                else return val
+                else return otv.Values[0]
 
             }
+            else
+                return val
 
         }
     }
@@ -193,57 +195,61 @@ export default function Params(props) {
     }
 
     function CreateEdit(event, item) {
-        HiddenEdit(event.target.parentNode.parentNode.parentNode, event.target)
-        let container = document.createElement("div")
-        let val = item.EditVal ? item.EditVal : item.value
-        if (item.EditStyle == 2) {
-            val = val.split(".")
-            if (val.length) {
-                val = val[2] + "-" + val[1] + "-" + val[0]
+        if (event.target.tagName == "TD") {
+            HiddenEdit(event.target.parentNode.parentNode.parentNode, event.target)
+            let container = document.createElement("div")
+            let val = item.EditVal ? item.EditVal : item.value
+            if (item.EditStyle == 2) {
+                val = val.split(".")
+                if (val.length) {
+                    val = val[2] + "-" + val[1] + "-" + val[0]
+                }
+                else
+                    val = item.EditVal ? item.EditVal : item.Value
             }
-            else
-                val = item.EditVal ? item.EditVal : item.Value
-        }
-        let edit = <Editor value={val}
-            EditStyle={item.EditStyle}
-            style={{ height: "24px" }}
-            mask={item.EditMask}
-            id={item.ID}
-            CLSID={item.CLSID}
-            Path={props.data.Path}
-            ObjRef={item.ObjRef}
-            EditVal={item.Value}
-            SectionID={props.SectionID}
-            //  setdata={SetData}
-            onDropDownList={onDropDownList}
-            // onEdit={onEdit}
-            ReportID={props.id}
-            CheckState={item.CheckState}
-            MultiCheckSet={item.MultiCheckSet}
-            Type="ParamItem"
-        />
-        ReactDOM.render(edit, container)
-        event.target.innerHTML = ""
+            let edit = <Editor value={val}
+                EditStyle={item.EditStyle}
+                style={{ height: "24px" }}
+                mask={item.EditMask}
+                id={item.ID}
+                CLSID={item.CLSID}
+                Path={props.data.Path}
+                ObjRef={item.ObjRef}
+                EditVal={item.Value}
+                SectionID={props.SectionID}
+                //  setdata={SetData}
+                onDropDownList={onDropDownList}
+                // onEdit={onEdit}
+                ReportID={props.id}
+                CheckState={item.CheckState}
+                MultiCheckSet={item.MultiCheckSet}
+                Type="ParamItem"
+                parent={event.target}
+            />
+            ReactDOM.render(edit, container)
 
-        event.target.appendChild(container.children[0])
-        let input = event.target.querySelector("input")
-        input.style.border = "none"
-        input.style.borderRadius = "";
-        input.style.transition = ""
-        input.focus()
+        }
     }
     function HiddenEdit(parent, td) {
         let edit = parent.querySelectorAll(".text-field__icon")
-       
+
         for (let n = 0; n <= edit.length - 1; n++) {
             let el = edit[n];
             let inp = el.querySelector("input")
-            let val = inp.dataset.editval
-            let otv = onEdit(inp)//.dispatchEvent(new Event('change'))
-
-            if (otv) el.parentNode.innerHTML = otv
-            else
-            el.parentNode.innerHTML = val
+            let val = inp.value
+            let oldVal = inp.dataset.value
+            let otv
+            if (val !== oldVal)
+             otv = onEdit(inp)//.dispatchEvent(new Event('change'))
+             else
+             val = inp.dataset.editval
+            if (otv)
+                if (otv.Value) {
+                    val = otv.Value
+                }
+            if (!val)
+                    val = ""
+            el.parentNode.parentNode.innerHTML = val
             el.remove()
         }
 
@@ -291,7 +297,7 @@ export default function Params(props) {
                                 </div>
                             </td>
                             <td
-                                style={{ borderBottom: "1px solid", position: "relative", whiteSpace: "nowrap", width: "50%" }}
+                                style={{ borderBottom: "1px solid", position: "relative", whiteSpace: "nowrap", width: "50%", paddingLeft: 24 }}
                                 onClick={(e) => CreateEdit(e, item)}
                             >
                                 {item.Value ? item.Value : ""}
