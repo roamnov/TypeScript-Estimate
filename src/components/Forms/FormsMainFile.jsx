@@ -688,16 +688,19 @@ export default function FormsMainFile(props){
                 const rcdataIcon = json.RCDATA
                 let icon = <img  src={`data:image/png;base64,${rcdataIcon}`} />
                 let sxStyle = Text ===""?{ "& .MuiButton-startIcon": { margin: "0px" }}:Text ==="undefined"?{ "& .MuiButton-startIcon": { margin: "0px" }}:{}
+                const DrawFrame = json.DrawFrame ==="1"?true:false;
+                Height = `${Height}px`
+                Width =  `${Width}px`
+                style = {color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
+                minWidth: "1px", width: Width,height:Height,position:"absolute", left:`${Left}px`,top:`${Top}px`,
+                textTransform:"none" , visibility:Visability}
                 if(SubLabel === "TCategoryPanel"){
                     let LocalTop = RCDATAFormParent?Number(Top) + 52:Top
+                    style= Object.assign(style,{top:`${LocalTop}px`})
                     ReturnComponent.push(
-                        <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="text" 
+                        <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant={DrawFrame?"outlined":"text"} 
                             startIcon={rcdataIcon === undefined?undefined:icon} sx={sxStyle}
-                            style={{
-                            color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
-                            minWidth: "1px", width: `${Width}px`,height:`${Height}px`,position:"absolute", left:`${Left}px`, top:`${LocalTop}px`, 
-                            textTransform:"none" , visibility:Visability
-                            }}>
+                            style={style}>
                             
                             {TextFromServerToBrowser(json)}  
                             {SubDataProcessing(json)}  
@@ -705,13 +708,9 @@ export default function FormsMainFile(props){
                     )
                 }else{
                     ReturnComponent.push(
-                        <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant="text" 
+                        <Button keyName={keyName} disabled={Enabled} name={Name} secid={props.id} onClick={ClickFormElement} variant={DrawFrame?"outlined":"text"}  
                             startIcon={rcdataIcon === undefined?undefined:icon} sx={sxStyle}
-                            style={{
-                            color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
-                            minWidth: "1px", width: `${Width}px`,height:`${Height}px`, position:"absolute", left:`${Left}px`, top:`${Top}px`, 
-                            textTransform:"none" , visibility:Visability
-                            }}>
+                            style={style}>
                             
                             {TextFromServerToBrowser(json)}  
                             {SubDataProcessing(json)}  
@@ -878,11 +877,22 @@ export default function FormsMainFile(props){
 
             case "TCategoryPanelGroup"://WITH SUB
                 RCDATA = GetParams(json,"RCDATA"); 
-                console.log(json.RCDATA)
+                Anchors = ShouldUseFullScreen(Anchors);
+                Right = Anchors.w ?`${Left}px`:`${0}px`;
+                Bottom = Anchors.h ?`${Number(Top) + Number(Height)}px`:`${0}px`;
+                Height = `${Height}px`
+                Width =  `${Width}px`
+                style = {position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: Width,height:Height, overflowY:"auto", overflowX:"hidden", visibility:Visability}
+                if(Anchors.w){
+                    delete style.width
+                    style = Object.assign(style,{right:Right})
+                }
+                if(Anchors.h){
+                    delete style.height
+                    style = Object.assign(style,{bottom:"20px"})
+                }
                 ReturnComponent.push(
-                    <Grid keyName={keyName} style={{position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: `${Width}px`,height:"90%", overflowY:"auto", overflowX:"hidden", visibility:Visability, 
-                    // backgroundColor: BGColor
-                     }}>
+                    <Grid keyName={keyName} style={style}>
                          <Scrollbars autoHide>
                              {SubDataProcessing(json,null, RCDATA)}
                          </Scrollbars>
@@ -907,7 +917,6 @@ export default function FormsMainFile(props){
                 if(Collapsed && BoolOpen===undefined){
                     expandedMap.set(Caption, Collapsed)
                     expandedMapTest.set(Caption, Collapsed)
-                    // console.log(expandedMap, expandedMapTest)
                     BoolOpen = expandedMap.get(Caption);
                 }else{
                     BoolOpen = expandedMap.get(Caption);
@@ -946,16 +955,16 @@ export default function FormsMainFile(props){
                     }
                 }
                 sortByIndex(SortedTabs)
-                tabIndex = json.TabIndex === undefined? 0 : Number(json.TabIndex)
+                tabIndex = json.ItemIndex === undefined? 0 : Number(json.ItemIndex)
                 TabsName = keyName;
                 function ClicTabItem(event, id){
                     let gridPanel = document.getElementById("gridpanel"+props.id),Tabs
-                    console.log(event)
+                    ClickFormElement(undefined,TabsName,event.detail.index)
                     if (gridPanel){
                         let Path =gridPanel.dataset.path
                         ManWhoSoldTheWorld(props.id, Path)
                     }
-                    ClickFormElement(undefined,TabsName,event.detail.index)
+                    
                 }
                 ReturnComponent.push(
                     <Tabs keyName={keyName} class= "Tabs" selectedIndex={tabIndex} id={"Tabs"+props.id}
@@ -1004,7 +1013,7 @@ export default function FormsMainFile(props){
                 style = {position:"absolute" ,left:`${Left}px`, top:`${Top}px`,height: Height, width: Width,
                 overflowX:"hidden",  display:Visability, backgroundColor: BGColor, borderRadius:`${Radius}px`, 
                 borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px`}
-                style = Scrolling? Object.assign(style,{overflowY:"scroll"}):Object.assign(style,{overflowY:"hidden"})
+                style = Scrolling? Object.assign(style,{overflowY:"auto"}):Object.assign(style,{overflowY:"hidden"})
                 if(FrameEdges !== undefined){
                     delete style.borderRadius
                     style = Object.assign(style,FrameEdges)

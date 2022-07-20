@@ -170,7 +170,7 @@ export default function FullRightSide(props: InfoAboutClick) {
             <Grid item id={id + "tabsContainer"} style={{ height: "inherit" }}>
               <Tabs scrollMode="paging" id={id + "tabs"} animation="none"
                 tabPosition="bottom" selectedIndex={TabIndex}
-                style={{ width: "100%", height: `97%` }} onChange={OnIndexChange} >
+                style={{ width: "100%", height: `96%` }} onChange={OnIndexChange} >
 
                 {JSXTabItems}
 
