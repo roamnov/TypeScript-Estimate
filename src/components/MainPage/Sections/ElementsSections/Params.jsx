@@ -84,6 +84,15 @@ export default function Params(props) {
             res = Unchecked;
         return res
     }
+    function MouseOverCheck(e) {
+        let div = e.currentTarget;
+        div.style.transform = "scale(1.2)"
+    }
+    function MouseOutCheck(e) {
+        let div = e.currentTarget;
+        div.style.transform = ""
+    }
+
     function ClickCheckState(ev) {
         let check = ev.currentTarget
         let params = new Map();
@@ -138,7 +147,7 @@ export default function Params(props) {
         let el, params = new Map();
         if (e.currentTarget) {
             el = e.currentTarget
-           
+
         }
         else
             el = e
@@ -354,7 +363,11 @@ export default function Params(props) {
                 }
             if (!val)
                 val = ""
-            el.parentNode.parentNode.innerHTML = val
+                let td =  el.parentNode.parentNode
+                td.innerText = val
+            let check = el.querySelector(".Check");
+            if (check)
+               td.appendChild(check)
             el.remove()
         }
 
@@ -402,11 +415,13 @@ export default function Params(props) {
                                 </div>
                             </td>
                             <td
-                                style={{ borderBottom: "1px solid", position: "relative", whiteSpace: "nowrap", paddingLeft: item.MultiCheckSet ? 2 : 24 }}
+                                style={{ borderBottom: "1px solid", position: "relative", whiteSpace: "nowrap", display: item.MultiCheckSet ? "grid": null, paddingLeft: item.MultiCheckSet ? 2 : 24 }}
                                 onClick={(e) => CreateEdit(e, item)}
                             >
                                 {item.MultiCheckSet ?
                                     <img
+                                        onMouseOver={(e) => MouseOverCheck(e)}
+                                        onMouseOut={(e) => MouseOutCheck(e)}
                                         data-Path={props.data.Path}
                                         data-CheckState={item.CheckState ? item.CheckState : 0}
                                         data-MultiCheckSet={item.MultiCheckSet}
