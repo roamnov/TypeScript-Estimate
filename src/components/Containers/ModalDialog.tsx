@@ -83,6 +83,54 @@ export default function ModalDialog(props: any) {
       return res
     }
     
+    function onEdit(ev:any, TextChanged:any) {
+      let el
+      if (ev.type == "change") {
+          el = ev.currentTarget
+      }
+      else {
+          el = ev;
+          TextChanged = 0
+      }
+      if (el) {
+          let val
+          val = el.dataset.value;
+          let params = new Map();
+          params.set('prefix', 'programs');
+          params.set('comand', 'SetParamProperty');
+          params.set('ID', el.dataId);
+          params.set('Path', el.dataPath);
+          if (TextChanged)
+              params.set('TextChanged', "1")
+          else
+              params.set('TextChanged', "0")
+          params.set('WSM', "1");
+          params.set('Value', val);
+          if (el.dataset.checkstate)
+              params.set('CheckState', el.dataset.checkstate)
+          if (el.dataset.objref)
+              params.set('ObjRef', el.dataset.objref);
+          let otv = XMLrequest(params);
+          if (otv) {
+              el.value = otv.Values[0].Value;
+              el.setAttribute("data-objref", otv.Values[0].ObjRef)
+              el.setAttribute("data-id", otv.Values[0].ID)
+              el.setAttribute("data-editval", otv.Values[0].EditVal)
+              if(otv.NeedRefresh)
+             { let params = new Map();
+              params.set('prefix', 'programs');
+              params.set("comand", "GetParamDialog");
+              params.set("GroupID", "0");///// ПРОВЕРИТЬ
+              params.set("Path", el.dataPath);
+              params.set("NeedRefresh", "1");
+              let data = XMLrequest(params);
+              SetData(data.Items)}
+
+          }
+
+      }
+  }
+
     return (
       <div>
         
@@ -110,7 +158,7 @@ export default function ModalDialog(props: any) {
                             ObjRef={item.ObjRef}
                             EditVal={item.EditVal}
                             SectionID={props.SectionID}
-                            setdata={SetData}
+                            //setdata={SetData}
                             onDropDownList={onDropDownList}
                             //onEdit={onEdit}
                             ReportID={props.id}

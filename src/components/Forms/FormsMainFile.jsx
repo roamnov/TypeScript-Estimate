@@ -37,7 +37,7 @@ import useTheme from "../Hooks/useTheme";
 import cn from "classnames"
 import Fade from '@mui/material/Fade';
 import ModalDialog from "../Containers/ModalDialog";
-
+import { DialogTitle } from "@material-ui/core";
 
 function PaperComponent(props) {
     return (
@@ -121,9 +121,10 @@ const Accordion = styled((props) => (
           PaperProps={{
               sx:{
                   width: heiWid.width,
-                  height: heiWid.height
+                  height: heiWid.height  
               }
           }}
+          maxWidth='false'
           open={open}
           TransitionComponent={Transition}
           keepMounted
@@ -131,12 +132,13 @@ const Accordion = styled((props) => (
           aria-describedby="alert-dialog-slide-description"
           PaperComponent={PaperComponent}
         > 
+        <DialogTitle>{props.caption!==undefined?props.caption:''}</DialogTitle>
           <DialogContent>
             {props.content}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Disagree</Button>
-            <Button onClick={handleClose}>Agree</Button>
+            <Button onClick={handleClose}>Выбрать</Button>
+            <Button onClick={handleClose}>Отмена</Button>
           </DialogActions>
         </Dialog>
       </div>
@@ -230,12 +232,13 @@ export default function FormsMainFile(props){
                     height = GetParams(subForms.jsonData, "Height");
                     width = GetParams(subForms.jsonData, "Width"); 
                 }else{
-                    height = GetParams(subForms.jsonData.Form, "Height");
-                    width = GetParams(subForms.jsonData.Form, "Width"); 
+                    height =(parseInt( GetParams(subForms.jsonData.Form, "Height"))*1.25).toString();
+                    width = (parseInt(GetParams(subForms.jsonData.Form, "Width"))*1.05).toString(); 
                 }
                 Path = subForms.jsonData.Form.Path;
-                
-                ReactDOM.render(<DialogSlide content={JSX} style={{height: `${height}px`, width: `${width}px`}} Path={Path} /> , document.getElementById('RenderFormsModal'));
+                let newModalDialog = document.createElement("div");
+                ReactDOM.render(<DialogSlide content={JSX} caption={subForms.Params.Caption} style={{height: `${height}px`, width: `${width}px`}} Path={Path} /> , newModalDialog); 
+                document.getElementById('RenderFormsModal').appendChild(newModalDialog)
                 break;
             case undefined:
                 ReactDOM.render( ReturnParamDialogComponent(subForms) , document.getElementById('footerProgress'))
@@ -314,7 +317,9 @@ export default function FormsMainFile(props){
             }else if(json.Form !== undefined){
                 // CheckAndReturnComponent(json);
                 setDataForms(json);
-            }  
+            }   else if(json.Token === "ExecuteModalDialog"){
+                setSubForms(json);
+            } 
            setTransition(false) 
         }
     }
@@ -1273,9 +1278,8 @@ function FormDataProcessing(json) {
                 </Grid>
              </Fade>
             
-            <Grid id="RenderFormsModal">
-
-            </Grid>
+            <Grid id="RenderFormsModal"> 
+            </Grid>  
         </>
             
         )  
