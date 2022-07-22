@@ -70,10 +70,6 @@ export default function SideBar(props: MainBoxBackClick) {
   },[selectedButton])
 
 
-  useEffect(()=>{
-    let selected = get_cookie("CurrentSec").split(",");
-    props.setSelected({ id: selected[0], clsic: selected[1], name: selected[2] })      
-  },[])
 
   useEffect(() => {
     getSectionList();
@@ -117,7 +113,7 @@ export default function SideBar(props: MainBoxBackClick) {
   };
 
   const updateSelected = (event: any) => {
-    let ID, CLSID, Name, Patch, img
+    let ID, CLSID, Name, Patch, img, valanya:any, jsonEmptyCLSID = []
    
     if (event.title){
       ID = event.id;
@@ -160,10 +156,31 @@ export default function SideBar(props: MainBoxBackClick) {
     CreateCokies("CurrentSecID", ID );
     CreateCokies("CurrentSec", ID+","+ CLSID+","+ Name );
     
+    if(CLSID === undefined) jsonEmptyCLSID = EmptyCLSIDSectionData(ID, data)
     let NameSection = document.getElementById("NameSection");
     NameSection ? NameSection.innerText = Name : NameSection = document.createElement("div")
-    props.setSelected({ id: ID, clsic: CLSID, name: Name })
+    props.setSelected({ id: ID, clsic: CLSID, name: Name , jsonEmptyCLSID:jsonEmptyCLSID})
   };
+
+  function EmptyCLSIDSectionData(ID:string, dataLocal:any){
+    let DeepParent:any, DeepChild:any, bool = true,valanya:any, jsonEmptyCLSID = []
+    for(const[key,value] of Object.entries(dataLocal)){
+      valanya = value
+      if(DeepParent === undefined){
+        if(valanya.ID === ID){
+            DeepParent = valanya.Deep === undefined?0:Number(valanya.Deep)
+            DeepChild = DeepParent + 1
+          }
+      }else{
+        if(Number(valanya.Deep) === DeepChild && bool){
+            jsonEmptyCLSID.push(valanya)
+          }else{
+            bool = false
+          }
+      }
+    }
+    return jsonEmptyCLSID
+  }
 
 
 
@@ -184,6 +201,10 @@ export default function SideBar(props: MainBoxBackClick) {
     }else{
       setData(json["Sections"]);
       ListItems(json["Sections"]);
+      let jsonEmptyCLSID:any
+      let selected = get_cookie("CurrentSec").split(",");
+      if(selected[1] === "undefined") jsonEmptyCLSID = EmptyCLSIDSectionData(selected[0], json["Sections"])
+      props.setSelected({ id: selected[0], clsic: selected[1]=== "undefined"?undefined:selected[1], name: selected[2] , jsonEmptyCLSID:jsonEmptyCLSID})
       props.isLoading(false);
     }
     

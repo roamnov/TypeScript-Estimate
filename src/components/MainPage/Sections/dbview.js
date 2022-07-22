@@ -2,7 +2,7 @@
 import Tree from '../Windows/ViewData/Tree/tree';
 import Button from "@mui/material/Button"
 import Tooltip from '@mui/material/Tooltip';
-import ManWhoSoldTheWorld from '../stimategrid/test'
+import ManWhoSoldTheWorld from '../rcsgrid/GridTools.jsx'
 import { clickTab } from '../Windows/ViewData/Tree/tree'
 import SectionToolsJS from '../Tools/SectionToolsJS';
 import Split from 'react-split'

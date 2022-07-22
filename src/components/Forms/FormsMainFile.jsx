@@ -7,7 +7,6 @@ import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import { XMLrequest, get_cookie, ImgBASE64 } from "../Url";
-import Box  from "@mui/material/Box";
 import { Tabs, TabItem} from 'smart-webcomponents-react/tabs';
 import Link from '@mui/material/Link';
 import  { tokenProcessingTest } from "../TokenProcessing";
@@ -30,7 +29,7 @@ import DialogContent from "@mui/material/DialogContent"
 import DialogActions from "@mui/material/DialogActions"
 import Checkbox from "@mui/material/Checkbox"
 import FormLabel from "@mui/material/FormLabel"
-import ManWhoSoldTheWorld from "../MainPage/stimategrid/test";
+import ManWhoSoldTheWorld from "../MainPage/rcsgrid/GridTools.jsx";
 import AccorionDownIcon from "../../static/images/down.png";
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import useTheme from "../Hooks/useTheme";
@@ -407,23 +406,13 @@ export default function FormsMainFile(props){
         Name = Name === null? IName: Name
         
         if (Name !== null ){
-            //dataValue = el.dataset.value
-          //  if (!dataValue)
-            dataValue = el.value
-            if (el.type =="date")
-            {
-                let val = dataValue.split("-")
-              if (val.length) {
-               val = val[2] + "." + val[1] + "." + val[0]
-               dataValue = val
-            }
-            }
+            dataValue = el.dataset.value
             console.log(el, Name)
             params.set('prefix', 'forms');
             params.set("comand", "ElementEvent");
             params.set("SectionID", props.id);/////
             params.set("Name", Name);
-            if (dataValue !== undefined & dataValue !=="" ) params.set("Text", dataValue);
+            if (dataValue !== undefined) params.set("Text", dataValue.value);
             if(Index) params.set("Index", Index)
             params.set("WSM", "1");
             json = XMLrequest(params);
@@ -537,6 +526,40 @@ export default function FormsMainFile(props){
     ClickFormElement(undefined,Name,index)
     // const newJsonForRadio = Object.assign({[Name]:event.target.value},radioValues)
 
+    }
+
+    function AnchorsUse(Anchors,jsonStyle,left,top, type){
+        if(Anchors !== undefined){
+            let w,h, returnj = jsonStyle, AnchorsArr = Anchors.split(",")
+            w = Anchors.includes("лево,право")
+            h = Anchors.includes("верх,низ")
+            // delete 
+            console.log(Anchors)
+            for (const [key,value] of Object.entries(AnchorsArr)){
+                switch(value){
+                    case "лево":
+                        returnj= Object.assign(returnj, {left:`${left}px`})
+                        break;
+                    case "право":
+                        returnj= Object.assign(returnj, {right: `${w?left:10}px`,})
+                        break;
+                    case "верх":
+                        returnj= Object.assign(returnj, {top: `${top}px`})
+                        break;
+                    case "низ":
+                        returnj= Object.assign(returnj, {bottom:"20px"})
+                        break;
+                }  
+            }
+            if(w){
+                if(type !== "TButton")delete returnj.width
+            }
+            if(h){
+                if(type !== "TButton")delete returnj.height
+            }    
+            // console.log(returnj) 
+            return returnj
+        }
     }
 
     function ShouldUseFullScreen(Anchors){
@@ -699,11 +722,16 @@ export default function FormsMainFile(props){
                 let icon = <img  src={`data:image/png;base64,${rcdataIcon}`} />
                 let sxStyle = Text ===""?{ "& .MuiButton-startIcon": { margin: "0px" }}:Text ==="undefined"?{ "& .MuiButton-startIcon": { margin: "0px" }}:{}
                 const DrawFrame = json.DrawFrame ==="1"?true:false;
+                // Anchors = ShouldUseFullScreen(Anchors);
+                Right = Anchors.w ?`${Left}px`:`${0}px`;
+                let wb = Number(Width);
                 Height = `${Height}px`
                 Width =  `${Width}px`
                 style = {color: Enabled? BackColor(json["Font-color"]): "grey" ,backgroundColor:BackColor(json["Back-color"]),
-                minWidth: "1px", width: Width,height:Height,position:"absolute", left:`${Left}px`,top:`${Top}px`,
+                minWidth: "1px", width: Width,height:Height,position:"absolute", 
                 textTransform:"none" , visibility:Visability}
+                style = AnchorsUse(Anchors,style,Left,Top,json.Type)
+                console.log(style)
                 if(SubLabel === "TCategoryPanel"){
                     let LocalTop = RCDATAFormParent?Number(Top) + 52:Top
                     style= Object.assign(style,{top:`${LocalTop}px`})
@@ -887,12 +915,10 @@ export default function FormsMainFile(props){
 
             case "TCategoryPanelGroup"://WITH SUB
                 RCDATA = GetParams(json,"RCDATA"); 
-                Anchors = ShouldUseFullScreen(Anchors);
-                Right = Anchors.w ?`${Left}px`:`${0}px`;
-                Bottom = Anchors.h ?`${Number(Top) + Number(Height)}px`:`${0}px`;
                 Height = `${Height}px`
                 Width =  `${Width}px`
                 style = {position:"absolute" ,left:`${Left}px`, top:`${Top}px`, width: Width,height:Height, overflowY:"auto", overflowX:"hidden", visibility:Visability}
+                style = AnchorsUse(Anchors,style,Left,Top)
                 if(Anchors.w){
                     delete style.width
                     style = Object.assign(style,{right:Right})
@@ -1010,9 +1036,6 @@ export default function FormsMainFile(props){
                 let Scrolling = json.Scrolling === "1"?isThereChild(json)?true:false:false
                 BevelWidth = BevelWidth=== undefined?0:Number(BevelWidth)
                 BevelWidth = Number(Radius) > 0? BevelWidth : 0
-                Anchors = ShouldUseFullScreen(Anchors);
-                Right = Anchors.w ?`${Left}px`:`${0}px`;
-                Bottom = Anchors.h ?`${Number(Top) + Number(Height)}px`:`${0}px`;
                 Height = `${Height}px`
                 Width =  `${Width}px`
                 if(json.Align === "целиком"){
@@ -1024,18 +1047,12 @@ export default function FormsMainFile(props){
                 overflowX:"hidden",  display:Visability, backgroundColor: BGColor, borderRadius:`${Radius}px`, 
                 borderColor:"#cbcbca", borderStyle:"solid", borderWidth:`${BevelWidth}px`}
                 style = Scrolling? Object.assign(style,{overflowY:"auto"}):Object.assign(style,{overflowY:"hidden"})
+                
                 if(FrameEdges !== undefined){
                     delete style.borderRadius
                     style = Object.assign(style,FrameEdges)
                 }
-                if(Anchors.w){
-                    delete style.width
-                    style = Object.assign(style,{right:Right})
-                }
-                if(Anchors.h){
-                    delete style.height
-                    style = Object.assign(style,{bottom:"20px"})
-                }
+                style = AnchorsUse(Anchors,style,Left,Top)
                 if(json.RadioButton1){
                     let counterOfRadio= 0, defaultValueOfRadio = Name+ ","
                     for(const [key,value] of Object.entries(json)){

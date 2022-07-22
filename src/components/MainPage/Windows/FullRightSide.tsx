@@ -727,7 +727,7 @@ export default function FullRightSide(props: InfoAboutClick) {
             content = <SectionReport CLSID={props.clsic} id={props.id} defaultButton={defaultButton} SectionToolsJS={true} />
           } else
             if (props.id !== undefined) {
-              content = <StillDevelopmentPage id={props.id} SectionToolsJS={true} />
+              content = <StillDevelopmentPage id={props.id} SectionToolsJS={true}  jsonEmptyCLSID={props.jsonEmptyCLSID}  CLSID={props.clsic} />
             }
 
 
