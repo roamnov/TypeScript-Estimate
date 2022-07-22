@@ -25,7 +25,7 @@ const MainPage = () => {
     }
     const Value = React.useContext(Theme);
     console.log("ЗАЙДИ И ПОСМОТРИ")
-   // document.addEventListener("click", (e) => {ClickDocument(e) })
+  //  document.addEventListener("click",  ClickDocument)
     return (
         <>
             <WrapperRightSide />
