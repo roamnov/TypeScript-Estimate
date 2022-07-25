@@ -1,4 +1,10 @@
-
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('font-awesome/fonts/fontawesome-webfont.eot?v=4.4.0');
+    src: url('font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.4.0') format('embedded-opentype'), url('font-awesome/fonts/fontawesome-webfont.woff2?v=4.4.0') format('woff2'), url('font-awesome/fonts/fontawesome-webfont.woff?v=4.4.0') format('woff'), url('font-awesome/fonts/fontawesome-webfont.ttf?v=4.4.0') format('truetype'), url('font-awesome/fonts/fontawesome-webfont.svg?v=4.4.0#fontawesomeregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
 
 .login-form-mask-box {
 	top: 50%;
@@ -17,7 +23,7 @@
 	height: 15px;
 	display: inline-block;
 	background-position: center;
-	
+	background: url(images/loading.gif)
 }
 
 .login-form-mask {
@@ -115,10 +121,10 @@
 }
 
 .col-move-top {
-	background-image: url('../images/col-move-top.png');
+	background-image: url('images/col-move-top.png');
 }
 .col-move-bottom {
-	background-image: url('../images/col-move-bottom.png');
+	background-image: url('images/col-move-bottom.png');
 }
 
 .grid-with-row-lines .grid-item {
@@ -220,7 +226,7 @@
 .collapse-img {
     width: 15px;
     height: 15px;
-    background-image: url(../images/arrows.gif);
+    background-image: url(images/arrows.gif);
 	vertical-align: top;
     border: 0;
     cursor: pointer;
@@ -268,7 +274,7 @@ ul.pagination li {
     display: inline;
 }
 
-ul.pagination li a {
+ul.pagination li span {
     color: black;
     float: left;
     padding: 1px 3px;
@@ -278,6 +284,6 @@ ul.pagination li a {
     font-size: 14px;
 }
 
-ul.pagination li a:hover:not(.active) {
+ul.pagination li span:hover:not(.active) {
     background-color: #ddd;
 }

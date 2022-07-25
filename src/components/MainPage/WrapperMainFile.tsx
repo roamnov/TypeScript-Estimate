@@ -54,8 +54,7 @@ export default function WrapperRightSide() {
 
   document.addEventListener("click", (e) => { ClickDocument(e) })
  
-  function ShowMenu()
-  {
+  function ShowMenu(){
 
     setdrawerOpen(!drawerOpen)
 
@@ -110,7 +109,7 @@ export default function WrapperRightSide() {
             cn("backgroundColorStimate",{light: theme === "light"})
           } 
             style={ drawerOpen ? { display: 'flex', height: "100%", overflow: "hidden", width: "calc(80% - 5px)" }: { display: 'flex', height: "100%", overflow: "hidden", width: "100%" }} id="FullRightSide" >
-            <FullRightSide isLoading={isLoading} id={selected?.id} clsic={selected?.clsic} name={selected?.name} />
+            <FullRightSide isLoading={isLoading} id={selected?.id} clsic={selected?.clsic} name={selected?.name} jsonEmptyCLSID={selected?.jsonEmptyCLSID} />
           </div>
         </Split>
       </div>

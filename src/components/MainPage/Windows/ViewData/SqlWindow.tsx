@@ -2,7 +2,7 @@ import CodeEditor from '@uiw/react-textarea-code-editor';
 import { IdToTree, TabPanelProps } from "../../../ComponentInterface";
 import  {useState,useEffect } from "react";
 import { useStyles } from "../../../Styles";
-import ManWhoSoldTheWorld from "../../stimategrid/test";
+import ManWhoSoldTheWorld from "../../rcsgrid/GridTools.jsx";
 import Grid from '@mui/material/Grid';
 import Tab from '@mui/material/Tab';
 import Tabs from "@mui/material/Tabs"

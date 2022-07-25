@@ -1,150 +1,20 @@
 'use strict';
-function getCookie(name, json=false) {
-    if (!name) {
-      return undefined;
-    }
-    /*
-    Returns cookie with specified name (str) if exists, else - undefined
-    if returning value is JSON and json parameter is true, returns json, otherwise str
-    */
-    let matches = document.cookie.match(new RegExp(
-      "(?:^|; )" + name.replace(/([.$?*|{}()\[\]\\\/+^])/g, '\\$1') + "=([^;]*)"
-    ));
-    if (matches) {
-      let res = decodeURIComponent(matches[1]);
-      if (json) {
-        try {
-          return JSON.parse(res);
-        }
-        catch(e) {}
-      }
-      return res;
-    }
-  
-    return undefined;
-};
 
-function setCookie(name, value, options = {path: '/'}) {
-    /*
-    Sets a cookie with specified name (str), value (str) & options (dict)
-    options keys:
-      - path (str) - URL, for which this cookie is available (must be absolute!)
-      - domain (str) - domain, for which this cookie is available
-      - expires (Date object) - expiration date&time of cookie
-      - max-age (int) - cookie lifetime in seconds (alternative for expires option)
-      - secure (bool) - if true, cookie will be available only for HTTPS.
-                        IT CAN'T BE FALSE
-      - samesite (str) - XSRF protection setting.
-                         Can be strict or lax
-                         Read https://web.dev/samesite-cookies-explained/ for details
-      - httpOnly (bool) - if true, cookie won't be available for using in JavaScript
-                          IT CAN'T BE FALSE
-    */
-    if (!name) {
-      return;
-    }
-  
-    options = options || {};
-  
-    if (options.expires instanceof Date) {
-      options.expires = options.expires.toUTCString();
-    }
-  
-    if (value instanceof Object) {
-      value = JSON.stringify(value);
-    }
-    let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
-    for (let optionKey in options) {
-      updatedCookie += "; " + optionKey;
-      let optionValue = options[optionKey];
-      if (optionValue !== true) {
-        updatedCookie += "=" + optionValue;
-      }
-    }
-    document.cookie = updatedCookie;
-};
-  
-function deleteCookie(name) {
-    /*
-    Deletes a cookie with specified name.
-    Returns true when cookie was successfully deleted, otherwise false
-    */
-    setCookie(name, null, {
-        expires: new Date(),
-        path: '/'
-    })
-};
-  
-var Stimate = {
-    appendEvent: function(e, f, el) {
-        if (el) {
-            el.addEventListener(e, f)
-        } else {
-          document.addEventListener(e, f);
-        }
-    },
-    deleteEvent: function(e, f, el) {
-        if (el) {
-            el.removeEventListener(e, f)
-        } else {
-            document.removeEventListener(e, f);
-        }
-    },
-    licGUID: '',
-    address: 'http://localhost:1317/mobile~',
-    synchRequest: function(command, content, params) {
-        var request = new XMLHttpRequest(), res, url = Stimate.address + command + '?licGUID=' + Stimate.licGUID;
-        if (params) {
-            url = url + '&' + params;
-        }
-        request.open('POST', url, false);
-        request.onload = function() {
-            res = request.responseText;
-        };
-        if (content) {
-            let json = JSON.stringify(content);
-            request.send(json);
-        } else request.send();
-        return JSON.parse(res);
-    },
-    binaryRequest: function(command, content, params) {
-        var request = new XMLHttpRequest(), res, url = Stimate.address + command + '?licGUID=' + Stimate.licGUID;
-        if (params) {
-            url = url + '&' + params;
-        }
-        request.open('POST', url, false);
-        request.onload = function() {
-            res = request.responseText;
-        }
-        request.send(content);
-        return JSON.parse(res);
+function appendEvent(e, f, el) {
+    if (el) {
+        el.addEventListener(e, f)
+    } else {
+      document.addEventListener(e, f);
     }
 };
 
-(function (){
-    if (document.location.protocol != 'file:') {
-        Stimate.address = document.location.origin + '/mobile~';
-    };
-    var s = "0123456789ABCDEFGHIKLMNOPQRSTVXYZ", l = getCookie('stim_adm_sess');
-
-    if (!l) {
-        function getRandomArbitrary(min, max) {
-            var res = Math.floor(Math.random() * (max - min) + min);
-            return res;
-        };
-
-        for (var n = 0; n <= 31; n++) {
-            if (n === 0) {
-                l = s[getRandomArbitrary(1, 31)];
-            } else {
-                l = l + s[getRandomArbitrary(1, 31)];
-            }
-        };
-
-        setCookie('stim_adm_sess', l);
-    };
-    Stimate.licGUID = 'web-' + l;
-})();
+function deleteEvent(e, f, el) {
+    if (el) {
+        el.removeEventListener(e, f)
+    } else {
+        document.removeEventListener(e, f);
+    }
+};
 
 function showApplicationMask(parent, text) {
     if (parent) {
@@ -190,7 +60,7 @@ function midint(min, max, val) {
     return maxint(min, minint(max, val))
 }
 
-function intintrange(int, min, max) {
+function intInRange(int, min, max) {
     return int >= min && int <= max
 }
 
@@ -216,7 +86,7 @@ var
     STATUS_GROUPED = 32,
     STATUS_COLLAPSED = 128;
 
-function createRecordSource() {
+export function createRecordSource() {
     var me = this, points = new Map(), state = '', bof = true, eof = true, recordIndex = -1, 
         indexFields = '', groupFields = '', editRec = null,
         gen = 0;
@@ -528,11 +398,11 @@ function createScrollbar(view, event) {
 
     var lastPageY, scrollTop = 0, maxScroll = 0;
     
-    Stimate.appendEvent('mousedown', function(e) {
+    appendEvent('mousedown', function(e) {
         lastPageY = e.pageY;
 
-        Stimate.appendEvent('mousemove', drag);
-        Stimate.appendEvent('mouseup', stop)
+        appendEvent('mousemove', drag);
+        appendEvent('mouseup', stop)
 
         return false;
     }, bar);
@@ -550,8 +420,8 @@ function createScrollbar(view, event) {
     };
 
     function stop(e) {
-        Stimate.deleteEvent('mousemove', drag);
-        Stimate.deleteEvent('mouseup', stop);
+        deleteEvent('mousemove', drag);
+        deleteEvent('mouseup', stop);
     };
 
     this.updateBar = function (visibleRows, recordCount, scrollPos) {
@@ -581,7 +451,7 @@ function createScrollbar(view, event) {
 var
   nfStateChanged = 'StateChanged';
 
-function createGrid(panel) {
+export function createGrid(panel) {
     var // константы
         REGION_GROUP = 'group',
         REGION_TITLE = 'title',
@@ -607,6 +477,7 @@ function createGrid(panel) {
         visibleRows = 0,
         firstRecord = 0,
         overflowColumns = false,
+        rightOverflow = false,
         leftRightMover = null,
         columnOffset = 0,
         currentRow = 0, currentCol = 0, childColumnSize = 24, isJustMouseDown = false,
@@ -673,8 +544,38 @@ function createGrid(panel) {
             handleColumnField.eventSize = x;
         };
     };
+    
+      function ajustColumnWidth(f) {     	 
+      	let IndexCol = 0, maxLengStr = 0, row, valueCol, colWidth;
+    
+      	for (let i = 0; i < visibleRows; i++ ){    	  	
+     	  	row = getRowElement(i);
+     	  	let arr = row.getElementsByClassName('grid-td');
+     		for (let j = 0; j < arr.length; j++) {
+     		  	if (arr[j].field.fieldName == f.fieldName) {
+     			  	valueCol = arr[j].firstChild.innerHTML;
+     			  	break;
+     			}
+     		}
+     	  	let textcol = document.createElement("span");
+     	  	textcol.className = 'grid-cell-inner';
+     		textcol.innerHTML = valueCol;
+     	  	document.body.appendChild(textcol);
+     		colWidth = textcol.offsetWidth;
+     	  	if (colWidth > maxLengStr) {
+     		    maxLengStr = colWidth;
+     		};
+     	   	document.body.removeChild(textcol);
+     	}
+     	f.width= maxLengStr + 5;
+     	updateColumns();
+        sizeMarker.style.opacity = 0;
+    };
+    
 
     function getFieldAtPoint(x, y, info) {
+
+        let checkMargin = columnOffset;
 
         function checkColumn(level, colLeft, colTop, width, height) {
             if (level.items && level.expanded) {
@@ -685,12 +586,14 @@ function createGrid(panel) {
                     f = l.field;
                     w = {value: f.width};
                     field = checkColumn(l, left, colTop + childColumnSize, w, childColumnSize);
-                    if (field) return field;
-                    left += w.value;
-                    width.value += w.value;                      
+                    if (checkMargin == 0) {
+                        if (field) return field;
+                        left += w.value;
+                        width.value += w.value; 
+                    } else checkMargin--;                    
                 };
             };
-            if (intintrange(x, colLeft, colLeft + width.value) && intintrange(y, colTop, colTop + height)) {
+            if (intInRange(x, colLeft, colLeft + width.value) && intInRange(y, colTop, colTop + height)) {
                 return level.field;
             };
             return null;
@@ -700,12 +603,15 @@ function createGrid(panel) {
         if (info) info.region = r;
         switch (r) {
             case REGION_TITLE: {
-                for (let levels = me.columns.levels, i = 0, left = 0, top = me.header.getBoundingClientRect().top, width, level, field; i < levels.length; i++) {
+                let r = me.header.getBoundingClientRect();
+                for (let levels = me.columns.levels, i = 0, left = r.left, top = r.top, width, level, field; i < levels.length; i++) {
                     level = levels[i];
                     width = {value: level.field.width};
                     field = checkColumn(levels[i], left, top, width, titleSize);
-                    if (field) return field;
-                    left += width.value;
+                    if (checkMargin == 0) {
+                        if (field) return field;
+                        left += width.value;
+                    } else checkMargin--;
                 };
                 return me.columns.stubField;
             };
@@ -714,7 +620,7 @@ function createGrid(panel) {
                 for (let i = 0, el; i < me.groups.childElementCount; i++) {
                     el = me.groups.children[i];
                     rect = el.getBoundingClientRect();
-                    if (intintrange(x, rect.left, rect.right)) {
+                    if (intInRange(x, rect.left, rect.right)) {
                         if (info) {
                             info.left = rect.left;
                             info.top = rect.top;
@@ -863,7 +769,11 @@ function createGrid(panel) {
     };
 
     function updateScrollBar() {
-        me.scrollBar.updateBar(visibleRows, me.source.recordCount, firstRecord);
+        if (me.source) {
+            me.scrollBar.updateBar(visibleRows, me.source.recordCount, firstRecord)
+        } else {
+            me.scrollBar.updateBar(0, 0, 0)
+        }
     };
     
     function getRecordState() {
@@ -930,7 +840,7 @@ function createGrid(panel) {
         buildColumns();
         buildRecords();
         updateScrollBar();
-    }
+    };
 
     function createRecordColumns(tr, isCurrentRow, margin) {
         var td;
@@ -1020,7 +930,7 @@ function createGrid(panel) {
                 el.isGroup = isGroup;
             } else {
                 if (isGroup) {
-                    cl = el.children[2];
+                    let cl = el.children[2];
                     cl.textContent = getGroupString();
                 } else {
                     for (let i = 0, cl, col; i < el.childElementCount; i++) {
@@ -1057,6 +967,8 @@ function createGrid(panel) {
             };
         };
     
+        if (!me.source) return;
+
         me.table.style.top = (groupSize + filterSize + titleSize) + "px";
 
         var saveActiveRecord = me.source.activeRecord;
@@ -1102,10 +1014,10 @@ function createGrid(panel) {
             tbody.appendChild(tr);
             table.appendChild(tbody);
             me.data.appendChild(table);
-            Stimate.appendEvent('mouseover', function() {
+            appendEvent('mouseover', function() {
                 table.classList.add('grid-item-over');
             }, table);
-            Stimate.appendEvent('mouseleave', function() {
+            appendEvent('mouseleave', function() {
                 table.classList.remove('grid-item-over');
             }, table);
         };
@@ -1247,23 +1159,35 @@ function createGrid(panel) {
                 }
             }
             if (colDelta != 0) {
-                if (newCol < 0) newCol = 0;
-                if (newCol > me.columns.fields.length -1) newCol = me.columns.fields.length - 1;
+                if (newCol < 0) {
+                    if (columnOffset > 0) {
+                        columnOffset--;
+                        updateAllGrid();
+                    };
+                    newCol = 0;
+                } else
+                if (newCol > me.columns.fields.length -1 ) {
+                    if (rightOverflow) {
+                        columnOffset++;
+                        updateAllGrid();
+                    };
+                    newCol = me.columns.fields.length - 1;
+                };
                 currentCol = newCol;
             }
             el = getColElement(currentCol, currentRow);
             if (el) el.classList.add('grid-item-focused');
-    }
+        }
     }
 
     function scrollToRecord(record, moveCurrent) {
-        if (sourceActive) {
+        if (sourceActive()) {
             if (moveCurrent) {
                 if (me.source.activeRecord != record) {
                     hideEditor();
                     if (me.source.isEditMode()) {
-                        if (me.source.modified) source.postRecord
-                        else me.source.cancelRecord;
+                        if (me.source.modified) me.source.postRecord()
+                        else me.source.cancelRecord();
                     }
                     me.source.setRecordIndex(record);
                 }
@@ -1382,7 +1306,7 @@ function createGrid(panel) {
         isJustMouseDown = false;
 
         if (sizeMarker.style.opacity == 1) {
-            Stimate.deleteEvent('mousemove', sizeColumn);
+            deleteEvent('mousemove', sizeColumn);
             if (handleColumnField.eventSize) {
                 handleColumnField.width = handleColumnField.eventSize - handleColumnField.offset;
                 updateColumns();
@@ -1394,7 +1318,7 @@ function createGrid(panel) {
 
 
         if (dragZone && dragZone.initRect) {
-            Stimate.deleteEvent('mousemove', moveColumn);
+            deleteEvent('mousemove', moveColumn);
             dragZone.initRect = null;
             hideElement(dragZone);
             hideElement(dragZone.moveTop);
@@ -1462,7 +1386,7 @@ function createGrid(panel) {
         if (role) {
             switch (role) {
                 case ROLE_COLUMN: {
-                    Stimate.deleteEvent('mousemove', moveColumn);
+                    deleteEvent('mousemove', moveColumn);
                     handleColumnField = null;
                     var temp, field = el.field;
                     if (!target.classList.contains('column-header-text')) {
@@ -1524,14 +1448,14 @@ function createGrid(panel) {
                     if (handleColumnField) return;
                     handleColumnField = el.field;
                     handleColumnField.groupEl = null;
-                    Stimate.appendEvent('mousemove', moveColumn);
+                    appendEvent('mousemove', moveColumn);
                     break;
                 };
                 case ROLE_GROUP: {
                     if (handleColumnField) return;
                     handleColumnField = el.field;
                     handleColumnField.groupEl = el;
-                    Stimate.appendEvent('mousemove', moveColumn);
+                    appendEvent('mousemove', moveColumn);
                     break;
                 };
                 case ROLE_COLDATA: {
@@ -1648,11 +1572,13 @@ function createGrid(panel) {
     };
 
     function buildColumns() {
-        var last, left = 0, levels = me.columns.levels, maxlev = 1, totalWidth = me.header.getBoundingClientRect().width;
+        var last, left = 0, levels = me.columns.levels, maxlev = 1, totalWidth = me.header.getBoundingClientRect().width, checkMargin = columnOffset;
         
         while (last = me.header.lastChild) {
             me.header.removeChild(last);
         };
+
+        if (!levels) return;
 
         function getMaxLevel(level) {
             let res = 1, max = 0;
@@ -1696,6 +1622,7 @@ function createGrid(panel) {
                     w = fld.width;
                     if ((l + w) > totalWidth) {
                         overflowColumns = true;
+                        rightOverflow = true;
                         w -= (l + w) - totalWidth;
                         if (w < rowHeight) break;
                         i = level.items.length;
@@ -1705,7 +1632,13 @@ function createGrid(panel) {
                     l += w;
                 };
                 height = childColumnSize;
-            } else me.columns.fields.push(field);
+            } else {
+                if (checkMargin > 0) {
+                    checkMargin--;
+                    return 0;
+                }
+                me.columns.fields.push(field);
+            };
 
             el = document.createElement('div');
             el.className = 'grid-column';
@@ -1733,7 +1666,7 @@ function createGrid(panel) {
                 else tmp.classList.add("collapse-plus");
                 tmp.role = ROLE_COLLAPSE;
                 el.appendChild(tmp);
-            }
+            };
 
             tmp = document.createElement('div');
             tmp.style.textAlign = 'center';
@@ -1754,13 +1687,15 @@ function createGrid(panel) {
         };
 
         me.columns.fields = [];
-        overflowColumns = false;
-        for (let i = columnOffset, level, field, width; i < levels.length; i++) {
+        overflowColumns = columnOffset != 0;
+        rightOverflow = false;
+        for (let i = 0, level, field, width; i < levels.length; i++) {
             level = levels[i];
             field = level.field;
             width = field.width;
             if ((left + width) > totalWidth) {
                 overflowColumns = true;
+                rightOverflow = true;
                 width -= (left + width) - totalWidth;
                 if (width < rowHeight) break;
                 i = levels.length;
@@ -1831,7 +1766,7 @@ function createGrid(panel) {
 
         function getParent(value) {
             var level;
-            if (intintrange(value, 0, parents.length - 1)) {
+            if (intInRange(value, 0, parents.length - 1)) {
                 level = parents[value];
                 if (level) {
                     if (!level.items) level.items = [];
@@ -1851,6 +1786,7 @@ function createGrid(panel) {
             parents[level.level] = level;
             parent = getParent(level.level - 1);
             parent.push(level);
+            level.expanded = true;
             field.parent = parent;
         }
         
@@ -1866,14 +1802,18 @@ function createGrid(panel) {
         delayCall(updateRecordTable);
     };
 
+    me.updateGridSize = function() {
+        delayCall(updateAllGrid)
+    }
+
     panel.style.userSelect = "none";
     panel.style.overflow = 'hidden';
     panel.className = 'grid-panel';
     panel.tabIndex = 0;
-    Stimate.appendEvent('mousedown', handleMouseDown, panel);
-    Stimate.appendEvent('mouseup', handleMouseUp, panel);
-    Stimate.appendEvent('keydown', handleKeyDown, panel);
-    var temp = 0;
+    appendEvent('mousedown', handleMouseDown, panel);
+    appendEvent('mouseup', handleMouseUp, panel);
+    appendEvent('keydown', handleKeyDown, panel);
+
     window.onresize = function(e) {
         //log(me.table.getBoundingClientRect().height)
         delayCall(updateAllGrid)
@@ -1890,9 +1830,12 @@ function createGrid(panel) {
             handleColumnField = sizeMarker.sizeEl.field;
             if (handleColumnField) {
                 sizeMarker.style.opacity = 1;
-                Stimate.appendEvent('mousemove', sizeColumn);
+                appendEvent('mousemove', sizeColumn);
             }
         }
+    }
+    sizeMarker.ondblclick = function(e) {
+        ajustColumnWidth(sizeMarker.sizeEl.field);
     }
     panel.appendChild(sizeMarker);
 
@@ -1943,7 +1886,7 @@ function createGrid(panel) {
 
     leftRightMover = document.createElement('ul');
     leftRightMover.className = "pagination";
-    leftRightMover.innerHTML = '<li><a href="#" role="l">❮</a></li><li><a href="#" role="r">❯</a></li>';
+    leftRightMover.innerHTML = '<li><span role="l">❮</span></li><li><span role="r">❯</span></li>';
     leftRightMover.style.position = "absolute";
     leftRightMover.style.right = "-7px";
     leftRightMover.style.top = "2px";
@@ -1951,7 +1894,18 @@ function createGrid(panel) {
     leftRightMover.style.height = "20px";
     leftRightMover.style.opacity = 1;
     leftRightMover.onclick = function (el) {
-        alert(el.target.innerText)
+        if (el.target.innerText == "❮") {
+            if (columnOffset > 0) {
+                columnOffset--;
+                updateAllGrid();
+            };
+        } else
+        if (el.target.innerText == "❯") {
+            if (rightOverflow) {
+                columnOffset++;
+                updateAllGrid();
+            };
+        };
     };
     me.header.appendChild(leftRightMover);
 
@@ -1970,7 +1924,7 @@ function createGrid(panel) {
     me.data.style.zIndex = 1;
     me.data.classList.add("grid-data");
     me.data.classList.add("grid-with-row-lines");
-    Stimate.appendEvent('wheel', handleMouseWheel);
+    appendEvent('wheel', handleMouseWheel, me.table);
 
     panel.onfocus = function(e) {
         //log('focused')

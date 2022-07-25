@@ -70,6 +70,7 @@ export interface TabPanelProps {
     id: string | undefined;
     clsic?: string | undefined;
     name: string | undefined;
+    jsonEmptyCLSID?: any;
   }
 
   export interface InfoAboutClickDown extends componentProps{
