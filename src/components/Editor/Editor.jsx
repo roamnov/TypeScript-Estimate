@@ -13,34 +13,16 @@ import { Calendar } from 'smart-webcomponents-react/calendar';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Popover from '@mui/material/Popover';
-import ListItem from '@mui/material/ListItem';
+//import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import List from '@mui/material/List';
-//import { ListBox, ListItem, ListItemsGroup } from 'smart-webcomponents-react/listbox';
+import { ListBox, ListItem, ListItemsGroup } from 'smart-webcomponents-react/listbox';
 export default function Editor(props) {
 
   const [blur, setBlur] = React.useState();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [anchorElList, setAnchorElList] = React.useState(null);
   const [DList, setList] = React.useState();
 
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handlePopoverOpenList = (event) => {
-    setAnchorElList(event.currentTarget);
-  };
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-
-  };
-  const handlePopoverCloseList = () => {
-    setAnchorElList(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const openList = Boolean(anchorElList);
   let DropList, list;
   const EditStyle_PickList = 1;
   const EditStyle_Calendar = 2;
@@ -121,22 +103,6 @@ export default function Editor(props) {
     EditID = RandomString(10)
   }
 
-
-
-  function SelectCheckState(e) {
-    let btn = e.currentTarget;
-    let CheckState = btn.dataset.checkstate;
-    let parent = document.getElementById(btn.getAttribute("for"))
-    let Check = document.getElementById(btn.dataset.checkid)
-    let selectCheckState = SelectBackgroundCheck(CheckState)
-    Check.style.backgroundImage = selectCheckState
-    if (parent) {
-      parent.setAttribute("data-checkState", CheckState)
-    }
-    EnterValue(parent)
-    handlePopoverClose()
-  }
-
   function MouseOverCheck(e) {
     let div = e.currentTarget;
     div.style.transform = "scale(1.2)"
@@ -170,7 +136,7 @@ export default function Editor(props) {
       let p
       if (ev) p = ev.currentTarget;
       // let list = document.getElementById("mouse-over-popover-list");
-      let inp = document.getElementById("for" + EditID)
+      let inp = document.getElementById(EditID)
       const withinBoundaries = ev.composedPath().includes(inp);
       if (!withinBoundaries) {
         if (!p)
@@ -186,7 +152,7 @@ export default function Editor(props) {
       EnterValue(parent)
       parent = parent.querySelector("input")
       parent.value = p.innerText
-      CloseList()
+     // CloseList()
     }
 
     function FindItems(ev) {
@@ -206,16 +172,19 @@ export default function Editor(props) {
     }
     let itemList
     let it = [];
-    let width = parent.getBoundingClientRect().width
+    let width = parent.parentNode.parentNode.parentNode.getBoundingClientRect().width
     let index = 0, indexv, val = parent.dataValue
     let text
+    let array = [];
     for (let pair of items) {
       text = pair[1]
       if (typeof text == "string") {
         if (val === text) {
           indexv = index
         }
-        it.push(<ListItem ref={parent} key={index} component="div" disablePadding data-value={text}>
+        it.push(text)
+        /* <ListItem value={pair[0]}>{text}</ListItem>
+           it.push(<ListItem ref={parent} key={index} component="div" disablePadding data-value={text}>
           <ListItemButton style={{ padding: 0, height: "24px", width: "inherit" }}>
             <ListItemText
               disableTypography
@@ -226,7 +195,7 @@ export default function Editor(props) {
               onClick={(ev) => ClickItemList(ev)}
             />
           </ListItemButton>
-        </ListItem>)
+        </ListItem>)*/
       }
       index = index + 1;
     }
@@ -235,37 +204,34 @@ export default function Editor(props) {
       top = 5
     else
       top = 30
-    itemList = <Box
-      style={{
-        position: "absolute",
-        backgroundColor: "white",
-        border: "2px solid",
-        width: width + "px",
-        overflowX: "hidden",
-        left: parent.getBoundingClientRect().left + "px",
-        top: parent.getBoundingClientRect().top + parent.getBoundingClientRect().height + "px"
-      }}
-      id="mouse-over-popover-list">
-      {it.length <= 1 ? <></> : <Box className="smart-list-box">
-        <div className="smart-list-box-filter-input-container vscroll" role="presentation" smart-id="filterInputContainer" style={{
-          position: "fixed", zIndex: 1, width: width - 25 + "px", marginLeft: "2px",
-          paddingLeft: "0px", marginTop: "0px"
-        }}>
-          <input id={"for" + EditID} placeholder="Поиск ..." role="searchbox" aria-label="Поиск ..." smart-id="filterInput" onKeyUp={(ev) => FindItems(ev)} /></div></Box>}
-      <List style={{ maxHeight: 200 - top + "px", width: width - 2 + "px", top: top + "px" }} >
-        {it.map((item) => { return item })}
-      </List></Box>
+      
+
+    itemList =       
+      <ListBox  itemHeight={24} virtualized  filterMode="contains" filterInputPlaceholder = "Поиск" filterable={it.length > 1} 
+      style={{ width: width + "px", 
+               overflowX: "hidden",
+               position: "absolute", 
+               left: parent.parentNode.parentNode.parentNode.getBoundingClientRect().left + "px",
+               top: parent.parentNode.parentNode.parentNode.getBoundingClientRect().top + parent.parentNode.parentNode.parentNode.getBoundingClientRect().height + "px"}}>
+        {
+          //it.map((item) => { return item })
+        }
+      </ListBox  >
     let background = document.createElement("div")
     background.id = "mouse-over-popover"
     background.addEventListener("click", CloseList)
     background.style = "position: fixed; z-index: 1300; right: 0;bottom: 0;top: 0;left: 0;pointer-events: all;"
     ReactDOM.render(itemList, background)
+    let tag = "smart-list-box"
+    
     document.body.appendChild(background)
-    //return itemList
+    let listBox = background.querySelector(tag.toUpperCase())
+    listBox.dataSource = it
+
+    return itemList
   }
   function onCreateList(e) {
     let div = e.currentTarget;
-    console.log(div)
     let id = div.getAttribute("for");
     let edit = document.getElementById(id)
     if (props.list) {

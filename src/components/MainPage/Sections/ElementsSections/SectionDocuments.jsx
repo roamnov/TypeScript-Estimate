@@ -10,7 +10,7 @@ export default function SectionDocuments(props) {
   function AddGroup(items) {
     let parent = items.shift()
 
-    let Group = <TreeItemsGroup>
+    let Group = <TreeItemsGroup >
       {parent.Name}
       {items.map((it)=>{return AddItem(it)})}
     </TreeItemsGroup>
@@ -19,7 +19,7 @@ export default function SectionDocuments(props) {
     return Group
   }
   function AddItem(item) {
-    return <TreeItem>{item.Name}</TreeItem>
+    return <TreeItem >{item.Name}</TreeItem>
   }
   function CreateDocuments(data) {
     let list = [], items = [], DeepNext
@@ -45,7 +45,7 @@ export default function SectionDocuments(props) {
         list.push(AddItem(data[i]))
 
     }
-    let TreeDoc = <Tree showRootLines showLines hasThreeStates style = {{width: "100%"}} >
+    let TreeDoc = <Tree showRootLines showLines hasThreeStates style = {{border: 0, width: "100%"}} >
       {
         list
       }

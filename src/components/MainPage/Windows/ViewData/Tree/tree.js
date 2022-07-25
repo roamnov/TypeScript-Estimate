@@ -401,7 +401,7 @@ export default function MyTree(props) {
   else
     selectionMode = "none"
   return (
-    <Tree showRootLines showLines id={"Tree" + props.Module} hasThreeStates selectionMode={selectionMode} style={{ height: '100%', overflowX: "auto", width: "100%" }}>
+    <Tree showRootLines showLines id={"Tree" + props.Module} hasThreeStates selectionMode={selectionMode} style={{height: '100%', overflowX: "auto", width: "100%" }}>
       {CreateListTree()}
     </Tree>
   );
