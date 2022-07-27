@@ -22,19 +22,33 @@ export default function WrapperRightSide() {
   const theme:any = useTheme(); 
   function ClickDocument(ev: any) {
     let AllList, list, itemList
-    AllList = document.querySelectorAll("div.css-b62m3t-container")
+   // AllList = document.querySelectorAll(".mouse-over-popover")
+    let target = ev.target;
+    if (target.className == "mouse-over-popover")
+    {
+      let box = target.querySelectorAll("smart-list-box")
+      for (let i = 0; i <= box.length - 1; i = i + 1)
+      {
+        let idInput = box[i]
+        let img: any
+        img = document.querySelector("span.EditStyle_PickList[for = '"+ idInput.htmlFor+"']")
+        if(img.children[0])
+        {
+          img.children[0].style.transform = ""
+        }
+      }
+      target.remove()
+    }
     // console.log(AllList)
-    for (let i = 0; i <= AllList.length - 1; i = i + 1) {
+   /* for (let i = 0; i <= AllList.length - 1; i = i + 1) {
       list = AllList[i];
       const withinBoundaries = ev.composedPath().includes(list);
       if (!withinBoundaries) {
-        itemList = list.querySelector("div.select__menu")
-        if (itemList) {
-          itemList.remove();
-        }
+         // list.remove();
+       
       }
 
-    }
+    }*/
   }
 
   React.useEffect(()=>{

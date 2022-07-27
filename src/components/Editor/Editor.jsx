@@ -152,7 +152,7 @@ export default function Editor(props) {
       EnterValue(parent)
       parent = parent.querySelector("input")
       parent.value = p.innerText
-     // CloseList()
+      // CloseList()
     }
 
     function FindItems(ev) {
@@ -171,11 +171,10 @@ export default function Editor(props) {
       }
     }
     let itemList
-    let it = [];
+    let it = [], itIndex = [];
     let width = parent.parentNode.parentNode.parentNode.getBoundingClientRect().width
     let index = 0, indexv, val = parent.dataValue
     let text
-    let array = [];
     for (let pair of items) {
       text = pair[1]
       if (typeof text == "string") {
@@ -183,19 +182,7 @@ export default function Editor(props) {
           indexv = index
         }
         it.push(text)
-        /* <ListItem value={pair[0]}>{text}</ListItem>
-           it.push(<ListItem ref={parent} key={index} component="div" disablePadding data-value={text}>
-          <ListItemButton style={{ padding: 0, height: "24px", width: "inherit" }}>
-            <ListItemText
-              disableTypography
-              primary={text}
-              data-parent={parent.id}
-              data-index={pair[0]}
-              style={{ paddingLeft: "10px", fontFamily: "Roboto, Helvetica Neue, sans-serif", fontSize: "14px", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}
-              onClick={(ev) => ClickItemList(ev)}
-            />
-          </ListItemButton>
-        </ListItem>)*/
+        itIndex.push(pair[0])
       }
       index = index + 1;
     }
@@ -204,35 +191,47 @@ export default function Editor(props) {
       top = 5
     else
       top = 30
-      
 
-    itemList =       
-      <ListBox  itemHeight={24} virtualized  filterMode="contains" filterInputPlaceholder = "Поиск" filterable={it.length > 1} 
-      style={{ width: width + "px", 
-               overflowX: "hidden",
-               position: "absolute", 
-               left: parent.parentNode.parentNode.parentNode.getBoundingClientRect().left + "px",
-               top: parent.parentNode.parentNode.parentNode.getBoundingClientRect().top + parent.parentNode.parentNode.parentNode.getBoundingClientRect().height + "px"}}>
+
+    itemList =
+      <ListBox htmlFor={parent.id} itemHeight={24} virtualized filterMode="contains" filterInputPlaceholder="Поиск" filterable={it.length > 1}
+        style={{
+          width: width + "px",
+          overflowX: "hidden",
+          position: "absolute",
+          left: parent.parentNode.parentNode.parentNode.getBoundingClientRect().left + "px",
+          top: parent.parentNode.parentNode.parentNode.getBoundingClientRect().top + parent.parentNode.parentNode.parentNode.getBoundingClientRect().height + "px"
+        }}>
         {
           //it.map((item) => { return item })
         }
       </ListBox  >
     let background = document.createElement("div")
-    background.id = "mouse-over-popover"
-    background.addEventListener("click", CloseList)
+    background.classList.add("mouse-over-popover")
     background.style = "position: fixed; z-index: 1300; right: 0;bottom: 0;top: 0;left: 0;pointer-events: all;"
     ReactDOM.render(itemList, background)
     let tag = "smart-list-box"
-    
+
     document.body.appendChild(background)
     let listBox = background.querySelector(tag.toUpperCase())
+    listBox.displayLoadingIndicator = true
     listBox.dataSource = it
-
+    listBox.setAttribute("for", parent.id)
+    listBox.displayLoadingIndicator = false
+    let array = []
+    array = listBox.querySelectorAll("smart-list-item")
+    for (let i = 0; i <= array.length - 1; i++) {
+      let item = array[i]
+      let index = itIndex[i]
+      item.setAttribute("data-index", index)
+    }
     return itemList
   }
   function onCreateList(e) {
     let div = e.currentTarget;
     let id = div.getAttribute("for");
+    let img = div.querySelector("img")
+
     let edit = document.getElementById(id)
     if (props.list) {
       list = props.list.split(',')
@@ -248,6 +247,9 @@ export default function Editor(props) {
         list = l1;
       }
       CreateList(list, edit)
+      if (img) {
+        img.style.transform = "rotate(180deg)"
+      }
       // setAnchorElList(edit)
     }
 
@@ -427,10 +429,10 @@ export default function Editor(props) {
       check.dataset.checkstate = otv.Values[0].CheckState
     check.dataset.id = otv.Values[0].ID
   }
-  DropList = <div className="text-field__icon" style ={{display: "flex"}}>
+  DropList = <div className="text-field__icon" style={{ display: "flex" }}>
     {props.MultiCheckSet ?
       <img
-      className = "Check"
+        className="Check"
         onMouseOver={(e) => MouseOverCheck(e)}
         onMouseOut={(e) => MouseOutCheck(e)}
         data-Path={props.Path}

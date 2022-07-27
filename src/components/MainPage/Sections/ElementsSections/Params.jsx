@@ -9,6 +9,9 @@ import ReactDOM from 'react-dom';
 import { XMLrequest } from '../../../Url';
 export default function Params(props) {
     const [data, SetData] = React.useState(props.data.Items)
+    React.useEffect(() => {
+        SetData(props.data.Items)
+        }, [props.data.Items]);
     //var data = props.data.Items;
     const ParamSetOption_Disabled = 1;
     const ParamSetOption_InConfig = 2;
@@ -372,70 +375,78 @@ export default function Params(props) {
         }
 
     }
-    return (
-        <table onMouseMove={MouseMove}
-            onMouseUp={MouseUp}
-            id={"params_" + props.SectionID + "_" + props.id}
-            style={{ borderSpacing: '0px', tableLayout: "fixed", width: "100%" }}>
-            <tbody>
-                {data.map((item, i) => {
-                    var display = (item.Options & ParamSetOption_Disabled) || (item.Options & ParamSetOption_Hidden) ? "none" : ""
-                    let level = Number(item.Level);
-                    let levelNext
-                    if (data[i + 1])
-                        levelNext = Number(data[i + 1].Level);
-                    if (!level) {
-                        level = 0;
-                    }
-                    let padding = level * 24;
-                    return (
-                        <tr style={{ display: display }}
-                            data-level={level ? level : '0'}
-                            data-collapsed={item.Options & ParamSetOption_Collapsed ? 1 : 0}
-                            data-id={item.ID}>
-                            <td data-level={level ? level : '0'}
-                                data-collapsed={item.Options & ParamSetOption_Collapsed ? 1 : 0}
-                                data-id={item.ID}
-                                style={{ borderBottom: "1px solid", position: "relative", whiteSpace: "nowrap", paddingLeft: padding ? padding : 12 }}>
-                                <span
-                                    style={{
-                                        display: "block",
-                                        position: "relative",
-                                        textOverflow: "clip",
-                                        overflow: "hidden"
-                                    }}>
-                                    {item.Name}
-                                </span>
-                                {level < levelNext ?
-                                    <img onClick={(e) => ShowHideParams(e)} style={{ transform: item.Options & ParamSetOption_Collapsed ? "rotate(-90deg)" : "", height: "10px", width: "10px", position: "absolute", left: level * 12, top: "calc(50% - 5px)" }} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAv0lEQVQ4jd3QsUrDYBQF4C8UxK5FXAM+hXN8AqmLD2AdKmbJUOjsHOzcB3ERwU1XsW8iYgd1uYGQ/oHMOfDD4d5z7rn3Z1Q4RTFAV4QWTFrmLc5whF2P+QqXuMYzviDDC/LgmxCmzJvQ5OHJmg2OcY5XPGGBGT6iP8cF7vGHG3ziLWsl3OIED5FS4x0/Yb7DLyrsY5sDlFgFb4bUwUWvTP5OZ5N1ol7FCYPQHdJrzlLFQIlp8G88Dk1vYxlvzPgH4I0f/Ofj0OAAAAAASUVORK5CYII="></img>
-                                    : <></>}
-                                <div style={{ width: "3px", height: "100%", position: "absolute", right: "0px", backgroundColor: "#d3d3d3", top: "0px", cursor: "col-resize" }}
-                                    onMouseDown={MouseDown}
-                                >
-                                </div>
-                            </td>
-                            <td
-                                style={{ borderBottom: "1px solid", position: "relative", whiteSpace: "nowrap", display: item.MultiCheckSet ? "grid": null, paddingLeft: item.MultiCheckSet ? 2 : 24 }}
-                                onClick={(e) => CreateEdit(e, item)}
-                            >
-                                {item.MultiCheckSet ?
-                                    <img
-                                        onMouseOver={(e) => MouseOverCheck(e)}
-                                        onMouseOut={(e) => MouseOutCheck(e)}
-                                        data-Path={props.data.Path}
-                                        data-CheckState={item.CheckState ? item.CheckState : 0}
-                                        data-MultiCheckSet={item.MultiCheckSet}
-                                        data-Id={item.ID}
-                                        style={{ width: 20, height: 20 }} src={SelectBackgroundCheck(item.CheckState ? item.CheckState : 0)} onClick={ClickCheckState} /> : ""}
-                                {item.Value ? item.Value : ""}
-                            </td>
-                        </tr>
-                    )
+   //  data=props.data.Items
+    let param = <table onMouseMove={MouseMove}
+    onMouseUp={MouseUp}
+    id={"params_" + props.SectionID + "_" + props.id}
+    style={{ borderSpacing: '0px', tableLayout: "fixed", width: "100%" }}>
+    <tbody>
+        {data.map((item, i) => {
+            var display = (item.Options & ParamSetOption_Disabled) || (item.Options & ParamSetOption_Hidden) ? "none" : ""
+            let level = Number(item.Level);
+            let levelNext
+            if (data[i + 1])
+                levelNext = Number(data[i + 1].Level);
+            if (!level) {
+                level = 0;
+            }
+            let padding = level * 24;
+            return (
+                <tr style={{ display: display }}
+                    data-level={level ? level : '0'}
+                    data-collapsed={item.Options & ParamSetOption_Collapsed ? 1 : 0}
+                    data-id={item.ID}>
+                    <td data-level={level ? level : '0'}
+                        data-collapsed={item.Options & ParamSetOption_Collapsed ? 1 : 0}
+                        data-id={item.ID}
+                        style={{ borderBottom: "1px solid", position: "relative", whiteSpace: "nowrap", paddingLeft: padding ? padding : 12 }}>
+                        <span
+                            style={{
+                                display: "block",
+                                position: "relative",
+                                textOverflow: "clip",
+                                overflow: "hidden"
+                            }}>
+                            {item.Name}
+                        </span>
+                        {level < levelNext ?
+                            <img className = "Collapsed" onClick={(e) => ShowHideParams(e)} style={{ transform: item.Options & ParamSetOption_Collapsed ? "rotate(-90deg)" : "", height: "10px", width: "10px", position: "absolute", left: level * 12, top: "calc(50% - 5px)" }} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAv0lEQVQ4jd3QsUrDYBQF4C8UxK5FXAM+hXN8AqmLD2AdKmbJUOjsHOzcB3ERwU1XsW8iYgd1uYGQ/oHMOfDD4d5z7rn3Z1Q4RTFAV4QWTFrmLc5whF2P+QqXuMYzviDDC/LgmxCmzJvQ5OHJmg2OcY5XPGGBGT6iP8cF7vGHG3ziLWsl3OIED5FS4x0/Yb7DLyrsY5sDlFgFb4bUwUWvTP5OZ5N1ol7FCYPQHdJrzlLFQIlp8G88Dk1vYxlvzPgH4I0f/Ofj0OAAAAAASUVORK5CYII="></img>
+                            : <></>}
+                        <div style={{ width: "3px", height: "100%", position: "absolute", right: "0px", backgroundColor: "#d3d3d3", top: "0px", cursor: "col-resize" }}
+                            onMouseDown={MouseDown}
+                        >
+                        </div>
+                    </td>
+                    <td
+                        style={{ borderBottom: "1px solid", position: "relative", whiteSpace: "nowrap", display: item.MultiCheckSet ? "grid": null, paddingLeft: item.MultiCheckSet ? 2 : 24 }}
+                        onClick={(e) => CreateEdit(e, item)}
+                    >
+                        {item.MultiCheckSet ?
+                            <img
+                                onMouseOver={(e) => MouseOverCheck(e)}
+                                onMouseOut={(e) => MouseOutCheck(e)}
+                                data-Path={props.data.Path}
+                                data-CheckState={item.CheckState ? item.CheckState : 0}
+                                data-MultiCheckSet={item.MultiCheckSet}
+                                data-Id={item.ID}
+                                style={{ width: 20, height: 20 }} src={SelectBackgroundCheck(item.CheckState ? item.CheckState : 0)} onClick={ClickCheckState} /> : ""}
+                        {item.Value ? item.Value : ""}
+                    </td>
+                </tr>
+            )
 
 
-                })
-                }
-            </tbody>
-        </table>
-    )
+        })
+        }
+    </tbody>
+</table>
+if (props.parent)
+{
+    let container = document.createElement("div")
+    ReactDOM.render(param, container)
+    container = container.children[0]
+    props.parent.appendChild(container)
+}
+    return param 
+    
 }
