@@ -410,7 +410,10 @@ export default function Params(props) {
                             {item.Name}
                         </span>
                         {level < levelNext ?
-                            <img className = "Collapsed" onClick={(e) => ShowHideParams(e)} style={{ transform: item.Options & ParamSetOption_Collapsed ? "rotate(-90deg)" : "", height: "10px", width: "10px", position: "absolute", left: level * 12, top: "calc(50% - 5px)" }} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAv0lEQVQ4jd3QsUrDYBQF4C8UxK5FXAM+hXN8AqmLD2AdKmbJUOjsHOzcB3ERwU1XsW8iYgd1uYGQ/oHMOfDD4d5z7rn3Z1Q4RTFAV4QWTFrmLc5whF2P+QqXuMYzviDDC/LgmxCmzJvQ5OHJmg2OcY5XPGGBGT6iP8cF7vGHG3ziLWsl3OIED5FS4x0/Yb7DLyrsY5sDlFgFb4bUwUWvTP5OZ5N1ol7FCYPQHdJrzlLFQIlp8G88Dk1vYxlvzPgH4I0f/Ofj0OAAAAAASUVORK5CYII="></img>
+                            <img 
+                            onMouseOver={(e) => MouseOverCheck(e)}
+                            onMouseOut={(e) => MouseOutCheck(e)} 
+                            className = "Collapsed" onClick={(e) => ShowHideParams(e)} style={{ transform: item.Options & ParamSetOption_Collapsed ? "rotate(-90deg)" : "", height: "10px", width: "10px", position: "absolute", left: level * 12, top: "calc(50% - 5px)" }} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAv0lEQVQ4jd3QsUrDYBQF4C8UxK5FXAM+hXN8AqmLD2AdKmbJUOjsHOzcB3ERwU1XsW8iYgd1uYGQ/oHMOfDD4d5z7rn3Z1Q4RTFAV4QWTFrmLc5whF2P+QqXuMYzviDDC/LgmxCmzJvQ5OHJmg2OcY5XPGGBGT6iP8cF7vGHG3ziLWsl3OIED5FS4x0/Yb7DLyrsY5sDlFgFb4bUwUWvTP5OZ5N1ol7FCYPQHdJrzlLFQIlp8G88Dk1vYxlvzPgH4I0f/Ofj0OAAAAAASUVORK5CYII="></img>
                             : <></>}
                         <div style={{ width: "3px", height: "100%", position: "absolute", right: "0px", backgroundColor: "#d3d3d3", top: "0px", cursor: "col-resize" }}
                             onMouseDown={MouseDown}
@@ -418,7 +421,7 @@ export default function Params(props) {
                         </div>
                     </td>
                     <td
-                        style={{ borderBottom: "1px solid", position: "relative", whiteSpace: "nowrap", display: item.MultiCheckSet ? "grid": null, paddingLeft: item.MultiCheckSet ? 2 : 24 }}
+                        style={{ overflow: "hidden",textOverflow: "ellipsis", borderBottom: "1px solid", position: "relative", whiteSpace: "nowrap", display: item.MultiCheckSet ? "grid": null, paddingLeft: item.MultiCheckSet ? 2 : 24 }}
                         onClick={(e) => CreateEdit(e, item)}
                     >
                         {item.MultiCheckSet ?

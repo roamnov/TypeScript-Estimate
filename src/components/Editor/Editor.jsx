@@ -224,6 +224,9 @@ export default function Editor(props) {
       let item = array[i]
       let index = itIndex[i]
       item.setAttribute("data-index", index)
+      item = item.querySelector(".smart-content-label")
+      if (item)
+      item.setAttribute("title", item.innerText)
     }
     return itemList
   }

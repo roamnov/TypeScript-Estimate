@@ -18,7 +18,7 @@ export default function SectionDocuments(props) {
     }
     let dataSource = new Map();
     let doc = ev.currentTarget.ariaLevel
-    let p = document.getElementById("ParamsDoc")
+    let p = document.getElementById("ParamsDoc" + props.id)
     let container = p.children[0]
     let dataP, param, id
     if (container) {
@@ -47,10 +47,10 @@ export default function SectionDocuments(props) {
       let documents = XMLrequest(params);
       if (documents.Params) {
         container = document.createElement("div")
-       // container.id = 
+        // container.id = 
         p.innerHTML = ''
         p.appendChild(container)
-       // p.innerHTML = ''
+        // p.innerHTML = ''
         var par = <Params id={doc} SectionID={props.id} data={documents.Params} />
         ReactDOM.render(par, container)
         //p.innerHTML = ""
@@ -117,13 +117,13 @@ export default function SectionDocuments(props) {
         }
       </div>
     </SplitterItem>
-    <SplitterItem size="80%"  id={"item_Param_Grid_" + props.id}>
+    <SplitterItem size="80%" id={"item_Param_Grid_" + props.id}>
       <Splitter style={{ height: "100%", width: "100%" }}>
-        <SplitterItem size="20%"  id={"item_Param_" + props.id}>
-          <div style={{ height: "calc(100% - 37px)" }} id="ParamsDoc">
-            
+        <SplitterItem size="20%" id={"item_Param_" + props.id}>
+          <div style = {{height: "calc(100% - 37px)", overflow: "auto"}} id={"ParamsDoc" + props.id}>
+
           </div>
-          <Button variant="contained">Применить</Button>
+          <Button style ={{bottom: 0, width: "100%"}} variant="contained">Применить</Button>
         </SplitterItem>
         <SplitterItem size="80%" id={"item_Grid_" + props.id}>
           <div style={{ height: "100%", width: "100%" }}>
