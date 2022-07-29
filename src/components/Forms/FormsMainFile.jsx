@@ -10,6 +10,7 @@ import { XMLrequest, get_cookie, ImgBASE64 } from "../Url";
 import { Tabs, TabItem} from 'smart-webcomponents-react/tabs';
 import Link from '@mui/material/Link';
 import  { tokenProcessingTest } from "../TokenProcessing";
+import  { handleClickMessageBox } from "../TokenProcessing";
 import SectionToolsJS from "../MainPage/Tools/SectionToolsJS";
 import Slide from '@mui/material/Slide'
 import Draggable from 'react-draggable';
@@ -35,8 +36,9 @@ import { Scrollbars } from 'react-custom-scrollbars-2';
 import useTheme from "../Hooks/useTheme";
 import cn from "classnames"
 import Fade from '@mui/material/Fade';
-import ModalDialog from "../Containers/ModalDialog";
 import { DialogTitle } from "@material-ui/core";
+import ModalContainer from "../Containers/ModalContainer";
+import Params from "../MainPage/Sections/ElementsSections/Params";
 
 function PaperComponent(props) {
     return (
@@ -90,6 +92,8 @@ const Accordion = styled((props) => (
     return <Slide direction="up" ref={ref} {...props} />;
   });
 /////////////////////////////////////////////////////////////////////////////////////////////
+
+
   export function DialogSlide(props) {
     const [open, setOpen] = useState(true);
     const [heiWid, setHeiWod] = useState({height: "0px", width:"0px"})
@@ -103,7 +107,19 @@ const Accordion = styled((props) => (
         }
     },[props])
 
-    
+
+
+    function InputButton(event, RequestID){
+        let params = new Map, data, json, ClickedButton= event.target.value ;
+        data = { "Result": ClickedButton  }
+        params.set('prefix', 'project');
+        params.set("comand", "ResumeRequest");
+        params.set("RequestID",RequestID );
+        params.set("WSM", "1");
+        json = XMLrequest(params,  data);
+        tokenProcessingTest(json);
+        handleClose();
+    }
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -127,7 +143,7 @@ const Accordion = styled((props) => (
           open={open}
           TransitionComponent={Transition}
           keepMounted
-          onClose={handleClose}
+          //onClose={handleClose}
           aria-describedby="alert-dialog-slide-description"
           PaperComponent={PaperComponent}
         > 
@@ -136,8 +152,8 @@ const Accordion = styled((props) => (
             {props.content}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Выбрать</Button>
-            <Button onClick={handleClose}>Отмена</Button>
+                <Button value={1} onClick={(e)=>InputButton(e,props.RequestID)}>Выбрать</Button>
+                <Button value={props.btn!==undefined?0:2} onClick={(e)=>InputButton(e,props.RequestID)}>Отмена</Button>
           </DialogActions>
         </Dialog>
       </div>
@@ -156,6 +172,7 @@ export default function FormsMainFile(props){
     const [transition, setTransition] = React.useState(true)
     const [currentHeight, setCurrentHeight] = useState(window.innerHeight - 189);
     const [subForms, setSubForms] = useState(undefined);
+    const [subParamDialog, setSubParamDialog] = useState(undefined);
     const [cursor,setCursor] = useState("auto");
     const [radioValues, setRadioValues]= useState({})
     var mainFormsHeight = (window.innerHeight - 166.5)/100 
@@ -181,8 +198,6 @@ export default function FormsMainFile(props){
     },[subForms])
 
 
-    
-
     const GetSectionForms=()=>{//GET /forms~GetSectionForm?LicGUID=8C5F5163443EBAC78D42B78939951952&SectionID=482 HTTP/1.0
         let params = new Map, json;
         params.set('prefix', 'forms');
@@ -202,7 +217,7 @@ export default function FormsMainFile(props){
         params.set("Path", Path);
         params.set("NeedRefresh", "1");
         json = XMLrequest(params);
-        setSubForms(json)
+        setSubParamDialog(json)
     }
 
     function GetParams(json, param){
@@ -235,12 +250,16 @@ export default function FormsMainFile(props){
                     width = (parseInt(GetParams(subForms.jsonData.Form, "Width"))*1.05).toString(); 
                 }
                 Path = subForms.jsonData.Form.Path;
-                let newModalDialog = document.createElement("div");
-                ReactDOM.render(<DialogSlide content={JSX} caption={subForms.Params.Caption} style={{height: `${height}px`, width: `${width}px`}} Path={Path} /> , newModalDialog); 
-                document.getElementById('RenderFormsModal').appendChild(newModalDialog)
+                let newModalDialog = document.createElement("dialog");
+                ReactDOM.render(<DialogSlide content={JSX} caption={subForms.Params.Caption} RequestID={subForms.Params.RequestID} style={{height: `${height}px`, width: `${width}px`}} Path={Path} /> , newModalDialog); 
+                document.getElementById('RenderFormsModal').append(newModalDialog)
                 break;
-            case undefined:
-                ReactDOM.render( ReturnParamDialogComponent(subForms) , document.getElementById('footerProgress'))
+            case "ExecuteParamDialog":
+                let jsx = <Params id={props.id} SectionID={props.id} data={subParamDialog} />    
+                let newDialog = document.createElement("div");
+                document.getElementById('RenderFormsModal').lastElementChild!==null ? document.getElementById('RenderFormsModal').lastElementChild.appendChild(newDialog) :
+                document.getElementById('footerProgressNew').appendChild(newDialog)
+                ReactDOM.render( <DialogSlide btn={0} content={jsx} caption={subParamDialog.Caption} RequestID={subForms.Params.RequestID} style={{height: `${350}px`, width: `${300}px`}}  /> , newDialog)
                 break;
         }
     }
@@ -309,6 +328,7 @@ export default function FormsMainFile(props){
 
     function CheckAnserOnElementEvent(json, from){
         if(!isEmptyObject(json)){
+            if (json.error===undefined){
             setTransition(true)
             const TokenReturn = tokenProcessingTest(json, "forms");
             if( TokenReturn !== undefined){
@@ -316,10 +336,13 @@ export default function FormsMainFile(props){
             }else if(json.Form !== undefined){
                 // CheckAndReturnComponent(json);
                 setDataForms(json);
-            }   else if(json.Token === "ExecuteModalDialog"){
+            }   
+            
+            if(json.Token === "ExecuteModalDialog" ||json.Token === "ExecuteParamDialog"){
                 setSubForms(json);
             } 
-           setTransition(false) 
+           setTransition(false)
+          } 
         }
     }
 
@@ -608,11 +631,6 @@ export default function FormsMainFile(props){
         return {ml:LeftPrecent , mr:RightPrecent, w:elemWidthPrecent}
     }
 
-    function ReturnParamDialogComponent(subForms){
-        let ReturnComponent =[]
-        ReturnComponent.push(<ModalDialog props={subForms}/>)
-        return ReturnComponent
-    }
 
 
     function ChangeTabs(){
@@ -1296,6 +1314,8 @@ function FormDataProcessing(json) {
              </Fade>
             
             <Grid id="RenderFormsModal"> 
+            </Grid>  
+            <Grid id="footerProgressNew"> 
             </Grid>  
         </>
             
